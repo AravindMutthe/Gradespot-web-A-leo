@@ -991,3 +991,62 @@ while `ServiceCard` numbers cards by the canonical local array order
 index before mapping; unknown slugs (none today) fall after the
 canonical ones in DB order. /services now leads with Service 01 —
 Corporate Trainings and runs 01→12 in the published order.
+
+## 24. Nav threshold fix #2 — one chrome breakpoint at 960px (2026-10-23, Aravind's desktop-mode review)
+
+### 24.1 Cause
+The §23 fix is verified working in a real desktop browser (full
+inline bar + both mega menus at ≥1024px). But Aravind tests
+"desktop view" from his phone browser's desktop mode (Edge/Copilot
+app), which renders at ~980 CSS px — below Tailwind's lg (1024px) —
+so he still got the hamburger and (reasonably) reported "its not
+working". The lesson: the chrome threshold must sit below the
+narrowest width at which he will ever judge the desktop view.
+
+### 24.2 The single-threshold rule
+ONE custom breakpoint now governs ALL site chrome: `nav` = 60rem
+(960px), defined once as `--breakpoint-nav` in the @theme block of
+globals.css. Everything that presents as "desktop vs mobile chrome"
+switches there, and nowhere else:
+- Header: inline bar + all three mega panels at ≥960; hamburger +
+  mobile sheet below 960.
+- FloatingActions: desktop WhatsApp float at ≥960; mobile sticky
+  Call/WhatsApp/Register bar below 960.
+- LP chrome: the landing pages' own sticky action bar hides at
+  ≥960 and its footer bottom padding releases at ≥960 (the LP
+  content grids are unchanged — they are content, not chrome).
+- globals.css: the body bottom-padding for the sticky bar now
+  applies at max-width 959px (was 1023px).
+Content grids (footer columns, stats, card layouts) still use the
+standard breakpoints — they are layout, not chrome, and were never
+part of the complaint.
+
+### 24.3 Compact measure extended to 960 — fit verified
+The §23 compact measure (previously the lg step) is now the nav
+step, tightened slightly so the full bar genuinely fits the
+narrower band: links 12px with px-1, chevrons w-4, logo plate
+px-1.5, pill/Register/Callback padding and margins trimmed. Full
+measure restores at xl (1280px) exactly as before. No item was
+dropped, renamed, reordered or wrapped.
+Fit proof (measured, not eyeballed): text widths were computed
+from the actual Instrument Sans variable font file (fontTools,
+instanced at wght 600/700) at the compact sizes, plus each item's
+padding/margins/border and the h-10 logo plate at its intrinsic
+193:60 ratio. Total bar = 864px (logo 143 + items 722) against
+912px available inside the .wrap container at a 960px viewport —
+~48px of slack on a single nowrap line.
+
+### 24.4 Mobile untouched
+Below 960px the markup, classes and behaviour of the hamburger,
+accordion sheet, sticky bars and LP bar are exactly as Aravind
+approved in his screenshots — only the visibility threshold moved
+(lg → nav, and the body padding media 1023px → 959px).
+
+### 24.5 Verification
+- `npm run build` passes (shared JS still 103 kB).
+- Grep proof: no `lg:` remains in Header.tsx or
+  FloatingActions.tsx; no `lg:hidden`/`lg:flex`/`lg:block`
+  visibility switching remains in any component; the compiled CSS
+  carries .nav\:flex/.nav\:block/.nav\:hidden inside
+  `@media (min-width:60rem)`.
+- Crawl of the built site: 89/89 sitemap URLs return 200.

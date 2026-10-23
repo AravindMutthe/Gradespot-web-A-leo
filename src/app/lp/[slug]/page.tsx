@@ -276,7 +276,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       </section>
 
       {/* LP footer: minimal, no nav */}
-      <footer className="bg-ink-deep py-8 pb-24 text-sm text-footer-text lg:pb-8">
+      <footer className="bg-ink-deep py-8 pb-24 text-sm text-footer-text nav:pb-8">
         <div className="wrap flex flex-wrap items-center justify-between gap-3">
           <p>
             © {new Date().getFullYear()} {business.legalName}
@@ -288,7 +288,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       </footer>
 
       {/* Sticky mobile action bar (LP pattern) */}
-      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 border-t border-white/10 bg-ink-deep text-center lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 border-t border-white/10 bg-ink-deep text-center nav:hidden">
         <a href={telHref(phone)} className="py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-white active:bg-white/10">
           Call Now
         </a>

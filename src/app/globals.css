@@ -100,6 +100,14 @@
   --font-sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* §24 — THE single chrome breakpoint. Every piece of site chrome
+     (header bar/mega panels/hamburger/sheet, FloatingActions, LP
+     sticky bar, body padding) switches at `nav` (960px) and nowhere
+     else. 960px because a phone browser's "desktop view" (Edge/
+     Copilot) reports ~980 CSS px — below Tailwind's lg (1024px),
+     which left desktop-mode testers with the mobile hamburger. */
+  --breakpoint-nav: 60rem;
 }
 
 @layer base {
@@ -135,8 +143,9 @@
       scroll-behavior: smooth;
     }
   }
-  /* Room for the mobile sticky CTA bar */
-  @media (max-width: 1023px) {
+  /* Room for the mobile sticky CTA bar — below the §24 chrome
+     breakpoint (960px) only, so it switches with everything else. */
+  @media (max-width: 959px) {
     body {
       padding-bottom: 57px;
     }

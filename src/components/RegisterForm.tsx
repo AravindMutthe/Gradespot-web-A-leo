@@ -86,7 +86,7 @@ export default function RegisterForm({
             Full Name *
           </label>
           <input id="reg-name" name="name" required autoComplete="name" className={field} placeholder="Your name" />
-          {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
+          {errors.name && <p className="mt-1 text-xs text-field-error">{errors.name}</p>}
         </div>
         <div>
           <label htmlFor="reg-phone" className={label}>
@@ -102,7 +102,7 @@ export default function RegisterForm({
             placeholder="+91 …"
             inputMode="tel"
           />
-          {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
+          {errors.phone && <p className="mt-1 text-xs text-field-error">{errors.phone}</p>}
         </div>
       </div>
       <div className="mt-4">
@@ -117,7 +117,7 @@ export default function RegisterForm({
           className={field}
           placeholder="you@example.com"
         />
-        {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
+        {errors.email && <p className="mt-1 text-xs text-field-error">{errors.email}</p>}
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
@@ -134,7 +134,7 @@ export default function RegisterForm({
               </option>
             ))}
           </select>
-          {errors.interest && <p className="mt-1 text-xs text-red-600">{errors.interest}</p>}
+          {errors.interest && <p className="mt-1 text-xs text-field-error">{errors.interest}</p>}
         </div>
         <div>
           <label htmlFor="reg-type" className={label}>
@@ -152,7 +152,7 @@ export default function RegisterForm({
           name="whatsappOptIn"
           type="checkbox"
           value="true"
-          className="mt-1 h-4 w-4 shrink-0 accent-brand"
+          className="mt-1 h-4 w-4 shrink-0 accent-signal"
         />
         <span>
           Yes, contact me on WhatsApp about this registration. I agree to be contacted about
@@ -168,7 +168,7 @@ export default function RegisterForm({
         it is an enquiry, not an online payment or a user account.
       </p>
       {state === "sent" && (
-        <div className="mt-4 rounded-lg bg-green-50 p-4 text-sm text-green-800">
+        <div className="mt-4 rounded-lg bg-success-surface p-4 text-sm text-success-text">
           <p>Thank you — your registration is in. Our team will call to confirm the details.</p>
           <a
             href={`https://wa.me/${waNumber}?text=${waText}`}
@@ -181,7 +181,7 @@ export default function RegisterForm({
         </div>
       )}
       {state === "error" && (
-        <p className="mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+        <p className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
           We could not submit your registration. Please check the fields and try again, or call
           us directly.
         </p>

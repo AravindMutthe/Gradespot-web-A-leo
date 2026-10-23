@@ -168,7 +168,7 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
                 </Link>
                 <Link
                   href={`/lp/${a.slug}-in-hyderabad`}
-                  className="text-[15px] font-bold leading-[48px] text-brand hover:text-brand-dark"
+                  className="text-[15px] font-bold leading-[48px] text-signal hover:text-signal-strong"
                 >
                   {shortA} in Hyderabad →
                 </Link>
@@ -183,7 +183,7 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
                 </Link>
                 <Link
                   href={`/lp/${b.slug}-in-hyderabad`}
-                  className="text-[15px] font-bold leading-[48px] text-brand hover:text-brand-dark"
+                  className="text-[15px] font-bold leading-[48px] text-signal hover:text-signal-strong"
                 >
                   {shortB} in Hyderabad →
                 </Link>
@@ -202,7 +202,7 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
               ))}
             </div>
             <p className="mt-8 text-center">
-              <Link href="/compare" className="text-sm font-bold text-brand hover:text-brand-dark">
+              <Link href="/compare" className="text-sm font-bold text-signal hover:text-signal-strong">
                 ← All course comparisons
               </Link>
             </p>

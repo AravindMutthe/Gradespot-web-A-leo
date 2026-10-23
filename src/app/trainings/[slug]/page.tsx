@@ -179,7 +179,7 @@ export default async function CoursePage({
       />
       <JsonLd data={faqSchema(allFaqs)} />
 
-      <section className="bg-heading py-14 text-white md:py-20">
+      <section className="bg-ink py-14 text-white md:py-20">
         <div className="wrap">
           <Breadcrumbs
             dark
@@ -302,7 +302,7 @@ export default async function CoursePage({
                     </p>
                     <Link
                       href={`/compare/${comparePair.slug}`}
-                      className="mt-4 inline-block text-[15px] font-bold text-brand hover:text-brand-dark"
+                      className="mt-4 inline-block text-[15px] font-bold text-signal hover:text-signal-strong"
                     >
                       {comparePair.title} →
                     </Link>

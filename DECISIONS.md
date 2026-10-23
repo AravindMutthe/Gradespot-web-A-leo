@@ -1050,3 +1050,127 @@ approved in his screenshots — only the visibility threshold moved
   carries .nav\:flex/.nav\:block/.nav\:hidden inside
   `@media (min-width:60rem)`.
 - Crawl of the built site: 89/89 sitemap URLs return 200.
+
+## 25. Dark theme — light/dark toggle (2026-10-23, Aravind's "one thing missing in v1")
+
+### 25.1 Mandate and mechanism
+Aravind approved the §24 nav fix and named the missing piece: a
+light/dark theme toggle like the Royal Salon site has. Mechanism:
+a `.dark` class on `<html>` (Tailwind v4 `@custom-variant dark`),
+set **before first paint** by a tiny inline script in `layout.tsx`
+head — stored choice (`localStorage["gradespot-theme"]`) wins, a
+first visit follows `prefers-color-scheme`; no flash of the wrong
+theme. `suppressHydrationWarning` on `<html>` covers the class the
+script adds. The toggle (`src/components/ThemeToggle.tsx`) flips
+the class, sets `color-scheme`, and persists the choice; its icon
+is CSS-driven by the root class, so it is correct pre-hydration.
+
+### 25.2 Toggle placement (salon-style)
+- **Header utility strip** (on ink, right side) — icon button,
+  sun/moon, visible at **every width**, 44×44, native `<button>`
+  (keyboard-accessible), `aria-label` "Switch to dark/light theme",
+  `aria-pressed` state.
+- **Mobile sheet** — a labelled "Theme — Light/Dark theme is on"
+  row under the Register/Callback grid.
+- **LP chrome** — LPs are nav-free, so a slim utility strip
+  (location + toggle) was added above the logo+phone bar; the LP
+  anatomy (one CTA, no navigation) is unchanged.
+- Switching cross-fades colours for ~400ms via a temporary
+  `theme-anim` class — **never** under `prefers-reduced-motion`
+  (checked in JS and in the CSS media query).
+
+### 25.3 THE RULE — dark is the light palette INVERTED (Aravind, 15:11 IST)
+No separate dark palette was invented. Each dark token is the
+light token inverted, Royal-Salon style — surfaces ↔ ink pole,
+ink text ↔ paper text, muted shades inverted likewise:
+- `canvas` = exact HSL lightness-inversion of `paper`
+  (#FAF6EE → **#110D05**); `body` of `body` (#5A4B38 → **#C7B8A5**);
+  `line` of `line` (#E0D4BE → **#41351F**); `heading` = `paper`
+  itself (#FAF6EE); `nav` from the cream pole (#EEE1C8).
+- Card/band/raised surfaces step up from the ink pole in the same
+  elevation order light uses: band `surface-light` #1E150B,
+  card `parchment` #251B10, raised `cream`/`navy` #2E2113,
+  tinted chip `brand-soft` #3D2110.
+- Elements already at the dark pole in light (ink panels, footer,
+  ticker, utility strip) stay ink, deepened one step
+  (`ink-deep` #0B0803).
+- The **vermilion signal stays the signal**: all brand
+  backgrounds/borders/gradients keep #B23A0A/#9A3412. The single
+  contrast-forced adjustment the rule allows: brand **as text**
+  (#B23A0A ≈ 3:1 on dark) lifts within the same family —
+  `signal` #FF8A4C, `signal-strong` #FFB287 (7.2–9.6:1 on dark
+  surfaces). In light, `signal`/`signal-strong` are exactly
+  brand/brand-dark, so light is untouched.
+
+### 25.4 Token strategy
+- New tokens: `canvas` (page background — split from `paper`,
+  whose text-on-ink role forbids inverting it), `signal`,
+  `signal-strong`, and a form-status set (`success/error/warning`
+  surface+text, `field-error`) replacing the hardcoded Tailwind
+  green/red/amber utilities in the four forms (light values =
+  the exact old hexes).
+- Class migration (33 files): `text-brand`→`text-signal`,
+  `text-brand-dark`→`text-signal-strong`, `accent-brand`→
+  `accent-signal`; foreground uses of `text-ink`/`border-ink` →
+  `text-heading`/`border-heading` (same #201913 in light, paper
+  in dark). Background uses of ink/paper/brand do not move.
+- The course-page hero `bg-heading` → `bg-ink` (identical hex in
+  light) so it stays a dark hero in both themes.
+
+### 25.5 Contrast — WCAG 2.2 AA spot-checks (measured, both themes)
+Light (unchanged, §19.2 values reproduced): body/paper **7.80**,
+body/cream **7.03**, heading/paper **16.10**, signal/paper **5.56**,
+white on brand gradient **6.00/7.31**, footer **10.31**,
+nav on glass **11.59**, brand-bright on ink **6.00**.
+Dark: heading/canvas **17.98**, heading/card **15.67**,
+body/canvas **9.99**, body/card **8.71**, body/brand-soft **7.61**,
+signal/canvas **8.30**, signal/card **7.23**, signal/raised
+**6.69**, signal-strong/card **9.63**, white on brand **6.00/7.31**
+(buttons unchanged), nav on glass-panel **13.34**, body on
+glass-panel **8.89**, paper on glass-ink **17.98**, paper on
+panel-ink **17.69**, footer **11.06**, dark btn-navy (ink on
+paper) **16.10**, status texts **11.20–11.77**, field-error
+**8.90**, form placeholders (body @70%) **4.95**. Every content
+pair passes AA in both themes.
+
+### 25.6 Special handling
+- **Logo**: header + LP render BOTH official artworks; CSS shows
+  `logo.png` in light and the official `logo-light.png` in dark —
+  no filters/recolors, files untouched (hashes unchanged). The
+  §22 brighter plate moved to a `.logo-plate` class with the exact
+  light gradient values + an ink-glow dark variant. The footer
+  already used `logo-light` on ink — correct in both themes.
+- **Signature block**: the MD signature is dark ink on
+  transparency; in dark it gains a pale plate (`.signature-art`)
+  so it stays legible exactly as printed.
+- **Employer LogoWall**: wordmarks are dark-ink art; tiles get
+  pale stock in dark (`.logo-tile`).
+- **Glass/ink panels**: `.glass-panel`/`.glass-ink`/`.panel-ink`
+  have `.dark` variants (warm ink glass, deepened ink gradient);
+  reduced-transparency still resolves them to opaque stock.
+- **Buttons**: `btn-navy` inverts (parchment button, ink text);
+  `btn-outline-navy` gets a paper outline in dark; the focus ring
+  follows `signal` in dark. `btn-primary` is unchanged.
+- **Accessibility page**: statement updated — both-theme contrast
+  figures and the theme-choice measure, from what this build
+  actually implements, as before.
+
+### 25.7 Light theme — pixel-identical
+Every light token value is unchanged; the renames are
+value-preserving (canvas = paper hex, signal = brand hex, status
+tokens = the old Tailwind hexes, `.logo-plate` = the exact §22
+gradient/shadow values). Light-system visitors see the approved
+v1 exactly; dark is an addition, not a restyle.
+
+### 25.8 Verification
+- `npm run build` passes; shared JS still **103 kB**.
+- Crawl of the production build: **89/89 sitemap URLs return 200**.
+- Compiled-CSS audit: the `.dark` block carries every override
+  (canvas #110D05, body #C7B8A5, line #41351F, signal #FF8A4C…);
+  `dark:` variant compiles to `:where(.dark, .dark *)` selectors;
+  `.dark .glass-panel/.logo-plate/.btn-navy` rules present.
+- Served-HTML audit on key pages (home, /trainings, a course
+  page, an LP, footer): theme script + toggle (aria-label,
+  aria-pressed) + both logo artworks present; LP carries the
+  toggle in its slim utility strip.
+- NO deploy in this step — commit only; the parent redeploys.

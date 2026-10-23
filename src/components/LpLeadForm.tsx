@@ -94,7 +94,7 @@ export default function LpLeadForm({
             className={field}
             placeholder="Your name"
           />
-          {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
+          {errors.name && <p className="mt-1 text-xs text-field-error">{errors.name}</p>}
         </div>
         <div>
           <label htmlFor={id("phone")} className={label}>
@@ -110,7 +110,7 @@ export default function LpLeadForm({
             placeholder="+91 …"
             inputMode="tel"
           />
-          {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
+          {errors.phone && <p className="mt-1 text-xs text-field-error">{errors.phone}</p>}
         </div>
         <div>
           <label htmlFor={id("start")} className={label}>
@@ -134,7 +134,7 @@ export default function LpLeadForm({
             className={field}
             placeholder="you@example.com"
           />
-          {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
+          {errors.email && <p className="mt-1 text-xs text-field-error">{errors.email}</p>}
         </div>
       </div>
       <label
@@ -146,7 +146,7 @@ export default function LpLeadForm({
           name="whatsappOptIn"
           type="checkbox"
           value="true"
-          className="mt-1 h-4 w-4 shrink-0 accent-brand"
+          className="mt-1 h-4 w-4 shrink-0 accent-signal"
         />
         <span>Yes, send me course details and updates on WhatsApp.</span>
       </label>
@@ -161,7 +161,7 @@ export default function LpLeadForm({
         No spam — one counsellor call. Your details are used only to respond to this enquiry.
       </p>
       {state === "error" && (
-        <p className="mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+        <p className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
           We could not submit your request. Please check the fields and try again, or call us
           directly.
         </p>

@@ -94,7 +94,7 @@ export default async function LocalInstitutePage() {
                 href={mapsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-4 inline-block text-sm font-bold text-brand hover:text-brand-dark"
+                className="mt-4 inline-block text-sm font-bold text-signal hover:text-signal-strong"
               >
                 View on Google Maps →
               </a>
@@ -103,12 +103,12 @@ export default async function LocalInstitutePage() {
               <h2 className="text-lg font-bold text-heading">Call or write</h2>
               <p className="mt-3 text-sm leading-6 text-body">
                 {business.phones.map((p) => (
-                  <a key={p} href={telHref(p)} className="block font-semibold text-heading hover:text-brand">
+                  <a key={p} href={telHref(p)} className="block font-semibold text-heading hover:text-signal">
                     {p}
                   </a>
                 ))}
                 {business.emails.map((e) => (
-                  <a key={e} href={`mailto:${e}`} className="block hover:text-brand">
+                  <a key={e} href={`mailto:${e}`} className="block hover:text-signal">
                     {e}
                   </a>
                 ))}
@@ -152,7 +152,7 @@ export default async function LocalInstitutePage() {
               <Link
                 key={c.slug}
                 href={`/lp/${c.slug}-in-hyderabad`}
-                className="rounded-full border border-line bg-parchment px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-brand"
+                className="rounded-full border border-line bg-parchment px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-signal"
               >
                 {c.title} in Hyderabad
               </Link>
@@ -175,7 +175,7 @@ export default async function LocalInstitutePage() {
               ))}
             </div>
             <p className="mt-6 text-center">
-              <Link href="/testimonials" className="text-sm font-bold text-brand hover:text-brand-dark">
+              <Link href="/testimonials" className="text-sm font-bold text-signal hover:text-signal-strong">
                 Read all testimonials →
               </Link>
             </p>

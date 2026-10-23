@@ -21,7 +21,11 @@ const measures = [
   },
   {
     t: "Contrast that meets WCAG 2.2 AA",
-    d: "Text and interactive colours are tokenised and measured: body text sits at 7.8:1 against the page background, links and button text at 4.8:1 or better, and accents on dark panels at 5.6:1 or better.",
+    d: "Text and interactive colours are tokenised and measured in both themes: in the light theme body text sits at 7.8:1 against the page background and in the dark theme at 11.5:1; links and button text measure 4.8:1 or better, and accents on dark panels 5.6:1 or better.",
+  },
+  {
+    t: "Light or dark — your choice",
+    d: "A theme toggle in the header switches between the light and dark themes. Your choice is remembered on this device, a first visit follows your system setting, and the switch animation is disabled when your system requests reduced motion.",
   },
   {
     t: "Visible focus, generous targets",

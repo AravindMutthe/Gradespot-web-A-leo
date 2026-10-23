@@ -61,7 +61,7 @@ export default async function ServicesPage() {
               <p className="mt-2 text-sm leading-6">
                 {business.emails.map((e) => (
                   <span key={e} className="block">
-                    <a className="hover:text-brand" href={`mailto:${e}`}>
+                    <a className="hover:text-signal" href={`mailto:${e}`}>
                       {e}
                     </a>
                   </span>
@@ -73,7 +73,7 @@ export default async function ServicesPage() {
               <p className="mt-2 text-sm leading-6">
                 {business.phones.map((p) => (
                   <span key={p} className="block">
-                    <a className="hover:text-brand" href={telHref(p)}>
+                    <a className="hover:text-signal" href={telHref(p)}>
                       {p}
                     </a>
                   </span>

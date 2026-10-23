@@ -106,7 +106,7 @@ export default async function PricingPage() {
                 >
                   <h3 className="text-xl font-bold text-heading">{course.title}</h3>
                   {course.duration && (
-                    <p className="mt-1 text-sm font-semibold text-brand-dark">
+                    <p className="mt-1 text-sm font-semibold text-signal-strong">
                       Duration: {course.duration}
                     </p>
                   )}
@@ -130,7 +130,7 @@ export default async function PricingPage() {
                   </div>
                   <Link
                     href={`/trainings/${course.slug}`}
-                    className="mt-6 inline-block text-sm font-bold text-brand hover:text-brand-dark"
+                    className="mt-6 inline-block text-sm font-bold text-signal hover:text-signal-strong"
                   >
                     View the course →
                   </Link>
@@ -170,7 +170,7 @@ export default async function PricingPage() {
                   href={`/services/${s.slug}`}
                   className="rounded-xl border border-line bg-parchment px-6 py-5 font-semibold text-heading shadow-sm transition duration-300 hover:shadow-[0_16px_32px_rgba(31,24,16,0.12)]"
                 >
-                  {s.title} <span className="text-brand">→</span>
+                  {s.title} <span className="text-signal">→</span>
                 </Link>
               ))}
             </div>
@@ -197,14 +197,14 @@ export default async function PricingPage() {
                     i === 1 ? "border-brand ring-1 ring-brand" : "border-line"
                   }`}
                 >
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-dark">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-signal-strong">
                     Tier {i + 1}
                   </p>
                   <h3 className="mt-3 text-xl font-bold text-heading">{t.name}</h3>
                   <ul className="mt-4 space-y-2.5 text-sm leading-6 text-body">
                     {t.points.map((p) => (
                       <li key={p} className="flex items-start gap-2.5">
-                        <span className="font-bold text-brand" aria-hidden>
+                        <span className="font-bold text-signal" aria-hidden>
                           ✓
                         </span>
                         {p}

@@ -42,7 +42,7 @@ export function SectionTitle({
     <div className={center ? "text-center" : ""} data-reveal>
       {label && (
         <p
-          className={`eyebrow flex items-center gap-3 text-brand-dark ${
+          className={`eyebrow flex items-center gap-3 text-signal-strong ${
             center ? "justify-center" : ""
           }`}
         >
@@ -126,17 +126,17 @@ export function CourseCardBody({
       )}
       <div className="flex grow flex-col p-6">
         <p>
-          <span className="eyebrow inline-block rounded-md bg-brand-soft px-2.5 py-1.5 text-brand-dark">
+          <span className="eyebrow inline-block rounded-md bg-brand-soft px-2.5 py-1.5 text-signal-strong">
             {category}
           </span>
         </p>
         <h3 className="mt-3.5 text-[19px] font-semibold leading-snug text-heading">
-          <Link href={`/trainings/${slug}`} className="transition-colors hover:text-brand">
+          <Link href={`/trainings/${slug}`} className="transition-colors hover:text-signal">
             {title}
           </Link>
         </h3>
         {duration && !image && (
-          <p className="mt-2 font-mono text-[12.5px] font-medium text-brand-dark">
+          <p className="mt-2 font-mono text-[12.5px] font-medium text-signal-strong">
             Duration — {duration}
           </p>
         )}
@@ -144,7 +144,7 @@ export function CourseCardBody({
         <div className="mt-auto flex items-center justify-between gap-3 pt-4">
           <Link
             href={`/trainings/${slug}`}
-            className="inline-block text-sm font-bold text-brand transition-colors hover:text-brand-dark"
+            className="inline-block text-sm font-bold text-signal transition-colors hover:text-signal-strong"
           >
             Read More{" "}
             <span aria-hidden className="inline-block transition-transform group-hover:translate-x-0.5">
@@ -186,17 +186,17 @@ export function ServiceCard({ service }: { service: Service }) {
       {idx >= 0 && (
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-1 -top-4 font-display text-[72px] font-semibold leading-none text-ink/[0.05]"
+          className="pointer-events-none absolute -right-1 -top-4 font-display text-[72px] font-semibold leading-none text-heading/[0.05]"
         >
           {String(idx + 1).padStart(2, "0")}
         </span>
       )}
       <span className="block h-[3px] w-10 rounded-full bg-brand transition-all duration-300 group-hover:w-16" aria-hidden />
-      <p className="eyebrow mt-4 text-[10.5px] text-brand-dark">
+      <p className="eyebrow mt-4 text-[10.5px] text-signal-strong">
         Service {idx >= 0 ? String(idx + 1).padStart(2, "0") : ""}
       </p>
       <h3 className="mt-2 text-[21px] font-semibold text-heading">
-        <Link href={`/services/${service.slug}`} className="transition-colors hover:text-brand">
+        <Link href={`/services/${service.slug}`} className="transition-colors hover:text-signal">
           {service.title}
         </Link>
       </h3>
@@ -205,7 +205,7 @@ export function ServiceCard({ service }: { service: Service }) {
       )}
       <Link
         href={`/services/${service.slug}`}
-        className="mt-auto inline-block pt-5 text-sm font-bold text-brand transition-colors hover:text-brand-dark"
+        className="mt-auto inline-block pt-5 text-sm font-bold text-signal transition-colors hover:text-signal-strong"
       >
         Read More →
       </Link>
@@ -231,7 +231,7 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
           >
             <summary className="flex cursor-pointer items-center justify-between gap-4 font-display text-[17px] font-semibold text-heading">
               {f.q}
-              <span aria-hidden className="faq-plus shrink-0 text-xl font-normal leading-none text-brand">
+              <span aria-hidden className="faq-plus shrink-0 text-xl font-normal leading-none text-signal">
                 +
               </span>
             </summary>
@@ -288,7 +288,7 @@ export function TestimonialSpotlight() {
               style={{ "--reveal-delay": `${i * 90}ms` } as CSSProperties}
               className="relative flex flex-col overflow-hidden rounded-[18px] border border-line bg-parchment p-7 shadow-[0_1px_2px_rgba(31,24,16,0.05)]"
             >
-              <span aria-hidden className="font-display text-[44px] font-semibold leading-[0.6] text-brand">
+              <span aria-hidden className="font-display text-[44px] font-semibold leading-[0.6] text-signal">
                 &ldquo;
               </span>
               <blockquote className="mt-3 grow text-[14.5px] leading-7 text-heading">
@@ -309,7 +309,7 @@ export function TestimonialSpotlight() {
           </Link>
           <Link
             href="/testimonials"
-            className="text-sm font-bold text-brand transition-colors hover:text-brand-dark"
+            className="text-sm font-bold text-signal transition-colors hover:text-signal-strong"
           >
             Read all learner voices →
           </Link>
@@ -408,7 +408,7 @@ export function LogoWall() {
             <div
               key={e.name}
               data-reveal
-              className="flex h-24 items-center justify-center rounded-2xl border border-line bg-parchment px-4"
+              className="logo-tile flex h-24 items-center justify-center rounded-2xl border border-line bg-parchment px-4"
             >
               <Image
                 src={e.logo}
@@ -451,7 +451,7 @@ export function BlogCards() {
                 href={p.url}
                 target="_blank"
                 rel="noreferrer"
-                className="transition-colors hover:text-brand"
+                className="transition-colors hover:text-signal"
               >
                 {p.title}
               </a>
@@ -460,7 +460,7 @@ export function BlogCards() {
               href={p.url}
               target="_blank"
               rel="noreferrer"
-              className="mt-auto inline-block pt-4 text-sm font-bold text-brand transition-colors hover:text-brand-dark"
+              className="mt-auto inline-block pt-4 text-sm font-bold text-signal transition-colors hover:text-signal-strong"
             >
               Read More →
             </a>
@@ -527,13 +527,17 @@ export function ExperienceBadge() {
 export function SignatureBlock() {
   return (
     <div className="flex flex-wrap items-center gap-5">
-      <Image
-        src="/images/signature.png"
-        alt="Signature of Nikhil Duth D"
-        width={300}
-        height={243}
-        className="h-20 w-auto"
-      />
+      {/* §25: the signature art is dark ink on transparency — in dark
+          mode .signature-art gives it a pale plate (globals.css). */}
+      <span className="signature-art inline-block">
+        <Image
+          src="/images/signature.png"
+          alt="Signature of Nikhil Duth D"
+          width={300}
+          height={243}
+          className="h-20 w-auto"
+        />
+      </span>
       <div>
         <p className="text-lg font-semibold text-heading">Nikhil Duth D</p>
         <p className="text-sm text-body">Founder &amp; MD — Corporate Trainings</p>

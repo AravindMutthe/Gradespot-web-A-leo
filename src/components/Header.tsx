@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { business, telHref } from "@/data/site";
 import { SocialLinks } from "@/components/ui";
+import ThemeToggle from "@/components/ThemeToggle";
 import { categoryAnchor, navCategoryOrder, navCourses, type NavCourse } from "@/data/catalogue-nav";
 import { services } from "@/data/services";
 import { promotions } from "@/data/promotions";
@@ -133,11 +134,11 @@ const resourceGroups: {
 ];
 
 const navLink =
-  "block whitespace-nowrap px-2.5 py-3 text-[14px] font-semibold text-nav underline-offset-4 transition-colors hover:text-brand hover:underline hover:decoration-2 nav:px-1 nav:py-2.5 nav:text-[12px] xl:px-2.5 xl:py-3 xl:text-[14px]";
+  "block whitespace-nowrap px-2.5 py-3 text-[14px] font-semibold text-nav underline-offset-4 transition-colors hover:text-signal hover:underline hover:decoration-2 nav:px-1 nav:py-2.5 nav:text-[12px] xl:px-2.5 xl:py-3 xl:text-[14px]";
 const chevronBtn =
-  "-ml-1.5 flex h-11 w-7 items-center justify-center text-[12px] text-nav transition-colors hover:text-brand nav:-ml-1 nav:w-4 xl:-ml-1.5 xl:w-7";
+  "-ml-1.5 flex h-11 w-7 items-center justify-center text-[12px] text-nav transition-colors hover:text-signal nav:-ml-1 nav:w-4 xl:-ml-1.5 xl:w-7";
 const mobileLink =
-  "flex min-h-[48px] items-center px-3 text-[15px] font-semibold text-ink transition-colors hover:text-brand";
+  "flex min-h-[48px] items-center px-3 text-[15px] font-semibold text-heading transition-colors hover:text-signal";
 
 function CourseEntry({ course, onNavigate }: { course: NavCourse; onNavigate?: () => void }) {
   const meta = [course.code, course.duration].filter(Boolean).join(" · ");
@@ -151,7 +152,7 @@ function CourseEntry({ course, onNavigate }: { course: NavCourse; onNavigate?: (
         {course.label}
       </span>
       {meta && (
-        <span className="shrink-0 pt-[1px] font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-brand-dark">
+        <span className="shrink-0 pt-[1px] font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-signal-strong">
           {meta}
         </span>
       )}
@@ -173,10 +174,10 @@ function CategoryBlock({
       <Link
         href={`/trainings#${categoryAnchor(category)}`}
         onClick={onNavigate}
-        className="flex items-baseline justify-between gap-2 border-b-2 border-ink/70 px-2 pb-1.5"
+        className="flex items-baseline justify-between gap-2 border-b-2 border-heading/70 px-2 pb-1.5"
       >
         <span className="eyebrow text-[10.5px] text-heading">{category}</span>
-        <span className="font-mono text-[10.5px] font-semibold text-brand-dark">
+        <span className="font-mono text-[10.5px] font-semibold text-signal-strong">
           {courses.length} course{courses.length === 1 ? "" : "s"}
         </span>
       </Link>
@@ -264,19 +265,25 @@ export default function Header() {
             </a>
             <span className="hidden md:inline">Office Hours: {business.officeHours}</span>
           </div>
-          <div className="hidden items-center gap-4 sm:flex">
-            <span className="flex items-center gap-3">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <span className="hidden items-center gap-3 sm:flex">
               <SocialLinks />
             </span>
-            {business.phones.map((p) => (
-              <a
-                key={p}
-                className="font-semibold normal-case tracking-normal text-brand-bright hover:text-paper"
-                href={telHref(p)}
-              >
-                {p}
-              </a>
-            ))}
+            <span className="hidden items-center gap-4 sm:flex">
+              {business.phones.map((p) => (
+                <a
+                  key={p}
+                  className="font-semibold normal-case tracking-normal text-brand-bright hover:text-paper"
+                  href={telHref(p)}
+                >
+                  {p}
+                </a>
+              ))}
+            </span>
+            {/* §25 — theme toggle: salon-style placement in the
+                header utility strip, visible at every width; the
+                mobile sheet carries a labelled variant too. */}
+            <ThemeToggle />
           </div>
         </div>
       </div>
@@ -286,20 +293,36 @@ export default function Header() {
         <div className="wrap flex items-center justify-between py-2.5">
           {/* Logo brightening (§22): presentation only — a luminous
               parchment plate + warm halo behind the unmodified
-              artwork at a stronger size. No filter, no recolor. */}
+              artwork at a stronger size. No filter, no recolor.
+              §25: the plate is now the .logo-plate class (ink-glow
+              variant in dark) and the artwork swaps to the official
+              light-text file on dark — both files render, CSS picks
+              one, so there is no flash or hydration mismatch. */}
           <Link
             href="/"
             aria-label="GradeSpot IT Solutions — Home"
-            className="shrink-0 rounded-2xl bg-[radial-gradient(120%_140%_at_30%_20%,#ffffff_0%,#fdf6e9_55%,#f7ecd4_100%)] px-3 py-1 shadow-[0_0_26px_rgba(247,99,27,0.20)] ring-1 ring-line nav:px-1.5 xl:px-3"
+            className="logo-plate shrink-0 rounded-2xl px-3 py-1 ring-1 ring-line nav:px-1.5 xl:px-3"
           >
-            <Image
-              src="/images/logo.png"
-              alt="GradeSpot IT Solutions"
-              width={193}
-              height={60}
-              className="h-12 w-auto nav:h-10 xl:h-12"
-              priority
-            />
+            <span className="dark:hidden">
+              <Image
+                src="/images/logo.png"
+                alt="GradeSpot IT Solutions"
+                width={193}
+                height={60}
+                className="h-12 w-auto nav:h-10 xl:h-12"
+                priority
+              />
+            </span>
+            <span className="hidden dark:block">
+              <Image
+                src="/images/logo-light.png"
+                alt="GradeSpot IT Solutions"
+                width={193}
+                height={60}
+                className="h-12 w-auto nav:h-10 xl:h-12"
+                priority
+              />
+            </span>
           </Link>
 
           <nav className="hidden items-center nav:flex" aria-label="Primary">
@@ -326,7 +349,7 @@ export default function Header() {
             </Link>
             <Link
               href="/register"
-              className="ml-3 flex min-h-[48px] items-center whitespace-nowrap rounded-xl border-[1.5px] border-ink/60 px-4 text-[14px] font-bold text-ink transition hover:border-ink hover:bg-ink hover:text-paper nav:ml-1.5 nav:min-h-[44px] nav:px-2.5 nav:text-[12px] xl:ml-3 xl:min-h-[48px] xl:px-4 xl:text-[14px]"
+              className="ml-3 flex min-h-[48px] items-center whitespace-nowrap rounded-xl border-[1.5px] border-heading/60 px-4 text-[14px] font-bold text-heading transition hover:border-heading hover:bg-ink hover:text-paper nav:ml-1.5 nav:min-h-[44px] nav:px-2.5 nav:text-[12px] xl:ml-3 xl:min-h-[48px] xl:px-4 xl:text-[14px]"
             >
               Register
             </Link>
@@ -339,7 +362,7 @@ export default function Header() {
           </nav>
 
           <button
-            className="flex min-h-[48px] items-center rounded-xl border border-ink/25 px-5 text-sm font-semibold text-ink nav:hidden"
+            className="flex min-h-[48px] items-center rounded-xl border border-heading/25 px-5 text-sm font-semibold text-heading nav:hidden"
             onClick={() => setOpen(!open)}
             aria-expanded={open}
             aria-label="Toggle menu"
@@ -363,7 +386,7 @@ export default function Header() {
                   {/* Featured rail — featured training + the Free Demo
                       promotion from the promotions data layer (§19). */}
                   <div className="overflow-y-auto bg-cream p-5">
-                    <p className="eyebrow text-brand-dark">Featured Training</p>
+                    <p className="eyebrow text-signal-strong">Featured Training</p>
                     {featuredCourse && (
                       <div className="mt-3 overflow-hidden rounded-xl border border-line bg-parchment">
                         {featuredCourse.image && (
@@ -384,7 +407,7 @@ export default function Header() {
                           <p className="font-display text-[16.5px] font-semibold leading-snug text-heading">
                             {featuredCourse.title}
                           </p>
-                          <p className="mt-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-brand-dark">
+                          <p className="mt-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-signal-strong">
                             {[featuredCourse.code, featuredCourse.duration]
                               .filter(Boolean)
                               .join(" · ")}
@@ -393,14 +416,14 @@ export default function Header() {
                             <Link
                               href={`/trainings/${featuredCourse.slug}`}
                               onClick={() => setPanel(null)}
-                              className="text-[13px] font-bold text-brand hover:text-brand-dark"
+                              className="text-[13px] font-bold text-signal hover:text-signal-strong"
                             >
                               View Course →
                             </Link>
                             <Link
                               href={`/trainings/${featuredCourse.slug}#demo`}
                               onClick={() => setPanel(null)}
-                              className="text-[13px] font-bold text-heading hover:text-brand"
+                              className="text-[13px] font-bold text-heading hover:text-signal"
                             >
                               Book the Free Demo →
                             </Link>
@@ -433,7 +456,7 @@ export default function Header() {
                     <Link
                       href="/compare"
                       onClick={() => setPanel(null)}
-                      className="mt-4 block rounded-xl border border-ink/20 px-4 py-3 text-[13px] font-bold text-heading transition-colors hover:border-brand hover:text-brand"
+                      className="mt-4 block rounded-xl border border-heading/20 px-4 py-3 text-[13px] font-bold text-heading transition-colors hover:border-brand hover:text-signal"
                     >
                       Can&apos;t decide? Compare courses side by side →
                     </Link>
@@ -502,7 +525,7 @@ export default function Header() {
                   <div className="grid gap-7 overflow-y-auto p-6 sm:grid-cols-3">
                     {serviceGroups.map((g) => (
                       <div key={g.title}>
-                        <p className="eyebrow border-b-2 border-ink/70 pb-1.5 text-[10.5px] text-heading">
+                        <p className="eyebrow border-b-2 border-heading/70 pb-1.5 text-[10.5px] text-heading">
                           {g.title}
                         </p>
                         <p className="mt-1.5 text-[11.5px] leading-4 text-body">{g.note}</p>
@@ -517,7 +540,7 @@ export default function Header() {
                                   onClick={() => setPanel(null)}
                                   className="group block rounded-lg px-2 py-[7px] transition-colors hover:bg-cream"
                                 >
-                                  <span className="block text-[13.5px] font-semibold leading-snug text-heading group-hover:text-brand">
+                                  <span className="block text-[13.5px] font-semibold leading-snug text-heading group-hover:text-signal">
                                     {s.title}
                                   </span>
                                   {s.summary && (
@@ -594,7 +617,7 @@ export default function Header() {
                 <div className="grid grid-cols-3 gap-6 p-6">
                   {resourceGroups.map((g) => (
                     <div key={g.title}>
-                      <p className="eyebrow border-b-2 border-ink/70 pb-1.5 text-[10.5px] text-heading">
+                      <p className="eyebrow border-b-2 border-heading/70 pb-1.5 text-[10.5px] text-heading">
                         {g.title}
                       </p>
                       <ul className="mt-2 space-y-0.5">
@@ -605,7 +628,7 @@ export default function Header() {
                                 href={l.href}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="block rounded-lg px-2 py-[7px] text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-brand"
+                                className="block rounded-lg px-2 py-[7px] text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-signal"
                               >
                                 {l.label} ↗
                               </a>
@@ -613,7 +636,7 @@ export default function Header() {
                               <Link
                                 href={l.href}
                                 onClick={() => setPanel(null)}
-                                className="block rounded-lg px-2 py-[7px] text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-brand"
+                                className="block rounded-lg px-2 py-[7px] text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-signal"
                               >
                                 {l.label}
                               </Link>
@@ -644,12 +667,12 @@ export default function Header() {
 
       {/* Mobile menu — rich accordion sheet, same groupings */}
       {open && (
-        <nav className="border-b border-line bg-paper nav:hidden" aria-label="Mobile">
+        <nav className="border-b border-line bg-canvas nav:hidden" aria-label="Mobile">
           <div className="wrap py-3">
             <div className="grid grid-cols-2 gap-3 pb-2">
               <Link
                 href="/register"
-                className="flex min-h-[48px] items-center justify-center rounded-xl border-[1.5px] border-ink/60 px-4 text-[14px] font-bold text-ink"
+                className="flex min-h-[48px] items-center justify-center rounded-xl border-[1.5px] border-heading/60 px-4 text-[14px] font-bold text-heading"
                 onClick={() => setOpen(false)}
               >
                 Register
@@ -657,6 +680,11 @@ export default function Header() {
               <Link href="/contact-us" className="btn-primary" onClick={() => setOpen(false)}>
                 Request a Callback
               </Link>
+            </div>
+            {/* §25 — labelled theme row in the sheet (the utility-strip
+                icon toggle above covers the closed state). */}
+            <div className="pb-2">
+              <ThemeToggle variant="labeled" />
             </div>
 
             <button
@@ -670,7 +698,7 @@ export default function Header() {
               <div className="max-h-[62vh] overflow-y-auto pb-2 pl-3">
                 <Link
                   href="/trainings"
-                  className="flex min-h-[44px] items-center py-2 pr-3 text-[13.5px] font-bold text-brand"
+                  className="flex min-h-[44px] items-center py-2 pr-3 text-[13.5px] font-bold text-signal"
                   onClick={() => setOpen(false)}
                 >
                   View All {navCourses.length} Trainings
@@ -680,7 +708,7 @@ export default function Header() {
                     <Link
                       href={`/trainings#${categoryAnchor(g.category)}`}
                       onClick={() => setOpen(false)}
-                      className="eyebrow block px-2 py-1.5 text-[10.5px] text-brand-dark"
+                      className="eyebrow block px-2 py-1.5 text-[10.5px] text-signal-strong"
                     >
                       {g.category} · {g.courses.length}
                     </Link>
@@ -693,7 +721,7 @@ export default function Header() {
                       >
                         <span>{c.label}</span>
                         {[c.code, c.duration].filter(Boolean).length > 0 && (
-                          <span className="shrink-0 font-mono text-[10px] font-semibold uppercase text-brand-dark">
+                          <span className="shrink-0 font-mono text-[10px] font-semibold uppercase text-signal-strong">
                             {[c.code, c.duration].filter(Boolean).join(" · ")}
                           </span>
                         )}
@@ -715,14 +743,14 @@ export default function Header() {
               <div className="max-h-[62vh] overflow-y-auto pb-2 pl-3">
                 <Link
                   href="/services"
-                  className="flex min-h-[44px] items-center py-2 pr-3 text-[13.5px] font-bold text-brand"
+                  className="flex min-h-[44px] items-center py-2 pr-3 text-[13.5px] font-bold text-signal"
                   onClick={() => setOpen(false)}
                 >
                   View All Services
                 </Link>
                 {serviceGroups.map((g) => (
                   <div key={g.title} className="mt-2">
-                    <p className="eyebrow px-2 py-1.5 text-[10.5px] text-brand-dark">{g.title}</p>
+                    <p className="eyebrow px-2 py-1.5 text-[10.5px] text-signal-strong">{g.title}</p>
                     {g.slugs.map((slug) => {
                       const s = services.find((x) => x.slug === slug);
                       if (!s) return null;
@@ -739,7 +767,7 @@ export default function Header() {
                     })}
                   </div>
                 ))}
-                <p className="eyebrow px-2 pb-1.5 pt-4 text-[10.5px] text-brand-dark">
+                <p className="eyebrow px-2 pb-1.5 pt-4 text-[10.5px] text-signal-strong">
                   For Business
                 </p>
                 {businessDoors.map((d) => (
@@ -773,7 +801,7 @@ export default function Header() {
               <div className="max-h-[62vh] overflow-y-auto pb-2 pl-3">
                 {resourceGroups.map((g) => (
                   <div key={g.title} className="mt-2">
-                    <p className="eyebrow px-2 py-1.5 text-[10.5px] text-brand-dark">{g.title}</p>
+                    <p className="eyebrow px-2 py-1.5 text-[10.5px] text-signal-strong">{g.title}</p>
                     {g.links.map((l) =>
                       l.external ? (
                         <a
@@ -805,7 +833,7 @@ export default function Header() {
               For Colleges
             </Link>
             <Link
-              className="flex min-h-[48px] items-center px-3 text-[15px] font-bold text-brand"
+              className="flex min-h-[48px] items-center px-3 text-[15px] font-bold text-signal"
               href="/for-institutes"
               onClick={() => setOpen(false)}
             >

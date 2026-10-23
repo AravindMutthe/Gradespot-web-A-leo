@@ -70,7 +70,7 @@ export default async function ServicePage({
                           key={o}
                           className="flex items-start gap-3 rounded-xl border border-line bg-surface-light px-4 py-3 text-[15px] font-medium text-heading"
                         >
-                          <span className="font-bold text-brand" aria-hidden>
+                          <span className="font-bold text-signal" aria-hidden>
                             ✓
                           </span>
                           {o}
@@ -83,11 +83,11 @@ export default async function ServicePage({
             )}
             <p className="text-[15px] leading-7 text-body">
               Looking at the wider picture? Browse{" "}
-              <Link href="/services" className="font-semibold text-brand hover:underline">
+              <Link href="/services" className="font-semibold text-signal hover:underline">
                 all services
               </Link>{" "}
               or read the{" "}
-              <Link href="/faq" className="font-semibold text-brand hover:underline">
+              <Link href="/faq" className="font-semibold text-signal hover:underline">
                 Help &amp; FAQs
               </Link>
               .
@@ -103,7 +103,7 @@ export default async function ServicePage({
               </Link>
             </div>
             <p>
-              <Link href="/services" className="text-sm font-semibold text-brand hover:underline">
+              <Link href="/services" className="text-sm font-semibold text-signal hover:underline">
                 ← All Services
               </Link>
             </p>

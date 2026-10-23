@@ -60,18 +60,18 @@ export default function VerifyForm() {
       </form>
 
       {state === "error" && (
-        <p className="mt-4 rounded bg-red-50 p-4 text-sm text-red-700">
+        <p className="mt-4 rounded bg-error-surface p-4 text-sm text-error-text">
           Something went wrong while verifying. Please try again or contact us.
         </p>
       )}
       {state === "done" && result && !result.found && (
-        <p className="mt-4 rounded bg-amber-50 p-4 text-sm text-amber-800">
+        <p className="mt-4 rounded bg-warning-surface p-4 text-sm text-warning-text">
           No certificate was found for this code. Please check the code and try again — or
           contact us and we will help you verify it.
         </p>
       )}
       {state === "done" && result?.found && result.certificate && (
-        <div className="mt-4 rounded bg-green-50 p-5 text-sm text-green-900">
+        <div className="mt-4 rounded bg-success-surface p-5 text-sm text-success-heading">
           <p className="text-base font-semibold">✓ Certificate verified</p>
           <dl className="mt-2 space-y-1">
             <div>

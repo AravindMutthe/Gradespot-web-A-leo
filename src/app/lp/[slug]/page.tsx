@@ -12,6 +12,7 @@ import { courseWaLink, syllabusWaLink } from "@/lib/wa";
 import { courseSchema, faqSchema } from "@/lib/schema";
 import JsonLd from "@/components/JsonLd";
 import LpLeadForm from "@/components/LpLeadForm";
+import ThemeToggle from "@/components/ThemeToggle";
 import { FaqList } from "@/components/ui";
 
 // City × course landing pages (research expansion pack, DECISIONS.md
@@ -94,27 +95,51 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       <JsonLd data={courseSchema(course)} />
       <JsonLd data={faqSchema(faqs)} />
 
+      {/* §25 — slim utility strip so the LP chrome carries the theme
+          toggle too (still no navigation, per the LP anatomy). */}
+      <div className="bg-ink-deep text-footer-text">
+        <div className="wrap flex items-center justify-between gap-3 py-1">
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em]">
+            {business.locationLabel}
+          </p>
+          <ThemeToggle />
+        </div>
+      </div>
+
       {/* LP chrome: logo + phone only, no nav. Logo carries the
-          same §22 luminous plate as the main header. */}
+          same §22 luminous plate as the main header (.logo-plate,
+          §25 per-theme variant + official light artwork in dark). */}
       <div className="glass-panel border-b border-line">
         <div className="wrap flex items-center justify-between py-3">
           <Link
             href="/"
             aria-label="GradeSpot IT Solutions — Home"
-            className="rounded-2xl bg-[radial-gradient(120%_140%_at_30%_20%,#ffffff_0%,#fdf6e9_55%,#f7ecd4_100%)] px-3 py-1 shadow-[0_0_26px_rgba(247,99,27,0.20)] ring-1 ring-line"
+            className="logo-plate rounded-2xl px-3 py-1 ring-1 ring-line"
           >
-            <Image
-              src="/images/logo.png"
-              alt="GradeSpot IT Solutions"
-              width={193}
-              height={60}
-              className="h-11 w-auto"
-              priority
-            />
+            <span className="dark:hidden">
+              <Image
+                src="/images/logo.png"
+                alt="GradeSpot IT Solutions"
+                width={193}
+                height={60}
+                className="h-11 w-auto"
+                priority
+              />
+            </span>
+            <span className="hidden dark:block">
+              <Image
+                src="/images/logo-light.png"
+                alt="GradeSpot IT Solutions"
+                width={193}
+                height={60}
+                className="h-11 w-auto"
+                priority
+              />
+            </span>
           </Link>
           <a
             href={telHref(phone)}
-            className="flex min-h-[44px] items-center rounded-full border border-ink/30 px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
+            className="flex min-h-[44px] items-center rounded-full border border-heading/30 px-4 py-2 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-signal"
           >
             {phone}
           </a>
@@ -198,7 +223,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
               <ul className="mt-5 space-y-3">
                 {d.topics.map((t) => (
                   <li key={t} className="flex gap-3 text-[15px] leading-6 text-body">
-                    <span className="mt-1 font-bold text-brand">✓</span>
+                    <span className="mt-1 font-bold text-signal">✓</span>
                     {t}
                   </li>
                 ))}
@@ -238,7 +263,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
               </p>
               <Link
                 href={`/trainings/${course.slug}`}
-                className="mt-3 inline-block text-sm font-bold text-brand hover:text-brand-dark"
+                className="mt-3 inline-block text-sm font-bold text-signal hover:text-signal-strong"
               >
                 See the full {short} course page →
               </Link>
@@ -266,7 +291,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
                 href={courseWaLink(course.title)}
                 target="_blank"
                 rel="noreferrer"
-                className="font-semibold text-brand hover:underline"
+                className="font-semibold text-signal hover:underline"
               >
                 WhatsApp us instead →
               </a>

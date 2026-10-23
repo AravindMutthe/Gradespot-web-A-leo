@@ -42,7 +42,7 @@ export default function WhyChoosePage() {
                 {svc?.summary && <p className="mt-2 text-sm leading-6 text-body">{svc.summary}</p>}
                 <Link
                   href={h.href}
-                  className="mt-auto inline-block pt-5 text-sm font-semibold text-brand hover:underline"
+                  className="mt-auto inline-block pt-5 text-sm font-semibold text-signal hover:underline"
                 >
                   Read More →
                 </Link>
@@ -67,7 +67,7 @@ export default function WhyChoosePage() {
             <p className="mt-1.5 text-sm leading-6 text-body">
               The answers live in one place — our Help &amp; FAQs.
             </p>
-            <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-brand hover:text-brand-dark">
+            <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-signal hover:text-signal-strong">
               Read Help &amp; FAQs →
             </Link>
           </div>

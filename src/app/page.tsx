@@ -30,9 +30,9 @@ export default async function HomePage() {
       <section className="hero-paper relative overflow-hidden border-b border-line">
         <div className="wrap grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.05fr_0.95fr]">
           <div data-reveal>
-            <p className="eyebrow text-brand-dark">Dilsukhnagar · Hyderabad</p>
+            <p className="eyebrow text-signal-strong">Dilsukhnagar · Hyderabad</p>
             <h1 className="mt-4 max-w-xl font-display text-[44px] font-semibold leading-[1.05] text-heading md:text-[68px]">
-              We Create Better <span className="font-medium italic text-brand">IT Solutions</span>
+              We Create Better <span className="font-medium italic text-signal">IT Solutions</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-body">{homeParagraphs[1]}</p>
             <div className="mt-8 flex flex-wrap gap-4">
@@ -46,7 +46,7 @@ export default async function HomePage() {
           </div>
           <div className="relative mx-auto w-full max-w-[520px]">
             <div
-              className="absolute -right-4 -top-4 h-full w-full rounded-[22px] border-2 border-ink"
+              className="absolute -right-4 -top-4 h-full w-full rounded-[22px] border-2 border-heading"
               aria-hidden
             />
             <Image
@@ -97,14 +97,14 @@ export default async function HomePage() {
                 className="group flex items-center justify-between gap-4 rounded-[16px] border border-line bg-parchment px-6 py-5 shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_rgba(31,24,16,0.12)]"
               >
                 <span>
-                  <span className="eyebrow block text-[10.5px] text-brand-dark">{d.audience}</span>
+                  <span className="eyebrow block text-[10.5px] text-signal-strong">{d.audience}</span>
                   <span className="mt-1.5 block font-display text-[17.5px] font-semibold leading-snug text-heading">
                     {d.title}
                   </span>
                 </span>
                 <span
                   aria-hidden
-                  className="font-display text-xl text-brand transition-transform duration-300 group-hover:translate-x-1"
+                  className="font-display text-xl text-signal transition-transform duration-300 group-hover:translate-x-1"
                 >
                   →
                 </span>
@@ -260,12 +260,12 @@ export default async function HomePage() {
                   className="mx-auto h-56 w-full rounded-2xl object-cover"
                 />
                 <h4 className="mt-3 text-lg font-semibold">{m.name}</h4>
-                <p className="text-sm text-brand">{m.role}</p>
+                <p className="text-sm text-signal">{m.role}</p>
               </article>
             ))}
           </div>
           <div className="mt-8 text-center">
-            <Link href="/team-members" className="text-sm font-semibold text-brand hover:underline">
+            <Link href="/team-members" className="text-sm font-semibold text-signal hover:underline">
               Meet Our Team →
             </Link>
           </div>

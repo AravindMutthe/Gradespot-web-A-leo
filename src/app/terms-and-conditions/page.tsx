@@ -21,7 +21,7 @@ export default function TermsPage() {
               data-reveal
               className="rounded-[20px] border border-line bg-parchment p-7 shadow-[0_1px_2px_rgba(31,24,16,0.05)] md:p-9"
             >
-              <p className="font-mono text-[12px] font-semibold tracking-[0.1em] text-brand-dark">
+              <p className="font-mono text-[12px] font-semibold tracking-[0.1em] text-signal-strong">
                 {String(i + 1).padStart(2, "0")}
               </p>
               {s.heading && (

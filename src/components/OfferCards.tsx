@@ -20,11 +20,11 @@ export default async function OfferCards({ excludeSlug }: { excludeSlug?: string
         >
           <span
             aria-hidden
-            className="pointer-events-none absolute -right-1 -top-4 font-display text-[64px] font-semibold leading-none text-ink/[0.05]"
+            className="pointer-events-none absolute -right-1 -top-4 font-display text-[64px] font-semibold leading-none text-heading/[0.05]"
           >
             {String(i + 1).padStart(2, "0")}
           </span>
-          <p className="eyebrow text-brand-dark">Free</p>
+          <p className="eyebrow text-signal-strong">Free</p>
           <h3 className="mt-2.5 font-display text-[20px] font-semibold leading-snug text-heading">
             {c.title}
           </h3>
@@ -32,7 +32,7 @@ export default async function OfferCards({ excludeSlug }: { excludeSlug?: string
           {c.ctaLabel && c.ctaHref && (
             <Link
               href={c.ctaHref}
-              className="mt-auto inline-block pt-4 text-sm font-bold text-brand transition-colors hover:text-brand-dark"
+              className="mt-auto inline-block pt-4 text-sm font-bold text-signal transition-colors hover:text-signal-strong"
             >
               {c.ctaLabel} →
             </Link>

@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Dark theme (DECISIONS §25) — a `.dark` class on <html>, set pre-paint
+   by the inline script in layout.tsx from localStorage / the system
+   setting, flipped by the header ThemeToggle. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ————————————————————————————————————————————————————————————————
    LEO REDESIGN v1 — "PROSPECTUS" (DECISIONS.md §19)
    An editorial design system for a training institute, informed by
@@ -63,8 +68,12 @@
 }
 
 @theme {
-  /* Paper & ink neutrals (warm, editorial — not the old blue-grey) */
+  /* Paper & ink neutrals (warm, editorial — not the old blue-grey).
+     `paper` keeps its dual role (page-adjacent pale + text on ink);
+     `canvas` (§25) is the page background proper, so dark mode can
+     darken the page without touching text-on-ink. */
   --color-paper: #faf6ee;
+  --color-canvas: #faf6ee;
   --color-parchment: #fffdf8;
   --color-cream: #f2eada;
   --color-ink: #201913;
@@ -80,6 +89,26 @@
   --color-brand-bright: #f7631b;
   --color-brand-dark: #9a3412;
   --color-brand-soft: #fbeada;
+
+  /* §25 — the brand AS TEXT gets its own tokens: `#b23a0a` measures
+     ~3:1 on dark surfaces, so in dark mode `signal`/`signal-strong`
+     lift to the bright end of the same vermilion family while every
+     background/border use of brand stays the deep vermilion. Light
+     values are exactly the current brand/brand-dark hexes, so the
+     light theme is unchanged. */
+  --color-signal: #b23a0a;
+  --color-signal-strong: #9a3412;
+
+  /* §25 — form status colours as tokens (were hardcoded Tailwind
+     green/red/amber utilities). Light values are those exact hexes. */
+  --color-success-surface: #f0fdf4;
+  --color-success-text: #166534;
+  --color-success-heading: #14532d;
+  --color-error-surface: #fef2f2;
+  --color-error-text: #b91c1c;
+  --color-field-error: #dc2626;
+  --color-warning-surface: #fffbeb;
+  --color-warning-text: #92400e;
 
   /* Legacy token names, remapped so every existing component picks
      up the new system: navy panels are now warm ink, the pale blue
@@ -111,8 +140,51 @@
 }
 
 @layer base {
+  :root {
+    color-scheme: light;
+    /* Hero dot-grid ink (§25: tokenised so dark mode can lighten it). */
+    --hero-dot: rgba(32, 25, 19, 0.07);
+  }
+  /* §25 — DARK THEME, derived by INVERTING the light palette (the
+     Royal Salon rule, Aravind 2026-10-23): light surfaces ↔ the ink
+     pole, ink text ↔ paper text, muted shades inverted likewise.
+     canvas is the exact HSL lightness-inversion of paper (#faf6ee →
+     #110d05), body of body (#5a4b38 → #c7b8a5), line of line
+     (#e0d4be → #41351f); heading is paper itself; card/band/raised
+     surfaces step up from the ink pole (ink #201913 / navy #241b11)
+     in the same elevation order the light theme uses; elements that
+     are already at the dark pole in light (ink panels, footer,
+     ticker) stay ink, deepened one step. The vermilion signal is
+     held — only its as-text tokens lift (contrast-forced, §25.3).
+     `paper` is deliberately NOT overridden: it is the text colour
+     on ink panels as well as a light surface colour. */
+  .dark {
+    color-scheme: dark;
+    --hero-dot: rgba(250, 246, 238, 0.09);
+    --color-canvas: #110d05;
+    --color-parchment: #251b10;
+    --color-cream: #2e2113;
+    --color-surface-light: #1e150b;
+    --color-line: #41351f;
+    --color-heading: #faf6ee;
+    --color-body: #c7b8a5;
+    --color-nav: #eee1c8;
+    --color-brand-soft: #3d2110;
+    --color-navy: #2e2113;
+    --color-ink-deep: #0b0803;
+    --color-signal: #ff8a4c;
+    --color-signal-strong: #ffb287;
+    --color-success-surface: #14301f;
+    --color-success-text: #bbf7d0;
+    --color-success-heading: #dcfce7;
+    --color-error-surface: #3a1512;
+    --color-error-text: #fecaca;
+    --color-field-error: #fca5a5;
+    --color-warning-surface: #38270d;
+    --color-warning-text: #fde68a;
+  }
   body {
-    @apply bg-paper font-sans text-base leading-[1.7] text-body antialiased;
+    @apply bg-canvas font-sans text-base leading-[1.7] text-body antialiased;
   }
   h1,
   h2,
@@ -362,8 +434,10 @@
 /* Paper hero texture — a faint dot grid, like printed prospectus
    stock. Pure CSS, zero asset weight. */
 @utility hero-paper {
-  background-color: var(--color-paper);
-  background-image: radial-gradient(rgba(32, 25, 19, 0.07) 1px, transparent 1.4px);
+  /* §25: canvas + hero-dot tokens — identical values in light,
+     warm ink stock with a pale dot grid in dark. */
+  background-color: var(--color-canvas);
+  background-image: radial-gradient(var(--hero-dot) 1px, transparent 1.4px);
   background-size: 22px 22px;
 }
 
@@ -394,5 +468,98 @@
     background: var(--color-ink-deep);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+  }
+}
+
+/* ——— §25 DARK THEME — component adaptations ———
+   The token overrides above re-skin everything built on tokens.
+   These rules cover the pieces defined with literal values: the
+   ink panel and glass gradients deepen, and the two button styles
+   whose "dark button on light ground" logic inverts. */
+.dark .panel-ink {
+  background:
+    radial-gradient(720px 340px at 88% -10%, rgba(247, 99, 27, 0.17), transparent 60%),
+    linear-gradient(160deg, #2d2113 0%, #140f08 78%);
+}
+.dark .glass-panel {
+  background: rgba(37, 27, 16, 0.88);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(250, 246, 238, 0.08);
+}
+.dark .glass-ink {
+  background: rgba(17, 13, 5, 0.92);
+}
+/* The ink button becomes a parchment button on dark grounds —
+   same 16:1 ink-on-paper pairing, inverted. */
+.dark .btn-navy {
+  background: var(--color-paper);
+  border-color: var(--color-paper);
+  color: var(--color-ink);
+}
+.dark .btn-navy:hover {
+  background: var(--color-cream);
+  border-color: var(--color-cream);
+  color: var(--color-ink);
+}
+.dark .btn-outline-navy {
+  border-color: rgba(250, 246, 238, 0.65);
+  color: var(--color-paper);
+}
+.dark .btn-outline-navy:hover {
+  background: var(--color-paper);
+  border-color: var(--color-paper);
+  color: var(--color-ink);
+}
+/* Focus ring follows the text-signal token in dark (brand measures
+   ~3:1 on dark grounds; signal is 5.9:1+ there). */
+.dark :focus-visible {
+  outline-color: var(--color-signal);
+}
+
+/* Logo plate (§22 brighter treatment, §25 per-theme) — the luminous
+   stock the official artwork sits on. Official files only, never
+   filtered or recoloured; in dark the artwork swaps to the official
+   light-text file (Header/Footer/LP render both, CSS picks one) and
+   the plate becomes a deep ink glow. */
+.logo-plate {
+  /* Exactly the §22 header/LP plate values, moved into a class. */
+  background: radial-gradient(120% 140% at 30% 20%, #ffffff 0%, #fdf6e9 55%, #f7ecd4 100%);
+  box-shadow: 0 0 26px rgba(247, 99, 27, 0.2);
+}
+.dark .logo-plate {
+  background: radial-gradient(130% 150% at 28% 12%, #3a2a16 0%, #241a0e 55%, #171208 100%);
+  box-shadow:
+    0 0 26px rgba(247, 99, 27, 0.3),
+    inset 0 0 0 1px rgba(250, 246, 238, 0.08);
+}
+/* The MD's signature artwork is dark ink on transparency — in dark
+   mode it sits on a small pale plate so it stays legible, exactly
+   as printed. No filter, no recolour. */
+.dark .signature-art {
+  background: radial-gradient(130% 150% at 28% 12%, #ffffff 0%, #fdfaf2 60%, #f6efdd 100%);
+  border-radius: 14px;
+  padding: 10px 16px;
+}
+/* Employer wordmarks ship as dark-ink art; their tiles get the
+   pale stock in dark mode so the official logos stay readable. */
+.dark .logo-tile {
+  background: #fffdf8;
+}
+
+/* Theme-change transition — applied by ThemeToggle for ~400ms on
+   switch, and only when the visitor allows motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-anim,
+  html.theme-anim *,
+  html.theme-anim *::before,
+  html.theme-anim *::after {
+    transition:
+      background-color 0.35s ease,
+      border-color 0.35s ease,
+      color 0.35s ease,
+      fill 0.35s ease,
+      stroke 0.35s ease,
+      box-shadow 0.35s ease !important;
   }
 }

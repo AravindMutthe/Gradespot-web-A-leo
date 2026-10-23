@@ -50,7 +50,7 @@ export default function CertificationsPage() {
             ))}
             <p>
               Received a certificate from us?{" "}
-              <Link href="/certificate-verification" className="font-semibold text-brand hover:underline">
+              <Link href="/certificate-verification" className="font-semibold text-signal hover:underline">
                 Verify it here
               </Link>
               .

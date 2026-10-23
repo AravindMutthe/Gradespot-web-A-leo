@@ -137,7 +137,7 @@ export default function ForCollegesPage() {
                     <ul className="mt-4 space-y-2">
                       {s.offerings.map((o) => (
                         <li key={o} className="flex gap-2.5 text-sm leading-6 text-body">
-                          <span className="mt-0.5 font-bold text-brand">✓</span>
+                          <span className="mt-0.5 font-bold text-signal">✓</span>
                           {o}
                         </li>
                       ))}
@@ -145,13 +145,13 @@ export default function ForCollegesPage() {
                   )}
                   <a
                     href="#enquire"
-                    className="mt-auto inline-block pt-5 text-sm font-bold text-brand hover:text-brand-dark"
+                    className="mt-auto inline-block pt-5 text-sm font-bold text-signal hover:text-signal-strong"
                   >
                     Enquire for your college →
                   </a>
                   <Link
                     href={`/services/${s.slug}`}
-                    className="mt-1 inline-block text-sm font-semibold text-body hover:text-brand"
+                    className="mt-1 inline-block text-sm font-semibold text-body hover:text-signal"
                   >
                     About {s.title}
                   </Link>
@@ -181,11 +181,11 @@ export default function ForCollegesPage() {
           </div>
           <p className="mx-auto mt-10 max-w-3xl text-center text-[15px] leading-7 text-body">
             Businesses looking for automation products for their own institute will find them on{" "}
-            <Link href="/for-institutes" className="font-semibold text-brand hover:underline">
+            <Link href="/for-institutes" className="font-semibold text-signal hover:underline">
               For Institutes
             </Link>
             ; companies training their teams can start with{" "}
-            <Link href="/services/corporate-trainings" className="font-semibold text-brand hover:underline">
+            <Link href="/services/corporate-trainings" className="font-semibold text-signal hover:underline">
               Corporate Trainings
             </Link>
             .

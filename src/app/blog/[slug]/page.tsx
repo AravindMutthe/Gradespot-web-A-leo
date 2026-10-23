@@ -89,13 +89,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 book a free demo class from any course page.
               </p>
               <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm font-bold">
-                <Link href="/trainings" className="text-brand hover:text-brand-dark">
+                <Link href="/trainings" className="text-signal hover:text-signal-strong">
                   All Trainings →
                 </Link>
-                <Link href="/compare" className="text-brand hover:text-brand-dark">
+                <Link href="/compare" className="text-signal hover:text-signal-strong">
                   Course Comparisons →
                 </Link>
-                <Link href="/blog" className="text-brand hover:text-brand-dark">
+                <Link href="/blog" className="text-signal hover:text-signal-strong">
                   More Articles →
                 </Link>
               </div>

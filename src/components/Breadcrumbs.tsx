@@ -26,8 +26,8 @@ export default function Breadcrumbs({
                   href={item.path}
                   className={
                     dark
-                      ? "font-medium text-white/75 transition-colors hover:text-brand"
-                      : "font-medium text-body transition-colors hover:text-brand"
+                      ? "font-medium text-white/75 transition-colors hover:text-signal"
+                      : "font-medium text-body transition-colors hover:text-signal"
                   }
                 >
                   {item.name}

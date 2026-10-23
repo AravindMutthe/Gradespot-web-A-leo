@@ -43,7 +43,7 @@ export default function BlogIndexPage() {
                 key={a.slug}
                 className="flex flex-col rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
               >
-                <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-brand-dark">
+                <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-signal-strong">
                   {new Date(`${a.date}T00:00:00`).toLocaleDateString("en-IN", {
                     day: "numeric",
                     month: "long",
@@ -54,7 +54,7 @@ export default function BlogIndexPage() {
                 <p className="mt-2 text-sm leading-6 text-body">{a.excerpt}</p>
                 <Link
                   href={`/blog/${a.slug}`}
-                  className="mt-auto inline-block pt-5 text-sm font-bold text-brand hover:text-brand-dark"
+                  className="mt-auto inline-block pt-5 text-sm font-bold text-signal hover:text-signal-strong"
                 >
                   Read the article →
                 </Link>

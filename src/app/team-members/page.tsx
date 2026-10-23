@@ -27,10 +27,10 @@ export default function TeamPage() {
               />
               <div className="p-6">
                 <h2 className="text-lg font-semibold">{m.name}</h2>
-                <p className="mt-1 text-sm font-medium text-brand">{m.role}</p>
+                <p className="mt-1 text-sm font-medium text-signal">{m.role}</p>
                 {m.email && (
                   <p className="mt-2 text-sm">
-                    <a className="text-brand hover:underline" href={`mailto:${m.email}`}>
+                    <a className="text-signal hover:underline" href={`mailto:${m.email}`}>
                       {m.email}
                     </a>
                   </p>
@@ -39,7 +39,7 @@ export default function TeamPage() {
                   <p className="mt-3">
                     <Link
                       href={m.profileHref}
-                      className="text-sm font-semibold text-brand hover:underline"
+                      className="text-sm font-semibold text-signal hover:underline"
                     >
                       View Profile →
                     </Link>

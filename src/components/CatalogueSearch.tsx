@@ -75,7 +75,7 @@ export default function CatalogueSearch({
               <a
                 key={cat}
                 href={`#${categoryAnchor(cat)}`}
-                className="rounded-full border border-line bg-parchment px-3.5 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-heading transition-colors hover:border-brand hover:text-brand"
+                className="rounded-full border border-line bg-parchment px-3.5 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-heading transition-colors hover:border-brand hover:text-signal"
               >
                 {cat} · {byCategory.get(cat)?.length ?? 0}
               </a>

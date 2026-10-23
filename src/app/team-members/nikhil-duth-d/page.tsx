@@ -32,7 +32,7 @@ export default function NikhilProfilePage() {
           />
           <div>
             <h2 className="text-[32px] font-semibold leading-[38px]">{member.name}</h2>
-            <p className="mt-1 text-lg font-medium text-brand">Founder, Managing Director</p>
+            <p className="mt-1 text-lg font-medium text-signal">Founder, Managing Director</p>
 
             <dl className="mt-8 space-y-4">
               <div className="flex gap-3">
@@ -43,7 +43,7 @@ export default function NikhilProfilePage() {
                 <div className="flex gap-3">
                   <dt className="w-32 shrink-0 font-semibold text-heading">Email:</dt>
                   <dd>
-                    <a className="text-brand hover:underline" href={`mailto:${member.email}`}>
+                    <a className="text-signal hover:underline" href={`mailto:${member.email}`}>
                       {member.email}
                     </a>
                   </dd>

@@ -80,7 +80,7 @@ export default function CareerSupportPage() {
                   key={course.slug}
                   className="flex flex-col rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm"
                 >
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-dark">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-signal-strong">
                     {course.category}
                   </p>
                   <h3 className="mt-2 text-lg font-bold leading-snug text-heading">
@@ -98,7 +98,7 @@ export default function CareerSupportPage() {
                   </div>
                   <Link
                     href={`/trainings/${course.slug}`}
-                    className="mt-auto inline-block pt-5 text-sm font-bold text-brand hover:text-brand-dark"
+                    className="mt-auto inline-block pt-5 text-sm font-bold text-signal hover:text-signal-strong"
                   >
                     View the course →
                   </Link>
@@ -126,7 +126,7 @@ export default function CareerSupportPage() {
                   <ul className="mt-4 space-y-2">
                     {s.offerings.map((o) => (
                       <li key={o} className="flex gap-2.5 text-sm leading-6 text-body">
-                        <span className="mt-0.5 font-bold text-brand">✓</span>
+                        <span className="mt-0.5 font-bold text-signal">✓</span>
                         {o}
                       </li>
                     ))}
@@ -134,7 +134,7 @@ export default function CareerSupportPage() {
                 )}
                 <Link
                   href={`/services/${s.slug}`}
-                  className="mt-auto inline-block pt-5 text-sm font-bold text-brand hover:text-brand-dark"
+                  className="mt-auto inline-block pt-5 text-sm font-bold text-signal hover:text-signal-strong"
                 >
                   About {s.title} →
                 </Link>

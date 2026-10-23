@@ -32,12 +32,18 @@ export const metadata: Metadata = {
   },
 };
 
+// §25 — theme bootstrap: runs before first paint so there is never a
+// flash of the wrong theme. Stored choice (localStorage) wins; a first
+// visit follows prefers-color-scheme. Kept dependency-free and tiny.
+const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("gradespot-theme");var d=t?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;var e=document.documentElement;e.classList.toggle("dark",d);e.dataset.theme=d?"dark":"light";e.style.colorScheme=d?"dark":"light";}catch(_){}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <link
           rel="preload"
           href="/fonts/fraunces-normal-100_900.woff2"

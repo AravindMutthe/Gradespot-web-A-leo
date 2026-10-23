@@ -42,15 +42,15 @@ export default function AboutPage() {
             <h3 className="text-2xl font-semibold text-heading">How We Work</h3>
             <ol className="mt-4 space-y-4">
               <li className="rounded-2xl border border-line bg-parchment p-5 shadow-sm">
-                <span className="font-extrabold text-brand">01</span>
+                <span className="font-extrabold text-signal">01</span>
                 <p className="mt-1">Explore from our range of services for your business needs</p>
               </li>
               <li className="rounded-2xl border border-line bg-parchment p-5 shadow-sm">
-                <span className="font-extrabold text-brand">02</span>
+                <span className="font-extrabold text-signal">02</span>
                 <p className="mt-1">Connect with us to schedule a meeting and discuss your needs</p>
               </li>
               <li className="rounded-2xl border border-line bg-parchment p-5 shadow-sm">
-                <span className="font-extrabold text-brand">03</span>
+                <span className="font-extrabold text-signal">03</span>
                 <p className="mt-1">
                   Talk to a Trainer — online &amp; offline classes with top-class trainings.
                 </p>
@@ -97,7 +97,7 @@ export default function AboutPage() {
                   className="mx-auto h-56 w-full rounded object-cover"
                 />
                 <h3 className="mt-3 text-lg font-semibold">{m.name}</h3>
-                <p className="text-sm text-brand">{m.role}</p>
+                <p className="text-sm text-signal">{m.role}</p>
               </article>
             ))}
           </div>
@@ -108,7 +108,7 @@ export default function AboutPage() {
             <p className="mt-1.5 text-sm leading-6 text-body">
               The answers live in one place — our Help &amp; FAQs.
             </p>
-            <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-brand hover:text-brand-dark">
+            <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-signal hover:text-signal-strong">
               Read Help &amp; FAQs →
             </Link>
           </div>

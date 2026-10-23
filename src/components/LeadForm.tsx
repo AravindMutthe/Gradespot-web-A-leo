@@ -86,7 +86,7 @@ export default function LeadForm({
       className="rounded-2xl border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
       noValidate
     >
-      <p className="mb-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-brand-dark">
+      <p className="mb-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-signal-strong">
         <span>Phone-first</span>
         <span aria-hidden>·</span>
         <span>Email optional</span>
@@ -106,7 +106,7 @@ export default function LeadForm({
             className={field}
             placeholder="Your name"
           />
-          {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
+          {errors.name && <p className="mt-1 text-xs text-field-error">{errors.name}</p>}
         </div>
         <div>
           <label htmlFor={id("phone")} className={label}>
@@ -122,7 +122,7 @@ export default function LeadForm({
             placeholder="+91 …"
             inputMode="tel"
           />
-          {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
+          {errors.phone && <p className="mt-1 text-xs text-field-error">{errors.phone}</p>}
         </div>
       </div>
       <div className="mt-4">
@@ -137,7 +137,7 @@ export default function LeadForm({
           className={field}
           placeholder="you@example.com"
         />
-        {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
+        {errors.email && <p className="mt-1 text-xs text-field-error">{errors.email}</p>}
       </div>
       <div className="mt-4">
         <label htmlFor={id("interest")} className={label}>
@@ -167,7 +167,7 @@ export default function LeadForm({
             placeholder="Course Training, Certification Voucher, a Service…"
           />
         )}
-        {errors.interest && <p className="mt-1 text-xs text-red-600">{errors.interest}</p>}
+        {errors.interest && <p className="mt-1 text-xs text-field-error">{errors.interest}</p>}
       </div>
       {!hideMessage && (
         <div className="mt-4">
@@ -181,7 +181,7 @@ export default function LeadForm({
             className={field}
             placeholder="Anything we should know?"
           />
-          {errors.message && <p className="mt-1 text-xs text-red-600">{errors.message}</p>}
+          {errors.message && <p className="mt-1 text-xs text-field-error">{errors.message}</p>}
         </div>
       )}
       <label htmlFor={id("wa")} className="mt-4 flex cursor-pointer items-start gap-2.5 text-sm text-body">
@@ -190,7 +190,7 @@ export default function LeadForm({
           name="whatsappOptIn"
           type="checkbox"
           value="true"
-          className="mt-1 h-4 w-4 shrink-0 accent-brand"
+          className="mt-1 h-4 w-4 shrink-0 accent-signal"
         />
         <span>Yes, send me course details and updates on WhatsApp.</span>
       </label>
@@ -205,7 +205,7 @@ export default function LeadForm({
         Your details are used only to respond to this enquiry — no spam, ever.
       </p>
       {state === "sent" && (
-        <div className="mt-4 rounded-lg bg-green-50 p-4 text-sm text-green-800">
+        <div className="mt-4 rounded-lg bg-success-surface p-4 text-sm text-success-text">
           <p>Thank you — your enquiry has been received. Our team will get back to you shortly.</p>
           <a
             href={`https://wa.me/${waNumber}?text=${waText}`}
@@ -218,7 +218,7 @@ export default function LeadForm({
         </div>
       )}
       {state === "error" && (
-        <p className="mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+        <p className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
           We could not submit your enquiry. Please check the fields and try again, or call us
           directly.
         </p>

@@ -67,11 +67,11 @@ export default async function RegisterPage({
             </ol>
             <p className="mt-9 max-w-xl text-[15px] leading-7 text-body">
               Rather talk first? Call{" "}
-              <a href={telHref(phone)} className="font-semibold text-brand hover:text-brand-dark">
+              <a href={telHref(phone)} className="font-semibold text-signal hover:text-signal-strong">
                 {phone}
               </a>{" "}
               or browse the{" "}
-              <Link href="/trainings" className="font-semibold text-brand hover:text-brand-dark">
+              <Link href="/trainings" className="font-semibold text-signal hover:text-signal-strong">
                 full training catalogue
               </Link>{" "}
               before you decide.

@@ -44,7 +44,7 @@ export default function CompareIndexPage() {
                   key={c.slug}
                   className="flex flex-col rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
                 >
-                  <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-brand-dark">
+                  <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-signal-strong">
                     {courseDetails[c.a]?.short} vs {courseDetails[c.b]?.short}
                   </p>
                   <h2 className="mt-3 text-lg font-bold leading-snug text-heading">{c.title}</h2>
@@ -54,7 +54,7 @@ export default function CompareIndexPage() {
                   </p>
                   <Link
                     href={`/compare/${c.slug}`}
-                    className="mt-auto inline-block pt-5 text-sm font-bold text-brand hover:text-brand-dark"
+                    className="mt-auto inline-block pt-5 text-sm font-bold text-signal hover:text-signal-strong"
                   >
                     Compare them →
                   </Link>

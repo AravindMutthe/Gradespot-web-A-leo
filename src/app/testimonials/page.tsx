@@ -19,7 +19,7 @@ export default function TestimonialsPage() {
               key={t.name}
               className="flex flex-col rounded-2xl border border-line bg-parchment p-7 shadow-sm"
             >
-              <span aria-hidden className="font-display text-[40px] font-semibold leading-[0.6] text-brand">
+              <span aria-hidden className="font-display text-[40px] font-semibold leading-[0.6] text-signal">
                 &ldquo;
               </span>
               <blockquote className="mt-3 grow text-[15px] leading-7 text-heading">

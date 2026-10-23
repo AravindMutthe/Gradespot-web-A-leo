@@ -60,18 +60,18 @@ export default function PartnerPage() {
               >
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -right-1 -top-5 font-display text-[84px] font-semibold leading-none text-ink/[0.05]"
+                  className="pointer-events-none absolute -right-1 -top-5 font-display text-[84px] font-semibold leading-none text-heading/[0.05]"
                 >
                   {tr.n}
                 </span>
-                <p className="eyebrow text-brand-dark">Track {tr.n}</p>
+                <p className="eyebrow text-signal-strong">Track {tr.n}</p>
                 <h3 className="mt-3 font-display text-[26px] font-semibold text-heading">{tr.t}</h3>
                 <p className="mt-3 text-[15px] leading-7 text-body">{tr.d}</p>
                 <ul className="mt-5 flex flex-wrap gap-2">
                   {tr.points.map((pt) => (
                     <li
                       key={pt}
-                      className="rounded-full bg-brand-soft px-3.5 py-1.5 text-[13px] font-semibold text-brand-dark"
+                      className="rounded-full bg-brand-soft px-3.5 py-1.5 text-[13px] font-semibold text-signal-strong"
                     >
                       {pt}
                     </li>
@@ -102,7 +102,7 @@ export default function PartnerPage() {
                 data-reveal
                 className="rounded-[18px] border border-line bg-parchment p-6"
               >
-                <p className="font-mono text-[12px] font-semibold text-brand-dark">
+                <p className="font-mono text-[12px] font-semibold text-signal-strong">
                   STEP {i + 1}
                 </p>
                 <h3 className="mt-2 font-display text-[21px] font-semibold text-heading">{s.t}</h3>

@@ -144,12 +144,12 @@ export default function ForInstitutesPage() {
                   key={p.t}
                   className="flex flex-col rounded-2xl border border-line bg-parchment px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
                 >
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-dark">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-signal-strong">
                     {p.tag}
                   </p>
                   <h3 className="mt-3 text-xl font-bold text-heading">{p.t}</h3>
                   <p className="mt-2 text-sm leading-6 text-body">{p.d}</p>
-                  <a href="#demo" className="mt-auto inline-block pt-5 text-sm font-bold text-brand hover:text-brand-dark">
+                  <a href="#demo" className="mt-auto inline-block pt-5 text-sm font-bold text-signal hover:text-signal-strong">
                     Book a Demo →
                   </a>
                 </article>
@@ -204,7 +204,7 @@ export default function ForInstitutesPage() {
               <p className="mt-2 text-sm leading-6 text-body">
                 Employers can verify a GradeSpot certificate on this site right now — the same
                 trust tool we offer institutes.{" "}
-                <Link href="/certificate-verification" className="font-semibold text-brand hover:underline">
+                <Link href="/certificate-verification" className="font-semibold text-signal hover:underline">
                   Try certificate verification →
                 </Link>
               </p>
@@ -261,7 +261,7 @@ export default function ForInstitutesPage() {
                 "Official Meta WhatsApp Cloud API — no ban-risk tools",
               ].map((x) => (
                 <li key={x} className="flex gap-2.5 text-[15px] leading-6 text-body">
-                  <span className="mt-0.5 font-bold text-brand" aria-hidden>
+                  <span className="mt-0.5 font-bold text-signal" aria-hidden>
                     ✓
                   </span>
                   {x}

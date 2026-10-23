@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { testimonials } from "@/data/testimonials";
 import { CtaBand, LogoWall, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Testimonials" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/testimonials" }, title: "Testimonials" };
 
 export default function TestimonialsPage() {
   return (
@@ -16,7 +17,7 @@ export default function TestimonialsPage() {
           {testimonials.map((t) => (
             <figure
               key={t.name}
-              className="flex flex-col rounded-2xl border border-[#dbe4ee] bg-white p-7 shadow-sm"
+              className="flex flex-col rounded-2xl border border-line bg-parchment p-7 shadow-sm"
             >
               <blockquote className="grow text-[15px] leading-7 text-heading">
                 {t.text}

@@ -8,6 +8,7 @@ import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { services } from "@/data/services";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/for-colleges" },
   title: "For Colleges",
   description:
     "College workshops, industrial trainings and internships from GradeSpot IT Solutions — hands-on technical programs conducted for colleges and their students in Hyderabad.",
@@ -99,7 +100,7 @@ export default function ForCollegesPage() {
               {pains.map((p) => (
                 <article
                   key={p.t}
-                  className="rounded-2xl border border-[#dbe4ee] bg-white px-8 py-10 shadow-sm"
+                  className="rounded-2xl border border-line bg-parchment px-8 py-10 shadow-sm"
                 >
                   <span className="block h-1 w-10 rounded-full bg-brand" aria-hidden />
                   <h3 className="mt-4 text-xl font-bold text-heading">{p.t}</h3>
@@ -115,7 +116,7 @@ export default function ForCollegesPage() {
               {collegeServices.map((s) => (
                 <article
                   key={s.slug}
-                  className="flex flex-col rounded-2xl border border-[#dbe4ee] bg-white px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+                  className="flex flex-col rounded-2xl border border-line bg-parchment px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
                 >
                   <h3 className="text-xl font-bold text-heading">{s.title}</h3>
                   {s.summary && <p className="mt-2 text-sm leading-6 text-body">{s.summary}</p>}
@@ -155,9 +156,9 @@ export default function ForCollegesPage() {
             {steps.map((s) => (
               <article
                 key={s.n}
-                className="rounded-2xl border border-[#dbe4ee] bg-white px-6 py-8 text-center shadow-sm"
+                className="rounded-2xl border border-line bg-parchment px-6 py-8 text-center shadow-sm"
               >
-                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-navy font-display text-lg font-extrabold text-brand">
+                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-navy font-display text-lg font-extrabold text-brand-bright">
                   {s.n}
                 </span>
                 <h3 className="mt-4 text-lg font-bold text-heading">{s.t}</h3>

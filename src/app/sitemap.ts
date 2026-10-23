@@ -29,6 +29,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact-us",
     "/faq",
     "/terms-and-conditions",
+    "/register",
+    "/accessibility",
+    "/partner-with-us",
   ];
   return [
     ...staticPaths.map((p) => ({ url: `${base}${p || "/"}` })),

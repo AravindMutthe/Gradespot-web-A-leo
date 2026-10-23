@@ -9,6 +9,7 @@ import { testimonials } from "@/data/testimonials";
 import { getCourses } from "@/lib/data";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/training-institute-in-dilsukhnagar-hyderabad" },
   title: "IT Training Institute in Dilsukhnagar, Hyderabad",
   description:
     "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad — cybersecurity, cloud, networking and digital marketing trainings with online & offline classes. Call +91 91826 54056.",
@@ -84,7 +85,7 @@ export default async function LocalInstitutePage() {
           </div>
 
           <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3">
-            <article className="rounded-2xl border border-[#dbe4ee] bg-white px-7 py-8 shadow-sm">
+            <article className="rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm">
               <h2 className="text-lg font-bold text-heading">Visit us</h2>
               <address className="mt-3 text-sm not-italic leading-6 text-body">
                 {business.address}
@@ -98,7 +99,7 @@ export default async function LocalInstitutePage() {
                 View on Google Maps →
               </a>
             </article>
-            <article className="rounded-2xl border border-[#dbe4ee] bg-white px-7 py-8 shadow-sm">
+            <article className="rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm">
               <h2 className="text-lg font-bold text-heading">Call or write</h2>
               <p className="mt-3 text-sm leading-6 text-body">
                 {business.phones.map((p) => (
@@ -113,7 +114,7 @@ export default async function LocalInstitutePage() {
                 ))}
               </p>
             </article>
-            <article className="rounded-2xl border border-[#dbe4ee] bg-white px-7 py-8 shadow-sm">
+            <article className="rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm">
               <h2 className="text-lg font-bold text-heading">Office hours</h2>
               <p className="mt-3 font-display text-2xl font-extrabold text-heading">
                 {business.officeHours}
@@ -151,7 +152,7 @@ export default async function LocalInstitutePage() {
               <Link
                 key={c.slug}
                 href={`/lp/${c.slug}-in-hyderabad`}
-                className="rounded-full border border-[#dbe4ee] bg-white px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-brand"
+                className="rounded-full border border-line bg-parchment px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-brand"
               >
                 {c.title} in Hyderabad
               </Link>
@@ -164,7 +165,7 @@ export default async function LocalInstitutePage() {
               {testimonials.slice(0, 4).map((t) => (
                 <blockquote
                   key={t.name}
-                  className="rounded-2xl border border-[#dbe4ee] bg-white px-7 py-6 shadow-sm"
+                  className="rounded-2xl border border-line bg-parchment px-7 py-6 shadow-sm"
                 >
                   <p className="text-[15px] leading-7 text-heading">“{t.text}”</p>
                   <footer className="mt-3 text-sm font-semibold text-body">

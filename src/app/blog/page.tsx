@@ -7,6 +7,7 @@ import { breadcrumbSchema } from "@/lib/schema";
 import { articles } from "@/data/articles";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog" },
   title: "Learning Articles",
   description:
     "Career roadmaps and course explainers from GradeSpot IT Solutions — how to start a cybersecurity career, CEH vs Security+, and what a SOC analyst actually does.",
@@ -40,7 +41,7 @@ export default function BlogIndexPage() {
             {articles.map((a) => (
               <article
                 key={a.slug}
-                className="flex flex-col rounded-2xl border border-[#dbe4ee] bg-white px-7 py-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+                className="flex flex-col rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
               >
                 <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-brand-dark">
                   {new Date(`${a.date}T00:00:00`).toLocaleDateString("en-IN", {

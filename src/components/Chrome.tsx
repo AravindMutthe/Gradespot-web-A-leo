@@ -14,12 +14,12 @@ export default function Chrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isLp = pathname?.startsWith("/lp/") ?? false;
   if (isLp) {
-    return <main>{children}</main>;
+    return <main id="main">{children}</main>;
   }
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <main id="main">{children}</main>
       <Footer />
       <FloatingActions />
     </>

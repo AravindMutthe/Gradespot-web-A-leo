@@ -3,7 +3,8 @@ import Link from "next/link";
 import { business } from "@/data/site";
 import { PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Resources" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/resources" }, title: "Resources" };
 
 const items = [
   {
@@ -72,7 +73,7 @@ export default function ResourcesPage() {
                 href={it.href}
                 target="_blank"
                 rel="noreferrer"
-                className="block rounded-2xl border border-[#dbe4ee] bg-white px-[30px] py-[40px] shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+                className="block rounded-2xl border border-line bg-parchment px-[30px] py-[40px] shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
               >
                 <h2 className="text-xl font-bold">{it.title} ↗</h2>
                 <p className="mt-2 text-sm leading-6">{it.desc}</p>
@@ -81,7 +82,7 @@ export default function ResourcesPage() {
               <Link
                 key={it.title}
                 href={it.href}
-                className="block rounded-2xl border border-[#dbe4ee] bg-white px-[30px] py-[40px] shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+                className="block rounded-2xl border border-line bg-parchment px-[30px] py-[40px] shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
               >
                 <h2 className="text-xl font-bold">{it.title}</h2>
                 <p className="mt-2 text-sm leading-6">{it.desc}</p>

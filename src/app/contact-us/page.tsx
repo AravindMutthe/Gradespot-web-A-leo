@@ -4,7 +4,8 @@ import { contactParagraphs } from "@/data/pages";
 import { business, telHref } from "@/data/site";
 import { PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Contact Us" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/contact-us" }, title: "Contact Us" };
 
 export default function ContactPage() {
   const allPhones = [...business.phones, ...business.extraPhones];
@@ -26,36 +27,36 @@ export default function ContactPage() {
           </div>
 
           {/* Side panel — dimensions follow the live site's contact panel */}
-          <aside className="w-full rounded-2xl bg-heading p-8 text-white lg:max-w-[400px] lg:p-[50px]">
-            <h2 className="text-2xl font-semibold text-white">Get in Touch</h2>
+          <aside className="w-full rounded-[20px] panel-ink p-8 lg:max-w-[400px] lg:p-[50px]">
+            <h2 className="font-display text-2xl font-semibold text-paper">Get in Touch</h2>
             <div className="mt-6 space-y-6 text-sm leading-6">
               <div>
-                <h3 className="font-semibold text-brand">Our Location</h3>
-                <p className="mt-1 text-white/85">{business.address}</p>
+                <h3 className="font-semibold text-brand-bright">Our Location</h3>
+                <p className="mt-1 text-paper/85">{business.address}</p>
               </div>
               <div>
-                <h3 className="font-semibold text-brand">Send Us Mail</h3>
+                <h3 className="font-semibold text-brand-bright">Send Us Mail</h3>
                 {business.emails.map((e) => (
                   <p key={e}>
-                    <a className="text-white/85 hover:text-brand" href={`mailto:${e}`}>
+                    <a className="text-paper/85 hover:text-brand-bright" href={`mailto:${e}`}>
                       {e}
                     </a>
                   </p>
                 ))}
               </div>
               <div>
-                <h3 className="font-semibold text-brand">Call Us</h3>
+                <h3 className="font-semibold text-brand-bright">Call Us</h3>
                 {allPhones.map((p) => (
                   <p key={p}>
-                    <a className="text-white/85 hover:text-brand" href={telHref(p)}>
+                    <a className="text-paper/85 hover:text-brand-bright" href={telHref(p)}>
                       {p}
                     </a>
                   </p>
                 ))}
               </div>
               <div>
-                <h3 className="font-semibold text-brand">Office Hours</h3>
-                <p className="mt-1 text-white/85">{business.officeHours}</p>
+                <h3 className="font-semibold text-brand-bright">Office Hours</h3>
+                <p className="mt-1 text-paper/85">{business.officeHours}</p>
               </div>
             </div>
           </aside>

@@ -35,7 +35,7 @@ export default function VerifyForm() {
     <div className="mx-auto max-w-xl">
       <form
         onSubmit={onSubmit}
-        className="rounded-2xl border border-[#dbe4ee] bg-white p-7 shadow-sm"
+        className="rounded-2xl border border-line bg-parchment p-7 shadow-sm"
       >
         <label htmlFor="cert-code" className="text-sm font-semibold text-heading">
           Certificate Code
@@ -48,7 +48,7 @@ export default function VerifyForm() {
           onChange={(e) => setCode(e.target.value)}
           placeholder="e.g. GS-2026-XXXX"
           aria-describedby="cert-code-hint"
-          className="mt-2 w-full rounded border border-neutral-300 px-4 py-3 text-[15px] text-heading outline-none focus:border-brand"
+          className="mt-2 w-full rounded-xl border border-line bg-parchment px-4 py-3 text-[15px] text-heading outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/20"
         />
         <p id="cert-code-hint" className="mt-2 text-[13px] leading-5 text-body">
           Enter the code exactly as printed on the certificate — it looks like{" "}

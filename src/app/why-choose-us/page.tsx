@@ -3,7 +3,8 @@ import Link from "next/link";
 import { whyChooseParagraphs } from "@/data/pages";
 import { CtaBand, ExperienceBadge, FaqList, LogoWall, PageHero, SectionTitle, siteFaqs } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Why Choose Us" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/why-choose-us" }, title: "Why Choose Us" };
 
 const highlights = [
   { title: "IT & Corporate Trainings", href: "/services/corporate-trainings" },
@@ -31,7 +32,7 @@ export default function WhyChoosePage() {
             {highlights.map((h) => (
               <article
                 key={h.title}
-                className="flex flex-col rounded-2xl border border-[#dbe4ee] bg-white p-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+                className="flex flex-col rounded-2xl border border-line bg-parchment p-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
               >
                 <h2 className="text-xl font-semibold text-heading">{h.title}</h2>
                 <Link

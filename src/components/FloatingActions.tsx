@@ -37,16 +37,16 @@ export default function FloatingActions() {
         target="_blank"
         rel="noreferrer"
         aria-label="Chat with GradeSpot IT Solutions on WhatsApp"
-        className="fixed bottom-[76px] right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] text-white shadow-[0_10px_30px_rgba(37,211,102,0.45)] transition-transform hover:scale-105 lg:bottom-6 lg:right-6"
+        className="fixed bottom-[76px] right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-wa text-white shadow-[0_10px_30px_rgba(11,122,67,0.45)] transition-transform hover:scale-105 lg:bottom-6 lg:right-6"
       >
         <ChatIcon />
       </a>
 
       {/* Mobile sticky CTA bar */}
-      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 border-t border-white/10 bg-navy text-center lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 border-t border-white/10 bg-ink-deep text-center lg:hidden">
         <a
           href={telHref(phone)}
-          className="py-3.5 text-[13px] font-semibold text-white active:bg-white/10"
+          className="py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-white active:bg-white/10"
         >
           Call Now
         </a>
@@ -54,11 +54,11 @@ export default function FloatingActions() {
           href={waHref}
           target="_blank"
           rel="noreferrer"
-          className="border-x border-white/10 py-3.5 text-[13px] font-semibold text-[#25d366] active:bg-white/10"
+          className="border-x border-white/10 py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-wa-bright active:bg-white/10"
         >
           WhatsApp
         </a>
-        <Link href="/contact-us" className="py-3.5 text-[13px] font-semibold text-brand active:bg-white/10">
+        <Link href="/contact-us" className="py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-brand-bright active:bg-white/10">
           Enquire
         </Link>
       </div>

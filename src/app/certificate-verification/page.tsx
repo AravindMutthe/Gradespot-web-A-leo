@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import VerifyForm from "@/components/VerifyForm";
 import { CtaBand, LogoWall, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Certificate Verification" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/certificate-verification" }, title: "Certificate Verification" };
 
 export default function VerifyPage() {
   return (

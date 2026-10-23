@@ -9,6 +9,7 @@ import { courseDetails } from "@/data/course-details";
 import { courses } from "@/data/courses";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/compare" },
   title: "Course Comparisons",
   description:
     "Side-by-side comparisons of GradeSpot trainings — topics, duration, certification and job roles — built only from each course's published data.",
@@ -41,7 +42,7 @@ export default function CompareIndexPage() {
               return (
                 <article
                   key={c.slug}
-                  className="flex flex-col rounded-2xl border border-[#dbe4ee] bg-white px-7 py-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+                  className="flex flex-col rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
                 >
                   <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-brand-dark">
                     {courseDetails[c.a]?.short} vs {courseDetails[c.b]?.short}

@@ -11,6 +11,7 @@ import { services } from "@/data/services";
 import { testimonials } from "@/data/testimonials";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/career-support" },
   title: "Career Support",
   description:
     "The job roles GradeSpot trainings prepare you for, the companies our students work with, and the career services we actually offer — roles and facts, no placement guarantees.",
@@ -77,7 +78,7 @@ export default function CareerSupportPage() {
               {roleCourses.map(({ course, roles }) => (
                 <article
                   key={course.slug}
-                  className="flex flex-col rounded-2xl border border-[#dbe4ee] bg-white px-7 py-8 shadow-sm"
+                  className="flex flex-col rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm"
                 >
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-dark">
                     {course.category}
@@ -117,7 +118,7 @@ export default function CareerSupportPage() {
             {careerServices.map((s) => (
               <article
                 key={s.slug}
-                className="flex flex-col rounded-2xl border border-[#dbe4ee] border-l-4 border-l-brand bg-white px-8 py-9 shadow-sm"
+                className="flex flex-col rounded-2xl border border-line border-l-4 border-l-brand bg-parchment px-8 py-9 shadow-sm"
               >
                 <h3 className="text-xl font-bold text-heading">{s.title}</h3>
                 {s.summary && <p className="mt-2 text-sm leading-6 text-body">{s.summary}</p>}
@@ -139,17 +140,17 @@ export default function CareerSupportPage() {
                 </Link>
               </article>
             ))}
-            <article className="flex flex-col rounded-2xl bg-navy px-8 py-9 text-white">
-              <h3 className="text-xl font-bold text-white">Verify a certificate</h3>
-              <p className="mt-2 text-sm leading-6 text-white/80">
+            <article className="flex flex-col rounded-[18px] panel-ink px-8 py-9">
+              <h3 className="font-display text-xl font-semibold text-paper">Verify a certificate</h3>
+              <p className="mt-2 text-sm leading-6 text-paper/80">
                 Employers can verify a GradeSpot certificate by its code — and students can see
                 the certifications our alumni have achieved.
               </p>
               <div className="mt-auto flex flex-col gap-2 pt-5">
-                <Link href="/certificate-verification" className="text-sm font-bold text-brand hover:text-white">
+                <Link href="/certificate-verification" className="text-sm font-bold text-brand-bright hover:text-paper">
                   Certificate Verification →
                 </Link>
-                <Link href="/student-certifications" className="text-sm font-bold text-brand hover:text-white">
+                <Link href="/student-certifications" className="text-sm font-bold text-brand-bright hover:text-paper">
                   Student Certifications →
                 </Link>
               </div>
@@ -162,7 +163,7 @@ export default function CareerSupportPage() {
               {testimonials.slice(0, 3).map((t) => (
                 <blockquote
                   key={t.name}
-                  className="rounded-2xl border border-[#dbe4ee] bg-white px-7 py-6 shadow-sm"
+                  className="rounded-2xl border border-line bg-parchment px-7 py-6 shadow-sm"
                 >
                   <p className="text-[15px] leading-7 text-heading">“{t.text}”</p>
                   <footer className="mt-3 text-sm font-semibold text-body">

@@ -7,6 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/for-institutes" },
   title: "For Institutes",
   description:
     "WhatsApp lead automation, a secure video learning hub and resilient lab setup for training institutes — built by GradeSpot IT Solutions, an institute ourselves.",
@@ -110,7 +111,7 @@ export default function ForInstitutesPage() {
               {pains.map((p) => (
                 <article
                   key={p.t}
-                  className="rounded-2xl border border-[#dbe4ee] bg-white px-8 py-10 shadow-sm"
+                  className="rounded-2xl border border-line bg-parchment px-8 py-10 shadow-sm"
                 >
                   <span className="block h-1 w-10 rounded-full bg-brand" aria-hidden />
                   <h3 className="mt-4 text-xl font-bold text-heading">{p.t}</h3>
@@ -127,7 +128,7 @@ export default function ForInstitutesPage() {
               {products.map((p) => (
                 <article
                   key={p.t}
-                  className="flex flex-col rounded-2xl border border-[#dbe4ee] bg-white px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+                  className="flex flex-col rounded-2xl border border-line bg-parchment px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
                 >
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-dark">
                     {p.tag}
@@ -152,9 +153,9 @@ export default function ForInstitutesPage() {
             {steps.map((s) => (
               <article
                 key={s.n}
-                className="rounded-2xl border border-[#dbe4ee] bg-white px-6 py-8 text-center shadow-sm"
+                className="rounded-2xl border border-line bg-parchment px-6 py-8 text-center shadow-sm"
               >
-                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-navy font-display text-lg font-extrabold text-brand">
+                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-navy font-display text-lg font-extrabold text-brand-bright">
                   {s.n}
                 </span>
                 <h3 className="mt-4 text-lg font-bold text-heading">{s.t}</h3>
@@ -202,6 +203,27 @@ export default function ForInstitutesPage() {
                 names attached.
               </p>
             </article>
+          </div>
+        </div>
+      </section>
+
+      {/* Partner band (§21): the collaboration/franchise door */}
+      <section className="section-pad">
+        <div className="wrap">
+          <div className="panel-ink flex flex-wrap items-center justify-between gap-6 rounded-[24px] p-8 md:p-10">
+            <div className="max-w-2xl">
+              <p className="eyebrow text-brand-bright">Partner With Us</p>
+              <h2 className="mt-3 font-display text-[28px] font-semibold leading-tight text-paper">
+                Open to working together?
+              </h2>
+              <p className="mt-2 text-[15px] leading-7 text-paper/80">
+                Beyond products: collaborations and franchise discussions are welcome — with
+                institutes, colleges, trainers and people thinking about a centre of their own.
+              </p>
+            </div>
+            <a href="/partner-with-us" className="btn-primary">
+              Partner With Us
+            </a>
           </div>
         </div>
       </section>

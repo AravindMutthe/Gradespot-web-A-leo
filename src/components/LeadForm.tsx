@@ -76,14 +76,14 @@ export default function LeadForm({
   }
 
   const field =
-    "w-full rounded-lg border border-neutral-300 px-4 py-3 text-[15px] text-heading outline-none transition-colors focus:border-brand";
+    "w-full rounded-xl border border-line bg-parchment px-4 py-3 text-[15px] text-heading outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/20";
   const label = "block text-sm font-semibold text-heading";
   const id = (n: string) => `${idPrefix}-${n}`;
 
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-[#dbe4ee] bg-white p-7 shadow-[0_20px_40px_rgba(10,34,54,0.10)]"
+      className="rounded-2xl border border-line bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
       noValidate
     >
       <div className="grid gap-4 sm:grid-cols-2">
@@ -184,7 +184,7 @@ export default function LeadForm({
           name="whatsappOptIn"
           type="checkbox"
           value="true"
-          className="mt-1 h-4 w-4 shrink-0 accent-[#f7631b]"
+          className="mt-1 h-4 w-4 shrink-0 accent-brand"
         />
         <span>Yes, send me course details and updates on WhatsApp.</span>
       </label>
@@ -205,7 +205,7 @@ export default function LeadForm({
             href={`https://wa.me/${waNumber}?text=${waText}`}
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-block rounded-full bg-[#25d366] px-5 py-2.5 font-semibold text-white transition-transform hover:scale-[1.03]"
+            className="mt-3 inline-block rounded-xl bg-wa px-5 py-2.5 font-semibold text-white transition-transform hover:scale-[1.03]"
           >
             Continue on WhatsApp →
           </a>

@@ -3,7 +3,8 @@ import { FaqList, PageHero, siteFaqs } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
 import { faqSchema } from "@/lib/schema";
 
-export const metadata: Metadata = { title: "Help & FAQs" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/faq" }, title: "Help & FAQs" };
 
 export default function FaqPage() {
   return (

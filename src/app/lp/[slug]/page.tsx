@@ -64,6 +64,7 @@ export async function generateMetadata({
   const d = courseDetails[course.slug];
   const short = d?.short ?? course.title;
   return {
+    alternates: { canonical: `/lp/${slug}` },
     title: `${short} Training in Hyderabad`,
     description: `${short} training in Hyderabad at GradeSpot IT Solutions, Dilsukhnagar — online & offline classes. ${d?.outcome ?? "Book a free counselling call."}`,
   };
@@ -94,11 +95,11 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       <JsonLd data={faqSchema(faqs)} />
 
       {/* LP chrome: logo + phone only, no nav */}
-      <div className="bg-navy">
+      <div className="border-b border-line bg-paper">
         <div className="wrap flex items-center justify-between py-3">
           <Link href="/" aria-label="GradeSpot IT Solutions — Home">
             <Image
-              src="/images/logo-light.png"
+              src="/images/logo.png"
               alt="GradeSpot IT Solutions"
               width={193}
               height={60}
@@ -108,7 +109,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
           </Link>
           <a
             href={telHref(phone)}
-            className="rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-brand hover:text-brand"
+            className="flex min-h-[44px] items-center rounded-full border border-ink/30 px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
           >
             {phone}
           </a>
@@ -116,10 +117,10 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       </div>
 
       {/* Hero: message-matched H1 + form above the fold */}
-      <section className="bg-[linear-gradient(120deg,#061724_0%,#0a2236_55%,#0e2b3d_100%)] py-12 text-white md:py-16">
+      <section className="panel-ink py-12 md:py-16">
         <div className="wrap grid items-start gap-10 lg:grid-cols-2">
           <div>
-            <p className="text-[13px] font-bold uppercase tracking-[0.18em] text-brand">
+            <p className="eyebrow text-brand-bright">
               Hyderabad · {course.category}
             </p>
             <h1 className="mt-3 text-4xl font-bold leading-[1.15] md:text-[46px]">
@@ -129,21 +130,21 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
             <ul className="mt-6 space-y-2.5 text-[15px] text-white/90">
               {d && (
                 <li>
-                  <span className="mr-2 font-bold text-brand">✓</span>For: {d.who}
+                  <span className="mr-2 font-bold text-brand-bright">✓</span>For: {d.who}
                 </li>
               )}
               <li>
-                <span className="mr-2 font-bold text-brand">✓</span>Hands-on labs and live
+                <span className="mr-2 font-bold text-brand-bright">✓</span>Hands-on labs and live
                 classes — not just theory
               </li>
               {roles.length > 0 && (
                 <li>
-                  <span className="mr-2 font-bold text-brand">✓</span>Prepares you for roles
+                  <span className="mr-2 font-bold text-brand-bright">✓</span>Prepares you for roles
                   like {roles.slice(0, 3).join(", ")}
                 </li>
               )}
               <li>
-                <span className="mr-2 font-bold text-brand">✓</span>Free demo class available —
+                <span className="mr-2 font-bold text-brand-bright">✓</span>Free demo class available —
                 ask when our counsellor calls
               </li>
             </ul>
@@ -173,7 +174,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       </section>
 
       {/* Facts strip */}
-      <section className="border-b border-[#dbe4ee] bg-surface-light">
+      <section className="border-b border-line bg-surface-light">
         <div className="wrap flex flex-wrap gap-x-8 gap-y-2 py-4 text-sm font-semibold text-heading">
           {facts.map((f) => (
             <span key={f}>{f}</span>
@@ -270,7 +271,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       </section>
 
       {/* LP footer: minimal, no nav */}
-      <footer className="bg-navy-deep py-8 pb-24 text-sm text-footer-text lg:pb-8">
+      <footer className="bg-ink-deep py-8 pb-24 text-sm text-footer-text lg:pb-8">
         <div className="wrap flex flex-wrap items-center justify-between gap-3">
           <p>
             © {new Date().getFullYear()} {business.legalName}
@@ -282,19 +283,19 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       </footer>
 
       {/* Sticky mobile action bar (LP pattern) */}
-      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 border-t border-white/10 bg-navy text-center lg:hidden">
-        <a href={telHref(phone)} className="py-3.5 text-[13px] font-semibold text-white active:bg-white/10">
+      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 border-t border-white/10 bg-ink-deep text-center lg:hidden">
+        <a href={telHref(phone)} className="py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-white active:bg-white/10">
           Call Now
         </a>
         <a
           href={courseWaLink(course.title)}
           target="_blank"
           rel="noreferrer"
-          className="border-x border-white/10 py-3.5 text-[13px] font-semibold text-[#25d366] active:bg-white/10"
+          className="border-x border-white/10 py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-wa-bright active:bg-white/10"
         >
           WhatsApp
         </a>
-        <a href="#leadform" className="py-3.5 text-[13px] font-semibold text-brand active:bg-white/10">
+        <a href="#leadform" className="py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-brand-bright active:bg-white/10">
           Free Counselling
         </a>
       </div>

@@ -5,7 +5,8 @@ import { aboutParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
 import { CtaBand, ExperienceBadge, FaqList, FeatureTrio, LogoWall, PageHero, SectionTitle, SignatureBlock, StatsRibbon, siteFaqs } from "@/components/ui";
 
-export const metadata: Metadata = { title: "About Us" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/about-us" }, title: "About Us" };
 
 export default function AboutPage() {
   // aboutParagraphs order follows the live About page: intro, ISO, AICTE,
@@ -40,15 +41,15 @@ export default function AboutPage() {
           <div>
             <h3 className="text-2xl font-semibold text-heading">How We Work</h3>
             <ol className="mt-4 space-y-4">
-              <li className="rounded-2xl border border-[#dbe4ee] bg-white p-5 shadow-sm">
+              <li className="rounded-2xl border border-line bg-parchment p-5 shadow-sm">
                 <span className="font-extrabold text-brand">01</span>
                 <p className="mt-1">Explore from our range of services for your business needs</p>
               </li>
-              <li className="rounded-2xl border border-[#dbe4ee] bg-white p-5 shadow-sm">
+              <li className="rounded-2xl border border-line bg-parchment p-5 shadow-sm">
                 <span className="font-extrabold text-brand">02</span>
                 <p className="mt-1">Connect with us to schedule a meeting and discuss your needs</p>
               </li>
-              <li className="rounded-2xl border border-[#dbe4ee] bg-white p-5 shadow-sm">
+              <li className="rounded-2xl border border-line bg-parchment p-5 shadow-sm">
                 <span className="font-extrabold text-brand">03</span>
                 <p className="mt-1">
                   Talk to a Trainer — online &amp; offline classes with top-class trainings.

@@ -22,7 +22,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = articles.find((a) => a.slug === slug);
   if (!article) return { title: "Article not found" };
-  return { title: article.title, description: article.excerpt };
+  return { title: article.title, description: article.excerpt, alternates: { canonical: `/blog/${slug}` } };
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {

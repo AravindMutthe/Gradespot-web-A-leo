@@ -205,3 +205,21 @@ export async function verifyCertificate(code: string): Promise<CertificateRecord
     return null;
   }
 }
+
+// ——— Promotions (admin-configured content, §19) ———
+// Single read path for every promo slot (banner / cards / ticker).
+// Today this resolves from the typed config seam src/data/promotions.ts
+// because migration 0005 (site_promotions table) is not yet applied —
+// DDL cannot run from the build sandbox. When it is applied, swap this
+// body for an anon read of public.site_promotions (RLS there already
+// restricts anon to active rows); components will not change.
+import { promotions as configPromotions, type Promotion, type PromotionKind } from "@/data/promotions";
+
+export async function getPromotions(kind: PromotionKind): Promise<Promotion[]> {
+  const now = Date.now();
+  return configPromotions
+    .filter((p) => p.kind === kind && p.active)
+    .filter((p) => (p.startsAt ? Date.parse(p.startsAt) <= now : true))
+    .filter((p) => (p.endsAt ? Date.parse(p.endsAt) >= now : true))
+    .sort((a, b) => a.sort - b.sort);
+}

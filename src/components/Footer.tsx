@@ -3,6 +3,11 @@ import Link from "next/link";
 import { business, telHref } from "@/data/site";
 import { SocialLinks } from "@/components/ui";
 
+// Footer — Leo redesign v2 ("Prospectus", DECISIONS.md §19): deep ink
+// stock, serif column heads, mono index labels. Link set is the v1 set
+// plus "Contact Us" in Quick Links (it left the top bar in §19 because
+// the Callback CTA duplicates it there; the footer keeps a plain path).
+
 const companyLinks = [
   { label: "About Us", href: "/about-us" },
   { label: "Team Members", href: "/team-members" },
@@ -10,15 +15,18 @@ const companyLinks = [
   { label: "Testimonials", href: "/testimonials" },
   { label: "Career Support", href: "/career-support" },
   { label: "For Colleges", href: "/for-colleges" },
+  { label: "Partner With Us", href: "/partner-with-us" },
   { label: "Help & FAQs", href: "/faq" },
 ];
 
 const quickLinks = [
   { label: "Trainings", href: "/trainings" },
   { label: "Services", href: "/services" },
+  { label: "Contact Us", href: "/contact-us" },
   { label: "Student Certifications", href: "/student-certifications" },
   { label: "Certificate Verification", href: "/certificate-verification" },
   { label: "Terms and Conditions", href: "/terms-and-conditions" },
+  { label: "Accessibility", href: "/accessibility" },
 ];
 
 // Footer keyword cluster (local-SEO pattern): the headline trainings,
@@ -32,10 +40,13 @@ const popularTrainings = [
   { label: "CompTIA Security+: Sy0-701", href: "/trainings/comptia-security-plus" },
 ];
 
+const linkCls = "inline-block py-1 transition-colors hover:text-brand-bright";
+const headCls = "mb-4 font-display text-[19px] font-semibold text-paper";
+
 export default function Footer() {
   return (
-    <footer className="border-t-4 border-brand bg-navy-deep text-footer-text">
-      <div className="wrap grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.25fr_0.7fr_0.8fr_1.05fr_1fr]">
+    <footer className="border-t-[3px] border-brand bg-ink-deep text-footer-text">
+      <div className="wrap grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1.25fr_0.7fr_0.8fr_1.05fr_1fr]">
         <div>
           <Image
             src="/images/logo-light.png"
@@ -44,23 +55,23 @@ export default function Footer() {
             height={60}
             className="h-12 w-auto"
           />
-          <p className="mt-4 text-sm leading-6">
+          <p className="mt-5 text-sm leading-6">
             At GradeSpot IT Solutions, our commitment is to craft superior IT solutions that
             redefine industry standards — training, services and cybersecurity from
             Dilsukhnagar, Hyderabad.
           </p>
-          <p className="mt-5 text-sm font-semibold text-white">Connect With Us</p>
-          <p className="mt-2 flex items-center gap-4">
+          <p className="eyebrow mt-6 text-paper">Connect With Us</p>
+          <p className="mt-3 flex items-center gap-4">
             <SocialLinks className="h-5 w-5" />
           </p>
         </div>
 
         <nav aria-label="Company">
-          <h3 className="mb-4 text-lg font-semibold text-white">Company</h3>
-          <ul className="space-y-2 text-sm">
+          <h3 className={headCls}>Company</h3>
+          <ul className="space-y-1.5 text-sm">
             {companyLinks.map((l) => (
               <li key={l.href}>
-                <Link className="hover:text-brand" href={l.href}>
+                <Link className={linkCls} href={l.href}>
                   {l.label}
                 </Link>
               </li>
@@ -69,11 +80,11 @@ export default function Footer() {
         </nav>
 
         <nav aria-label="Quick links">
-          <h3 className="mb-4 text-lg font-semibold text-white">Quick Links</h3>
-          <ul className="space-y-2 text-sm">
+          <h3 className={headCls}>Quick Links</h3>
+          <ul className="space-y-1.5 text-sm">
             {quickLinks.map((l) => (
               <li key={l.href}>
-                <Link className="hover:text-brand" href={l.href}>
+                <Link className={linkCls} href={l.href}>
                   {l.label}
                 </Link>
               </li>
@@ -82,11 +93,11 @@ export default function Footer() {
         </nav>
 
         <nav aria-label="Popular trainings">
-          <h3 className="mb-4 text-lg font-semibold text-white">Popular Trainings</h3>
-          <ul className="space-y-2 text-sm">
+          <h3 className={headCls}>Popular Trainings</h3>
+          <ul className="space-y-1.5 text-sm">
             {popularTrainings.map((l) => (
               <li key={l.href}>
-                <Link className="hover:text-brand" href={l.href}>
+                <Link className={linkCls} href={l.href}>
                   {l.label}
                 </Link>
               </li>
@@ -95,12 +106,12 @@ export default function Footer() {
         </nav>
 
         <div>
-          <h3 className="mb-4 text-lg font-semibold text-white">Contact Info</h3>
+          <h3 className={headCls}>Contact Info</h3>
           <address className="space-y-3 text-sm not-italic leading-6">
             <p>{business.address}</p>
             <p>
               <a
-                className="font-semibold text-brand hover:text-white"
+                className="font-semibold text-brand-bright hover:text-paper"
                 href={`https://www.google.com/maps?q=${encodeURIComponent(business.address)}`}
                 target="_blank"
                 rel="noreferrer"
@@ -111,7 +122,7 @@ export default function Footer() {
             <p>
               {business.emails.map((e) => (
                 <span key={e} className="block">
-                  <a className="hover:text-brand" href={`mailto:${e}`}>
+                  <a className={linkCls} href={`mailto:${e}`}>
                     {e}
                   </a>
                 </span>
@@ -120,7 +131,7 @@ export default function Footer() {
             <p>
               {business.phones.map((p) => (
                 <span key={p} className="block">
-                  <a className="hover:text-brand" href={telHref(p)}>
+                  <a className={linkCls} href={telHref(p)}>
                     {p}
                   </a>
                 </span>
@@ -131,37 +142,37 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="wrap flex flex-wrap items-center justify-between gap-2 py-4 text-[13px] text-footer-text">
+        <div className="wrap flex flex-wrap items-center justify-between gap-2 py-5 font-mono text-[11.5px] uppercase tracking-[0.08em] text-footer-text">
           <p>© Copyright {new Date().getFullYear()}. {business.legalName}</p>
-          <p>
-            <Link className="hover:text-brand" href="/">
+          <p className="normal-case tracking-normal">
+            <Link className="hover:text-brand-bright" href="/">
               Home
             </Link>
             {" · "}
-            <Link className="hover:text-brand" href="/testimonials">
+            <Link className="hover:text-brand-bright" href="/testimonials">
               Testimonials
             </Link>
             {" · "}
-            <Link className="hover:text-brand" href="/services">
+            <Link className="hover:text-brand-bright" href="/services">
               Our Services
             </Link>
             {" · "}
-            <Link className="hover:text-brand" href="/pricing">
+            <Link className="hover:text-brand-bright" href="/pricing">
               Pricing
             </Link>
             {" · "}
-            <Link className="hover:text-brand" href="/for-institutes">
+            <Link className="hover:text-brand-bright" href="/for-institutes">
               For Institutes
             </Link>
             {" · "}
             <Link
-              className="hover:text-brand"
+              className="hover:text-brand-bright"
               href="/training-institute-in-dilsukhnagar-hyderabad"
             >
               Institute in Dilsukhnagar
             </Link>
             {" · "}
-            <Link className="hover:text-brand" href="/terms-and-conditions">
+            <Link className="hover:text-brand-bright" href="/terms-and-conditions">
               Terms and Conditions
             </Link>
           </p>

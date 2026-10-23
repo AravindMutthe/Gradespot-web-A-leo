@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getCourses, getServices } from "@/lib/data";
 import { PageHero, SectionTitle } from "@/components/ui";
+import OfferCards from "@/components/OfferCards";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/pricing" },
   title: "Pricing",
   description:
     "GradeSpot pricing: published course fees for students, scoped quotes for businesses, and institute plans quoted after a demo.",
@@ -81,6 +83,14 @@ export default async function PricingPage() {
             <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "Pricing" }]} />
           </div>
 
+          {/* Free first steps — promotions data layer (§19) */}
+          <div className="mt-12">
+            <SectionTitle label="No-Cost First Steps" title="Start free" />
+            <div className="mt-8">
+              <OfferCards />
+            </div>
+          </div>
+
           {/* Students — the real published fees */}
           <div className="mt-12">
             <SectionTitle label="For Students" title="Course fees, published" />
@@ -92,7 +102,7 @@ export default async function PricingPage() {
               {pricedCourses.map(({ course, plans }) => (
                 <article
                   key={course.slug}
-                  className="rounded-2xl border border-[#dbe4ee] bg-white p-8 shadow-sm"
+                  className="rounded-2xl border border-line bg-parchment p-8 shadow-sm"
                 >
                   <h3 className="text-xl font-bold text-heading">{course.title}</h3>
                   {course.duration && (
@@ -158,7 +168,7 @@ export default async function PricingPage() {
                 <Link
                   key={s.slug}
                   href={`/services/${s.slug}`}
-                  className="rounded-xl border border-[#dbe4ee] bg-white px-6 py-5 font-semibold text-heading shadow-sm transition duration-300 hover:shadow-[0_16px_32px_rgba(10,34,54,0.12)]"
+                  className="rounded-xl border border-line bg-parchment px-6 py-5 font-semibold text-heading shadow-sm transition duration-300 hover:shadow-[0_16px_32px_rgba(31,24,16,0.12)]"
                 >
                   {s.title} <span className="text-brand">→</span>
                 </Link>
@@ -183,8 +193,8 @@ export default async function PricingPage() {
               {instituteTiers.map((t, i) => (
                 <article
                   key={t.name}
-                  className={`flex flex-col rounded-2xl border bg-white px-8 py-10 shadow-sm ${
-                    i === 1 ? "border-brand ring-1 ring-brand" : "border-[#dbe4ee]"
+                  className={`flex flex-col rounded-2xl border bg-parchment px-8 py-10 shadow-sm ${
+                    i === 1 ? "border-brand ring-1 ring-brand" : "border-line"
                   }`}
                 >
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-dark">

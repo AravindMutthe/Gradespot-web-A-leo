@@ -16,7 +16,7 @@ export default function EnquiryRail({ courseTitle }: { courseTitle: string }) {
 
   return (
     <aside className="lg:sticky lg:top-32">
-      <h2 className="font-display text-[22px] font-bold leading-snug text-heading">
+      <h2 className="font-display text-[22px] font-semibold leading-snug text-heading">
         Request a Callback
       </h2>
       <p className="mt-1.5 text-sm leading-6 text-body">
@@ -29,7 +29,7 @@ export default function EnquiryRail({ courseTitle }: { courseTitle: string }) {
         href={`https://wa.me/${waNumber}?text=${waText}`}
         target="_blank"
         rel="noreferrer"
-        className="mt-4 flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_24px_rgba(37,211,102,0.35)] transition-transform hover:scale-[1.02]"
+        className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-wa px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_24px_rgba(11,122,67,0.35)] transition-transform hover:scale-[1.02]"
       >
         Chat about this course on WhatsApp
       </a>
@@ -37,13 +37,13 @@ export default function EnquiryRail({ courseTitle }: { courseTitle: string }) {
         href={syllabusWaLink(courseTitle)}
         target="_blank"
         rel="noreferrer"
-        className="mt-3 flex items-center justify-center gap-2 rounded-full border-2 border-[#25d366] px-6 py-3 text-[15px] font-semibold text-heading transition-colors hover:bg-green-50"
+        className="mt-3 flex items-center justify-center gap-2 rounded-xl border-2 border-wa px-6 py-3 text-[15px] font-semibold text-heading transition-colors hover:bg-brand-soft"
       >
         Get the Syllabus on WhatsApp
       </a>
       <a
         href="#demo"
-        className="mt-3 flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 text-[15px] font-semibold text-white transition-transform hover:scale-[1.02]"
+        className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-navy px-6 py-3 text-[15px] font-semibold text-white transition-transform hover:scale-[1.02]"
       >
         Book a Free Demo Class
       </a>

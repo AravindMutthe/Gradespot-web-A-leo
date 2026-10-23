@@ -1172,9 +1172,38 @@ const legacyRedirects = [
   }
 ];
 
+// OWASP security headers (Leo redesign v2, DECISIONS.md §19) — the
+// set proven on Aravind's other builds. CSP notes: 'unsafe-inline'
+// for script/style is required by the Next.js runtime (inline
+// bootstrap scripts + style attributes) in the absence of a nonce
+// pipeline; no external script/style/font origins are allowed at
+// all, images are same-origin (+ data:/blob: for inline assets),
+// and the app sets no third-party trackers to exempt.
+const securityHeaders = [
+  {
+    key: "Content-Security-Policy",
+    value:
+      "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+  },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
+  },
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains; preload",
+  },
+];
+
 const nextConfig: NextConfig = {
   async redirects() {
     return legacyRedirects;
+  },
+  async headers() {
+    return [{ source: "/:path*", headers: securityHeaders }];
   },
 };
 

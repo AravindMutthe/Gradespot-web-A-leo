@@ -5,7 +5,8 @@ import { servicesFaqAnswers } from "@/data/pages";
 import { business, telHref } from "@/data/site";
 import { FaqList, LogoWall, PageHero, SectionTitle, ServiceCard, siteFaqs } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Services" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/services" }, title: "Services" };
 
 export default async function ServicesPage() {
   const services = await getServices();
@@ -39,9 +40,9 @@ export default async function ServicesPage() {
             <FaqList items={siteFaqs} />
           </div>
 
-          <div className="mt-16 rounded-2xl bg-heading p-8 text-center text-white">
-            <h2 className="text-2xl font-semibold text-white">Need a service for your business?</h2>
-            <p className="mx-auto mt-2 max-w-xl text-white/80">
+          <div className="mt-16 rounded-[20px] panel-ink p-8 text-center">
+            <h2 className="font-display text-2xl font-semibold text-paper">Need a service for your business?</h2>
+            <p className="mx-auto mt-2 max-w-xl text-paper/80">
               Tell us what you are building or training for — we will respond with the right
               service plan.
             </p>

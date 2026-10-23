@@ -1,21 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import type { Course } from "@/data/courses";
 import type { Service } from "@/data/services";
 import { stats } from "@/data/site";
 import { servicesFaqAnswers } from "@/data/pages";
 import { employers } from "@/data/employers";
 import { blogPosts } from "@/data/blog";
+import { services as allServices } from "@/data/services";
+
+// Shared components in the Leo redesign v2 language ("Prospectus",
+// DECISIONS.md §19): paper heroes with serif display type, mono index
+// labels, parchment cards with warm shadows, ink panels. Content —
+// copy, links, images — is unchanged from v1 everywhere below.
 
 export function PageHero({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
-    <section className="bg-[linear-gradient(120deg,#061724_0%,#0a2236_55%,#0e2b3d_100%)] py-14 text-white md:py-[72px]">
-      <div className="wrap">
-        <span className="block h-1 w-14 rounded-full bg-brand" aria-hidden />
-        <h1 className="mt-5 text-4xl font-bold leading-[1.15] text-white md:text-[52px]">
+    <section className="hero-paper border-b border-line py-16 md:py-[84px]">
+      <div className="wrap" data-reveal>
+        <span className="block h-[3px] w-14 rounded-full bg-brand" aria-hidden />
+        <h1 className="mt-6 max-w-4xl text-[40px] font-semibold leading-[1.08] text-heading md:text-[56px]">
           {title}
         </h1>
-        {subtitle && <p className="mt-4 max-w-3xl text-base leading-7 text-white/80">{subtitle}</p>}
+        {subtitle && <p className="mt-5 max-w-3xl text-lg leading-8 text-body">{subtitle}</p>}
       </div>
     </section>
   );
@@ -31,19 +38,19 @@ export function SectionTitle({
   center?: boolean;
 }) {
   return (
-    <div className={center ? "text-center" : ""}>
+    <div className={center ? "text-center" : ""} data-reveal>
       {label && (
         <p
-          className={`flex items-center gap-2.5 text-[13px] font-bold uppercase tracking-[0.18em] text-brand-dark ${
+          className={`eyebrow flex items-center gap-3 text-brand-dark ${
             center ? "justify-center" : ""
           }`}
         >
-          <span className="inline-block h-[2px] w-8 bg-brand" aria-hidden />
+          <span className="inline-block h-[2px] w-9 bg-brand" aria-hidden />
           {label}
-          {center && <span className="inline-block h-[2px] w-8 bg-brand" aria-hidden />}
+          {center && <span className="inline-block h-[2px] w-9 bg-brand" aria-hidden />}
         </p>
       )}
-      <h2 className="mt-3 text-[32px] font-bold leading-[1.2] text-heading md:text-[36px]">
+      <h2 className="mt-3.5 text-[32px] font-semibold leading-[1.15] text-heading md:text-[38px]">
         {title}
       </h2>
     </div>
@@ -52,14 +59,14 @@ export function SectionTitle({
 
 export function StatsRibbon() {
   return (
-    <section className="bg-navy py-12 text-white">
-      <div className="wrap grid grid-cols-2 gap-6 text-center sm:grid-cols-3 lg:grid-cols-5">
-        {stats.map((s) => (
-          <div key={s.label}>
-            <p className="font-display text-4xl font-extrabold text-brand">{s.value}</p>
-            <p className="mt-1 text-[13px] font-medium uppercase tracking-wide text-white/75">
-              {s.label}
+    <section className="panel-ink py-14">
+      <div className="wrap grid grid-cols-2 gap-8 text-center sm:grid-cols-3 lg:grid-cols-5">
+        {stats.map((s, i) => (
+          <div key={s.label} data-reveal style={{ "--reveal-delay": `${i * 80}ms` } as CSSProperties}>
+            <p className="font-display text-[42px] font-semibold leading-none text-brand-bright">
+              {s.value}
             </p>
+            <p className="eyebrow mt-2.5 text-paper/70">{s.label}</p>
           </div>
         ))}
       </div>
@@ -85,36 +92,58 @@ export function CourseCardBody({
   duration?: string;
 }) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#dbe4ee] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(10,34,54,0.14)]">
+    <article
+      data-reveal
+      className="group flex h-full flex-col overflow-hidden rounded-[18px] border border-line bg-parchment shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_rgba(31,24,16,0.13)]"
+    >
       {image ? (
-        <Image
-          src={image}
-          alt={title}
-          width={600}
-          height={340}
-          className="h-44 w-full object-cover"
-        />
+        <div className="relative overflow-hidden">
+          <Image
+            src={image}
+            alt={title}
+            width={600}
+            height={340}
+            className="h-44 w-full object-cover sepia-[0.14] transition duration-500 group-hover:scale-[1.04]"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/0 to-ink/10"
+          />
+          <span className="eyebrow absolute right-3 top-3 rounded-md bg-brand px-2.5 py-1.5 text-white shadow-lg">
+            Free Demo
+          </span>
+          {duration && (
+            <span className="absolute bottom-3 left-3 rounded-md bg-ink/85 px-2.5 py-1.5 font-mono text-[11.5px] font-medium text-paper">
+              {duration}
+            </span>
+          )}
+        </div>
       ) : (
         <div className="flex h-44 w-full items-center justify-center bg-navy px-6 text-center">
-          <span className="font-display text-lg font-semibold text-white">{category}</span>
+          <span className="font-display text-lg font-semibold text-paper">{category}</span>
         </div>
       )}
       <div className="flex grow flex-col p-6">
         <p>
-          <span className="inline-block rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-dark">
+          <span className="eyebrow inline-block rounded-md bg-brand-soft px-2.5 py-1.5 text-brand-dark">
             {category}
           </span>
         </p>
-        <h3 className="mt-3 text-lg font-bold leading-snug text-heading">{title}</h3>
-        {duration && (
-          <p className="mt-2 text-[13px] font-semibold text-brand-dark">Duration: {duration}</p>
+        <h3 className="mt-3.5 text-[19px] font-semibold leading-snug text-heading">{title}</h3>
+        {duration && !image && (
+          <p className="mt-2 font-mono text-[12.5px] font-medium text-brand-dark">
+            Duration — {duration}
+          </p>
         )}
         {summary && <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{summary}</p>}
         <Link
           href={`/trainings/${slug}`}
-          className="mt-auto inline-block pt-4 text-sm font-bold text-brand hover:text-brand-dark"
+          className="mt-auto inline-block pt-4 text-sm font-bold text-brand transition-colors hover:text-brand-dark"
         >
-          Read More →
+          Read More{" "}
+          <span aria-hidden className="inline-block transition-transform group-hover:translate-x-0.5">
+            →
+          </span>
         </Link>
       </div>
     </article>
@@ -135,15 +164,28 @@ export function CourseCard({ course }: { course: Course }) {
 }
 
 export function ServiceCard({ service }: { service: Service }) {
+  const idx = allServices.findIndex((s) => s.slug === service.slug);
   return (
-    <article className="flex flex-col rounded-2xl border border-[#dbe4ee] border-l-4 border-l-brand bg-white px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]">
-      <h3 className="text-xl font-bold text-heading">{service.title}</h3>
+    <article
+      data-reveal
+      className="group relative flex flex-col overflow-hidden rounded-[18px] border border-line bg-parchment px-7 py-8 shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_rgba(31,24,16,0.12)]"
+    >
+      {idx >= 0 && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-1 -top-4 font-display text-[72px] font-semibold leading-none text-ink/[0.05]"
+        >
+          {String(idx + 1).padStart(2, "0")}
+        </span>
+      )}
+      <span className="block h-[3px] w-10 rounded-full bg-brand transition-all duration-300 group-hover:w-16" aria-hidden />
+      <h3 className="mt-4 text-[21px] font-semibold text-heading">{service.title}</h3>
       {service.summary && (
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{service.summary}</p>
       )}
       <Link
         href={`/services/${service.slug}`}
-        className="mt-auto inline-block pt-5 text-sm font-bold text-brand hover:text-brand-dark"
+        className="mt-auto inline-block pt-5 text-sm font-bold text-brand transition-colors hover:text-brand-dark"
       >
         Read More →
       </Link>
@@ -163,11 +205,17 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
       {items
         .filter((f) => f.a)
         .map((f) => (
-          <details key={f.q} className="rounded-xl border border-[#dbe4ee] bg-white px-6 py-5">
-            <summary className="cursor-pointer font-display text-[17px] font-semibold text-heading">
+          <details
+            key={f.q}
+            className="faq-item rounded-2xl border border-line bg-parchment px-6 py-5"
+          >
+            <summary className="flex cursor-pointer items-center justify-between gap-4 font-display text-[17px] font-semibold text-heading">
               {f.q}
+              <span aria-hidden className="faq-plus shrink-0 text-xl font-normal leading-none text-brand">
+                +
+              </span>
             </summary>
-            <p className="mt-2 text-sm leading-6 text-body">{f.a}</p>
+            <p className="mt-2.5 text-[15px] leading-7 text-body">{f.a}</p>
           </details>
         ))}
     </div>
@@ -176,11 +224,11 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
 
 export function CtaBand() {
   return (
-    <section className="bg-[linear-gradient(120deg,#061724_0%,#0a2236_55%,#0e2b3d_100%)] py-14 text-white">
-      <div className="wrap flex flex-wrap items-center justify-between gap-6">
+    <section className="panel-ink py-16">
+      <div className="wrap flex flex-wrap items-center justify-between gap-6" data-reveal>
         <div>
-          <h2 className="text-[32px] font-bold leading-[38px] text-white">Need Help?</h2>
-          <p className="mt-1 text-white/80">
+          <h2 className="text-[32px] font-semibold leading-[38px] text-paper">Need Help?</h2>
+          <p className="mt-1.5 text-paper/80">
             Reach out to the world&apos;s most reliable IT services. Get a free consultation.
           </p>
         </div>
@@ -193,9 +241,9 @@ export function CtaBand() {
 }
 
 // For Institutes band on the home page (harvested 2026-10-23 from the
-// gsits-platform B2BBand pattern, DECISIONS.md §17): the B2B door, in
-// Leo's idiom. Factual copy only — no prices (tier pricing undecided),
-// no delivery promises, no testimonials.
+// gsits-platform B2BBand pattern, DECISIONS.md §17): the B2B door.
+// Factual copy only — no prices (tier pricing undecided), no delivery
+// promises, no testimonials.
 export function ForInstitutesBand() {
   const items = [
     {
@@ -212,25 +260,31 @@ export function ForInstitutesBand() {
     },
   ];
   return (
-    <section className="bg-navy section-pad text-white">
+    <section className="panel-ink section-pad">
       <div className="wrap">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-[13px] font-bold uppercase tracking-[0.18em] text-brand">
-            For Institutes
-          </p>
-          <h2 className="mt-3 text-[32px] font-bold leading-[1.2] text-white md:text-[36px]">
+        <div className="mx-auto max-w-3xl text-center" data-reveal>
+          <p className="eyebrow text-brand-bright">For Institutes</p>
+          <h2 className="mt-3.5 text-[32px] font-semibold leading-[1.15] text-paper md:text-[38px]">
             Run an Institute? Automate Admissions.
           </h2>
-          <p className="mt-3 text-white/80">
+          <p className="mt-3.5 text-paper/80">
             GradeSpot builds the products it runs on. Our Axon products for training institutes
             start with our own admissions — and are available to yours.
           </p>
         </div>
         <div className="mx-auto mt-10 grid max-w-5xl gap-6 md:grid-cols-3">
-          {items.map((x) => (
-            <article key={x.t} className="rounded-2xl bg-white/[0.06] px-7 py-8 ring-1 ring-white/10">
-              <h3 className="text-lg font-bold text-white">{x.t}</h3>
-              <p className="mt-2 text-sm leading-6 text-white/75">{x.d}</p>
+          {items.map((x, i) => (
+            <article
+              key={x.t}
+              data-reveal
+              style={{ "--reveal-delay": `${i * 90}ms` } as CSSProperties}
+              className="rounded-[18px] bg-white/[0.05] px-7 py-8 ring-1 ring-white/10"
+            >
+              <p className="font-mono text-[12px] font-semibold text-brand-bright">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 className="mt-2.5 text-lg font-semibold text-paper">{x.t}</h3>
+              <p className="mt-2 text-sm leading-6 text-paper/75">{x.d}</p>
             </article>
           ))}
         </div>
@@ -242,6 +296,15 @@ export function ForInstitutesBand() {
             Book a Demo
           </Link>
         </div>
+        <p className="mt-6 text-center text-sm text-paper/75">
+          Or start a different conversation —{" "}
+          <Link
+            href="/partner-with-us"
+            className="font-semibold text-brand-bright underline-offset-4 hover:underline"
+          >
+            collaborations &amp; franchise discussions are welcome →
+          </Link>
+        </p>
       </div>
     </section>
   );
@@ -262,7 +325,8 @@ export function LogoWall() {
           {employers.map((e) => (
             <div
               key={e.name}
-              className="flex h-24 items-center justify-center rounded-xl border border-[#dbe4ee] bg-white px-4"
+              data-reveal
+              className="flex h-24 items-center justify-center rounded-2xl border border-line bg-parchment px-4"
             >
               <Image
                 src={e.logo}
@@ -287,24 +351,27 @@ export function BlogCards() {
       {blogPosts.map((p) => (
         <article
           key={p.title}
-          className="flex flex-col overflow-hidden rounded-2xl border border-[#dbe4ee] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(10,34,54,0.14)]"
+          data-reveal
+          className="group flex flex-col overflow-hidden rounded-[18px] border border-line bg-parchment shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_rgba(31,24,16,0.13)]"
         >
-          <a href={p.url} target="_blank" rel="noreferrer">
+          <a href={p.url} target="_blank" rel="noreferrer" className="block overflow-hidden">
             <Image
               src={p.image}
               alt={p.title}
               width={600}
               height={340}
-              className="h-44 w-full object-cover"
+              className="h-44 w-full object-cover transition duration-500 group-hover:scale-[1.04]"
             />
           </a>
           <div className="flex grow flex-col p-6">
-            <h3 className="text-base font-bold leading-snug text-heading">{p.title}</h3>
+            <h3 className="font-display text-[17px] font-semibold leading-snug text-heading">
+              {p.title}
+            </h3>
             <a
               href={p.url}
               target="_blank"
               rel="noreferrer"
-              className="mt-auto inline-block pt-4 text-sm font-bold text-brand hover:text-brand-dark"
+              className="mt-auto inline-block pt-4 text-sm font-bold text-brand transition-colors hover:text-brand-dark"
             >
               Read More →
             </a>
@@ -326,16 +393,21 @@ export function FeatureTrio() {
     <section className="section-pad">
       <div className="wrap">
         <div className="grid gap-6 md:grid-cols-3">
-          {items.map((t) => (
+          {items.map((t, i) => (
             <article
               key={t}
-              className="rounded-2xl border border-[#dbe4ee] border-t-4 border-t-brand bg-white px-8 py-10 text-center shadow-sm"
+              data-reveal
+              style={{ "--reveal-delay": `${i * 90}ms` } as CSSProperties}
+              className="rounded-[18px] border border-line border-t-[3px] border-t-brand bg-parchment px-8 py-9 text-center shadow-[0_1px_2px_rgba(31,24,16,0.05)]"
             >
-              <h3 className="text-xl font-bold text-heading">{t}</h3>
+              <p className="font-mono text-[12px] font-semibold text-brand-dark">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 className="mt-2 text-[21px] font-semibold text-heading">{t}</h3>
             </article>
           ))}
         </div>
-        <div className="mt-8 text-center">
+        <div className="mt-9 text-center">
           <Link href="/contact-us" className="btn-primary">
             Talk to a Trainer
           </Link>
@@ -348,8 +420,8 @@ export function FeatureTrio() {
 // "9 years of experience" badge from the live Home/About/Why Choose Us.
 export function ExperienceBadge() {
   return (
-    <div className="inline-flex items-center gap-3 rounded-2xl border border-brand/40 bg-navy px-5 py-4 text-white shadow-lg">
-      <span className="font-display text-4xl font-extrabold text-brand">9 Years</span>
+    <div className="inline-flex items-center gap-3 rounded-2xl border border-brand-bright/40 bg-ink px-5 py-4 text-paper shadow-lg">
+      <span className="font-display text-4xl font-semibold text-brand-bright">9 Years</span>
       <span className="text-sm font-medium leading-tight">
         of
         <br />
@@ -402,7 +474,7 @@ export function SocialLinks({ className = "h-4 w-4" }: { className?: string }) {
           target="_blank"
           rel="noreferrer"
           aria-label={`GradeSpot IT Solutions on ${s.label}`}
-          className="hover:text-brand"
+          className="hover:text-brand-bright"
         >
           <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
             <path d={s.path} />

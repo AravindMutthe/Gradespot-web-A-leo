@@ -36,7 +36,7 @@ function SectionBody({ section }: { section: CourseSection }) {
           return (
             <div
               key={j}
-              className="rounded-2xl border border-[#dbe4ee] bg-white px-6 py-8 text-center shadow-sm"
+              className="rounded-2xl border border-line bg-parchment px-6 py-8 text-center shadow-sm"
             >
               <p className="text-sm font-semibold uppercase tracking-wide text-body">{name}</p>
               <p className="mt-2 text-3xl font-extrabold text-heading">{price ?? p}</p>
@@ -70,16 +70,38 @@ function SectionBody({ section }: { section: CourseSection }) {
   );
 }
 
+// Register strip (DECISIONS.md §20): the registration door beside
+// the demo band on every course page. Links to /register with the
+// course pre-selected.
+function RegisterStrip({ slug, title }: { slug: string; title: string }) {
+  return (
+    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-[18px] border border-line bg-parchment px-7 py-6">
+      <div>
+        <h2 className="font-display text-[21px] font-semibold text-heading">
+          Ready to register for {title}?
+        </h2>
+        <p className="mt-1 max-w-xl text-sm leading-6 text-body">
+          Send the two-minute registration and the team will call to confirm your seat, batch
+          and mode of training.
+        </p>
+      </div>
+      <Link href={`/register?course=${slug}`} className="btn-navy">
+        Register for This Course
+      </Link>
+    </div>
+  );
+}
+
 // Corporate / B2B door on every course page (research: a corporate-training
 // module belongs on course pages, not only on a separate B2B page). Copy is
 // the business's own published positioning — corporate trainings are a
 // published GradeSpot service and the founder's published role.
 function B2BStrip() {
   return (
-    <div className="mt-12 rounded-2xl bg-navy p-8 text-white md:flex md:items-center md:justify-between md:gap-8">
+    <div className="mt-12 rounded-[20px] panel-ink p-8 md:flex md:items-center md:justify-between md:gap-8">
       <div>
-        <h2 className="text-2xl font-semibold text-white">Training a Team or a Classroom?</h2>
-        <p className="mt-2 max-w-xl text-white/80">
+        <h2 className="font-display text-2xl font-semibold text-paper">Training a Team or a Classroom?</h2>
+        <p className="mt-2 max-w-xl text-paper/80">
           GradeSpot also runs Corporate Trainings, College Workshops and Industrial Trainings —
           the same hands-on programs, delivered for your organisation.
         </p>
@@ -111,6 +133,7 @@ export async function generateMetadata({
   return {
     title: course.title,
     description: course.summary || `${course.title} — training at GradeSpot IT Solutions, Hyderabad.`,
+    alternates: { canonical: `/trainings/${slug}` },
   };
 }
 
@@ -162,7 +185,7 @@ export default async function CoursePage({
             dark
             items={crumbs}
           />
-          <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-brand">
+          <p className="eyebrow mt-6 text-brand-bright">
             {course.category}
           </p>
           <h1 className="mt-2 max-w-4xl text-4xl font-semibold md:text-5xl md:leading-tight">
@@ -222,6 +245,7 @@ export default async function CoursePage({
               <div id="demo" className="scroll-mt-32">
                 <DemoBand courseTitle={course.title} />
               </div>
+              <RegisterStrip slug={course.slug} title={course.title} />
               {generatedFaqs.length > 0 && (
                 <div className="mt-12">
                   <h2 className="text-[28px] font-semibold leading-[34px]">
@@ -257,6 +281,7 @@ export default async function CoursePage({
                 <div id="demo" className="scroll-mt-32">
                   <DemoBand courseTitle={course.title} />
                 </div>
+                <RegisterStrip slug={course.slug} title={course.title} />
                 {generatedFaqs.length > 0 && (
                   <div className="mt-12">
                     <h2 className="text-[28px] font-semibold leading-[34px]">
@@ -268,7 +293,7 @@ export default async function CoursePage({
                   </div>
                 )}
                 {comparePair && (
-                  <div className="mt-12 rounded-2xl border border-[#dbe4ee] bg-white p-8">
+                  <div className="mt-12 rounded-2xl border border-line bg-parchment p-8">
                     <h2 className="text-2xl font-semibold">Still deciding?</h2>
                     <p className="mt-2 max-w-xl">
                       We compared this course side-by-side with the closest alternative — topics,

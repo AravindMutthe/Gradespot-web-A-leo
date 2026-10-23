@@ -1,54 +1,209 @@
 @import "tailwindcss";
 
-/* Self-hosted variable fonts (downloaded into the repo — nothing hotlinked) */
+/* ————————————————————————————————————————————————————————————————
+   LEO REDESIGN v2 — "PROSPECTUS" (DECISIONS.md §19)
+   An editorial design system for a training institute, informed by
+   the market research corpus: SANS/OffSec course-code authority
+   (mono labels, index numbers), international ed-tech editorial
+   polish (serif display, paper canvas, generous rhythm), and the
+   Indian institute conversion layer (callback/WhatsApp/demo) kept
+   intact underneath. The palette no longer derives from the logo;
+   it harmonizes with it — the logo's vermilion, deepened one step
+   so every text and touch target meets WCAG 2.2 AA.
+   Fonts are self-hosted variable files — nothing hotlinked.
+   ———————————————————————————————————————————————————————————————— */
 @font-face {
-  font-family: "Inter";
-  src: url("/fonts/inter-var.woff2") format("woff2");
+  font-family: "Fraunces";
+  src: url("/fonts/fraunces-normal-100_900.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fraunces";
+  src: url("/fonts/fraunces-italic-100_900.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("/fonts/instrument-normal-400_700.woff2") format("woff2");
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("/fonts/jakarta-var.woff2") format("woff2");
-  font-weight: 600 800;
+  font-family: "Instrument Sans";
+  src: url("/fonts/instrument-italic-400_700.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plexmono-normal-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plexmono-normal-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plexmono-normal-600.woff2") format("woff2");
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @theme {
-  /* Palette anchored to the official GradeSpot logo: its orange + deep navy.
-     Same brand hues as the logo, applied in a corporate system — navy does
-     the structural work (header, footer, heroes), orange is the accent. */
-  --color-brand: #f7631b;
-  --color-brand-dark: #d9520f;
-  --color-brand-soft: #fdeee4;
-  --color-navy: #0a2236;
-  --color-navy-deep: #061724;
-  --color-heading: #0e2b3d;
-  --color-body: #47596b;
-  --color-nav: #d7e3ee;
-  --color-surface-light: #eef3f8;
-  --color-footer-text: #b9c9d8;
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Paper & ink neutrals (warm, editorial — not the old blue-grey) */
+  --color-paper: #faf6ee;
+  --color-parchment: #fffdf8;
+  --color-cream: #f2eada;
+  --color-ink: #201913;
+  --color-ink-deep: #171208;
+  --color-line: #e0d4be;
+
+  /* Signal vermilion — the logo orange's family, deepened for AA.
+     brand       = working signal (links, buttons, accents-as-text)
+     brand-bright= the true logo orange, for display/graphic moments
+                   and accents on ink (6.0:1 there)
+     brand-dark  = hover/pressed + small text on tinted chips      */
+  --color-brand: #b23a0a;
+  --color-brand-bright: #f7631b;
+  --color-brand-dark: #9a3412;
+  --color-brand-soft: #fbeada;
+
+  /* Legacy token names, remapped so every existing component picks
+     up the new system: navy panels are now warm ink, the pale blue
+     section tint is now cream, headings are ink. */
+  --color-navy: #241b11;
+  --color-navy-deep: #171208;
+  --color-heading: #201913;
+  --color-body: #5a4b38;
+  --color-nav: #3e362b;
+  --color-surface-light: #f2eada;
+  --color-footer-text: #cdbfa8;
+
+  /* WhatsApp, deepened so white text/icons meet AA (5.41:1);
+     wa-bright is the on-ink variant (10.7:1). */
+  --color-wa: #0b7a43;
+  --color-wa-bright: #4ade80;
+
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 @layer base {
   body {
-    @apply bg-white font-sans text-[15px] leading-[1.75] text-body antialiased;
+    @apply bg-paper font-sans text-base leading-[1.7] text-body antialiased;
   }
   h1,
   h2,
   h3,
   h4 {
     @apply font-display text-heading;
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: var(--color-brand);
+    color: #fff;
+  }
+  /* WCAG 2.2 — a focus indicator that is always visible and never
+     clipped by the sticky header's stacking context. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  /* Anchored sections clear the sticky header (focus not obscured). */
+  section[id],
+  div[id] {
+    scroll-margin-top: 96px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
   /* Room for the mobile sticky CTA bar */
   @media (max-width: 1023px) {
     body {
       padding-bottom: 57px;
     }
+  }
+}
+
+/* ——— Scroll reveal (progressive enhancement) ———
+   Elements carry data-reveal; the RevealFX component adds .reveal-on
+   to <html> and .is-in as elements enter the viewport. Without JS,
+   or with reduced motion, everything is simply visible. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-on [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.8s ease,
+      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal-on [data-reveal].is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ——— Ticker / board (salon-style scrolling board, §19) ———
+   A CSS marquee fed by the promotions data layer + catalogue titles.
+   Pauses on hover; under reduced motion it stops and wraps as a
+   static board — content is never hidden or lost. */
+.ticker-track {
+  animation: ticker-scroll 48s linear infinite;
+}
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+}
+
+/* FAQ accordion affordance (FaqList <details>) */
+.faq-item > summary {
+  list-style: none;
+}
+.faq-item > summary::-webkit-details-marker {
+  display: none;
+}
+.faq-item .faq-plus {
+  transition: transform 0.25s ease;
+}
+.faq-item[open ] .faq-plus {
+  transform: rotate(45deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .faq-item .faq-plus {
+    transition: none;
   }
 }
 
@@ -62,77 +217,140 @@
   }
 }
 
+/* Mono micro-label — the system's "index voice" (course codes,
+   section eyebrows, stat labels, utility strips). */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Buttons — one shape language: 12px "ticket" radius, ≥48px tall,
+   warm shadow, a 1px lift on hover. Names are unchanged from v1 so
+   every existing call site restyles in place. */
 @utility btn-primary {
-  display: inline-block;
-  border: 2px solid var(--color-brand);
-  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  border: 1px solid var(--color-brand);
+  border-radius: 12px;
   background: var(--color-brand);
-  padding: 11px 30px;
+  padding: 12px 28px;
   font-size: 15px;
   font-weight: 600;
   color: #fff;
-  box-shadow: 0 8px 20px rgba(247, 99, 27, 0.28);
+  box-shadow: 0 10px 24px rgba(178, 58, 10, 0.28);
   transition:
     background 0.2s ease,
-    transform 0.2s ease;
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   &:hover {
     background: var(--color-brand-dark);
+    border-color: var(--color-brand-dark);
     transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(178, 58, 10, 0.32);
+  }
+  &:active {
+    transform: translateY(0);
   }
 }
 
 @utility btn-navy {
-  display: inline-block;
-  border: 2px solid var(--color-navy);
-  border-radius: 999px;
-  background: var(--color-navy);
-  padding: 11px 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  border: 1px solid var(--color-ink);
+  border-radius: 12px;
+  background: var(--color-ink);
+  padding: 12px 28px;
   font-size: 15px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-paper);
   transition:
     background 0.2s ease,
     transform 0.2s ease;
   &:hover {
-    background: var(--color-heading);
+    background: #2e2416;
     transform: translateY(-1px);
+  }
+  &:active {
+    transform: translateY(0);
   }
 }
 
 @utility btn-outline-light {
-  display: inline-block;
-  border: 2px solid rgba(255, 255, 255, 0.85);
-  border-radius: 999px;
-  padding: 11px 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  border: 1px solid rgba(250, 246, 238, 0.65);
+  border-radius: 12px;
+  padding: 12px 28px;
   font-size: 15px;
   font-weight: 600;
-  color: #fff;
-  transition: background 0.2s ease;
+  color: var(--color-paper);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(250, 246, 238, 0.1);
+    border-color: var(--color-paper);
+    transform: translateY(-1px);
   }
 }
 
 @utility btn-outline-navy {
-  display: inline-block;
-  border: 2px solid var(--color-navy);
-  border-radius: 999px;
-  padding: 11px 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  border: 1.5px solid rgba(32, 25, 19, 0.75);
+  border-radius: 12px;
+  padding: 12px 28px;
   font-size: 15px;
   font-weight: 600;
-  color: var(--color-navy);
+  color: var(--color-ink);
   transition:
     background 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    transform 0.2s ease;
   &:hover {
-    background: var(--color-navy);
-    color: #fff;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    transform: translateY(-1px);
   }
 }
 
 @utility section-pad {
-  padding-block: 72px;
+  padding-block: 84px;
   @media (min-width: 768px) {
-    padding-block: 104px;
+    padding-block: 116px;
   }
+}
+
+/* Ink panel — dark sections (heroes, CTA bands, demo band):
+   deep warm ink with a whisper of signal glow at the top edge. */
+@utility panel-ink {
+  background:
+    radial-gradient(720px 340px at 88% -10%, rgba(247, 99, 27, 0.14), transparent 60%),
+    linear-gradient(160deg, #241b11 0%, #171208 78%);
+  color: var(--color-paper);
+}
+
+/* Paper hero texture — a faint dot grid, like printed prospectus
+   stock. Pure CSS, zero asset weight. */
+@utility hero-paper {
+  background-color: var(--color-paper);
+  background-image: radial-gradient(rgba(32, 25, 19, 0.07) 1px, transparent 1.4px);
+  background-size: 22px 22px;
 }

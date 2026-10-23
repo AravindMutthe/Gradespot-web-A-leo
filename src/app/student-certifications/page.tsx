@@ -5,7 +5,8 @@ import { certificationsParagraphs } from "@/data/pages";
 import { certificationGallery } from "@/data/certifications";
 import { LogoWall, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Student Certifications" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/student-certifications" }, title: "Student Certifications" };
 
 export default function CertificationsPage() {
   return (

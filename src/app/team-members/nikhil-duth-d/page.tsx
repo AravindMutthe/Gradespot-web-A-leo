@@ -4,7 +4,8 @@ import Link from "next/link";
 import { team } from "@/data/team";
 import { CtaBand, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Nikhil Duth D — Founder, Managing Director" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/team-members/nikhil-duth-d" }, title: "Nikhil Duth D — Founder, Managing Director" };
 
 // Profile facts exactly as published on the live Team Single page
 // (crawl 2026-10-23): role, 9 years of experience, two 95% skill bars and

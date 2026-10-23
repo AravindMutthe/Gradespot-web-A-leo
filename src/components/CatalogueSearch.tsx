@@ -59,7 +59,7 @@ export default function CatalogueSearch({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={`Search ${courses.length} trainings — try "CCNA", "Azure", "SOC"…`}
-          className="w-full rounded-full border border-[#dbe4ee] bg-white px-6 py-4 text-[15px] text-heading shadow-[0_10px_30px_rgba(10,34,54,0.08)] outline-none transition-colors placeholder:text-body/70 focus:border-brand"
+          className="w-full rounded-full border border-line bg-parchment px-6 py-4 text-[15px] text-heading shadow-[0_10px_30px_rgba(31,24,16,0.08)] outline-none transition-colors placeholder:text-body/70 focus:border-brand"
         />
         {results !== null && (
           <p className="mt-3 text-center text-sm text-body" role="status">

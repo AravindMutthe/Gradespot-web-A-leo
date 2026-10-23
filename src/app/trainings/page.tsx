@@ -3,9 +3,11 @@ import Link from "next/link";
 import { getCourses } from "@/lib/data";
 import { courseCategories } from "@/data/courses";
 import CatalogueSearch from "@/components/CatalogueSearch";
+import Ticker from "@/components/Ticker";
 import { BlogCards, FeatureTrio, LogoWall, PageHero, SectionTitle, StatsRibbon } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Trainings" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/trainings" }, title: "Trainings" };
 
 const showcaseItems = ["IT Consultancy", "Cyber Security", "Cloud Computing", "Backup & Recovery"];
 
@@ -25,6 +27,7 @@ export default async function TrainingsPage() {
         title="Trainings"
         subtitle="Creating a better IT solutions — At GradeSpot, we empower future engineers with cutting-edge IT skills, practical training, and real-world projects. Our mission is to turn learners into tech leaders. Transform every Digital Process — intelligent automation, expert-driven solutions, and scalable technology."
       />
+      <Ticker />
       <StatsRibbon />
       <section className="section-pad">
         <div className="wrap">
@@ -33,7 +36,7 @@ export default async function TrainingsPage() {
             {showcaseItems.map((t) => (
               <article
                 key={t}
-                className="rounded-2xl border border-[#dbe4ee] bg-white px-[30px] py-[40px] text-center shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+                className="rounded-2xl border border-line bg-parchment px-[30px] py-[40px] text-center shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
               >
                 <h3 className="text-xl font-bold text-heading">{t}</h3>
               </article>

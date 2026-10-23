@@ -21,7 +21,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const service = await getService(slug);
   if (!service) return { title: "Service not found" };
-  return { title: service.title, description: service.summary ?? `${service.title} — a GradeSpot IT Solutions service, Hyderabad.` };
+  return { title: service.title, description: service.summary ?? `${service.title} — a GradeSpot IT Solutions service, Hyderabad.`, alternates: { canonical: `/services/${slug}` } };
 }
 
 export default async function ServicePage({

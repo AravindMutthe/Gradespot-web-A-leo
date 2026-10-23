@@ -4,7 +4,8 @@ import Link from "next/link";
 import { team } from "@/data/team";
 import { CtaBand, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Team Members" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/team-members" }, title: "Team Members" };
 
 export default function TeamPage() {
   return (
@@ -15,7 +16,7 @@ export default function TeamPage() {
           {team.map((m) => (
             <article
               key={m.name}
-              className="overflow-hidden rounded-2xl border border-[#dbe4ee] bg-white text-center shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+              className="overflow-hidden rounded-2xl border border-line bg-parchment text-center shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
             >
               <Image
                 src={m.image}

@@ -57,13 +57,13 @@ export default function LpLeadForm({
   }
 
   const field =
-    "w-full rounded-lg border border-neutral-300 px-4 py-3 text-[15px] text-heading outline-none transition-colors focus:border-brand";
+    "w-full rounded-xl border border-line bg-parchment px-4 py-3 text-[15px] text-heading outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/20";
   const label = "block text-sm font-semibold text-heading";
   const id = (n: string) => `${idPrefix}-${n}`;
 
   if (state === "sent") {
     return (
-      <div className="rounded-2xl border border-[#dbe4ee] bg-white p-7 shadow-[0_20px_40px_rgba(10,34,54,0.10)]">
+      <div className="rounded-2xl border border-line bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]">
         <h3 className="font-display text-xl font-bold text-heading">Thank you!</h3>
         <p className="mt-2 text-sm leading-6 text-body">
           Your free counselling call request for {courseTitle} is in. Our counsellor will call
@@ -76,7 +76,7 @@ export default function LpLeadForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-[#dbe4ee] bg-white p-7 shadow-[0_20px_40px_rgba(10,34,54,0.10)]"
+      className="rounded-2xl border border-line bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
       noValidate
     >
       <h3 className="font-display text-xl font-bold text-heading">Get My Free Counselling Call</h3>
@@ -146,7 +146,7 @@ export default function LpLeadForm({
           name="whatsappOptIn"
           type="checkbox"
           value="true"
-          className="mt-1 h-4 w-4 shrink-0 accent-[#f7631b]"
+          className="mt-1 h-4 w-4 shrink-0 accent-brand"
         />
         <span>Yes, send me course details and updates on WhatsApp.</span>
       </label>

@@ -460,3 +460,350 @@ unchanged; the "Request a Callback" CTA unchanged.
 - **City pages beyond Hyderabad** — the business has one published
   location (Dilsukhnagar, Hyderabad); other-city pages would invent
   a presence.
+
+## 19. Leo redesign v2 — "Prospectus" — 2026-10-23
+
+Aravind's mandate (13:46 IST, superseding the v1 "palette from the
+logo" narrowing): full creative control — forget the original site's
+theme, style, design, layouts, structure, fonts, colors, effects and
+buttons; design to India + international standards; the original
+menu options stay (removals/merges allowed with research confidence,
+each logged); the official logo artwork stays unmodified; the
+content truth layer (all routes and their content, MD signature,
+management photos, 8 verbatim Google testimonials, one phone, 1250
+learners, published CCNA/CCNP prices only) is untouchable. Added the
+same day: rich Salon-style cards/boards/promo banners (§19.4–19.5),
+a named web-standards checklist (§19.6), and a legal-compliance
+layer (§19.7).
+
+### 19.1 Concept — "Prospectus"
+
+The site reads like a world-class institute prospectus crossed with
+a course-code ledger. Rationale from the research corpus: SANS and
+OffSec win authority with code-led course identity (SEC504, PEN-200)
+and mono-spaced technical labels; EC-Council/Simplilearn convert with
+visible proof and one clear CTA per surface; premium international
+ed-tech (and the world-class UX corpus) uses editorial serif display
+type, warm paper canvases and generous rhythm. GradeSpot's catalogue
+is literally a list of codes (AZ-900, CCNA 200-301, CEH v13) — so the
+system gives it a "ledger voice": Fraunces serif for display,
+Instrument Sans for text, IBM Plex Mono for codes, eyebrows, stats
+and board lines. The Indian conversion layer the research demands
+(callback-first forms, WhatsApp, free demo) stays exactly as built in
+§16–§18, wearing the new language.
+
+### 19.2 Tokens and fonts
+
+Palette (harmonizes with the logo; no longer derived from it — the
+logo's wordmark charcoal and vermilion sit naturally on warm ink and
+paper):
+- paper #FAF6EE · parchment #FFFDF8 · cream #F2EADA · ink #201913 ·
+  ink-deep #171208 · line #E0D4BE · body text #5A4B38
+- signal vermilion #B23A0A — the logo orange's family, deepened one
+  step so text and touch targets pass WCAG 2.2 AA (the raw logo
+  orange measures 2.95:1 and fails): 5.56:1 on paper, 5.01:1 on
+  cream, 6.0:1 under white button text.
+- brand-bright #F7631B = the true logo orange, reserved for display
+  accents on ink (6.0:1) and graphic moments; brand-dark #9A3412
+  (hover/pressed, chip text 6.2:1); brand-soft #FBEADA.
+- WhatsApp #0B7A43 (white on it 5.41:1) / #4ADE80 on ink (10.7:1).
+- Measured pairs: body on paper 7.80:1 · body on cream 7.03:1 ·
+  ink headings 16.1:1 · footer text on ink-deep 10.31:1 ·
+  paper on ink-deep 17.29:1.
+Legacy token names (navy, heading, surface-light…) were remapped to
+the new values so all 86 routes restyled coherently; hardcoded v1
+hexes were migrated (24 files) and hero gradients replaced by the
+panel-ink / hero-paper treatments.
+Fonts (self-hosted variable woff2 in public/fonts/, preloaded, zero
+hotlinking): Fraunces 100–900 + italic (display), Instrument Sans
+400–700 (text/UI), IBM Plex Mono 400/500/600 (index voice). The v1
+Inter/Jakarta files were deleted.
+
+### 19.3 Structure and motion
+
+Light paper header (dark logo) under an ink mono utility strip;
+mega-menu and dropdowns as paper panels with serif course titles;
+buttons moved from pills to a 12px "ticket" radius, ≥48px tall, warm
+shadows, 1px hover lift; heroes are paper (dot-grid texture, serif
+display, italic signal word on Home) or ink panels with a signal
+glow; cards are layered parchment with warm shadows and hover lift;
+section rhythm widened (84/116px) with alternating paper/cream/ink
+bands; footer is deep ink with serif column heads. Motion: a
+RevealFX IntersectionObserver adds staggered fade-rise reveals —
+pure progressive enhancement (no JS or reduced-motion ⇒ everything
+simply visible), ticker pauses on hover. LP pages keep their §18
+conversion anatomy exactly (nav-free, message-matched H1, one CTA
+×3, 3-field form, sticky bar) in the new language.
+
+### 19.4 Menu changes (the only ones)
+
+1. "Home" removed from the top bar — the logo is the home link
+   (universal convention; NN/g menu guidance in the nav research).
+   Route, logo link and footer Home links unchanged.
+2. "Contact Us" removed from the top bar — it duplicated the
+   persistent "Request a Callback" CTA (same destination), the
+   floating Enquire action and the footer contact column. The page
+   stays one tap away via the CTA, and "Contact Us" was ADDED to
+   the footer Quick Links so a plain-text path exists.
+3. "Digital ↗" moved from the top bar into the Resources dropdown —
+   external properties (Blog ↗, Digital ↗) cluster together instead
+   of spending a primary slot on an outbound link (research sweet
+   spot: 4–6 core items + audience doors + one CTA).
+Resulting bar: Trainings ▾ · Services · Pricing · About Us ·
+Resources ▾ · For Colleges · For Institutes (pill) · Register (§20)
+· Request a Callback. Mobile menu mirrors it.
+
+### 19.5 Rich layer and the promotions system
+
+- Ticker (components/Ticker.tsx): a salon-style scrolling board —
+  "Featured" chip + CSS marquee of featured course titles (catalogue
+  data) interleaved with free-service lines (promotions data).
+  "Featured", not "Trending": no view analytics exist to
+  substantiate "trending" (ASCI). Reduced-motion ⇒ static board.
+- PromoBanner: layered ink panel, serif headline, real course
+  imagery, floating fact chip; renders the first active "banner"
+  promotion; hides when none is active.
+- OfferCards: ghost-numeral rich cards rendering active "card"
+  promotions; hides when none are active.
+- Rich cards: course cards gained an image gradient, a "Free Demo"
+  badge and a duration chip (both true — the demo path exists on
+  every course page); service and offer cards carry ghost index
+  numerals.
+- PROMOTIONS ARCHITECTURE (Aravind's decision, 13:54 IST): promo
+  content is never hardcoded. One data layer —
+  lib/data.ts getPromotions(kind) — shaped exactly like the future
+  Supabase table site_promotions (slug, kind banner/card/ticker,
+  title, body, cta_label, cta_href, image, active, sort, starts_at,
+  ends_at; anon read of active rows only). Supabase DDL is blocked
+  from the build sandbox, so today the seam is the typed config
+  src/data/promotions.ts with identical shape and seed; migration
+  supabase/migrations/0005_site_promotions.sql ships the table + RLS
+  + the same seed for the admin phase to apply. Admin CRUD belongs
+  to gradespot-axon (Phase 3) per the integration contract — no
+  admin UI was built here.
+- PROMO CONTENT RULE: only offers actually true today are seeded —
+  Book a Free Demo, Free Counselling Call, Syllabus on WhatsApp,
+  Free Certificate Verification. No invented discounts, percentages,
+  strike-through prices, deadlines or festival offers; an empty slot
+  hides rather than faking a deal. (A repo scan for discount/urgency
+  language hits only this rule's own statement in the config
+  comments.)
+
+### 19.6 Web & internet standards checklist (verified 2026-10-23)
+
+- Semantic HTML5 + landmarks + heading order — PASS (header/nav/
+  main/footer landmarks via Chrome; exactly one <h1> per page on
+  every sampled route incl. dynamic, LP and new pages; skip-to-
+  content link is the first focusable element).
+- WCAG 2.2 AA — PASS (contrast table §19.2, all pairs ≥ AA; visible
+  :focus-visible outline + scroll-margin so the sticky header never
+  obscures focus; nav/sticky targets ≥44px, buttons ≥48px; alt text
+  on informative images, decorative marked; prefers-reduced-motion
+  disables reveals, smooth scroll and the ticker animation; form
+  fields labelled with correct input types incl. tel).
+- Open Graph + Twitter cards + canonical URLs — PASS (metadataBase
+  https://gsitssolutions.com matching sitemap/robots; OG/Twitter
+  defaults in the root layout; a canonical on every page — all 26
+  page files: 20 static metadata objects, 5 generateMetadata
+  returns, home page export added; verified live in rendered HTML).
+- robots.txt / sitemap.xml / llms.txt hygiene — PASS (all serve
+  200; sitemap carries 89 URLs after §20–§21 additions; every one
+  returns 200; llms.txt lists the new pages).
+- OWASP security headers via next.config — PASS (verified in live
+  response headers: Content-Security-Policy, X-Content-Type-Options
+  nosniff, X-Frame-Options DENY + frame-ancestors 'none',
+  Referrer-Policy strict-origin-when-cross-origin,
+  Permissions-Policy (camera/microphone/geolocation/payment/usb/
+  browsing-topics off), Strict-Transport-Security. CSP allows no
+  external script/style/font origins; 'unsafe-inline' remains for
+  the Next.js runtime's inline bootstrap — recorded honestly; the
+  233 legacy redirects are untouched).
+- HTTPS-only external links + rel hygiene — PASS (all outbound
+  links are https and open with rel="noreferrer"; the only external
+  destinations are the business's own properties + WhatsApp).
+- Responsive, mobile-first — PASS (layouts grid from mobile up;
+  sticky mobile action bars retained; ticker wraps statically on
+  small screens under reduced motion).
+- Performance budget — PASS (shared First Load JS 103 kB; fonts
+  self-hosted + preloaded, no render-blocking third-party requests;
+  images via next/image with dimensions everywhere except the LP/
+  banner heroes, which use fill + sizes inside fixed-aspect frames
+  — no CLS either way; motion is CSS/IntersectionObserver only, no
+  animation libraries).
+- schema.org markup — RETAINED (Organization, Course, FAQPage,
+  BreadcrumbList, LocalBusiness JSON-LD unchanged from §16–§18).
+
+### 19.7 Legal-compliance layer
+
+- DPDP Act 2023: forms state what details are used for ("used only
+  to respond to this enquiry"); the WhatsApp opt-in is an explicit,
+  unticked checkbox everywhere, and the register form (§20) carries
+  a fuller consent line (contact purpose + never sold). No data is
+  collected beyond the enquiry fields.
+- IT Act / IT Rules 2021: a grievance/contact path exists via the
+  published email, phone and contact page. The named Grievance
+  Officer is Aravind's data — blocked below.
+- Consumer Protection Act 2019 + E-Commerce Rules + ASCI code:
+  all new v2 copy (promo system, register, partner, accessibility)
+  was audited against the honesty rules — no misleading claims, no
+  fake scarcity/urgency (no countdowns, no "limited period"), no
+  unsubstantiated superlatives, no invented figures; "Featured" is
+  used instead of "Trending". LP pages keep the §18 ads-policy-safe
+  anatomy (message-matched, no fake offers).
+- GDPR / ePrivacy posture: the site runs no ad trackers and no
+  analytics; the application sets no cookies of its own (strictly-
+  necessary hosting behaviour aside), so no consent banner is
+  required today. Any future embed/tracker triggers consent
+  handling first — noted as a standing rule.
+- Existing legal pages audited: /terms-and-conditions is present
+  and carried into the new design language (PageHero + tokens).
+  A privacy policy page does NOT exist (already blocked in §16) —
+  see blocked-on-data below; it was not invented here.
+- Accessibility statement: /accessibility added, written only from
+  measures this build actually implements and verified (§19.6),
+  with a human contact route for barriers.
+
+BLOCKED-ON-DATA (legal — Aravind to supply; nothing was invented):
+1. Grievance Officer name, designation and direct contact for the
+   IT Rules 2021 grievance page/section.
+2. Privacy notice text for a /privacy-policy page: what personal
+   data the forms/WhatsApp collect, purposes, retention period, and
+   the data-principal request route under DPDP Act 2023.
+3. Refund/cancellation policy for course fees (Consumer Protection
+   (E-Commerce) Rules) — needed before any fee is ever taken
+   online; today's pages take no payment.
+4. Company registration details (CIN and registered office address,
+   if different from the published institute address) for the legal
+   pages and any future franchise documentation.
+5. Confirmation of the salon-style board claim set if promotions
+   ever grow beyond the four true offers — each new offer needs his
+   approval before seeding (the data layer makes it a config
+   change, not a code change).
+
+### 19.8 Verification (2026-10-23, local production build)
+
+- npm run build: PASS (96 static pages generated; /register dynamic
+  by design for its ?course= prefill).
+- Crawl: 89/89 sitemap URLs return 200; 93 unique internal links
+  found across all pages, 0 bad.
+- Lead flows against live Supabase, all 201 + stored, then deleted
+  (leads table left empty): demo (source website:/trainings/…),
+  LP (website:/lp/…), register (website:/register, §20), partner
+  (website:/partner-with-us, §21); invalid payload → 422.
+- Security headers: all six present in live responses (§19.6).
+- Content integrity vs the pre-v2 baseline: signature alt present;
+  8 testimonials with "Posted on Google" ×8; one phone everywhere;
+  published prices ₹13,000 / ₹28,000 / ₹37,500 render on /pricing;
+  Set A/Set B figures: 0 anywhere; ISO/AICTE claim instances
+  byte-identical to baseline (the strict-grep delta of +2 during
+  the pass was two "// ISO 8601" code comments in the new config
+  file, reworded — claims neither added nor removed); logo,
+  signature and team photo files hash-identical to the replica.
+
+## 20. Registration — 2026-10-23
+
+Aravind's decision (13:56 IST): "put Registration on the site."
+Confirmed by his option tap the same minute: "Keep demo signup
+only — no accounts for now." Implementation follows that ruling
+exactly: /register is course/demo LEAD registration on the existing
+/api/leads pipeline — NOT password user accounts, no login, no
+account creation anywhere in this build. Student accounts are
+noted for the LMS phase only (gradespot-axon), if he ever asks.
+
+- Page: /register (v2 design) — how-it-works steps, a registration
+  form (name, phone, optional email, course select from the real
+  catalogue, type select: Course Registration / Free Demo, WhatsApp
+  opt-in with a DPDP consent line), and the free-first-steps offer
+  board. Copy states plainly that registering is an enquiry, not a
+  payment or an account.
+- Lead shape: source "website:/register" (path-derived, like every
+  form); interest names type + course — "Registration: <course>" or
+  "Demo: <course>", reusing the existing Demo convention.
+- Entry points (menu options unchanged): a distinct Register action
+  in the header CTA area (desktop + mobile), the home hero's
+  secondary CTA (was "Our Services"; Services remains in the menu
+  and sections), and a Register strip beside the Demo band on every
+  course page linking to /register?course=<slug> with the course
+  pre-selected. LP anatomy deliberately untouched (one CTA ×3).
+- Thank-you state follows the established pattern (confirmation +
+  Continue on WhatsApp with the registration pre-filled).
+- Verified: register POST → 201, stored with source
+  website:/register and interest "Registration: CCNA 200-301";
+  test lead deleted (§19.8).
+
+## 21. Partner With Us — 2026-10-23
+
+Aravind's decision (13:57 IST): the site should openly welcome
+collaborations and franchise discussions.
+
+- Page: /partner-with-us (v2 design) — hero carrying his line
+  ("Collaborations & franchise discussions are welcome"), two
+  tracks (Collaborations: institutes, colleges, trainers, content/
+  community partners · Franchise discussions: new-centre
+  conversations), a four-step discussion process (Talk → Understand
+  → Pilot → Decide), proof limited to facts (GradeSpot is Pilot
+  Customer #1; the products are real and inspectable on this site),
+  and an enquiry form with a type select posting to /api/leads —
+  source "website:/partner-with-us", interest "Collaboration" or
+  "Franchise Discussion".
+- Entry points (menu options unchanged): a partner band at the end
+  of /for-institutes, a "Partner With Us" link in the home B2B band,
+  and a footer Company link.
+- LEGAL LINE: the page is an invitation to discuss, NOT a franchise
+  offer — and says so on the page itself. No investment figures, no
+  ROI/earnings claims, no territory promises, no franchise terms
+  appear anywhere (a repo scan hits only this disclaimer's own
+  wording). Franchise documentation, if discussions ever mature, is
+  blocked on Aravind's data and legal drafting (§19.7 list).
+- Verified: partner POST → 201 stored with source
+  website:/partner-with-us (§19.8); page in sitemap + llms.txt.
+
+### 19.9 Market-pattern sources for v2 choices (mandate confirmed 14:00 IST)
+
+Aravind confirmed free hands for domain/market choices on current
+global + India training-institute/ed-tech practice, with the
+research corpus as evidence. The v2 choices and the pattern each
+follows:
+- Ledger/code identity (mono course codes, index numerals, board
+  lines) — SANS code-led course pages (SEC504) and OffSec course
+  codes (PEN-200); training-institute research Q1/Q5.
+- Visible desktop nav, 4–6 core items + catalogue mega-menu —
+  NN/g menu guidance and Simplilearn's "All Courses" mega-menu;
+  research Q3. (Drove the §19.4 trims.)
+- Separate audience doors instead of hiding B2B behind "Services" —
+  SANS "For Organizations", OffSec Individuals/Teams, EC-Council
+  "Enterprise", Simplilearn's secondary-nav "For Business";
+  research Q3/Q7. (For Institutes pill, For Colleges, Partner.)
+- Split hero with dual doors (Explore Trainings / Register) —
+  SANS + OffSec split-audience heroes; research Q4. The published
+  headline is untouched (truth layer); only the door pairing is new.
+- Callback-first ≤4-field forms, WhatsApp as a primary channel,
+  floating WhatsApp + sticky mobile action bar — Hacker School
+  ("GET A CALL BACK", floating call/WhatsApp) and Simplilearn's
+  4-field course form; research Q6. Retained from §16–§18.
+- Scrolling board/ticker — the announcement-board pattern from
+  Aravind's own Royal Salon build, crossed with Indian ed-tech's
+  cohort strips (Simplilearn cards, research Q1) — minus scarcity:
+  no countdowns, because no real batch dates exist (research Q4/Q6
+  describe the countdown pattern; the honesty rules veto faking it).
+- Free-offer cards as the promo system (demo, counselling, syllabus,
+  verification) — the lead-magnet inventory in research Q6 (free
+  demo class at Hacker School, "Talk to Advisor" at Simplilearn,
+  gated brochure/syllabus) instead of discount-led promotion, which
+  the corpus shows belongs to funded marketplaces, not institutes.
+- Published student fees + gated B2B quotes on /pricing — EC-Council
+  tiered price transparency, Interakt's published SaaS pricing and
+  FATbit's productized packages; research Q2/Q7 (page from §17).
+- Course comparison pages — Interakt's "vs" SEO play, adapted to
+  course-vs-course on real data; research Q2/Q5 (pages from §18).
+- llms.txt + FAQ/Course/LocalBusiness schema — research Q5 (even
+  Hacker School ships llms.txt; SANS/OffSec don't — the leapfrog
+  opening for a small institute).
+- "This site runs on our stack" as the B2B proof — the dogfooding
+  tactic, research Q7 tactic 10 / Interakt Academy mirror (used on
+  /for-institutes §17 and /partner-with-us §21).
+- Editorial serif + paper as the premium register — the corpus's
+  premium benchmarks (SANS/EC-Council authority presentation) over
+  the discount-marketplace visual language; India institutes that
+  present as premium (Hacker School's award-led trust blocks) sell
+  trust, not offers.

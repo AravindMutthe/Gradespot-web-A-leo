@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { termsSections } from "@/data/pages";
 import { PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Terms and Conditions" };
+export const metadata: Metadata = {
+  alternates: { canonical: "/terms-and-conditions" }, title: "Terms and Conditions" };
 
 export default function TermsPage() {
   return (

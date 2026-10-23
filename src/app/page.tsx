@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getCourses, getServices } from "@/lib/data";
@@ -5,6 +6,16 @@ import { homeParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
 import { CourseCard, CtaBand, ExperienceBadge, FaqList, FeatureTrio, ForInstitutesBand, SectionTitle, ServiceCard, SignatureBlock, StatsRibbon, siteFaqs } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "GradeSpot IT Solutions - Empower Your Business with Top-Notch IT Solutions",
+  },
+  alternates: { canonical: "/" },
+};
+import Ticker from "@/components/Ticker";
+import PromoBanner from "@/components/PromoBanner";
+import OfferCards from "@/components/OfferCards";
 import { faqSchema } from "@/lib/schema";
 
 export default async function HomePage() {
@@ -15,25 +26,26 @@ export default async function HomePage() {
     <>
       <JsonLd data={faqSchema(siteFaqs)} />
       {/* Hero — corporate split layout; headline and copy as published on the live homepage */}
-      <section className="relative overflow-hidden bg-[linear-gradient(180deg,#eef3f8_0%,#ffffff_92%)]">
+      <section className="hero-paper relative overflow-hidden border-b border-line">
         <div className="wrap grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <h1 className="max-w-xl font-display text-[42px] font-bold leading-[1.1] text-heading md:text-[64px]">
-              We Create Better <span className="font-extrabold text-brand">IT Solutions</span>
+          <div data-reveal>
+            <p className="eyebrow text-brand-dark">Dilsukhnagar · Hyderabad</p>
+            <h1 className="mt-4 max-w-xl font-display text-[44px] font-semibold leading-[1.05] text-heading md:text-[68px]">
+              We Create Better <span className="font-medium italic text-brand">IT Solutions</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-body">{homeParagraphs[1]}</p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/trainings" className="btn-primary">
                 Explore Trainings
               </Link>
-              <Link href="/services" className="btn-outline-navy">
-                Our Services
+              <Link href="/register" className="btn-outline-navy">
+                Register
               </Link>
             </div>
           </div>
           <div className="relative mx-auto w-full max-w-[520px]">
             <div
-              className="absolute -right-4 -top-4 h-full w-full rounded-3xl border-2 border-brand"
+              className="absolute -right-4 -top-4 h-full w-full rounded-[22px] border-2 border-ink"
               aria-hidden
             />
             <Image
@@ -41,18 +53,20 @@ export default async function HomePage() {
               alt="Certified Ethical Hacker [CEH v13]"
               width={800}
               height={600}
-              className="relative h-auto w-full rounded-3xl object-cover shadow-2xl"
+              className="relative h-auto w-full rounded-[22px] object-cover shadow-[0_28px_56px_rgba(31,24,16,0.22)]"
               priority
             />
             <Link
               href="/trainings/certified-ethical-hacker-ceh"
-              className="absolute bottom-4 left-4 rounded-full bg-navy/90 px-4 py-2 text-[13px] font-semibold text-white backdrop-blur transition-colors hover:text-brand"
+              className="absolute bottom-4 left-4 rounded-full bg-ink/90 px-4 py-2 text-[13px] font-semibold text-paper backdrop-blur transition-colors hover:text-brand-bright"
             >
               Certified Ethical Hacker [CEH v13] →
             </Link>
           </div>
         </div>
       </section>
+
+      <Ticker />
 
       {/* What we do — the four published homepage blurbs */}
       <section className="section-pad">
@@ -67,7 +81,7 @@ export default async function HomePage() {
             ].map((x) => (
               <article
                 key={x.t}
-                className="rounded-2xl border border-[#dbe4ee] bg-white px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
+                className="rounded-2xl border border-line bg-parchment px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
               >
                 <span className="block h-1 w-10 rounded-full bg-brand" aria-hidden />
                 <h3 className="mt-4 text-xl font-bold">{x.t}</h3>
@@ -77,6 +91,10 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <div className="pb-4">
+        <PromoBanner />
+      </div>
 
       {/* Intro + credentials, as published */}
       <section className="bg-surface-light section-pad">
@@ -98,11 +116,11 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="space-y-6">
-            <article className="rounded-2xl border border-[#dbe4ee] bg-white p-6 shadow-sm">
+            <article className="rounded-2xl border border-line bg-parchment p-6 shadow-sm">
               <h3 className="text-lg font-semibold">An ISO Certified Company</h3>
               <p className="mt-2 text-sm leading-6">{homeParagraphs[8]}</p>
             </article>
-            <article className="rounded-2xl border border-[#dbe4ee] bg-white p-6 shadow-sm">
+            <article className="rounded-2xl border border-line bg-parchment p-6 shadow-sm">
               <h3 className="text-lg font-semibold">AICTE Internships Approved</h3>
               <p className="mt-2 text-sm leading-6">{homeParagraphs[10]}</p>
             </article>
@@ -142,6 +160,16 @@ export default async function HomePage() {
             <Link href="/services" className="btn-primary">
               All Services
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Offer board — the free first steps (promotions data layer, §19) */}
+      <section className="section-pad">
+        <div className="wrap">
+          <SectionTitle label="No-Cost First Steps" title="Start Free" center />
+          <div className="mt-10">
+            <OfferCards />
           </div>
         </div>
       </section>

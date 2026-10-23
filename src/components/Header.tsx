@@ -27,6 +27,14 @@ import { promotions } from "@/data/promotions";
 // home), Contact Us removed from the DESKTOP bar (duplicated by the
 // Callback CTA; kept in footer + mobile sheet), Digital moved into
 // Resources. §22 verdicts on those three are logged in DECISIONS.md.
+//
+// §23 desktop fix (Aravind's ruling from his phone review): the full
+// salon-style inline bar + mega panels switch at lg (1024px) — the
+// same breakpoint as the rest of the chrome (FloatingActions). The
+// header previously held out at xl (1280px), so 1024–1279px widths
+// got the hamburger instead of the desktop bar. At lg the bar runs a
+// compact measure (smaller logo step, tighter links/CTAs) and
+// restores the full measure at xl. Mobile (<lg) is untouched.
 
 type PanelKey = "trainings" | "services" | "resources";
 
@@ -120,9 +128,9 @@ const resourceGroups: {
 ];
 
 const navLink =
-  "block whitespace-nowrap px-2.5 py-3 text-[14px] font-semibold text-nav underline-offset-4 transition-colors hover:text-brand hover:underline hover:decoration-2";
+  "block whitespace-nowrap px-2.5 py-3 text-[14px] font-semibold text-nav underline-offset-4 transition-colors hover:text-brand hover:underline hover:decoration-2 lg:px-1.5 lg:py-2.5 lg:text-[12.5px] xl:px-2.5 xl:py-3 xl:text-[14px]";
 const chevronBtn =
-  "-ml-1.5 flex h-11 w-7 items-center justify-center text-[12px] text-nav transition-colors hover:text-brand";
+  "-ml-1.5 flex h-11 w-7 items-center justify-center text-[12px] text-nav transition-colors hover:text-brand lg:-ml-1 lg:w-5 xl:-ml-1.5 xl:w-7";
 const mobileLink =
   "flex min-h-[48px] items-center px-3 text-[15px] font-semibold text-ink transition-colors hover:text-brand";
 
@@ -277,19 +285,19 @@ export default function Header() {
           <Link
             href="/"
             aria-label="GradeSpot IT Solutions — Home"
-            className="shrink-0 rounded-2xl bg-[radial-gradient(120%_140%_at_30%_20%,#ffffff_0%,#fdf6e9_55%,#f7ecd4_100%)] px-3 py-1 shadow-[0_0_26px_rgba(247,99,27,0.20)] ring-1 ring-line"
+            className="shrink-0 rounded-2xl bg-[radial-gradient(120%_140%_at_30%_20%,#ffffff_0%,#fdf6e9_55%,#f7ecd4_100%)] px-3 py-1 shadow-[0_0_26px_rgba(247,99,27,0.20)] ring-1 ring-line lg:px-2 xl:px-3"
           >
             <Image
               src="/images/logo.png"
               alt="GradeSpot IT Solutions"
               width={193}
               height={60}
-              className="h-12 w-auto"
+              className="h-12 w-auto lg:h-10 xl:h-12"
               priority
             />
           </Link>
 
-          <nav className="hidden items-center xl:flex" aria-label="Primary">
+          <nav className="hidden items-center lg:flex" aria-label="Primary">
             {megaTrigger("trainings", "/trainings", "Trainings", "mega-trainings")}
             {megaTrigger("services", "/services", "Services", "mega-services")}
             <Link className={navLink} href="/pricing">
@@ -306,24 +314,27 @@ export default function Header() {
               For Colleges
             </Link>
             <Link
-              className="ml-1 whitespace-nowrap rounded-xl bg-ink px-4 py-2.5 text-[14px] font-bold text-paper shadow-[0_8px_20px_rgba(23,18,8,0.25)] transition hover:bg-navy"
+              className="ml-1 whitespace-nowrap rounded-xl bg-ink px-4 py-2.5 text-[14px] font-bold text-paper shadow-[0_8px_20px_rgba(23,18,8,0.25)] transition hover:bg-navy lg:px-3 lg:py-2 lg:text-[12.5px] xl:px-4 xl:py-2.5 xl:text-[14px]"
               href="/for-institutes"
             >
               For Institutes
             </Link>
             <Link
               href="/register"
-              className="ml-3 flex min-h-[48px] items-center whitespace-nowrap rounded-xl border-[1.5px] border-ink/60 px-4 text-[14px] font-bold text-ink transition hover:border-ink hover:bg-ink hover:text-paper"
+              className="ml-3 flex min-h-[48px] items-center whitespace-nowrap rounded-xl border-[1.5px] border-ink/60 px-4 text-[14px] font-bold text-ink transition hover:border-ink hover:bg-ink hover:text-paper lg:ml-2 lg:min-h-[44px] lg:px-3 lg:text-[12.5px] xl:ml-3 xl:min-h-[48px] xl:px-4 xl:text-[14px]"
             >
               Register
             </Link>
-            <Link href="/contact-us" className="btn-primary ml-3 whitespace-nowrap">
+            <Link
+              href="/contact-us"
+              className="btn-primary ml-3 whitespace-nowrap lg:ml-2 lg:min-h-[44px] lg:px-3 lg:text-[13px] xl:ml-3 xl:min-h-[50px] xl:px-7 xl:text-[15px]"
+            >
               Request a Callback
             </Link>
           </nav>
 
           <button
-            className="flex min-h-[48px] items-center rounded-xl border border-ink/25 px-5 text-sm font-semibold text-ink xl:hidden"
+            className="flex min-h-[48px] items-center rounded-xl border border-ink/25 px-5 text-sm font-semibold text-ink lg:hidden"
             onClick={() => setOpen(!open)}
             aria-expanded={open}
             aria-label="Toggle menu"
@@ -336,7 +347,7 @@ export default function Header() {
         {panel === "trainings" && (
           <div
             id="mega-trainings"
-            className="absolute inset-x-0 top-full z-40 hidden xl:block"
+            className="absolute inset-x-0 top-full z-40 hidden lg:block"
             onMouseEnter={() => openNow("trainings")}
             onMouseLeave={scheduleClose}
             onKeyDown={onPanelKeyDown}
@@ -475,7 +486,7 @@ export default function Header() {
         {panel === "services" && (
           <div
             id="mega-services"
-            className="absolute inset-x-0 top-full z-40 hidden xl:block"
+            className="absolute inset-x-0 top-full z-40 hidden lg:block"
             onMouseEnter={() => openNow("services")}
             onMouseLeave={scheduleClose}
             onKeyDown={onPanelKeyDown}
@@ -568,7 +579,7 @@ export default function Header() {
         {panel === "resources" && (
           <div
             id="mega-resources"
-            className="absolute inset-x-0 top-full z-40 hidden xl:block"
+            className="absolute inset-x-0 top-full z-40 hidden lg:block"
             onMouseEnter={() => openNow("resources")}
             onMouseLeave={scheduleClose}
             onKeyDown={onPanelKeyDown}
@@ -628,7 +639,7 @@ export default function Header() {
 
       {/* Mobile menu — rich accordion sheet, same groupings */}
       {open && (
-        <nav className="border-b border-line bg-paper xl:hidden" aria-label="Mobile">
+        <nav className="border-b border-line bg-paper lg:hidden" aria-label="Mobile">
           <div className="wrap py-3">
             <div className="grid grid-cols-2 gap-3 pb-2">
               <Link

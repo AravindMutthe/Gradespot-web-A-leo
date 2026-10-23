@@ -59,12 +59,25 @@ async function queryServices(): Promise<Service[] | null> {
   const supabase = getAnonClient();
   if (!supabase) return null;
   try {
-    const { data, error } = await supabase.from("services").select("slug,title").order("title");
+    const { data, error } = await supabase.from("services").select("slug,title");
     if (error || !data || data.length === 0) {
       supabaseDown = true;
       return null;
     }
-    return data.map((row) => {
+    // Canonical order is the published Services-page order — the order
+    // of the local services array (§23). The DB read must NOT re-sort
+    // alphabetically: it previously did (.order("title")), which made
+    // /services lead with "Service 12 — Abroad Consultancy" in a
+    // shuffled-looking 12, 04, 01, 05… sequence (the cards' index
+    // numbers follow the canonical order). Unknown slugs (none today)
+    // keep their DB order after the canonical ones.
+    const canonicalIndex = new Map(localServices.map((s, i) => [s.slug, i]));
+    const rows = [...data].sort(
+      (a, b) =>
+        (canonicalIndex.get(a.slug) ?? Number.MAX_SAFE_INTEGER) -
+        (canonicalIndex.get(b.slug) ?? Number.MAX_SAFE_INTEGER),
+    );
+    return rows.map((row) => {
       // Summaries/offerings were harvested into the local data
       // (DECISIONS.md §17); the services table carries slug/title only.
       const local = localServices.find((s) => s.slug === row.slug);

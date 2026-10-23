@@ -944,3 +944,50 @@ pass); NO CSS filter, recolor or file edit was applied anywhere.
 - NOT touched (researched intentional repetition): LP one-CTA ×3,
   WhatsApp/demo presence across pages, testimonial proof beside
   forms.
+
+## 23. Desktop nav fix + services order (2026-10-23, Aravind's phone review)
+
+Aravind reviewed Leo v1 on his phone (screenshots of /services, mobile
+menu open and closed) and ruled: **the mobile menu is fine — do not
+touch it — but the desktop view menu must be "salon style"**: a full,
+rich, always-visible horizontal nav bar like the Royal Salon site,
+not a logo + "☰ Menu" button with a plain list panel.
+
+### 23.1 Root cause
+The Header alone switched at `xl` (1280px): the inline bar was
+`hidden xl:flex`, all three mega panels were `hidden xl:block`, the
+hamburger was `xl:hidden` and the mobile sheet was `xl:hidden`. Every
+other piece of chrome (FloatingActions sticky bar / desktop WhatsApp,
+the body bottom-padding rule in globals.css) already switches at
+`lg` (1024px). So at 1024–1279px widths the site presented the
+hamburger + mobile sheet — a mobile menu on a desktop-width screen —
+and the rich mega menu was unreachable below 1280px.
+
+### 23.2 What changed (Header.tsx only; mobile untouched)
+- Inline primary bar: `hidden lg:flex`; hamburger: `lg:hidden`;
+  mobile sheet: `lg:hidden`; all three mega panels: `hidden lg:block`.
+  The desktop bar now renders at ≥1024px: logo lockup (brighter plate
+  unchanged) + Trainings ▾, Services ▾, Pricing, About Us,
+  Resources ▾, For Colleges, For Institutes pill + Register (outline)
+  + Request a Callback (solid).
+- To fit the full bar inside the 1024–1279px measure, the lg step
+  runs a compact measure — logo h-10 (plate/halo identical), tighter
+  link padding/type (12.5px), narrower chevrons, slimmer pill/
+  Register/Callback — and every value restores to the previous full
+  measure at xl. No item was dropped, renamed or reordered.
+- Mobile (<lg) markup, classes and behaviour are byte-identical:
+  the hamburger, accordion sheet and sticky bar were not edited.
+- Verification is by code inspection + grep proof of the responsive
+  classes (no headless browser in the sandbox); the parent redeploy
+  + Aravind's own desktop check are the visual verdict.
+
+### 23.3 Services index order — bug, fixed
+His screenshot showed /services leading with "Service 12 — Abroad
+Consultancy" in a shuffled-looking 12, 04, 01, 05… sequence. Cause:
+`queryServices()` read Supabase with `.order("title")` (alphabetical)
+while `ServiceCard` numbers cards by the canonical local array order
+(the published Services-page order, identical in the replica). Fix in
+`src/lib/data.ts`: the DB rows are re-sorted by the canonical local
+index before mapping; unknown slugs (none today) fall after the
+canonical ones in DB order. /services now leads with Service 01 —
+Corporate Trainings and runs 01→12 in the published order.

@@ -17,6 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/testimonials",
     "/student-certifications",
     "/certificate-verification",
+    "/pricing",
+    "/for-institutes",
     "/contact-us",
     "/faq",
     "/terms-and-conditions",

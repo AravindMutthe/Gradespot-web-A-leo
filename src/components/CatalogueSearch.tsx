@@ -10,6 +10,7 @@ export interface CatalogueCourse {
   category: string;
   summary: string;
   image: string | null;
+  duration?: string;
 }
 
 // Search-first catalogue (Simplilearn pattern from the research): one

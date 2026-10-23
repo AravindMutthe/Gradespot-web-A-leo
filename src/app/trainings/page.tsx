@@ -50,6 +50,7 @@ export default async function TrainingsPage() {
               category: c.category,
               summary: c.summary,
               image: c.image,
+              duration: c.duration,
             }))}
             categories={categories}
           />

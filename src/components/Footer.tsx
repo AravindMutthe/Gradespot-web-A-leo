@@ -144,6 +144,14 @@ export default function Footer() {
               Our Services
             </Link>
             {" · "}
+            <Link className="hover:text-brand" href="/pricing">
+              Pricing
+            </Link>
+            {" · "}
+            <Link className="hover:text-brand" href="/for-institutes">
+              For Institutes
+            </Link>
+            {" · "}
             <Link className="hover:text-brand" href="/terms-and-conditions">
               Terms and Conditions
             </Link>

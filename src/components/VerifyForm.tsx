@@ -46,9 +46,14 @@ export default function VerifyForm() {
           required
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          placeholder="Enter your certificate code"
+          placeholder="e.g. GS-2026-XXXX"
+          aria-describedby="cert-code-hint"
           className="mt-2 w-full rounded border border-neutral-300 px-4 py-3 text-[15px] text-heading outline-none focus:border-brand"
         />
+        <p id="cert-code-hint" className="mt-2 text-[13px] leading-5 text-body">
+          Enter the code exactly as printed on the certificate — it looks like{" "}
+          <span className="font-semibold text-heading">GS-2026-XXXX</span>.
+        </p>
         <button type="submit" disabled={state === "loading"} className="btn-primary mt-4 w-full disabled:opacity-60">
           {state === "loading" ? "Verifying…" : "Verify Certificate"}
         </button>

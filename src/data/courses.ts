@@ -20,6 +20,9 @@ export interface Course {
   summary: string;
   sections: CourseSection[];
   catalogOnly: boolean;
+  // Only for the full courses with a published duration — see
+  // courseDurations below (harvested 2026-10-23, DECISIONS.md §17).
+  duration?: string;
 }
 
 export const courses: Course[] = [
@@ -1696,3 +1699,22 @@ export const courses: Course[] = [
 ];
 
 export const courseCategories: string[] = [...new Set(courses.map((c) => c.category))];
+
+// Course durations harvested 2026-10-23 (DECISIONS.md §17) from the
+// business's own published site data — the 2026-10-02 live-site scrape in
+// ~/workspace/gradespot-planning/gsitssolutions-content.json. Only the
+// full courses whose scrape entry carries a duration are listed; the
+// AZ-900, AZ-104 and Hardware & Networking entries were published with
+// no duration, so they stay without one here — never invented. (The
+// gsits-platform scaffold lists different hour figures for its launch
+// set; those conflict with the scrape and were NOT used.)
+export const courseDurations: Record<string, string> = {
+  "ccna-200-301": "45 days",
+  "ccnp-350-401-encor": "45 days",
+  "comptia-network-plus": "30 days",
+  "comptia-security-plus": "30 days",
+  "comptia-pentest-plus": "60 hours",
+  "soc-analyst": "90 days",
+  "certified-ethical-hacker-ceh": "45 days",
+  "digital-marketing": "45 days",
+};

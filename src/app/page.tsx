@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getCourses, getServices } from "@/lib/data";
 import { homeParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
-import { CourseCard, CtaBand, ExperienceBadge, FaqList, FeatureTrio, SectionTitle, ServiceCard, SignatureBlock, StatsRibbon, siteFaqs } from "@/components/ui";
+import { CourseCard, CtaBand, ExperienceBadge, FaqList, FeatureTrio, ForInstitutesBand, SectionTitle, ServiceCard, SignatureBlock, StatsRibbon, siteFaqs } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
 import { faqSchema } from "@/lib/schema";
 
@@ -145,6 +145,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <ForInstitutesBand />
 
       {/* Trusted by + leadership */}
       <section className="section-pad">

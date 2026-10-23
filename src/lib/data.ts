@@ -1,4 +1,4 @@
-import { courses as localCourses, type Course } from "@/data/courses";
+import { courses as localCourses, courseDurations, type Course } from "@/data/courses";
 import { services as localServices, type Service } from "@/data/services";
 import { getAnonClient, getServiceClient } from "./supabase";
 
@@ -32,6 +32,9 @@ async function queryCourses(): Promise<Course[] | null> {
       summary: row.summary ?? "",
       sections: Array.isArray(row.sections) ? row.sections : [],
       catalogOnly: Boolean(row.catalog_only),
+      // Durations live in the harvested local map (DECISIONS.md §17) —
+      // the courses table has no duration column.
+      duration: courseDurations[row.slug],
     }));
   } catch {
     supabaseDown = true;
@@ -40,7 +43,10 @@ async function queryCourses(): Promise<Course[] | null> {
 }
 
 export async function getCourses(): Promise<Course[]> {
-  return (await queryCourses()) ?? localCourses;
+  const rows = (await queryCourses()) ?? localCourses;
+  // Merge harvested durations in both read modes (DB rows above already
+  // carry them; local rows get them here).
+  return rows.map((c) => ({ ...c, duration: c.duration ?? courseDurations[c.slug] }));
 }
 
 export async function getCourse(slug: string): Promise<Course | null> {
@@ -58,7 +64,17 @@ async function queryServices(): Promise<Service[] | null> {
       supabaseDown = true;
       return null;
     }
-    return data.map((row) => ({ slug: row.slug, title: row.title }));
+    return data.map((row) => {
+      // Summaries/offerings were harvested into the local data
+      // (DECISIONS.md §17); the services table carries slug/title only.
+      const local = localServices.find((s) => s.slug === row.slug);
+      return {
+        slug: row.slug,
+        title: row.title,
+        summary: local?.summary,
+        offerings: local?.offerings,
+      };
+    });
   } catch {
     supabaseDown = true;
     return null;

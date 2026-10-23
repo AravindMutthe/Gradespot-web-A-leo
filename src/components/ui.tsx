@@ -75,12 +75,14 @@ export function CourseCardBody({
   category,
   summary,
   image,
+  duration,
 }: {
   slug: string;
   title: string;
   category: string;
   summary?: string;
   image?: string | null;
+  duration?: string;
 }) {
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#dbe4ee] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(10,34,54,0.14)]">
@@ -104,6 +106,9 @@ export function CourseCardBody({
           </span>
         </p>
         <h3 className="mt-3 text-lg font-bold leading-snug text-heading">{title}</h3>
+        {duration && (
+          <p className="mt-2 text-[13px] font-semibold text-brand-dark">Duration: {duration}</p>
+        )}
         {summary && <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{summary}</p>}
         <Link
           href={`/trainings/${slug}`}
@@ -124,6 +129,7 @@ export function CourseCard({ course }: { course: Course }) {
       category={course.category}
       summary={course.summary}
       image={course.image}
+      duration={course.duration}
     />
   );
 }
@@ -132,6 +138,9 @@ export function ServiceCard({ service }: { service: Service }) {
   return (
     <article className="flex flex-col rounded-2xl border border-[#dbe4ee] border-l-4 border-l-brand bg-white px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]">
       <h3 className="text-xl font-bold text-heading">{service.title}</h3>
+      {service.summary && (
+        <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{service.summary}</p>
+      )}
       <Link
         href={`/services/${service.slug}`}
         className="mt-auto inline-block pt-5 text-sm font-bold text-brand hover:text-brand-dark"
@@ -178,6 +187,61 @@ export function CtaBand() {
         <Link href="/contact-us" className="btn-primary">
           Request a Callback
         </Link>
+      </div>
+    </section>
+  );
+}
+
+// For Institutes band on the home page (harvested 2026-10-23 from the
+// gsits-platform B2BBand pattern, DECISIONS.md §17): the B2B door, in
+// Leo's idiom. Factual copy only — no prices (tier pricing undecided),
+// no delivery promises, no testimonials.
+export function ForInstitutesBand() {
+  const items = [
+    {
+      t: "WhatsApp Lead Engine",
+      d: "Instant replies, lead capture and counsellor alerts on your own number.",
+    },
+    {
+      t: "Secure Learning Hub",
+      d: "Watermarked video courses with student logins and progress tracking.",
+    },
+    {
+      t: "Resilient Linux Lab",
+      d: "PXE thin-client labs that recover with a reboot, not a repair call.",
+    },
+  ];
+  return (
+    <section className="bg-navy section-pad text-white">
+      <div className="wrap">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-[13px] font-bold uppercase tracking-[0.18em] text-brand">
+            For Institutes
+          </p>
+          <h2 className="mt-3 text-[32px] font-bold leading-[1.2] text-white md:text-[36px]">
+            Run an Institute? Automate Admissions.
+          </h2>
+          <p className="mt-3 text-white/80">
+            GradeSpot builds the products it runs on. Our Axon products for training institutes
+            start with our own admissions — and are available to yours.
+          </p>
+        </div>
+        <div className="mx-auto mt-10 grid max-w-5xl gap-6 md:grid-cols-3">
+          {items.map((x) => (
+            <article key={x.t} className="rounded-2xl bg-white/[0.06] px-7 py-8 ring-1 ring-white/10">
+              <h3 className="text-lg font-bold text-white">{x.t}</h3>
+              <p className="mt-2 text-sm leading-6 text-white/75">{x.d}</p>
+            </article>
+          ))}
+        </div>
+        <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <Link href="/for-institutes" className="btn-primary">
+            Explore For Institutes
+          </Link>
+          <Link href="/for-institutes#demo" className="btn-outline-light">
+            Book a Demo
+          </Link>
+        </div>
       </div>
     </section>
   );

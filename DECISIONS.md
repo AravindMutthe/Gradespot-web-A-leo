@@ -265,3 +265,60 @@ Still BLOCKED-ON-DATA (never fabricate):
   (a fake countdown would also violate Google Ads policy).
 - Course durations/levels for cards: not published for the catalogue.
 - Brochure PDF / free-demo offer: no such asset or offer is published.
+
+## 17. Legacy harvest — 2026-10-23
+
+Aravind authorized harvesting ideas/concepts/services/menus from the
+legacy gradespot/axon builds (inventory:
+goals/axon-gradespot-site-rebuild/hidden_files/legacy-asset-inventory-2026-10-23.md)
+into this build where the business needs them. Applied:
+
+- **Two new pages — an authorized exception to the replica menu/content
+  sameness rule** (recorded here per that rule): `/for-institutes`
+  (pain → his three real products — WhatsApp Lead Engine, Secure
+  Learning Hub, Resilient Linux Lab, per gradespot-axon/docs/PRODUCTS.md
+  → 5-step process → factual proof → demo form + FAQ) and `/pricing`
+  (three audiences: students / businesses / institutes). **No prices
+  were harvested**: the only amounts anywhere are the real published
+  CCNA/CCNP course fees rendered from the course data itself. Institute
+  tiers are described by contents only — Set A vs Set B pricing is
+  still undecided. Proof copy carries NO metrics, case studies or
+  outcome promises.
+- **Nav**: "Pricing" added as a plain item; "For Institutes" added as
+  a visually distinct orange pill (the Stage-1 approved sitemap's
+  highlighted-CTA treatment), desktop + mobile + footer. All existing
+  menu options/destinations and the unified "Request a Callback" CTA
+  are unchanged.
+- **Service summaries + offerings (partially answers §6)**: harvested
+  for all 12 services from the business's own live-site scrape
+  (~/workspace/gradespot-planning/gsitssolutions-content.json,
+  2026-10-02) and rendered on service cards and detail pages.
+  **Pending Aravind's accuracy confirmation** — this is the business's
+  own published marketing copy, not independently verified.
+  Accreditation lines in the scrape (the Internships "AICTE-approved"
+  offering and the AICTE clause in its summary) were deliberately NOT
+  carried; they stay flagged per §3.
+- **Course durations (partially resolves §16's blocked item)**: for
+  the full courses, harvested from the same planning JSON —
+  CCNA 45 days, CCNP 45 days, Network+ 30 days, Security+ 30 days,
+  PenTest+ 60 hours, SOC Analyst 90 days, CEH 45 days, Digital
+  Marketing 45 days. The JSON publishes NO duration for AZ-900, AZ-104
+  or Hardware & Networking, so those three show none — never invented.
+  The gsits-platform scaffold's hour figures (e.g. SOC "80+ hours",
+  CCNA "70+ hours") conflict with the scrape and were NOT used.
+  **Pending Aravind's re-confirmation** that the scraped durations are
+  still current.
+- **Verify form hint**: the legacy serial-format guidance (GS-2026-XXXX)
+  added as placeholder + hint text on the certificate verification form.
+  UX alignment only — the underlying certificates schema is unchanged.
+- **Home B2B band**: a For Institutes band on the home page (pattern
+  from gsits-platform's B2BBand, rebuilt in this build's idiom) linking
+  to /for-institutes. The band's tier prices and its "installed in
+  7 days" line were NOT carried; no testimonials were harvested from
+  anywhere.
+- **Not harvested** (per inventory's NOT-recommended list + scope):
+  AI chat (deferred — keys/backend decision), PPC landing pages,
+  DB schema changes (the lead status pipeline / demo_bookings /
+  quote_requests model stays an admin-phase design note), legacy stats
+  beyond the resolved set, placeholder testimonials, the /placements
+  guarantee claim.

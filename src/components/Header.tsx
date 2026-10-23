@@ -6,9 +6,12 @@ import { useState } from "react";
 import { business, telHref } from "@/data/site";
 import { SocialLinks } from "@/components/ui";
 
-// Same menu options and destinations as the official site / replica build.
-// The Trainings mega-menu is a presentation pattern only: every link in it
-// points at a page that already exists in the trainings catalogue.
+// Menu options and destinations as the official site / replica build,
+// plus the two additions Aravind authorized in the 2026-10-23 legacy
+// harvest: Pricing and the highlighted For Institutes door
+// (DECISIONS.md §17). The Trainings mega-menu is a presentation pattern
+// only: every link in it points at a page that already exists in the
+// trainings catalogue.
 const resourceLinks = [
   { label: "Team Members", href: "/team-members" },
   { label: "Why Choose Us", href: "/why-choose-us" },
@@ -203,6 +206,18 @@ export default function Header() {
             <Link className={navLink} href="/contact-us">
               Contact Us
             </Link>
+            <Link className={navLink} href="/pricing">
+              Pricing
+            </Link>
+            {/* For Institutes — highlighted B2B door, per the Stage-1
+                approved sitemap's distinct CTA treatment (harvested
+                2026-10-23, DECISIONS.md §17). */}
+            <Link
+              className="ml-1 rounded-full bg-brand px-4 py-2 text-[13.5px] font-bold text-white transition-colors hover:bg-brand-dark"
+              href="/for-institutes"
+            >
+              For Institutes
+            </Link>
             <Link href="/contact-us" className="btn-primary ml-4">
               Request a Callback
             </Link>
@@ -295,6 +310,16 @@ export default function Header() {
             </Link>
             <Link className={mobileLink} href="/contact-us" onClick={() => setOpen(false)}>
               Contact Us
+            </Link>
+            <Link className={mobileLink} href="/pricing" onClick={() => setOpen(false)}>
+              Pricing
+            </Link>
+            <Link
+              className="block px-3 py-2.5 text-sm font-bold text-brand"
+              href="/for-institutes"
+              onClick={() => setOpen(false)}
+            >
+              For Institutes
             </Link>
             <Link
               href="/contact-us"

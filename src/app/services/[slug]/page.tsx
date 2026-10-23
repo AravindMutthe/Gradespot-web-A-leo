@@ -21,7 +21,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const service = await getService(slug);
   if (!service) return { title: "Service not found" };
-  return { title: service.title, description: `${service.title} — a GradeSpot IT Solutions service, Hyderabad.` };
+  return { title: service.title, description: service.summary ?? `${service.title} — a GradeSpot IT Solutions service, Hyderabad.` };
 }
 
 export default async function ServicePage({
@@ -56,6 +56,32 @@ export default async function ServicePage({
             />
           </div>
           <div className="mx-auto mt-8 max-w-4xl space-y-10">
+            {service.summary && (
+              <article>
+                <h2 className="text-[28px] font-semibold leading-[34px]">
+                  {service.title} at GradeSpot
+                </h2>
+                <p className="mt-3 text-lg leading-8">{service.summary}</p>
+                {service.offerings && service.offerings.length > 0 && (
+                  <>
+                    <h3 className="mt-8 text-xl font-semibold text-heading">What This Includes</h3>
+                    <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                      {service.offerings.map((o) => (
+                        <li
+                          key={o}
+                          className="flex items-start gap-3 rounded-xl bg-surface-light px-4 py-3 text-[15px] font-medium text-heading"
+                        >
+                          <span className="font-bold text-brand" aria-hidden>
+                            ✓
+                          </span>
+                          {o}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </article>
+            )}
             <article>
               <h2 className="text-[28px] font-semibold leading-[34px]">What We Offer</h2>
               <p className="mt-3">{servicesFaqAnswers.services}</p>

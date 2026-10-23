@@ -18,6 +18,8 @@
 - [Testimonials](https://gsitssolutions.com/testimonials): student reviews posted on Google
 - [Student Certifications](https://gsitssolutions.com/student-certifications)
 - [Certificate Verification](https://gsitssolutions.com/certificate-verification): verify a GradeSpot certificate by its code
+- [Pricing](https://gsitssolutions.com/pricing): published course fees for students; scoped quotes for businesses and institutes
+- [For Institutes](https://gsitssolutions.com/for-institutes): WhatsApp lead automation, video LMS and lab setup products for training institutes
 - [Help & FAQs](https://gsitssolutions.com/faq)
 - [Contact Us](https://gsitssolutions.com/contact-us)
 

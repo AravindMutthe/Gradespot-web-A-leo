@@ -14,9 +14,17 @@ import { business } from "@/data/site";
 export default function LeadForm({
   interest,
   idPrefix = "lead",
+  interestOptions,
+  hideMessage = false,
+  submitLabel = "Request a Callback",
 }: {
   interest?: string;
   idPrefix?: string;
+  // When set, the interest field becomes a product select (used by the
+  // For Institutes demo form) instead of a free-text input.
+  interestOptions?: string[];
+  hideMessage?: boolean;
+  submitLabel?: string;
 }) {
   const pathname = usePathname();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -129,29 +137,47 @@ export default function LeadForm({
         <label htmlFor={id("interest")} className={label}>
           I&apos;m interested in *
         </label>
-        <input
-          id={id("interest")}
-          name="interest"
-          required
-          defaultValue={interest ?? ""}
-          className={field}
-          placeholder="Course Training, Certification Voucher, a Service…"
-        />
+        {interestOptions ? (
+          <select
+            id={id("interest")}
+            name="interest"
+            required
+            defaultValue={interestOptions[0]}
+            className={field}
+          >
+            {interestOptions.map((o) => (
+              <option key={o} value={o}>
+                {o}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            id={id("interest")}
+            name="interest"
+            required
+            defaultValue={interest ?? ""}
+            className={field}
+            placeholder="Course Training, Certification Voucher, a Service…"
+          />
+        )}
         {errors.interest && <p className="mt-1 text-xs text-red-600">{errors.interest}</p>}
       </div>
-      <div className="mt-4">
-        <label htmlFor={id("message")} className={label}>
-          Message
-        </label>
-        <textarea
-          id={id("message")}
-          name="message"
-          rows={4}
-          className={field}
-          placeholder="Anything we should know?"
-        />
-        {errors.message && <p className="mt-1 text-xs text-red-600">{errors.message}</p>}
-      </div>
+      {!hideMessage && (
+        <div className="mt-4">
+          <label htmlFor={id("message")} className={label}>
+            Message
+          </label>
+          <textarea
+            id={id("message")}
+            name="message"
+            rows={4}
+            className={field}
+            placeholder="Anything we should know?"
+          />
+          {errors.message && <p className="mt-1 text-xs text-red-600">{errors.message}</p>}
+        </div>
+      )}
       <label htmlFor={id("wa")} className="mt-4 flex cursor-pointer items-start gap-2.5 text-sm text-body">
         <input
           id={id("wa")}
@@ -167,7 +193,7 @@ export default function LeadForm({
         disabled={state === "sending"}
         className="btn-primary mt-5 w-full disabled:opacity-60"
       >
-        {state === "sending" ? "Sending…" : "Request a Callback"}
+        {state === "sending" ? "Sending…" : submitLabel}
       </button>
       <p className="mt-3 text-center text-xs leading-5 text-body">
         Your details are used only to respond to this enquiry — no spam, ever.

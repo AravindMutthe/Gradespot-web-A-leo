@@ -158,6 +158,11 @@ export default async function CoursePage({
           {course.summary && (
             <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">{course.summary}</p>
           )}
+          {course.duration && (
+            <p className="mt-4 inline-block rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white">
+              Duration: {course.duration}
+            </p>
+          )}
           <div className="mt-7 flex flex-wrap gap-4">
             <a href="#enquire" className="btn-primary">
               Enquire About This Course

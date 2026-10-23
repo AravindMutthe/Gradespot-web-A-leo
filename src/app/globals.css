@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+/* Self-hosted variable fonts (downloaded into the repo — nothing hotlinked) */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-var.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/fonts/jakarta-var.woff2") format("woff2");
+  font-weight: 600 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  /* Palette anchored to the official GradeSpot logo: its orange + deep navy.
+     Same brand hues as the logo, applied in a corporate system — navy does
+     the structural work (header, footer, heroes), orange is the accent. */
+  --color-brand: #f7631b;
+  --color-brand-dark: #d9520f;
+  --color-brand-soft: #fdeee4;
+  --color-navy: #0a2236;
+  --color-navy-deep: #061724;
+  --color-heading: #0e2b3d;
+  --color-body: #47596b;
+  --color-nav: #d7e3ee;
+  --color-surface-light: #eef3f8;
+  --color-footer-text: #b9c9d8;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-white font-sans text-[15px] leading-[1.75] text-body antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-heading;
+  }
+  /* Room for the mobile sticky CTA bar */
+  @media (max-width: 1023px) {
+    body {
+      padding-bottom: 57px;
+    }
+  }
+}
+
+@utility wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1200px;
+  padding-inline: 20px;
+  @media (min-width: 768px) {
+    padding-inline: 24px;
+  }
+}
+
+@utility btn-primary {
+  display: inline-block;
+  border: 2px solid var(--color-brand);
+  border-radius: 999px;
+  background: var(--color-brand);
+  padding: 11px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(247, 99, 27, 0.28);
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+  &:hover {
+    background: var(--color-brand-dark);
+    transform: translateY(-1px);
+  }
+}
+
+@utility btn-navy {
+  display: inline-block;
+  border: 2px solid var(--color-navy);
+  border-radius: 999px;
+  background: var(--color-navy);
+  padding: 11px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+  &:hover {
+    background: var(--color-heading);
+    transform: translateY(-1px);
+  }
+}
+
+@utility btn-outline-light {
+  display: inline-block;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  padding: 11px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  transition: background 0.2s ease;
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@utility btn-outline-navy {
+  display: inline-block;
+  border: 2px solid var(--color-navy);
+  border-radius: 999px;
+  padding: 11px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-navy);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+  &:hover {
+    background: var(--color-navy);
+    color: #fff;
+  }
+}
+
+@utility section-pad {
+  padding-block: 72px;
+  @media (min-width: 768px) {
+    padding-block: 104px;
+  }
+}

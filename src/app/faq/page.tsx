@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FaqList, PageHero, siteFaqs } from "@/components/ui";
+import { CtaBand, FaqList, PageHero, siteFaqs } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
 import { faqSchema } from "@/lib/schema";
 
@@ -16,6 +16,7 @@ export default function FaqPage() {
           <FaqList items={siteFaqs} />
         </div>
       </section>
+      <CtaBand />
     </>
   );
 }

@@ -94,16 +94,21 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       <JsonLd data={courseSchema(course)} />
       <JsonLd data={faqSchema(faqs)} />
 
-      {/* LP chrome: logo + phone only, no nav */}
-      <div className="border-b border-line bg-paper">
+      {/* LP chrome: logo + phone only, no nav. Logo carries the
+          same §22 luminous plate as the main header. */}
+      <div className="glass-panel border-b border-line">
         <div className="wrap flex items-center justify-between py-3">
-          <Link href="/" aria-label="GradeSpot IT Solutions — Home">
+          <Link
+            href="/"
+            aria-label="GradeSpot IT Solutions — Home"
+            className="rounded-2xl bg-[radial-gradient(120%_140%_at_30%_20%,#ffffff_0%,#fdf6e9_55%,#f7ecd4_100%)] px-3 py-1 shadow-[0_0_26px_rgba(247,99,27,0.20)] ring-1 ring-line"
+          >
             <Image
               src="/images/logo.png"
               alt="GradeSpot IT Solutions"
               width={193}
               height={60}
-              className="h-10 w-auto"
+              className="h-11 w-auto"
               priority
             />
           </Link>
@@ -225,7 +230,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
                 </div>
               </>
             )}
-            <div className="mt-8 rounded-2xl bg-surface-light p-6">
+            <div className="mt-8 rounded-2xl border border-line bg-surface-light p-6">
               <h3 className="text-lg font-bold text-heading">Prefer to read everything first?</h3>
               <p className="mt-2 text-sm leading-6 text-body">
                 The full course page carries the complete curriculum, every section and the

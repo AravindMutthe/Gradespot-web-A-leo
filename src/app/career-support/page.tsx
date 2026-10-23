@@ -60,7 +60,7 @@ export default function CareerSupportPage() {
         <div className="wrap">
           <div className="mx-auto max-w-4xl">
             <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "Career Support" }]} />
-            <div className="mt-8 rounded-2xl bg-surface-light p-7">
+            <div className="mt-8 rounded-2xl border border-line bg-surface-light p-7">
               <h2 className="text-lg font-bold text-heading">Our honest position</h2>
               <p className="mt-2 text-[15px] leading-7 text-body">
                 We publish the roles our courses prepare you for and the companies our students

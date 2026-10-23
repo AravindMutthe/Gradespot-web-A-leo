@@ -1172,7 +1172,7 @@ const legacyRedirects = [
   }
 ];
 
-// OWASP security headers (Leo redesign v2, DECISIONS.md §19) — the
+// OWASP security headers (Leo redesign v1, DECISIONS.md §19) — the
 // set proven on Aravind's other builds. CSP notes: 'unsafe-inline'
 // for script/style is required by the Next.js runtime (inline
 // bootstrap scripts + style attributes) in the absence of a nonce

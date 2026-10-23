@@ -20,7 +20,7 @@ function SectionBody({ section }: { section: CourseSection }) {
         {section.paragraphs.map((p, j) => (
           <div
             key={j}
-            className="rounded-xl bg-surface-light px-4 py-3 text-center text-[15px] font-semibold text-heading"
+            className="rounded-xl border border-line bg-surface-light px-4 py-3 text-center text-[15px] font-semibold text-heading"
           >
             {p}
           </div>
@@ -308,7 +308,7 @@ export default async function CoursePage({
                     </Link>
                   </div>
                 )}
-                <div className="mt-12 rounded-2xl bg-surface-light p-8 text-center">
+                <div className="mt-12 rounded-2xl border border-line bg-surface-light p-8 text-center">
                   <h2 className="text-2xl font-semibold">Ready to enrol?</h2>
                   <p className="mx-auto mt-2 max-w-xl">
                     Send an enquiry and our team will help you with batches, mode of training and

@@ -77,6 +77,14 @@ export default function PartnerPage() {
                     </li>
                   ))}
                 </ul>
+                <div className="mt-auto pt-7">
+                  <a
+                    href="#start"
+                    className={tr.n === "01" ? "btn-outline-navy" : "btn-primary"}
+                  >
+                    {tr.n === "01" ? "Start a Collaboration" : "Discuss a Franchise"}
+                  </a>
+                </div>
               </article>
             ))}
           </div>
@@ -117,7 +125,7 @@ export default function PartnerPage() {
       </section>
 
       {/* Enquiry */}
-      <section className="section-pad">
+      <section id="start" className="section-pad scroll-mt-32">
         <div className="wrap grid items-start gap-12 lg:grid-cols-2">
           <div data-reveal>
             <SectionTitle label="Start" title="Start the conversation" />

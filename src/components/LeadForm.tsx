@@ -83,9 +83,16 @@ export default function LeadForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-line bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
+      className="rounded-2xl border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
       noValidate
     >
+      <p className="mb-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-brand-dark">
+        <span>Phone-first</span>
+        <span aria-hidden>·</span>
+        <span>Email optional</span>
+        <span aria-hidden>·</span>
+        <span>No spam, ever</span>
+      </p>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor={id("name")} className={label}>
@@ -120,13 +127,12 @@ export default function LeadForm({
       </div>
       <div className="mt-4">
         <label htmlFor={id("email")} className={label}>
-          Email *
+          Email <span className="font-normal text-body">(optional)</span>
         </label>
         <input
           id={id("email")}
           name="email"
           type="email"
-          required
           autoComplete="email"
           className={field}
           placeholder="you@example.com"

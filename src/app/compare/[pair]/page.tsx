@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PageHero } from "@/components/ui";
+import { PageHero, CtaBand } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
@@ -209,6 +209,7 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
           </div>
         </div>
       </section>
+      <CtaBand />
     </>
   );
 }

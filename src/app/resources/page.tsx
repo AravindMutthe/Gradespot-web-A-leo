@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { business } from "@/data/site";
-import { PageHero } from "@/components/ui";
+import { CtaBand, PageHero } from "@/components/ui";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/resources" }, title: "Resources" };
@@ -23,10 +23,15 @@ const items = [
     desc: "Explore the voices of satisfaction and success as our students and clients share their experiences.",
   },
   {
-    title: "Blog",
+    title: "DigiDefense Blog",
     href: business.blogUrl,
     external: true,
-    desc: "Security write-ups and learning articles on our blog (DigiDefense).",
+    desc: "Security write-ups and learning articles on our security blog, DigiDefense.",
+  },
+  {
+    title: "Partner With Us",
+    href: "/partner-with-us",
+    desc: "Collaborations and franchise discussions are welcome — institutes, colleges, trainers and new-centre conversations.",
   },
   {
     title: "Student Certifications",
@@ -91,6 +96,7 @@ export default function ResourcesPage() {
           )}
         </div>
       </section>
+      <CtaBand />
     </>
   );
 }

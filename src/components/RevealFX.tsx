@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-// Scroll-reveal engine (Leo redesign v2, DECISIONS.md §19). Progressive
+// Scroll-reveal engine (Leo redesign v1, DECISIONS.md §19). Progressive
 // enhancement only: it adds .reveal-on to <html> (which arms the CSS
 // transitions in globals.css) and .is-in to each [data-reveal] element
 // as it enters the viewport. If JS is off, IO is unsupported, or the

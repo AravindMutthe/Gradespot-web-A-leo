@@ -1,7 +1,7 @@
 import { courses } from "@/data/courses";
 import { getPromotions } from "@/lib/data";
 
-// Scrolling board (Leo redesign v2, DECISIONS.md §19) — the salon
+// Scrolling board (Leo redesign v1, DECISIONS.md §19) — the salon
 // site's board pattern adapted to an institute: a slow ink ticker of
 // FEATURED trainings and free services. Nothing here is hardcoded:
 // course lines come from the catalogue data and the service lines
@@ -39,7 +39,7 @@ export default async function Ticker() {
       aria-label="Featured trainings and free services"
     >
       <p className="sr-only">{items.join(". ")}</p>
-      <span className="eyebrow z-10 flex shrink-0 items-center bg-brand px-4 py-3 text-white">
+      <span className="eyebrow z-10 flex shrink-0 items-center bg-gradient-to-r from-brand to-brand-dark px-4 py-3 text-white">
         Featured
       </span>
       <div

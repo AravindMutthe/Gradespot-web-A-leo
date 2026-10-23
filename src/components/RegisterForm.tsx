@@ -77,7 +77,7 @@ export default function RegisterForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-[20px] border border-line bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
+      className="rounded-[20px] border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
       noValidate
     >
       <div className="grid gap-4 sm:grid-cols-2">

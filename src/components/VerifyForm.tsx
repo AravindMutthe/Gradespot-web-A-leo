@@ -35,7 +35,7 @@ export default function VerifyForm() {
     <div className="mx-auto max-w-xl">
       <form
         onSubmit={onSubmit}
-        className="rounded-2xl border border-line bg-parchment p-7 shadow-sm"
+        className="rounded-2xl border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
       >
         <label htmlFor="cert-code" className="text-sm font-semibold text-heading">
           Certificate Code

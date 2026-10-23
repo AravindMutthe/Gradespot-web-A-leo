@@ -3,7 +3,7 @@ import Link from "next/link";
 import { business, telHref } from "@/data/site";
 import { SocialLinks } from "@/components/ui";
 
-// Footer — Leo redesign v2 ("Prospectus", DECISIONS.md §19): deep ink
+// Footer — Leo redesign v1 ("Prospectus", DECISIONS.md §19): deep ink
 // stock, serif column heads, mono index labels. Link set is the v1 set
 // plus "Contact Us" in Quick Links (it left the top bar in §19 because
 // the Callback CTA duplicates it there; the footer keeps a plain path).
@@ -48,13 +48,17 @@ export default function Footer() {
     <footer className="border-t-[3px] border-brand bg-ink-deep text-footer-text">
       <div className="wrap grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1.25fr_0.7fr_0.8fr_1.05fr_1fr]">
         <div>
-          <Image
-            src="/images/logo-light.png"
-            alt="GradeSpot IT Solutions"
-            width={193}
-            height={60}
-            className="h-12 w-auto"
-          />
+          {/* Logo brightening (§22): luminous plate + halo on the
+              ink footer behind the unmodified light artwork. */}
+          <span className="inline-block rounded-2xl bg-white/[0.07] px-3 py-2 shadow-[0_0_30px_rgba(247,99,27,0.28)] ring-1 ring-white/15">
+            <Image
+              src="/images/logo-light.png"
+              alt="GradeSpot IT Solutions"
+              width={193}
+              height={60}
+              className="h-[52px] w-auto"
+            />
+          </span>
           <p className="mt-5 text-sm leading-6">
             At GradeSpot IT Solutions, our commitment is to craft superior IT solutions that
             redefine industry standards — training, services and cybersecurity from
@@ -144,19 +148,10 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="wrap flex flex-wrap items-center justify-between gap-2 py-5 font-mono text-[11.5px] uppercase tracking-[0.08em] text-footer-text">
           <p>© Copyright {new Date().getFullYear()}. {business.legalName}</p>
+          {/* §22 dedupe: this strip used to repeat Home / Testimonials /
+              Services / Terms, which already live in the columns above.
+              It now carries only the links the columns don't. */}
           <p className="normal-case tracking-normal">
-            <Link className="hover:text-brand-bright" href="/">
-              Home
-            </Link>
-            {" · "}
-            <Link className="hover:text-brand-bright" href="/testimonials">
-              Testimonials
-            </Link>
-            {" · "}
-            <Link className="hover:text-brand-bright" href="/services">
-              Our Services
-            </Link>
-            {" · "}
             <Link className="hover:text-brand-bright" href="/pricing">
               Pricing
             </Link>
@@ -170,10 +165,6 @@ export default function Footer() {
               href="/training-institute-in-dilsukhnagar-hyderabad"
             >
               Institute in Dilsukhnagar
-            </Link>
-            {" · "}
-            <Link className="hover:text-brand-bright" href="/terms-and-conditions">
-              Terms and Conditions
             </Link>
           </p>
         </div>

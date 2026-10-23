@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PageHero, SectionTitle } from "@/components/ui";
 import { business, telHref } from "@/data/site";
 
-// Accessibility statement (Leo redesign v2, DECISIONS.md §19) —
+// Accessibility statement (Leo redesign v1, DECISIONS.md §19) —
 // written ONLY from what this build actually implements and has
 // verified; no aspirational claims. If a measure is not listed here,
 // this page does not claim it.

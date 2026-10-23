@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { CourseCardBody } from "@/components/ui";
+import { categoryAnchor } from "@/data/catalogue-nav";
 
 export interface CatalogueCourse {
   slug: string;
@@ -48,13 +49,13 @@ export default function CatalogueSearch({
   }, [courses]);
 
   return (
-    <div>
+    <div id="course-search" className="scroll-mt-36">
       <div className="mx-auto max-w-2xl">
-        <label htmlFor="course-search" className="sr-only">
+        <label htmlFor="course-search-input" className="sr-only">
           Search trainings
         </label>
         <input
-          id="course-search"
+          id="course-search-input"
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -68,12 +69,25 @@ export default function CatalogueSearch({
               : `${results.length} training${results.length === 1 ? "" : "s"} found`}
           </p>
         )}
+        {results === null && (
+          <nav aria-label="Training categories" className="mt-5 flex flex-wrap justify-center gap-2">
+            {categories.map((cat) => (
+              <a
+                key={cat}
+                href={`#${categoryAnchor(cat)}`}
+                className="rounded-full border border-line bg-parchment px-3.5 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-heading transition-colors hover:border-brand hover:text-brand"
+              >
+                {cat} · {byCategory.get(cat)?.length ?? 0}
+              </a>
+            ))}
+          </nav>
+        )}
       </div>
 
       {results === null ? (
         <div className="mt-14 space-y-16">
           {categories.map((cat) => (
-            <div key={cat}>
+            <div key={cat} id={categoryAnchor(cat)} className="scroll-mt-36">
               <h2 className="text-2xl font-semibold text-heading">{cat}</h2>
               <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {(byCategory.get(cat) ?? []).map((c) => (
@@ -84,7 +98,7 @@ export default function CatalogueSearch({
           ))}
         </div>
       ) : results.length === 0 ? (
-        <div className="mt-12 rounded-2xl bg-surface-light p-8 text-center">
+        <div className="mt-12 rounded-2xl border border-line bg-surface-light p-8 text-center">
           <h2 className="text-2xl font-semibold">Not sure which course fits you?</h2>
           <p className="mx-auto mt-2 max-w-xl">
             Talk to a Trainer — tell us your goal and we will help you pick the right training

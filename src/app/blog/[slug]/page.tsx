@@ -82,7 +82,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 </article>
               ))}
             </div>
-            <div className="mt-12 rounded-2xl bg-surface-light p-7">
+            <div className="mt-12 rounded-2xl border border-line bg-surface-light p-7">
               <h2 className="text-lg font-bold text-heading">Keep exploring</h2>
               <p className="mt-2 text-sm leading-6 text-body">
                 Browse the trainings these articles draw on, compare courses side by side, or

@@ -116,7 +116,7 @@ export default async function PricingPage() {
                       return (
                         <div
                           key={p}
-                          className="rounded-xl bg-surface-light px-4 py-5 text-center"
+                          className="rounded-xl border border-line bg-surface-light px-4 py-5 text-center"
                         >
                           <p className="text-[12px] font-semibold uppercase tracking-wide text-body">
                             {name}
@@ -137,7 +137,7 @@ export default async function PricingPage() {
                 </article>
               ))}
             </div>
-            <div className="mt-8 rounded-2xl bg-surface-light p-8 text-center">
+            <div className="mt-8 rounded-2xl border border-line bg-surface-light p-8 text-center">
               <h3 className="text-xl font-semibold text-heading">All other trainings</h3>
               <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-body">
                 Fees for the remaining trainings are confirmed on enquiry — the batch, the mode

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { certificationsParagraphs } from "@/data/pages";
 import { certificationGallery } from "@/data/certifications";
-import { LogoWall, PageHero } from "@/components/ui";
+import { CtaBand, LogoWall, PageHero } from "@/components/ui";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/student-certifications" }, title: "Student Certifications" };
@@ -21,7 +21,7 @@ export default function CertificationsPage() {
             {certificationsParagraphs.slice(0, 3).map((p, i) => (
               <p key={i}>{p}</p>
             ))}
-            <p className="rounded-2xl bg-surface-light p-5 font-medium text-heading">
+            <p className="rounded-2xl border border-line bg-surface-light p-5 font-medium text-heading">
               Our distinctive &lsquo;Pay after you Pass&rsquo; methodology guarantees the
               attainment of your desired credentials prior to any financial obligations.
             </p>
@@ -59,6 +59,7 @@ export default function CertificationsPage() {
         </div>
       </section>
       <LogoWall />
+      <CtaBand />
     </>
   );
 }

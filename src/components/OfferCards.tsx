@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { getPromotions } from "@/lib/data";
 
-// Offer card row (Leo redesign v2, DECISIONS.md §19) — the "board" of
+// Offer card row (Leo redesign v1, DECISIONS.md §19) — the "board" of
 // free first steps. Renders the active "card" promotions from the
 // data layer (config seam today, site_promotions after migration
 // 0005). Only offers that are actually true may be seeded (§19
 // content rule). Zero active cards → the row hides itself.
-export default async function OfferCards() {
-  const cards = await getPromotions("card");
+export default async function OfferCards({ excludeSlug }: { excludeSlug?: string } = {}) {
+  const cards = (await getPromotions("card")).filter((c) => c.slug !== excludeSlug);
   if (cards.length === 0) return null;
 
   return (

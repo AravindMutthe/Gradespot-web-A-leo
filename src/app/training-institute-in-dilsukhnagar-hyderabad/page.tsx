@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageHero, SectionTitle, CourseCard, FaqList } from "@/components/ui";
+import { PageHero, SectionTitle, CourseCard, CtaBand, FaqList } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, faqSchema, localBusinessSchema } from "@/lib/schema";
@@ -189,6 +189,7 @@ export default async function LocalInstitutePage() {
           </div>
         </div>
       </section>
+      <CtaBand />
     </>
   );
 }

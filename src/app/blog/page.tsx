@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageHero, SectionTitle, BlogCards } from "@/components/ui";
+import { PageHero, SectionTitle, BlogCards, CtaBand } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -76,6 +76,7 @@ export default function BlogIndexPage() {
           </div>
         </div>
       </section>
+      <CtaBand />
     </>
   );
 }

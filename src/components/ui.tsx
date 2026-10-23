@@ -3,13 +3,14 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import type { Course } from "@/data/courses";
 import type { Service } from "@/data/services";
-import { stats } from "@/data/site";
+import { business, stats, telHref } from "@/data/site";
+import { testimonials } from "@/data/testimonials";
 import { servicesFaqAnswers } from "@/data/pages";
 import { employers } from "@/data/employers";
 import { blogPosts } from "@/data/blog";
 import { services as allServices } from "@/data/services";
 
-// Shared components in the Leo redesign v2 language ("Prospectus",
+// Shared components in the Leo redesign v1 language ("Prospectus",
 // DECISIONS.md §19): paper heroes with serif display type, mono index
 // labels, parchment cards with warm shadows, ink panels. Content —
 // copy, links, images — is unchanged from v1 everywhere below.
@@ -18,7 +19,7 @@ export function PageHero({ title, subtitle }: { title: string; subtitle?: string
   return (
     <section className="hero-paper border-b border-line py-16 md:py-[84px]">
       <div className="wrap" data-reveal>
-        <span className="block h-[3px] w-14 rounded-full bg-brand" aria-hidden />
+        <span className="block h-[3px] w-14 rounded-full bg-gradient-to-r from-brand-dark via-brand to-brand-bright" aria-hidden />
         <h1 className="mt-6 max-w-4xl text-[40px] font-semibold leading-[1.08] text-heading md:text-[56px]">
           {title}
         </h1>
@@ -97,7 +98,7 @@ export function CourseCardBody({
       className="group flex h-full flex-col overflow-hidden rounded-[18px] border border-line bg-parchment shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_rgba(31,24,16,0.13)]"
     >
       {image ? (
-        <div className="relative overflow-hidden">
+        <Link href={`/trainings/${slug}`} className="relative block overflow-hidden" aria-label={title}>
           <Image
             src={image}
             alt={title}
@@ -117,7 +118,7 @@ export function CourseCardBody({
               {duration}
             </span>
           )}
-        </div>
+        </Link>
       ) : (
         <div className="flex h-44 w-full items-center justify-center bg-navy px-6 text-center">
           <span className="font-display text-lg font-semibold text-paper">{category}</span>
@@ -129,22 +130,34 @@ export function CourseCardBody({
             {category}
           </span>
         </p>
-        <h3 className="mt-3.5 text-[19px] font-semibold leading-snug text-heading">{title}</h3>
+        <h3 className="mt-3.5 text-[19px] font-semibold leading-snug text-heading">
+          <Link href={`/trainings/${slug}`} className="transition-colors hover:text-brand">
+            {title}
+          </Link>
+        </h3>
         {duration && !image && (
           <p className="mt-2 font-mono text-[12.5px] font-medium text-brand-dark">
             Duration — {duration}
           </p>
         )}
         {summary && <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{summary}</p>}
-        <Link
-          href={`/trainings/${slug}`}
-          className="mt-auto inline-block pt-4 text-sm font-bold text-brand transition-colors hover:text-brand-dark"
-        >
-          Read More{" "}
-          <span aria-hidden className="inline-block transition-transform group-hover:translate-x-0.5">
-            →
-          </span>
-        </Link>
+        <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+          <Link
+            href={`/trainings/${slug}`}
+            className="inline-block text-sm font-bold text-brand transition-colors hover:text-brand-dark"
+          >
+            Read More{" "}
+            <span aria-hidden className="inline-block transition-transform group-hover:translate-x-0.5">
+              →
+            </span>
+          </Link>
+          <Link
+            href={`/trainings/${slug}#demo`}
+            className="inline-block rounded-lg bg-ink px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.08em] text-paper transition-colors hover:bg-brand"
+          >
+            Free Demo
+          </Link>
+        </div>
       </div>
     </article>
   );
@@ -179,7 +192,14 @@ export function ServiceCard({ service }: { service: Service }) {
         </span>
       )}
       <span className="block h-[3px] w-10 rounded-full bg-brand transition-all duration-300 group-hover:w-16" aria-hidden />
-      <h3 className="mt-4 text-[21px] font-semibold text-heading">{service.title}</h3>
+      <p className="eyebrow mt-4 text-[10.5px] text-brand-dark">
+        Service {idx >= 0 ? String(idx + 1).padStart(2, "0") : ""}
+      </p>
+      <h3 className="mt-2 text-[21px] font-semibold text-heading">
+        <Link href={`/services/${service.slug}`} className="transition-colors hover:text-brand">
+          {service.title}
+        </Link>
+      </h3>
       {service.summary && (
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{service.summary}</p>
       )}
@@ -207,7 +227,7 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
         .map((f) => (
           <details
             key={f.q}
-            className="faq-item rounded-2xl border border-line bg-parchment px-6 py-5"
+            className="faq-item rounded-2xl border border-line bg-parchment px-6 py-5 transition-shadow duration-300 hover:shadow-[0_14px_28px_rgba(31,24,16,0.08)]"
           >
             <summary className="flex cursor-pointer items-center justify-between gap-4 font-display text-[17px] font-semibold text-heading">
               {f.q}
@@ -223,18 +243,77 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
 }
 
 export function CtaBand() {
+  const phone = business.phones[0];
   return (
     <section className="panel-ink py-16">
       <div className="wrap flex flex-wrap items-center justify-between gap-6" data-reveal>
         <div>
-          <h2 className="text-[32px] font-semibold leading-[38px] text-paper">Need Help?</h2>
+          <p className="eyebrow text-brand-bright">Free Consultation</p>
+          <h2 className="mt-2.5 text-[32px] font-semibold leading-[38px] text-paper">Need Help?</h2>
           <p className="mt-1.5 text-paper/80">
             Reach out to the world&apos;s most reliable IT services. Get a free consultation.
           </p>
         </div>
-        <Link href="/contact-us" className="btn-primary">
-          Request a Callback
-        </Link>
+        <div className="flex flex-wrap gap-3.5">
+          <Link href="/contact-us" className="btn-primary">
+            Request a Callback
+          </Link>
+          <a href={telHref(phone)} className="btn-outline-light">
+            Call {phone}
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Verbatim learner proof, placed beside the conversion asks
+// (engagement pass, DECISIONS.md §22): three of the eight published
+// Google testimonials — SOC, Azure and Cloud voices — unedited, with
+// the register door in the same section so proof sits next to action.
+export function TestimonialSpotlight() {
+  const picks = ["M Vamsi", "Arif Syed", "kruthikrishna dwaraka"]
+    .map((name) => testimonials.find((t) => t.name === name))
+    .filter((t): t is NonNullable<typeof t> => Boolean(t));
+  if (picks.length === 0) return null;
+  return (
+    <section className="section-pad">
+      <div className="wrap">
+        <SectionTitle label="Learner Voices" title="What our learners say" center />
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {picks.map((t, i) => (
+            <figure
+              key={t.name}
+              data-reveal
+              style={{ "--reveal-delay": `${i * 90}ms` } as CSSProperties}
+              className="relative flex flex-col overflow-hidden rounded-[18px] border border-line bg-parchment p-7 shadow-[0_1px_2px_rgba(31,24,16,0.05)]"
+            >
+              <span aria-hidden className="font-display text-[44px] font-semibold leading-[0.6] text-brand">
+                &ldquo;
+              </span>
+              <blockquote className="mt-3 grow text-[14.5px] leading-7 text-heading">
+                {t.text}
+              </blockquote>
+              <figcaption className="mt-4 border-t border-line pt-3.5">
+                <span className="block text-sm font-semibold text-heading">{t.name}</span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-body">
+                  {t.source}
+                </span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+          <Link href="/register" className="btn-primary">
+            Register / Book a Free Demo
+          </Link>
+          <Link
+            href="/testimonials"
+            className="text-sm font-bold text-brand transition-colors hover:text-brand-dark"
+          >
+            Read all learner voices →
+          </Link>
+        </div>
       </div>
     </section>
   );
@@ -294,6 +373,9 @@ export function ForInstitutesBand() {
           </Link>
           <Link href="/for-institutes#demo" className="btn-outline-light">
             Book a Demo
+          </Link>
+          <Link href="/for-colleges" className="btn-outline-light">
+            For Colleges
           </Link>
         </div>
         <p className="mt-6 text-center text-sm text-paper/75">
@@ -365,7 +447,14 @@ export function BlogCards() {
           </a>
           <div className="flex grow flex-col p-6">
             <h3 className="font-display text-[17px] font-semibold leading-snug text-heading">
-              {p.title}
+              <a
+                href={p.url}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-brand"
+              >
+                {p.title}
+              </a>
             </h3>
             <a
               href={p.url}
@@ -383,6 +472,10 @@ export function BlogCards() {
 }
 
 // Feature trio strip from the live Home/About/Trainings/course pages.
+// §22 polish: promoted from three bare labels to an ink ledger band —
+// the three published points as numbered columns with the conversion
+// action built into the same surface, so the strip works as a board,
+// not a footnote.
 export function FeatureTrio() {
   const items = [
     "100% Student Satisfaction",
@@ -392,23 +485,22 @@ export function FeatureTrio() {
   return (
     <section className="section-pad">
       <div className="wrap">
-        <div className="grid gap-6 md:grid-cols-3">
+        <div
+          data-reveal
+          className="panel-ink grid items-center gap-8 rounded-[24px] px-8 py-10 md:px-10 lg:grid-cols-[1fr_1fr_1fr_auto]"
+        >
           {items.map((t, i) => (
-            <article
+            <div
               key={t}
-              data-reveal
-              style={{ "--reveal-delay": `${i * 90}ms` } as CSSProperties}
-              className="rounded-[18px] border border-line border-t-[3px] border-t-brand bg-parchment px-8 py-9 text-center shadow-[0_1px_2px_rgba(31,24,16,0.05)]"
+              className="border-l-2 border-brand/70 pl-5"
             >
-              <p className="font-mono text-[12px] font-semibold text-brand-dark">
+              <p className="font-mono text-[12px] font-semibold text-brand-bright">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mt-2 text-[21px] font-semibold text-heading">{t}</h3>
-            </article>
+              <h3 className="mt-1.5 font-display text-[21px] font-semibold text-paper">{t}</h3>
+            </div>
           ))}
-        </div>
-        <div className="mt-9 text-center">
-          <Link href="/contact-us" className="btn-primary">
+          <Link href="/contact-us" className="btn-primary whitespace-nowrap">
             Talk to a Trainer
           </Link>
         </div>

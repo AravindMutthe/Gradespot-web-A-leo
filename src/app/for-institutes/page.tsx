@@ -100,6 +100,20 @@ export default function ForInstitutesPage() {
             <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "For Institutes" }]} />
           </div>
 
+          {/* First-screen actions (§22): the demo door is visible
+              without scrolling past the pain points. */}
+          <div className="mt-9 flex flex-wrap justify-center gap-3.5">
+            <a href="#demo" className="btn-primary">
+              Book a Live Demo
+            </a>
+            <Link href="/pricing" className="btn-outline-navy">
+              See Institute Plans
+            </Link>
+            <Link href="/partner-with-us" className="btn-outline-navy">
+              Partner With Us
+            </Link>
+          </div>
+
           {/* Pain */}
           <div className="mt-12">
             <SectionTitle
@@ -177,7 +191,7 @@ export default function ForInstitutesPage() {
             </p>
           </div>
           <div className="mx-auto mt-10 grid max-w-5xl gap-6 md:grid-cols-3">
-            <article className="rounded-2xl bg-surface-light p-7">
+            <article className="rounded-2xl border border-line bg-surface-light p-7">
               <h3 className="text-lg font-semibold text-heading">This website runs on it</h3>
               <p className="mt-2 text-sm leading-6 text-body">
                 Every enquiry sent through these pages is captured into our database with its
@@ -185,7 +199,7 @@ export default function ForInstitutesPage() {
                 memory.
               </p>
             </article>
-            <article className="rounded-2xl bg-surface-light p-7">
+            <article className="rounded-2xl border border-line bg-surface-light p-7">
               <h3 className="text-lg font-semibold text-heading">Verification is live</h3>
               <p className="mt-2 text-sm leading-6 text-body">
                 Employers can verify a GradeSpot certificate on this site right now — the same
@@ -195,7 +209,7 @@ export default function ForInstitutesPage() {
                 </Link>
               </p>
             </article>
-            <article className="rounded-2xl bg-surface-light p-7">
+            <article className="rounded-2xl border border-line bg-surface-light p-7">
               <h3 className="text-lg font-semibold text-heading">No invented numbers</h3>
               <p className="mt-2 text-sm leading-6 text-body">
                 We don&apos;t publish case-study figures we can&apos;t stand behind. As real
@@ -240,6 +254,20 @@ export default function ForInstitutesPage() {
               Tell us which product you want to see. We&apos;ll show you the admission flow
               handling real enquiries and map it to your institute.
             </p>
+            <ul className="mt-6 space-y-2.5">
+              {[
+                "The live enquiry flow this website itself runs on",
+                "Mapped to your courses, counsellors and batches",
+                "Official Meta WhatsApp Cloud API — no ban-risk tools",
+              ].map((x) => (
+                <li key={x} className="flex gap-2.5 text-[15px] leading-6 text-body">
+                  <span className="mt-0.5 font-bold text-brand" aria-hidden>
+                    ✓
+                  </span>
+                  {x}
+                </li>
+              ))}
+            </ul>
             <div className="mt-8">
               <LeadForm
                 idPrefix="demo"

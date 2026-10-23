@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { services as localServices } from "@/data/services";
-import { servicesFaqAnswers } from "@/data/pages";
 import { getService } from "@/lib/data";
 import { PageHero } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -69,7 +68,7 @@ export default async function ServicePage({
                       {service.offerings.map((o) => (
                         <li
                           key={o}
-                          className="flex items-start gap-3 rounded-xl bg-surface-light px-4 py-3 text-[15px] font-medium text-heading"
+                          className="flex items-start gap-3 rounded-xl border border-line bg-surface-light px-4 py-3 text-[15px] font-medium text-heading"
                         >
                           <span className="font-bold text-brand" aria-hidden>
                             ✓
@@ -82,17 +81,18 @@ export default async function ServicePage({
                 )}
               </article>
             )}
-            <article>
-              <h2 className="text-[28px] font-semibold leading-[34px]">What We Offer</h2>
-              <p className="mt-3">{servicesFaqAnswers.services}</p>
-              <p className="mt-4">{servicesFaqAnswers.trainings}</p>
-            </article>
-            <article>
-              <h2 className="text-[28px] font-semibold leading-[34px]">How We Support You</h2>
-              <p className="mt-3">{servicesFaqAnswers.support}</p>
-              <p className="mt-4">{servicesFaqAnswers.smart}</p>
-            </article>
-            <div className="rounded-2xl bg-surface-light p-8 text-center">
+            <p className="text-[15px] leading-7 text-body">
+              Looking at the wider picture? Browse{" "}
+              <Link href="/services" className="font-semibold text-brand hover:underline">
+                all services
+              </Link>{" "}
+              or read the{" "}
+              <Link href="/faq" className="font-semibold text-brand hover:underline">
+                Help &amp; FAQs
+              </Link>
+              .
+            </p>
+            <div className="rounded-2xl border border-line bg-surface-light p-8 text-center">
               <h2 className="text-2xl font-semibold">Interested in {service.title}?</h2>
               <p className="mx-auto mt-2 max-w-xl">
                 Send an enquiry and our team will discuss your requirement, timelines and the

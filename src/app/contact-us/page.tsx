@@ -62,17 +62,6 @@ export default function ContactPage() {
           </aside>
         </div>
 
-        <div className="wrap mt-14 grid gap-6 md:grid-cols-2">
-          <article className="rounded-2xl bg-surface-light p-7">
-            <h2 className="text-2xl font-semibold">24/7 Customer Support</h2>
-            <p className="mt-2 text-sm leading-6">{contactParagraphs[6]}</p>
-          </article>
-          <article className="rounded-2xl bg-surface-light p-7">
-            <h2 className="text-2xl font-semibold">Smart Solutions</h2>
-            <p className="mt-2 text-sm leading-6">{contactParagraphs[7]}</p>
-          </article>
-        </div>
-
         <div className="wrap mt-14">
           <h2 className="text-2xl font-semibold">Find Us</h2>
           <iframe

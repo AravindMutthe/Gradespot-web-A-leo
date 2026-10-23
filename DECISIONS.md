@@ -461,7 +461,7 @@ unchanged; the "Request a Callback" CTA unchanged.
   location (Dilsukhnagar, Hyderabad); other-city pages would invent
   a presence.
 
-## 19. Leo redesign v2 — "Prospectus" — 2026-10-23
+## 19. Leo redesign v1 — "Prospectus" — 2026-10-23
 
 Aravind's mandate (13:46 IST, superseding the v1 "palette from the
 logo" narrowing): full creative control — forget the original site's
@@ -644,7 +644,7 @@ Resources ▾ · For Colleges · For Institutes (pill) · Register (§20)
   published email, phone and contact page. The named Grievance
   Officer is Aravind's data — blocked below.
 - Consumer Protection Act 2019 + E-Commerce Rules + ASCI code:
-  all new v2 copy (promo system, register, partner, accessibility)
+  all new v1 copy (promo system, register, partner, accessibility)
   was audited against the honesty rules — no misleading claims, no
   fake scarcity/urgency (no countdowns, no "limited period"), no
   unsubstantiated superlatives, no invented figures; "Featured" is
@@ -691,7 +691,7 @@ BLOCKED-ON-DATA (legal — Aravind to supply; nothing was invented):
   LP (website:/lp/…), register (website:/register, §20), partner
   (website:/partner-with-us, §21); invalid payload → 422.
 - Security headers: all six present in live responses (§19.6).
-- Content integrity vs the pre-v2 baseline: signature alt present;
+- Content integrity vs the pre-v1 baseline: signature alt present;
   8 testimonials with "Posted on Google" ×8; one phone everywhere;
   published prices ₹13,000 / ₹28,000 / ₹37,500 render on /pricing;
   Set A/Set B figures: 0 anywhere; ISO/AICTE claim instances
@@ -710,7 +710,7 @@ exactly: /register is course/demo LEAD registration on the existing
 account creation anywhere in this build. Student accounts are
 noted for the LMS phase only (gradespot-axon), if he ever asks.
 
-- Page: /register (v2 design) — how-it-works steps, a registration
+- Page: /register (v1 design) — how-it-works steps, a registration
   form (name, phone, optional email, course select from the real
   catalogue, type select: Course Registration / Free Demo, WhatsApp
   opt-in with a DPDP consent line), and the free-first-steps offer
@@ -736,7 +736,7 @@ noted for the LMS phase only (gradespot-axon), if he ever asks.
 Aravind's decision (13:57 IST): the site should openly welcome
 collaborations and franchise discussions.
 
-- Page: /partner-with-us (v2 design) — hero carrying his line
+- Page: /partner-with-us (v1 design) — hero carrying his line
   ("Collaborations & franchise discussions are welcome"), two
   tracks (Collaborations: institutes, colleges, trainers, content/
   community partners · Franchise discussions: new-centre
@@ -758,11 +758,11 @@ collaborations and franchise discussions.
 - Verified: partner POST → 201 stored with source
   website:/partner-with-us (§19.8); page in sitemap + llms.txt.
 
-### 19.9 Market-pattern sources for v2 choices (mandate confirmed 14:00 IST)
+### 19.9 Market-pattern sources for v1 choices (mandate confirmed 14:00 IST)
 
 Aravind confirmed free hands for domain/market choices on current
 global + India training-institute/ed-tech practice, with the
-research corpus as evidence. The v2 choices and the pattern each
+research corpus as evidence. The v1 choices and the pattern each
 follows:
 - Ledger/code identity (mono course codes, index numerals, board
   lines) — SANS code-led course pages (SEC504) and OffSec course
@@ -807,3 +807,140 @@ follows:
   the discount-marketplace visual language; India institutes that
   present as premium (Hacker School's award-led trust blocks) sell
   trust, not offers.
+
+## 22. Engagement + menu-effectiveness pass (2026-10-23, Aravind's acceptance bar)
+
+Bar as stated: the site must be attractive, students AND clients
+must engage, the menu must be most effective; design/layout/style/
+fonts/colours judged on attractive AND effective together; a RICH
+mega menu; every part rich and advanced; dedupe of redundant
+content/pages/courses/services/options; logo brighter by
+presentation; glass + gradients in the Royal Salon manner; final
+look = professional corporate (Simplilearn/NIIT/SANS register).
+
+### 22.1 Version ruling (Aravind, 14:04 IST)
+THIS build is **Leo v1**. The earlier `9f08845` corporate draft is
+superseded history, not a version. v2 = the next commissioned
+feature wave (AI chat, admin-side promo configuration going live,
+LMS-phase student accounts, batch system). All repo copy/docs
+calling this build "v2" corrected to v1 in this pass.
+
+### 22.2 Student journey — findings
+- PASS: hero hook (H1 value line + phone-first form + ticker),
+  course→demo anchor flow, LP one-CTA pattern, comparison pages,
+  verify page, floating WhatsApp (desktop).
+- FIXED: course/service cards were image-rich but inert — card
+  image + title now link to the course/service; every course card
+  carries a Free Demo chip to its `#demo` block.
+- FIXED: testimonial proof sat only on its own page — a
+  TestimonialSpotlight (3 verbatim reviews + Register CTA) now
+  sits on Home directly before the final CTA band.
+- FIXED: LeadForm demanded an email (friction) — email is now
+  optional, matching the API; a "Phone-first · Email optional ·
+  No spam, ever" microline sets the promise under the form.
+- FIXED: Trainings index buried the catalogue below stats +
+  showcase — catalogue + search now immediately follow the hero;
+  category chips with counts deep-link to anchored sections.
+- FIXED: mobile sticky bar duplicated the floating WhatsApp and
+  pointed its third slot at a generic contact page — third action
+  is now Register; floating WhatsApp is desktop-only.
+- FIXED: dead ends closed — CtaBand added to blog index, compare
+  pages, /faq, /resources, /student-certifications, local page.
+
+### 22.3 Client journey — findings
+- PASS: /for-institutes carries demo + plans + partner doors;
+  partner page is discussion-only per §21 (no terms/ROI).
+- FIXED: the three client doors were not one click from anywhere —
+  the Services mega menu now carries an ink "For Business" rail
+  (For Institutes / For Colleges / Partner With Us + Pricing),
+  and Home's hero gained an audience-doors strip (Students /
+  Institute Owners / Colleges & Partners).
+- FIXED: B2B pages opened with prose before any action — first-
+  screen action strips added (Book a Live Demo / See Institute
+  Plans / Partner With Us; colleges: Start the Conversation /
+  Partner With Us), plus a form-side reassurance checklist built
+  only from copy already on the page.
+- FIXED: partner track cards were inert — each now carries its
+  own CTA anchoring to the discussion form.
+
+### 22.4 Menu verdicts
+| Change | Verdict | Rationale |
+|---|---|---|
+| Home removed from the bar (v1 §19) | KEEP | Logo-is-home is the NN/g convention; the mega menu carries depth, the bar stays lean. |
+| Contact Us removed from desktop bar | KEEP | Request a Callback (same destination, stronger verb) is the single solid CTA; Contact remains in footer, mobile sheet and Resources. |
+| Digital moved into Resources | KEEP | External properties cluster under Resources; relabelled "GradeSpot Digital" (and "DigiDefense Blog") so the destination is unambiguous. |
+| Rich mega menu (§22) | ADOPTED as primary instrument | Nav-IA corpus: with a 36-course catalogue a mega menu beats deep dropdowns; hover + click + keyboard, grouped columns with code·duration, featured CEH rail + Free Demo promo card inside Trainings; grouped services + B2B rail inside Services. |
+| CTA hierarchy | RESTACKED | One vermilion solid only (Request a Callback); Register = outline; For Institutes demoted vermilion-solid → ink pill (an audience door, not a competing conversion CTA). |
+| Top level | UNCHANGED (5 + actions) | Trainings / Services / Why GradeSpot / Verify / Resources — inside the corpus's ≤5–6 guidance because the mega panels carry the depth. |
+
+### 22.5 Attractive-AND-effective polish (each judged on both axes)
+- FeatureTrio: three bare labels read as filler → an ink ledger
+  band with real entries + a built-in Talk to a Trainer CTA
+  (richer AND converts).
+- Home "What We Do" + Trainings showcase cards: image + index
+  chips (visual rhythm, scannable).
+- Terms page: wall of text → numbered ledger cards + closing
+  contact panel (same published text).
+- About story: bare prose → ledger panel with a lead paragraph;
+  testimonials page: quote marks + mono source line.
+- Blanket: every flat `bg-surface-light` card gained a `border-line`
+  edge so cards read as layered stock, not grey boxes.
+- Corporate register firmed up: the floating WhatsApp button's
+  playful scale-on-hover replaced with a lift + shadow deepen;
+  no emojis, no bouncy motion anywhere in the build.
+
+### 22.6 Rich-and-advanced blanket (§22 directive)
+Every component class was audited; thin sections were enriched
+from content already on the site (imagery, mono-code detailing,
+index chips, service numbering, hover depth). Sections that
+cannot be made rich without inventing content: NONE padded — the
+grievance/legal facts remain blocked-on-data per §19.7 and were
+left plain rather than decorated with invented substance.
+
+### 22.7 Glass + gradient system (Royal Salon treatment, §22)
+- `.glass-panel` (parchment 88% + blur 18px + saturate) on: sticky
+  header bar, all three mega-menu panels, LP chrome, hero fact
+  chip. `.glass-ink` (ink 88% + blur 14px) on: mobile sticky bar.
+- Gradients: primary button brand→brand-dark (both stops AA with
+  white text); hero accent bar brand-dark→brand→brand-bright;
+  ticker label brand→brand-dark; `panel-ink` already carries the
+  ink ground + vermilion radial glow (hero, CTA bands, demo card).
+- Discipline: blur on three surface classes only (performance
+  budget held — shared JS unchanged at 103 kB); text always on
+  ≥85%-opaque stock so §19 contrast stands; under
+  `prefers-reduced-transparency` glass resolves to opaque stock.
+
+### 22.8 Logo brightening (presentation only)
+Treatment: a luminous parchment plate (white→cream radial) with a
+warm vermilion halo shadow + ring behind the lockup, artwork at a
+stronger size (h-12). Footer: light artwork on a translucent
+plate with the same halo on the ink ground. LP chrome matches the
+header. Applies to: main header, LP chrome, footer. The artwork
+files are byte-identical to the replica (hash-verified in this
+pass); NO CSS filter, recolor or file edit was applied anywhere.
+
+### 22.9 Dedupe log
+| Removal | Evidence | Preservation |
+|---|---|---|
+| Free Demo OfferCard dropped from Home only (`excludeSlug`) | The PromoBanner already carries Free Demo on Home; the same card rendered twice on one page. Pricing/Register keep it (no banner there). | Same content, one canonical instance per page. |
+| siteFaqs FaqList removed from About + Why Choose Us | The identical 3-item FAQ set repeated verbatim on three pages. | Cross-link card to canonical /faq on both pages. |
+| Generic "What We Offer / How We Support You" articles removed from all 12 service pages | Same two generated answer blocks verbatim on every service page. | Cross-link line to /services + /faq; service-specific summaries/offerings (the harvest content) untouched. |
+| "24/7 Customer Support" + "Smart Solutions" cards removed from Contact | Duplicated the canonical instances on /services. | Canonical instances remain on /services (verified single occurrence). |
+| Footer bottom strip trimmed (Home/Testimonials/Services/Terms links) | Each duplicated a footer column directly above it. | Columns remain; strip keeps Pricing / For Institutes / local page. |
+| Resources "Blog" card renamed "DigiDefense Blog" | Label collided with the internal /blog ("Blog (DigiDefense)" ambiguity). | Destination unchanged; label now names the property. |
+
+- Routes: NO page removed — the page-merge audit found no two
+  pages serving the same purpose, so no new 301s were needed.
+- Borderline pair listed for Aravind's word: About vs Why Choose
+  Us (company story vs differentiators — purposes differ, both
+  are original routes; kept).
+- Courses: NO true duplicates among the 36. Borderline overlaps
+  listed for his word: CCNA vs Network+; SOC Analyst vs SC-200;
+  Cybersecurity Technologies vs CEH/SOC; Data Analytics vs Data
+  Science vs Power BI.
+- Services: no true duplicates among the 12; Corporate Trainings /
+  Industrial Trainings / College Workshops are audience variants
+  of one delivery capability — listed, kept.
+- NOT touched (researched intentional repetition): LP one-CTA ×3,
+  WhatsApp/demo presence across pages, testimonial proof beside
+  forms.

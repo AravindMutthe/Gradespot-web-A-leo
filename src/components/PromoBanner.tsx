@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getPromotions } from "@/lib/data";
 import { business, telHref } from "@/data/site";
 
-// Hero promotional banner (Leo redesign v2, DECISIONS.md §19) — a
+// Hero promotional banner (Leo redesign v1, DECISIONS.md §19) — a
 // layered salon-style promo panel: ink stock, signal glow, serif
 // headline, real course imagery and a floating fact chip. Content is
 // NOT hardcoded: it renders the first active "banner" promotion from
@@ -53,7 +53,7 @@ export default async function PromoBanner() {
               aria-hidden
               className="absolute inset-0 bg-gradient-to-r from-[#171208] via-transparent to-transparent lg:bg-gradient-to-r"
             />
-            <p className="absolute bottom-4 left-4 rounded-full bg-paper px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink shadow-lg">
+            <p className="glass-panel absolute bottom-4 left-4 rounded-full px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink shadow-lg ring-1 ring-line">
               Online &amp; Offline · Dilsukhnagar
             </p>
           </div>

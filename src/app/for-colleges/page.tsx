@@ -90,6 +90,19 @@ export default function ForCollegesPage() {
             <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "For Colleges" }]} />
           </div>
 
+          {/* First-screen actions (§22) */}
+          <div className="mt-9 flex flex-wrap justify-center gap-3.5">
+            <a href="#enquire" className="btn-primary">
+              Plan a Program for Your College
+            </a>
+            <Link href="/for-institutes" className="btn-outline-navy">
+              For Institutes
+            </Link>
+            <Link href="/partner-with-us" className="btn-outline-navy">
+              Partner With Us
+            </Link>
+          </div>
+
           <div className="mt-12">
             <SectionTitle
               label="For Colleges"
@@ -177,6 +190,28 @@ export default function ForCollegesPage() {
             </Link>
             .
           </p>
+        </div>
+      </section>
+
+      {/* Partner band (§22): the third client door, cross-linked
+          from the college track as it is from the institute track. */}
+      <section className="section-pad pt-0">
+        <div className="wrap">
+          <div className="panel-ink flex flex-wrap items-center justify-between gap-6 rounded-[24px] p-8 md:p-10">
+            <div className="max-w-2xl">
+              <p className="eyebrow text-brand-bright">Partner With Us</p>
+              <h2 className="mt-3 font-display text-[28px] font-semibold leading-tight text-paper">
+                Thinking beyond one program?
+              </h2>
+              <p className="mt-2 text-[15px] leading-7 text-paper/80">
+                Collaborations and franchise discussions are welcome — with colleges,
+                institutes, trainers and people thinking about a centre of their own.
+              </p>
+            </div>
+            <Link href="/partner-with-us" className="btn-primary">
+              Partner With Us
+            </Link>
+          </div>
         </div>
       </section>
 

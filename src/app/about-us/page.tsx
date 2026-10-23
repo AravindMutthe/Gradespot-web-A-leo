@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { aboutParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
-import { CtaBand, ExperienceBadge, FaqList, FeatureTrio, LogoWall, PageHero, SectionTitle, SignatureBlock, StatsRibbon, siteFaqs } from "@/components/ui";
+import { CtaBand, ExperienceBadge, FeatureTrio, LogoWall, PageHero, SectionTitle, SignatureBlock, StatsRibbon } from "@/components/ui";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/about-us" }, title: "About Us" };
@@ -28,11 +28,11 @@ export default function AboutPage() {
               <SignatureBlock />
             </div>
             <div className="mt-6 space-y-4">
-              <article className="rounded-2xl bg-surface-light p-5">
+              <article className="rounded-2xl border border-line bg-surface-light p-5">
                 <h3 className="text-lg font-semibold">An ISO Certified Company</h3>
                 <p className="mt-1 text-sm leading-6">{aboutParagraphs[2]}</p>
               </article>
-              <article className="rounded-2xl bg-surface-light p-5">
+              <article className="rounded-2xl border border-line bg-surface-light p-5">
                 <h3 className="text-lg font-semibold">AICTE Internships Approved</h3>
                 <p className="mt-1 text-sm leading-6">{aboutParagraphs[4]}</p>
               </article>
@@ -70,9 +70,14 @@ export default function AboutPage() {
       <section className="section-pad">
         <div className="wrap">
           <SectionTitle label="Our Story" title="About GradeSpot IT Solutions" center />
-          <div className="mx-auto mt-8 max-w-4xl space-y-5">
+          <div
+            data-reveal
+            className="mx-auto mt-8 max-w-4xl space-y-5 rounded-[20px] border border-line border-l-[3px] border-l-brand bg-parchment px-7 py-8 shadow-[0_1px_2px_rgba(31,24,16,0.05)] md:px-10 md:py-10"
+          >
             {narrative.map((p, i) => (
-              <p key={i}>{p}</p>
+              <p key={i} className={i === 0 ? "text-[17px] leading-8 text-heading" : undefined}>
+                {p}
+              </p>
             ))}
           </div>
         </div>
@@ -96,8 +101,16 @@ export default function AboutPage() {
               </article>
             ))}
           </div>
-          <div className="mx-auto mt-12 max-w-3xl">
-            <FaqList items={siteFaqs} />
+          <div className="mx-auto mt-12 max-w-3xl rounded-[18px] border border-line bg-parchment px-7 py-6 text-center shadow-[0_1px_2px_rgba(31,24,16,0.05)]">
+            <h3 className="font-display text-[20px] font-semibold text-heading">
+              Questions about trainings or services?
+            </h3>
+            <p className="mt-1.5 text-sm leading-6 text-body">
+              The answers live in one place — our Help &amp; FAQs.
+            </p>
+            <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-brand hover:text-brand-dark">
+              Read Help &amp; FAQs →
+            </Link>
           </div>
         </div>
       </section>

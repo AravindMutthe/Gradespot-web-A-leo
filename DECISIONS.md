@@ -322,3 +322,141 @@ into this build where the business needs them. Applied:
   quote_requests model stays an admin-phase design note), legacy stats
   beyond the resolved set, placeholder testimonials, the /placements
   guarantee claim.
+
+## 18. Research expansion pack — 2026-10-23
+
+Aravind's call: the §17 harvest added only 2 pages from four deep
+research reports (training-institute strategies; global similar
+business models; nav/IA patterns; PPC/AEO/local) — too thin. This pack
+mines the research corpus itself (all 4 reports + notes), the
+research-demo, the planning scrape, and the Oct-6 content engine
+(GitHub `gradespot-frontend-website` `src/lib/mock-data.ts` @
+e54a51c — read via the official GitHub connector; the local clone is a
+stale initial commit and was NOT used, and its stored-credential API
+route returns 401) and builds every recommendation that stands on
+real data only. Standalone mapping:
+goals/axon-gradespot-site-rebuild/hidden_files/leo-research-expansion-map-2026-10-23.md
+
+**Built:**
+
+- **City×course landing pages — `/lp/<course>-in-hyderabad` × 11**
+  (ppc report tactics 1–5; folder-1 tactic 8 city×course matrix;
+  research-demo lp-ceh pattern): nav-free chrome (a `Chrome` switch
+  in the root layout drops the global header/footer/floating actions
+  on `/lp/*` only), message-matched H1 (course + city), ONE primary
+  CTA in identical words ("Get My Free Counselling Call") repeated
+  3×, a 3-field form above the fold (name, phone, one qualifying
+  "when can you start?" select riding in the message; email optional),
+  per-course pre-filled WhatsApp (chat + syllabus variants), a sticky
+  mobile Call/WhatsApp/Free-Counselling bar, a verbatim Google
+  testimonial beside the form, and content strictly from real course
+  data. No batch dates — none exist in the record.
+- **Local institute page — `/training-institute-in-dilsukhnagar-hyderabad`**
+  (folder-1 tactic 8; ppc §2.2/§2.4/§2.5): answer-first intro, real
+  address/phone/email/hours, Google Maps query link, the 11 full
+  courses, verbatim testimonials, LP cross-links, local FAQ block +
+  FAQPage schema + `LocalBusiness` schema (new `localBusinessSchema`:
+  same restraint as the org schema — no geo, no opening-hours days,
+  none are published).
+- **`/for-colleges`** (nav report Part A2 — third audience gets its
+  own door, not a separate site; business-models report —
+  Algoritma/Supertype university-partnership bridge): mirrors the
+  /for-institutes anatomy; stands only on the three real services
+  (College Workshops, Industrial Trainings, Internships — summaries +
+  offerings from data); enquiry form with product interest options,
+  source `website:/for-colleges`. No college names/counts/outcomes —
+  none exist in the record.
+- **`/career-support`** (replaces the banned /placements idea):
+  published job roles for the 9 courses that publish them, the
+  employer logo wall as the live site publishes it, the 5
+  career-oriented services among the real 12, certificate
+  verification links, verbatim testimonials, and an explicit
+  no-guarantee position. "Till You Get Hired" and every placement
+  percentage/salary figure stay banned — none appear.
+- **Book-a-Free-Demo as a first-class path** (folder-1 tactic 6;
+  ppc §1.10): a DemoBand on EVERY course page (full + catalogue) —
+  form through `/api/leads` with interest `Demo: <course>` +
+  WhatsApp demo/syllabus buttons; EnquiryRail gains "Get the
+  Syllabus on WhatsApp" (the research's per-course WhatsApp syllabus
+  pattern) and a "Book a Free Demo Class" anchor. Demo FAQ added to
+  every course's generated FAQs.
+- **Course comparisons — `/compare` + 3 pairs** (ppc §2.2:
+  comparison queries trigger AI answers 95.4% of the time):
+  CEH vs Security+, CCNA vs Network+, SOC Analyst vs CEH. Tables
+  render ONLY from real fields (focus, who, duration, mode, level,
+  certification, published fees — CCNA's plans appear; unpublished
+  fees read "Confirmed on enquiry" — topics, outcomes, job roles);
+  the only authored text is the focus lines and "which is for you"
+  guidance, both derived from those fields. Cross-linked from both
+  course pages of each pair.
+- **Course-level factual FAQs on every course page** (folder-1 Q5 /
+  ppc §2.2 answer-first): generated ONLY from real fields (who,
+  duration, published fees, online/offline mode, certification, job
+  roles, topics, demo availability); unknowns answer "confirmed on
+  enquiry". Rendered as a visible FAQ section and merged into the
+  FAQPage schema alongside the courses' published FAQ sections.
+- **Blog — `/blog` + 3 articles.** The Oct-6 BLOG_POSTS are stubs
+  ("[Pending: article body]") on GitHub too, so per the fallback rule
+  these are **original Leo-authored articles** (marked here as such):
+  "How to Start a Cybersecurity Career" (the stub's own title/topic),
+  "CEH vs Security+: Which Certification Should You Do First?",
+  "What Does a SOC Analyst Actually Do?". Every fact traces to
+  published course topics/durations/certifications/roles; no stats,
+  quotes or salary claims. The external DigiDefense blog stays linked
+  as its own section, as the live site presents it.
+- **Enrichment data — `src/data/course-details.ts`**: the Oct-6
+  content engine's published per-course fields (short name, who,
+  outcome, topics, level, certification) for the 11 full courses,
+  powering the LPs, comparisons and FAQs. AZ-900/AZ-104/Hardware have
+  no duration in ANY source — durations stay absent there.
+- **llms.txt depth**: key-pages entries for all new routes + a
+  "Hyderabad course landing pages" section (hygiene per the
+  evidence — shipped, never sold as an AEO lever).
+
+**API change:** `/api/leads` email is now optional (validated when
+present). The LP form is phone-first per the ppc research; the main
+LeadForm still requires email in its UI. Verified: LP-shaped and
+demo-shaped POSTs return 201 with `stored: "supabase"` and correct
+source/interest; test leads deleted; table left clean.
+
+**Nav changes (every one, per the sameness rule):** desktop + mobile
+nav gain **For Colleges** (plain item beside the For Institutes
+pill); the Resources dropdown gains **Career Support**, **Learning
+Articles** (/blog) and **Course Comparisons** (/compare); the footer
+Company column gains Career Support + For Colleges; the footer
+bottom row gains **Institute in Dilsukhnagar**; the Resources page
+gains 4 cards (Career Support, Learning Articles, Course
+Comparisons, For Colleges). All pre-existing items/destinations
+unchanged; the "Request a Callback" CTA unchanged.
+
+**Skipped, with reasons:**
+- **Batch dates / countdowns / batch cards** — every legacy source
+  marks dates `[Pending]`; inventing them is fabrication and fake
+  scarcity violates Google Ads policy. (Unchanged from §16.)
+- **Brochure PDF download** — no brochure asset exists in the record;
+  the WhatsApp syllabus message is the deliverable instead.
+- **"Pay after you Pass" page** — a payment-method promise; same
+  decision class as pricing (Set A vs Set B still open). The line
+  stays only where the replica already carried it (Student
+  Certifications, §15).
+- **Oct-6 TESTIMONIALS set** — not the verbatim Google set Aravind
+  resolved; it also carries a placement claim ("placed at Wipro").
+  The 8 Google testimonials govern everywhere.
+- **Oct-6 STATS** — 1200 certified contradicts the resolved 1250;
+  "100% Student Satisfaction" as a stat is an unverified claim.
+- **Competitor "vs" pages** (Interakt-vs-Wati play; Vacademy
+  switch-math) — those target B2B SaaS rivals for the Axon products;
+  they belong to the gradespot-axon phase and need Aravind's pricing
+  decision first.
+- **Industry landing pages for the automation products** — same
+  Axon-phase dependency.
+- **AI chat assistant** — unchanged: needs API keys + a
+  serving-backend decision (Aravind's call).
+- **Free mini-courses / lead magnets beyond the demo** — no such
+  asset exists; the free demo class + free counselling call are the
+  real offers.
+- **AggregateRating / review stars** — no verified aggregate exists
+  (§16); testimonials are shown verbatim with source named instead.
+- **City pages beyond Hyderabad** — the business has one published
+  location (Dilsukhnagar, Hyderabad); other-city pages would invent
+  a presence.

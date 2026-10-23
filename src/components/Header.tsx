@@ -16,6 +16,9 @@ const resourceLinks = [
   { label: "Team Members", href: "/team-members" },
   { label: "Why Choose Us", href: "/why-choose-us" },
   { label: "Testimonials", href: "/testimonials" },
+  { label: "Career Support", href: "/career-support" },
+  { label: "Learning Articles", href: "/blog" },
+  { label: "Course Comparisons", href: "/compare" },
   { label: "Blog", href: business.blogUrl, external: true },
   { label: "Student Certifications", href: "/student-certifications" },
   { label: "Certificate Verification", href: "/certificate-verification" },
@@ -209,6 +212,12 @@ export default function Header() {
             <Link className={navLink} href="/pricing">
               Pricing
             </Link>
+            {/* For Colleges — the third audience's own door (nav
+                research: third audience gets its own tab; added in the
+                research expansion pack, DECISIONS.md §18). */}
+            <Link className={navLink} href="/for-colleges">
+              For Colleges
+            </Link>
             {/* For Institutes — highlighted B2B door, per the Stage-1
                 approved sitemap's distinct CTA treatment (harvested
                 2026-10-23, DECISIONS.md §17). */}
@@ -313,6 +322,9 @@ export default function Header() {
             </Link>
             <Link className={mobileLink} href="/pricing" onClick={() => setOpen(false)}>
               Pricing
+            </Link>
+            <Link className={mobileLink} href="/for-colleges" onClick={() => setOpen(false)}>
+              For Colleges
             </Link>
             <Link
               className="block px-3 py-2.5 text-sm font-bold text-brand"

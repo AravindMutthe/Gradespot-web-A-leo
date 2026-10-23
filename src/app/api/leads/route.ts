@@ -4,7 +4,20 @@ import { createLead } from "@/lib/data";
 
 const leadSchema = z.object({
   name: z.string().trim().min(2, "Please enter your full name").max(120),
-  email: z.string().trim().email("Please enter a valid email address").max(160),
+  // Email is required by the main enquiry form, but the /lp/* landing
+  // forms collect phone-first leads (ppc research: phone is the lead) —
+  // so the API accepts an empty email and validates the format whenever
+  // one is provided (DECISIONS.md §18).
+  email: z
+    .string()
+    .trim()
+    .max(160)
+    .refine(
+      (v) => v === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+      "Please enter a valid email address",
+    )
+    .optional()
+    .default(""),
   phone: z
     .string()
     .trim()

@@ -8,6 +8,8 @@ const companyLinks = [
   { label: "Team Members", href: "/team-members" },
   { label: "Why Choose Us", href: "/why-choose-us" },
   { label: "Testimonials", href: "/testimonials" },
+  { label: "Career Support", href: "/career-support" },
+  { label: "For Colleges", href: "/for-colleges" },
   { label: "Help & FAQs", href: "/faq" },
 ];
 
@@ -150,6 +152,13 @@ export default function Footer() {
             {" · "}
             <Link className="hover:text-brand" href="/for-institutes">
               For Institutes
+            </Link>
+            {" · "}
+            <Link
+              className="hover:text-brand"
+              href="/training-institute-in-dilsukhnagar-hyderabad"
+            >
+              Institute in Dilsukhnagar
             </Link>
             {" · "}
             <Link className="hover:text-brand" href="/terms-and-conditions">

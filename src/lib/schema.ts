@@ -117,6 +117,21 @@ export function courseSchema(course: Course) {
   return schema;
 }
 
+// LocalBusiness view of the same organization for the Dilsukhnagar
+// local page (ppc report §2.4: LocalBusiness + address + areaServed for
+// local/AEO legibility). Same restraint as organizationSchema: no geo
+// coordinates and no opening-hours days exist in the published record,
+// so neither is emitted.
+export function localBusinessSchema() {
+  return {
+    ...organizationSchema(),
+    "@type": ["EducationalOrganization", "LocalBusiness"],
+    areaServed: "Hyderabad, Telangana, IN",
+    priceRange: "Course fees published per course; other fees confirmed on enquiry",
+    hasMap: `https://www.google.com/maps?q=${encodeURIComponent(business.address)}`,
+  };
+}
+
 export function serviceSchema(title: string, slug: string) {
   return {
     "@context": "https://schema.org",

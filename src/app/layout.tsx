@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import FloatingActions from "@/components/FloatingActions";
+import Chrome from "@/components/Chrome";
 import JsonLd from "@/components/JsonLd";
 import { organizationSchema } from "@/lib/schema";
 
@@ -38,10 +36,7 @@ export default function RootLayout({
       </head>
       <body>
         <JsonLd data={organizationSchema()} />
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <FloatingActions />
+        <Chrome>{children}</Chrome>
       </body>
     </html>
   );

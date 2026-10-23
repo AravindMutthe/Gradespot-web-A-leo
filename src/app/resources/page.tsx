@@ -37,6 +37,26 @@ const items = [
     href: "/certificate-verification",
     desc: "Verify a GradeSpot certificate using its certificate code.",
   },
+  {
+    title: "Career Support",
+    href: "/career-support",
+    desc: "The job roles each training prepares you for, the companies our students work with, and the career services we offer.",
+  },
+  {
+    title: "Learning Articles",
+    href: "/blog",
+    desc: "Roadmaps and explainers: starting a cybersecurity career, CEH vs Security+, and what a SOC analyst does.",
+  },
+  {
+    title: "Course Comparisons",
+    href: "/compare",
+    desc: "Similar courses compared side by side — topics, duration, certification and roles — from their published data.",
+  },
+  {
+    title: "For Colleges",
+    href: "/for-colleges",
+    desc: "Workshops, industrial trainings and internships conducted for colleges and their students.",
+  },
 ];
 
 export default function ResourcesPage() {

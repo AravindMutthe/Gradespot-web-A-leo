@@ -20,8 +20,27 @@
 - [Certificate Verification](https://gsitssolutions.com/certificate-verification): verify a GradeSpot certificate by its code
 - [Pricing](https://gsitssolutions.com/pricing): published course fees for students; scoped quotes for businesses and institutes
 - [For Institutes](https://gsitssolutions.com/for-institutes): WhatsApp lead automation, video LMS and lab setup products for training institutes
+- [For Colleges](https://gsitssolutions.com/for-colleges): college workshops, industrial trainings and internships conducted for colleges
+- [Career Support](https://gsitssolutions.com/career-support): the job roles each training prepares you for, the companies our students work with, and career services — no placement guarantees
+- [Training Institute in Dilsukhnagar, Hyderabad](https://gsitssolutions.com/training-institute-in-dilsukhnagar-hyderabad): address, office hours, courses and visiting FAQs for the Dilsukhnagar institute
+- [Course Comparisons](https://gsitssolutions.com/compare): CEH vs Security+, CCNA vs Network+, SOC Analyst vs CEH — compared from their published topics, durations, certifications and job roles
+- [Learning Articles](https://gsitssolutions.com/blog): how to start a cybersecurity career; CEH vs Security+ — which first; what a SOC analyst actually does
 - [Help & FAQs](https://gsitssolutions.com/faq)
 - [Contact Us](https://gsitssolutions.com/contact-us)
+
+## Hyderabad course landing pages
+
+- [CEH Training in Hyderabad](https://gsitssolutions.com/lp/certified-ethical-hacker-ceh-in-hyderabad)
+- [SOC Analyst Training in Hyderabad](https://gsitssolutions.com/lp/soc-analyst-in-hyderabad)
+- [CCNA Training in Hyderabad](https://gsitssolutions.com/lp/ccna-200-301-in-hyderabad)
+- [CCNP Training in Hyderabad](https://gsitssolutions.com/lp/ccnp-350-401-encor-in-hyderabad)
+- [CompTIA Network+ Training in Hyderabad](https://gsitssolutions.com/lp/comptia-network-plus-in-hyderabad)
+- [CompTIA Security+ Training in Hyderabad](https://gsitssolutions.com/lp/comptia-security-plus-in-hyderabad)
+- [CompTIA PenTest+ Training in Hyderabad](https://gsitssolutions.com/lp/comptia-pentest-plus-in-hyderabad)
+- [Azure AZ-900 Training in Hyderabad](https://gsitssolutions.com/lp/azure-fundamentals-az-900-in-hyderabad)
+- [Azure AZ-104 Training in Hyderabad](https://gsitssolutions.com/lp/azure-administrator-az-104-in-hyderabad)
+- [Digital Marketing Training in Hyderabad](https://gsitssolutions.com/lp/digital-marketing-in-hyderabad)
+- [Computer Hardware & Networking Training in Hyderabad](https://gsitssolutions.com/lp/computer-hardware-and-networking-in-hyderabad)
 
 ## Trainings
 

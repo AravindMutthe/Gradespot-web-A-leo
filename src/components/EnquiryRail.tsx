@@ -1,5 +1,6 @@
 import LeadForm from "@/components/LeadForm";
 import { business, stats } from "@/data/site";
+import { syllabusWaLink } from "@/lib/wa";
 
 // Sticky enquiry rail for course pages (research: the form lives ON the
 // course page, next to the content — not one click away on /contact-us).
@@ -31,6 +32,20 @@ export default function EnquiryRail({ courseTitle }: { courseTitle: string }) {
         className="mt-4 flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_24px_rgba(37,211,102,0.35)] transition-transform hover:scale-[1.02]"
       >
         Chat about this course on WhatsApp
+      </a>
+      <a
+        href={syllabusWaLink(courseTitle)}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-3 flex items-center justify-center gap-2 rounded-full border-2 border-[#25d366] px-6 py-3 text-[15px] font-semibold text-heading transition-colors hover:bg-green-50"
+      >
+        Get the Syllabus on WhatsApp
+      </a>
+      <a
+        href="#demo"
+        className="mt-3 flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 text-[15px] font-semibold text-white transition-transform hover:scale-[1.02]"
+      >
+        Book a Free Demo Class
       </a>
       {happy && certified && (
         <p className="mt-4 text-center text-[13px] font-medium text-body">

@@ -4,11 +4,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { courses as localCourses, type CourseSection } from "@/data/courses";
 import { getCourse, getCourses } from "@/lib/data";
-import { BlogCards, CourseCard, FeatureTrio, LogoWall, StatsRibbon } from "@/components/ui";
+import { BlogCards, CourseCard, FaqList, FeatureTrio, LogoWall, StatsRibbon } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import EnquiryRail from "@/components/EnquiryRail";
+import DemoBand from "@/components/DemoBand";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, courseFaqs, courseSchema, faqSchema } from "@/lib/schema";
+import { generatedCourseFaqs } from "@/lib/course-faqs";
+import { comparisons } from "@/data/comparisons";
 
 function SectionBody({ section }: { section: CourseSection }) {
   if (section.style === "cards") {
@@ -131,6 +134,16 @@ export default async function CoursePage({
     { name: course.title },
   ];
 
+  // Research expansion (§18): generated factual FAQs (real fields only)
+  // merged with the course's published FAQ sections, plus the demo path
+  // and any comparison page this course appears in.
+  const publishedFaqs = courseFaqs(course);
+  const generatedFaqs = generatedCourseFaqs(course).filter(
+    (g) => !publishedFaqs.some((p) => p.q.trim().toLowerCase() === g.q.trim().toLowerCase()),
+  );
+  const allFaqs = [...generatedFaqs, ...publishedFaqs];
+  const comparePair = comparisons.find((c) => c.a === course.slug || c.b === course.slug);
+
   return (
     <>
       <JsonLd data={courseSchema(course)} />
@@ -141,7 +154,7 @@ export default async function CoursePage({
           { name: course.title, path: `/trainings/${course.slug}` },
         ])}
       />
-      <JsonLd data={faqSchema(courseFaqs(course))} />
+      <JsonLd data={faqSchema(allFaqs)} />
 
       <section className="bg-heading py-14 text-white md:py-20">
         <div className="wrap">
@@ -206,6 +219,19 @@ export default async function CoursePage({
               <div id="enquire" className="mt-8 scroll-mt-32">
                 <EnquiryRail courseTitle={course.title} />
               </div>
+              <div id="demo" className="scroll-mt-32">
+                <DemoBand courseTitle={course.title} />
+              </div>
+              {generatedFaqs.length > 0 && (
+                <div className="mt-12">
+                  <h2 className="text-[28px] font-semibold leading-[34px]">
+                    {course.title} — FAQs
+                  </h2>
+                  <div className="mt-6">
+                    <FaqList items={generatedFaqs} />
+                  </div>
+                </div>
+              )}
               <B2BStrip />
             </div>
           ) : (
@@ -228,6 +254,35 @@ export default async function CoursePage({
                     </div>
                   ))}
                 </div>
+                <div id="demo" className="scroll-mt-32">
+                  <DemoBand courseTitle={course.title} />
+                </div>
+                {generatedFaqs.length > 0 && (
+                  <div className="mt-12">
+                    <h2 className="text-[28px] font-semibold leading-[34px]">
+                      {course.title} — FAQs
+                    </h2>
+                    <div className="mt-6">
+                      <FaqList items={generatedFaqs} />
+                    </div>
+                  </div>
+                )}
+                {comparePair && (
+                  <div className="mt-12 rounded-2xl border border-[#dbe4ee] bg-white p-8">
+                    <h2 className="text-2xl font-semibold">Still deciding?</h2>
+                    <p className="mt-2 max-w-xl">
+                      We compared this course side-by-side with the closest alternative — topics,
+                      duration, certification and roles — so you can choose with the facts in
+                      front of you.
+                    </p>
+                    <Link
+                      href={`/compare/${comparePair.slug}`}
+                      className="mt-4 inline-block text-[15px] font-bold text-brand hover:text-brand-dark"
+                    >
+                      {comparePair.title} →
+                    </Link>
+                  </div>
+                )}
                 <div className="mt-12 rounded-2xl bg-surface-light p-8 text-center">
                   <h2 className="text-2xl font-semibold">Ready to enrol?</h2>
                   <p className="mx-auto mt-2 max-w-xl">

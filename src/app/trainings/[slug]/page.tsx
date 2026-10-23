@@ -5,6 +5,10 @@ import { notFound } from "next/navigation";
 import { courses as localCourses, type CourseSection } from "@/data/courses";
 import { getCourse } from "@/lib/data";
 import { BlogCards, FeatureTrio, LogoWall, StatsRibbon } from "@/components/ui";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import EnquiryRail from "@/components/EnquiryRail";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbSchema, courseFaqs, courseSchema, faqSchema } from "@/lib/schema";
 
 function SectionBody({ section }: { section: CourseSection }) {
   if (section.style === "cards") {
@@ -13,7 +17,7 @@ function SectionBody({ section }: { section: CourseSection }) {
         {section.paragraphs.map((p, j) => (
           <div
             key={j}
-            className="rounded bg-surface-light px-4 py-3 text-center text-[15px] font-semibold text-heading"
+            className="rounded-xl bg-surface-light px-4 py-3 text-center text-[15px] font-semibold text-heading"
           >
             {p}
           </div>
@@ -29,7 +33,7 @@ function SectionBody({ section }: { section: CourseSection }) {
           return (
             <div
               key={j}
-              className="rounded-lg bg-white px-6 py-8 text-center shadow-[0_5px_30px_rgba(214,215,216,0.57)]"
+              className="rounded-2xl border border-[#dbe4ee] bg-white px-6 py-8 text-center shadow-sm"
             >
               <p className="text-sm font-semibold uppercase tracking-wide text-body">{name}</p>
               <p className="mt-2 text-3xl font-extrabold text-heading">{price ?? p}</p>
@@ -63,6 +67,32 @@ function SectionBody({ section }: { section: CourseSection }) {
   );
 }
 
+// Corporate / B2B door on every course page (research: a corporate-training
+// module belongs on course pages, not only on a separate B2B page). Copy is
+// the business's own published positioning — corporate trainings are a
+// published GradeSpot service and the founder's published role.
+function B2BStrip() {
+  return (
+    <div className="mt-12 rounded-2xl bg-navy p-8 text-white md:flex md:items-center md:justify-between md:gap-8">
+      <div>
+        <h2 className="text-2xl font-semibold text-white">Training a Team or a Classroom?</h2>
+        <p className="mt-2 max-w-xl text-white/80">
+          GradeSpot also runs Corporate Trainings, College Workshops and Industrial Trainings —
+          the same hands-on programs, delivered for your organisation.
+        </p>
+      </div>
+      <div className="mt-5 flex flex-wrap gap-3 md:mt-0 md:shrink-0">
+        <Link href="/services/corporate-trainings" className="btn-primary">
+          Corporate Trainings
+        </Link>
+        <Link href="/services" className="btn-outline-light">
+          All Services
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export function generateStaticParams() {
   return localCourses.map((c) => ({ slug: c.slug }));
 }
@@ -90,11 +120,31 @@ export default async function CoursePage({
   const course = await getCourse(slug);
   if (!course) notFound();
 
+  const crumbs = [
+    { name: "Home", path: "/" },
+    { name: "Trainings", path: "/trainings" },
+    { name: course.title },
+  ];
+
   return (
     <>
+      <JsonLd data={courseSchema(course)} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Trainings", path: "/trainings" },
+          { name: course.title, path: `/trainings/${course.slug}` },
+        ])}
+      />
+      <JsonLd data={faqSchema(courseFaqs(course))} />
+
       <section className="bg-heading py-14 text-white md:py-20">
         <div className="wrap">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand">
+          <Breadcrumbs
+            dark
+            items={crumbs}
+          />
+          <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-brand">
             {course.category}
           </p>
           <h1 className="mt-2 max-w-4xl text-4xl font-semibold md:text-5xl md:leading-tight">
@@ -104,9 +154,9 @@ export default async function CoursePage({
             <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">{course.summary}</p>
           )}
           <div className="mt-7 flex flex-wrap gap-4">
-            <Link href="/contact-us" className="btn-primary">
+            <a href="#enquire" className="btn-primary">
               Enquire About This Course
-            </Link>
+            </a>
             <Link href="/trainings" className="btn-outline-light">
               All Trainings
             </Link>
@@ -121,7 +171,7 @@ export default async function CoursePage({
             alt={course.title}
             width={1140}
             height={480}
-            className="h-72 w-full rounded-lg object-cover md:h-96"
+            className="h-72 w-full rounded-2xl object-cover md:h-96"
           />
         </div>
       )}
@@ -143,36 +193,45 @@ export default async function CoursePage({
                 For the current batch schedule, curriculum and enrolment details for this
                 course, talk to a trainer and we will walk you through the complete program.
               </p>
-              <Link href="/contact-us" className="btn-primary mt-6">
-                Talk to a Trainer
-              </Link>
+              <div id="enquire" className="mt-8 scroll-mt-32">
+                <EnquiryRail courseTitle={course.title} />
+              </div>
+              <B2BStrip />
             </div>
           ) : (
-            <div className="mx-auto max-w-4xl space-y-12">
-              {course.sections.map((s, i) => (
-                <div key={i}>
-                  <article>
-                    {s.heading && (
-                      <h2 className="text-[28px] font-semibold leading-[34px]">{s.heading}</h2>
-                    )}
-                    <SectionBody section={s} />
-                  </article>
-                  {s.heading === "Visit our Blog" && (
-                    <div className="mt-6">
-                      <BlogCards />
+            <div className="grid items-start gap-12 lg:grid-cols-[1fr_370px]">
+              <div className="order-2 min-w-0 lg:order-1">
+                <div className="space-y-12">
+                  {course.sections.map((s, i) => (
+                    <div key={i}>
+                      <article>
+                        {s.heading && (
+                          <h2 className="text-[28px] font-semibold leading-[34px]">{s.heading}</h2>
+                        )}
+                        <SectionBody section={s} />
+                      </article>
+                      {s.heading === "Visit our Blog" && (
+                        <div className="mt-6">
+                          <BlogCards />
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-              <div className="rounded-lg bg-surface-light p-8 text-center">
-                <h2 className="text-2xl font-semibold">Ready to enrol?</h2>
-                <p className="mx-auto mt-2 max-w-xl">
-                  Send an enquiry and our team will help you with batches, mode of training and
-                  certification guidance for {course.title}.
-                </p>
-                <Link href="/contact-us" className="btn-primary mt-5">
-                  Enquire Now
-                </Link>
+                <div className="mt-12 rounded-2xl bg-surface-light p-8 text-center">
+                  <h2 className="text-2xl font-semibold">Ready to enrol?</h2>
+                  <p className="mx-auto mt-2 max-w-xl">
+                    Send an enquiry and our team will help you with batches, mode of training and
+                    certification guidance for {course.title}.
+                  </p>
+                  <a href="#enquire" className="btn-primary mt-5">
+                    Enquire Now
+                  </a>
+                </div>
+                <B2BStrip />
+              </div>
+              <div id="enquire" className="order-1 scroll-mt-32 lg:order-2">
+                <EnquiryRail courseTitle={course.title} />
               </div>
             </div>
           )}

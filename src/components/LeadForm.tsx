@@ -1,22 +1,56 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { business } from "@/data/site";
 
-export default function LeadForm({ interest }: { interest?: string }) {
+// Lead form per the researched conversion rules:
+// - few fields (name, phone, email, one qualifier, optional message)
+// - outcome-worded submit ("Request a Callback", never "Submit")
+// - phone is a real tel input; WhatsApp opt-in checkbox (WhatsApp policy
+//   requires opt-in before business-initiated messaging)
+// - every lead carries its source page for attribution
+// - success state confirms AND offers an instant WhatsApp continuation
+export default function LeadForm({
+  interest,
+  idPrefix = "lead",
+}: {
+  interest?: string;
+  idPrefix?: string;
+}) {
+  const pathname = usePathname();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [sentInterest, setSentInterest] = useState<string>(interest ?? "");
+
+  const waNumber = business.phones[0].replace(/[^+\d]/g, "").replace(/^\+/, "");
+  const waText = encodeURIComponent(
+    sentInterest
+      ? `Hi GradeSpot, I just sent an enquiry about ${sentInterest} on your website. Please share the details.`
+      : "Hi GradeSpot, I just sent an enquiry on your website. Please share the details.",
+  );
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setState("sending");
     setErrors({});
     const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
+    const fd = new FormData(form);
+    const payload = {
+      name: String(fd.get("name") ?? ""),
+      phone: String(fd.get("phone") ?? ""),
+      email: String(fd.get("email") ?? ""),
+      interest: String(fd.get("interest") ?? ""),
+      message: String(fd.get("message") ?? ""),
+      whatsappOptIn: fd.get("whatsappOptIn") === "true",
+      source: `website:${pathname ?? "/"}`,
+    };
+    setSentInterest(payload.interest);
     try {
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         setState("sent");
@@ -34,8 +68,9 @@ export default function LeadForm({ interest }: { interest?: string }) {
   }
 
   const field =
-    "w-full rounded border border-neutral-300 px-4 py-3 text-[15px] text-heading outline-none focus:border-brand";
+    "w-full rounded-lg border border-neutral-300 px-4 py-3 text-[15px] text-heading outline-none transition-colors focus:border-brand";
   const label = "block text-sm font-semibold text-heading";
+  const id = (n: string) => `${idPrefix}-${n}`;
 
   return (
     <form
@@ -45,20 +80,29 @@ export default function LeadForm({ interest }: { interest?: string }) {
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="lead-name" className={label}>
+          <label htmlFor={id("name")} className={label}>
             Full Name *
           </label>
-          <input id="lead-name" name="name" required className={field} placeholder="Your name" />
+          <input
+            id={id("name")}
+            name="name"
+            required
+            autoComplete="name"
+            className={field}
+            placeholder="Your name"
+          />
           {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
         </div>
         <div>
-          <label htmlFor="lead-phone" className={label}>
+          <label htmlFor={id("phone")} className={label}>
             Phone *
           </label>
           <input
-            id="lead-phone"
+            id={id("phone")}
             name="phone"
+            type="tel"
             required
+            autoComplete="tel"
             className={field}
             placeholder="+91 …"
             inputMode="tel"
@@ -67,25 +111,26 @@ export default function LeadForm({ interest }: { interest?: string }) {
         </div>
       </div>
       <div className="mt-4">
-        <label htmlFor="lead-email" className={label}>
+        <label htmlFor={id("email")} className={label}>
           Email *
         </label>
         <input
-          id="lead-email"
+          id={id("email")}
           name="email"
           type="email"
           required
+          autoComplete="email"
           className={field}
           placeholder="you@example.com"
         />
         {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
       </div>
       <div className="mt-4">
-        <label htmlFor="lead-interest" className={label}>
+        <label htmlFor={id("interest")} className={label}>
           I&apos;m interested in *
         </label>
         <input
-          id="lead-interest"
+          id={id("interest")}
           name="interest"
           required
           defaultValue={interest ?? ""}
@@ -95,22 +140,53 @@ export default function LeadForm({ interest }: { interest?: string }) {
         {errors.interest && <p className="mt-1 text-xs text-red-600">{errors.interest}</p>}
       </div>
       <div className="mt-4">
-        <label htmlFor="lead-message" className={label}>
+        <label htmlFor={id("message")} className={label}>
           Message
         </label>
-        <textarea id="lead-message" name="message" rows={4} className={field} placeholder="Anything we should know?" />
+        <textarea
+          id={id("message")}
+          name="message"
+          rows={4}
+          className={field}
+          placeholder="Anything we should know?"
+        />
         {errors.message && <p className="mt-1 text-xs text-red-600">{errors.message}</p>}
       </div>
-      <button type="submit" disabled={state === "sending"} className="btn-primary mt-5 w-full disabled:opacity-60">
-        {state === "sending" ? "Submitting…" : "Submit Query"}
+      <label htmlFor={id("wa")} className="mt-4 flex cursor-pointer items-start gap-2.5 text-sm text-body">
+        <input
+          id={id("wa")}
+          name="whatsappOptIn"
+          type="checkbox"
+          value="true"
+          className="mt-1 h-4 w-4 shrink-0 accent-[#f7631b]"
+        />
+        <span>Yes, send me course details and updates on WhatsApp.</span>
+      </label>
+      <button
+        type="submit"
+        disabled={state === "sending"}
+        className="btn-primary mt-5 w-full disabled:opacity-60"
+      >
+        {state === "sending" ? "Sending…" : "Request a Callback"}
       </button>
+      <p className="mt-3 text-center text-xs leading-5 text-body">
+        Your details are used only to respond to this enquiry — no spam, ever.
+      </p>
       {state === "sent" && (
-        <p className="mt-4 rounded bg-green-50 p-4 text-sm text-green-800">
-          Thank you — your enquiry has been received. Our team will get back to you shortly.
-        </p>
+        <div className="mt-4 rounded-lg bg-green-50 p-4 text-sm text-green-800">
+          <p>Thank you — your enquiry has been received. Our team will get back to you shortly.</p>
+          <a
+            href={`https://wa.me/${waNumber}?text=${waText}`}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-3 inline-block rounded-full bg-[#25d366] px-5 py-2.5 font-semibold text-white transition-transform hover:scale-[1.03]"
+          >
+            Continue on WhatsApp →
+          </a>
+        </div>
       )}
       {state === "error" && (
-        <p className="mt-4 rounded bg-red-50 p-4 text-sm text-red-700">
+        <p className="mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
           We could not submit your enquiry. Please check the fields and try again, or call us
           directly.
         </p>

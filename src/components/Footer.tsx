@@ -19,10 +19,21 @@ const quickLinks = [
   { label: "Terms and Conditions", href: "/terms-and-conditions" },
 ];
 
+// Footer keyword cluster (local-SEO pattern): the headline trainings,
+// linked by their real published titles to their real pages.
+const popularTrainings = [
+  { label: "Certified Ethical Hacker [CEH v13]", href: "/trainings/certified-ethical-hacker-ceh" },
+  { label: "SOC Analyst Training in Hyderabad", href: "/trainings/soc-analyst" },
+  { label: "CCNA 200-301", href: "/trainings/ccna-200-301" },
+  { label: "Azure Fundamentals | AZ-900", href: "/trainings/azure-fundamentals-az-900" },
+  { label: "Azure Administrator | AZ-104", href: "/trainings/azure-administrator-az-104" },
+  { label: "CompTIA Security+: Sy0-701", href: "/trainings/comptia-security-plus" },
+];
+
 export default function Footer() {
   return (
     <footer className="border-t-4 border-brand bg-navy-deep text-footer-text">
-      <div className="wrap grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
+      <div className="wrap grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.25fr_0.7fr_0.8fr_1.05fr_1fr]">
         <div>
           <Image
             src="/images/logo-light.png"
@@ -68,10 +79,33 @@ export default function Footer() {
           </ul>
         </nav>
 
+        <nav aria-label="Popular trainings">
+          <h3 className="mb-4 text-lg font-semibold text-white">Popular Trainings</h3>
+          <ul className="space-y-2 text-sm">
+            {popularTrainings.map((l) => (
+              <li key={l.href}>
+                <Link className="hover:text-brand" href={l.href}>
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
         <div>
           <h3 className="mb-4 text-lg font-semibold text-white">Contact Info</h3>
           <address className="space-y-3 text-sm not-italic leading-6">
             <p>{business.address}</p>
+            <p>
+              <a
+                className="font-semibold text-brand hover:text-white"
+                href={`https://www.google.com/maps?q=${encodeURIComponent(business.address)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View on Google Maps →
+              </a>
+            </p>
             <p>
               {business.emails.map((e) => (
                 <span key={e} className="block">

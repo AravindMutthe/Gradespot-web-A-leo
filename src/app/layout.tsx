@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingActions from "@/components/FloatingActions";
+import JsonLd from "@/components/JsonLd";
+import { organizationSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: {
@@ -35,6 +37,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <JsonLd data={organizationSchema()} />
         <Header />
         <main>{children}</main>
         <Footer />

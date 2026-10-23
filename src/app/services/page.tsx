@@ -24,11 +24,11 @@ export default async function ServicesPage() {
           </div>
 
           <div className="mt-16 grid gap-6 md:grid-cols-2">
-            <article className="rounded-lg bg-surface-light p-7">
+            <article className="rounded-2xl bg-surface-light p-7">
               <h2 className="text-2xl font-semibold">24/7 Customer Support</h2>
               <p className="mt-2 text-sm leading-6">{servicesFaqAnswers.support}</p>
             </article>
-            <article className="rounded-lg bg-surface-light p-7">
+            <article className="rounded-2xl bg-surface-light p-7">
               <h2 className="text-2xl font-semibold">Smart Solutions</h2>
               <p className="mt-2 text-sm leading-6">{servicesFaqAnswers.smart}</p>
             </article>
@@ -39,7 +39,7 @@ export default async function ServicesPage() {
             <FaqList items={siteFaqs} />
           </div>
 
-          <div className="mt-16 rounded-lg bg-heading p-8 text-center text-white">
+          <div className="mt-16 rounded-2xl bg-heading p-8 text-center text-white">
             <h2 className="text-2xl font-semibold text-white">Need a service for your business?</h2>
             <p className="mx-auto mt-2 max-w-xl text-white/80">
               Tell us what you are building or training for — we will respond with the right
@@ -51,11 +51,11 @@ export default async function ServicesPage() {
           </div>
 
           <div className="mt-16 grid gap-6 md:grid-cols-3">
-            <article className="rounded-lg bg-surface-light p-7">
+            <article className="rounded-2xl bg-surface-light p-7">
               <h2 className="text-xl font-semibold">Address</h2>
               <p className="mt-2 text-sm leading-6">{business.address}</p>
             </article>
-            <article className="rounded-lg bg-surface-light p-7">
+            <article className="rounded-2xl bg-surface-light p-7">
               <h2 className="text-xl font-semibold">Send Us Mail</h2>
               <p className="mt-2 text-sm leading-6">
                 {business.emails.map((e) => (
@@ -67,7 +67,7 @@ export default async function ServicesPage() {
                 ))}
               </p>
             </article>
-            <article className="rounded-lg bg-surface-light p-7">
+            <article className="rounded-2xl bg-surface-light p-7">
               <h2 className="text-xl font-semibold">Call Us</h2>
               <p className="mt-2 text-sm leading-6">
                 {business.phones.map((p) => (

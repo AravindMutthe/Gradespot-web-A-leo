@@ -92,6 +92,8 @@ export interface LeadInput {
   phone: string;
   interest: string;
   message?: string;
+  source?: string;
+  whatsappOptIn?: boolean;
 }
 
 export interface LeadResult {
@@ -105,19 +107,35 @@ export interface LeadResult {
 export async function createLead(lead: LeadInput): Promise<LeadResult> {
   const supabase = supabaseDown ? null : getServiceClient();
   if (supabase) {
+    const core = {
+      name: lead.name,
+      email: lead.email,
+      phone: lead.phone,
+      interest: lead.interest,
+      message: lead.message ?? null,
+    };
+    // Full row includes source attribution + WhatsApp opt-in (columns
+    // added by migration 0004). If that insert fails — e.g. the migration
+    // has not been applied yet — retry with the core columns so a lead is
+    // never lost to a missing column.
     try {
       const { data, error } = await withTimeout(
         supabase
           .from("leads")
-          .insert({
-            name: lead.name,
-            email: lead.email,
-            phone: lead.phone,
-            interest: lead.interest,
-            message: lead.message ?? null,
-          })
+          .insert({ ...core, source: lead.source ?? null, whatsapp_opt_in: lead.whatsappOptIn ?? false })
           .select("id")
           .single(),
+      );
+      if (!error && data) {
+        return { stored: "supabase", id: String(data.id) };
+      }
+      console.error("[leads] Full insert failed, retrying with core columns:", error?.message);
+    } catch (err) {
+      console.error("[leads] Full insert errored, retrying with core columns:", String(err));
+    }
+    try {
+      const { data, error } = await withTimeout(
+        supabase.from("leads").insert(core).select("id").single(),
       );
       if (!error && data) {
         return { stored: "supabase", id: String(data.id) };

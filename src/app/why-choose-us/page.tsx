@@ -31,7 +31,7 @@ export default function WhyChoosePage() {
             {highlights.map((h) => (
               <article
                 key={h.title}
-                className="flex flex-col rounded-lg bg-white p-8 shadow-[0_5px_30px_rgba(214,215,216,0.57)]"
+                className="flex flex-col rounded-2xl border border-[#dbe4ee] bg-white p-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
               >
                 <h2 className="text-xl font-semibold text-heading">{h.title}</h2>
                 <Link
@@ -44,11 +44,11 @@ export default function WhyChoosePage() {
             ))}
           </div>
           <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-2">
-            <article className="rounded-lg bg-surface-light p-8">
+            <article className="rounded-2xl bg-surface-light p-8">
               <h2 className="text-2xl font-semibold">Vision</h2>
               <p className="mt-3">{vision}</p>
             </article>
-            <article className="rounded-lg bg-surface-light p-8">
+            <article className="rounded-2xl bg-surface-light p-8">
               <h2 className="text-2xl font-semibold">Mission</h2>
               <p className="mt-3">{mission}</p>
             </article>

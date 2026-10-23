@@ -26,7 +26,7 @@ export default function ContactPage() {
           </div>
 
           {/* Side panel — dimensions follow the live site's contact panel */}
-          <aside className="w-full bg-heading p-[50px] text-white lg:max-w-[400px]">
+          <aside className="w-full rounded-2xl bg-heading p-8 text-white lg:max-w-[400px] lg:p-[50px]">
             <h2 className="text-2xl font-semibold text-white">Get in Touch</h2>
             <div className="mt-6 space-y-6 text-sm leading-6">
               <div>
@@ -62,11 +62,11 @@ export default function ContactPage() {
         </div>
 
         <div className="wrap mt-14 grid gap-6 md:grid-cols-2">
-          <article className="rounded-lg bg-surface-light p-7">
+          <article className="rounded-2xl bg-surface-light p-7">
             <h2 className="text-2xl font-semibold">24/7 Customer Support</h2>
             <p className="mt-2 text-sm leading-6">{contactParagraphs[6]}</p>
           </article>
-          <article className="rounded-lg bg-surface-light p-7">
+          <article className="rounded-2xl bg-surface-light p-7">
             <h2 className="text-2xl font-semibold">Smart Solutions</h2>
             <p className="mt-2 text-sm leading-6">{contactParagraphs[7]}</p>
           </article>

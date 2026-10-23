@@ -4,6 +4,8 @@ import { getCourses, getServices } from "@/lib/data";
 import { homeParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
 import { CourseCard, CtaBand, ExperienceBadge, FaqList, FeatureTrio, SectionTitle, ServiceCard, SignatureBlock, StatsRibbon, siteFaqs } from "@/components/ui";
+import JsonLd from "@/components/JsonLd";
+import { faqSchema } from "@/lib/schema";
 
 export default async function HomePage() {
   const [courses, services] = await Promise.all([getCourses(), getServices()]);
@@ -11,6 +13,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={faqSchema(siteFaqs)} />
       {/* Hero — corporate split layout; headline and copy as published on the live homepage */}
       <section className="relative overflow-hidden bg-[linear-gradient(180deg,#eef3f8_0%,#ffffff_92%)]">
         <div className="wrap grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.05fr_0.95fr]">

@@ -16,7 +16,7 @@ export default function TestimonialsPage() {
           {testimonials.map((t) => (
             <figure
               key={t.name}
-              className="flex flex-col bg-white p-7 shadow-[0_5px_30px_rgba(214,215,216,0.57)]"
+              className="flex flex-col rounded-2xl border border-[#dbe4ee] bg-white p-7 shadow-sm"
             >
               <blockquote className="grow text-[15px] leading-7 text-heading">
                 {t.text}

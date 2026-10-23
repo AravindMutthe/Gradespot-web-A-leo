@@ -243,3 +243,25 @@ and additions were completed and verified live the same day:
   Pass" line on Student Certifications, Trainings hero copy.
 - Contact map: added pointing at the REAL Dilsukhnagar address — the live
   site's embed points at Rajkot, Gujarat (theme demo) and was not copied.
+
+## 16. Research-compliance pass — 2026-10-23
+
+Full-corpus research audit (all four research_notes folders) applied to
+this build. Fixed in code: schema stack (EducationalOrganization, Course
+with real pricing offers only, FAQPage, BreadcrumbList, Service),
+llms.txt, visible breadcrumbs, course-page enquiry rail (form + course
+WhatsApp + B2B strip), trainings catalogue search, lead source
+attribution + WhatsApp opt-in (migration 0004 — APPLY to the shared
+Supabase project; the code degrades gracefully until then), outcome CTA
+wording ("Request a Callback"), pre-filled WhatsApp everywhere, footer
+Popular Trainings cluster + Maps link.
+
+Still BLOCKED-ON-DATA (never fabricate):
+- Privacy policy page: the form carries a no-spam microcopy line, but a
+  real /privacy-policy page needs business-approved policy text.
+- AggregateRating / star ratings: the 8 testimonials are individual
+  Google reviews with no verified aggregate value in the record.
+- Batch dates / countdown: no real batch schedule exists in the record
+  (a fake countdown would also violate Google Ads policy).
+- Course durations/levels for cards: not published for the catalogue.
+- Brochure PDF / free-demo offer: no such asset or offer is published.

@@ -53,7 +53,7 @@ export function SectionTitle({
 export function StatsRibbon() {
   return (
     <section className="bg-navy py-12 text-white">
-      <div className="wrap grid grid-cols-2 gap-6 text-center lg:grid-cols-4">
+      <div className="wrap grid grid-cols-2 gap-6 text-center sm:grid-cols-3 lg:grid-cols-5">
         {stats.map((s) => (
           <div key={s.label}>
             <p className="font-display text-4xl font-extrabold text-brand">{s.value}</p>
@@ -67,40 +67,64 @@ export function StatsRibbon() {
   );
 }
 
-export function CourseCard({ course }: { course: Course }) {
+// Presentational course card — takes plain props so the client-side
+// catalogue search can render the exact same card as the server pages.
+export function CourseCardBody({
+  slug,
+  title,
+  category,
+  summary,
+  image,
+}: {
+  slug: string;
+  title: string;
+  category: string;
+  summary?: string;
+  image?: string | null;
+}) {
   return (
-    <article className="flex flex-col overflow-hidden rounded-2xl border border-[#dbe4ee] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(10,34,54,0.14)]">
-      {course.image ? (
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#dbe4ee] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(10,34,54,0.14)]">
+      {image ? (
         <Image
-          src={course.image}
-          alt={course.title}
+          src={image}
+          alt={title}
           width={600}
           height={340}
           className="h-44 w-full object-cover"
         />
       ) : (
         <div className="flex h-44 w-full items-center justify-center bg-navy px-6 text-center">
-          <span className="font-display text-lg font-semibold text-white">{course.category}</span>
+          <span className="font-display text-lg font-semibold text-white">{category}</span>
         </div>
       )}
       <div className="flex grow flex-col p-6">
         <p>
           <span className="inline-block rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-dark">
-            {course.category}
+            {category}
           </span>
         </p>
-        <h3 className="mt-3 text-lg font-bold leading-snug text-heading">{course.title}</h3>
-        {course.summary && (
-          <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{course.summary}</p>
-        )}
+        <h3 className="mt-3 text-lg font-bold leading-snug text-heading">{title}</h3>
+        {summary && <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{summary}</p>}
         <Link
-          href={`/trainings/${course.slug}`}
+          href={`/trainings/${slug}`}
           className="mt-auto inline-block pt-4 text-sm font-bold text-brand hover:text-brand-dark"
         >
           Read More →
         </Link>
       </div>
     </article>
+  );
+}
+
+export function CourseCard({ course }: { course: Course }) {
+  return (
+    <CourseCardBody
+      slug={course.slug}
+      title={course.title}
+      category={course.category}
+      summary={course.summary}
+      image={course.image}
+    />
   );
 }
 
@@ -152,7 +176,7 @@ export function CtaBand() {
           </p>
         </div>
         <Link href="/contact-us" className="btn-primary">
-          Contact Us
+          Request a Callback
         </Link>
       </div>
     </section>

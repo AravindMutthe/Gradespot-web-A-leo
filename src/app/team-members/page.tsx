@@ -15,7 +15,7 @@ export default function TeamPage() {
           {team.map((m) => (
             <article
               key={m.name}
-              className="overflow-hidden rounded-md bg-white text-center shadow-[0_5px_30px_rgba(214,215,216,0.57)]"
+              className="overflow-hidden rounded-2xl border border-[#dbe4ee] bg-white text-center shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
             >
               <Image
                 src={m.image}

@@ -27,11 +27,11 @@ export default function AboutPage() {
               <SignatureBlock />
             </div>
             <div className="mt-6 space-y-4">
-              <article className="rounded-lg bg-surface-light p-5">
+              <article className="rounded-2xl bg-surface-light p-5">
                 <h3 className="text-lg font-semibold">An ISO Certified Company</h3>
                 <p className="mt-1 text-sm leading-6">{aboutParagraphs[2]}</p>
               </article>
-              <article className="rounded-lg bg-surface-light p-5">
+              <article className="rounded-2xl bg-surface-light p-5">
                 <h3 className="text-lg font-semibold">AICTE Internships Approved</h3>
                 <p className="mt-1 text-sm leading-6">{aboutParagraphs[4]}</p>
               </article>
@@ -40,15 +40,15 @@ export default function AboutPage() {
           <div>
             <h3 className="text-2xl font-semibold text-heading">How We Work</h3>
             <ol className="mt-4 space-y-4">
-              <li className="rounded-lg bg-white p-5 shadow-[0_5px_30px_rgba(214,215,216,0.4)]">
+              <li className="rounded-2xl border border-[#dbe4ee] bg-white p-5 shadow-sm">
                 <span className="font-extrabold text-brand">01</span>
                 <p className="mt-1">Explore from our range of services for your business needs</p>
               </li>
-              <li className="rounded-lg bg-white p-5 shadow-[0_5px_30px_rgba(214,215,216,0.4)]">
+              <li className="rounded-2xl border border-[#dbe4ee] bg-white p-5 shadow-sm">
                 <span className="font-extrabold text-brand">02</span>
                 <p className="mt-1">Connect with us to schedule a meeting and discuss your needs</p>
               </li>
-              <li className="rounded-lg bg-white p-5 shadow-[0_5px_30px_rgba(214,215,216,0.4)]">
+              <li className="rounded-2xl border border-[#dbe4ee] bg-white p-5 shadow-sm">
                 <span className="font-extrabold text-brand">03</span>
                 <p className="mt-1">
                   Talk to a Trainer — online &amp; offline classes with top-class trainings.

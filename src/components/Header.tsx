@@ -204,7 +204,7 @@ export default function Header() {
               Contact Us
             </Link>
             <Link href="/contact-us" className="btn-primary ml-4">
-              Get Started
+              Request a Callback
             </Link>
           </nav>
 
@@ -240,7 +240,7 @@ export default function Header() {
               <>
                 <Link
                   href="/trainings"
-                  className="block py-2 pl-7 pr-3 text-[13px] font-semibold text-brand"
+                  className="block py-2.5 pl-7 pr-3 text-[13px] font-semibold text-brand"
                   onClick={() => setOpen(false)}
                 >
                   View All Trainings
@@ -249,7 +249,7 @@ export default function Header() {
                   <Link
                     key={c.slug}
                     href={`/trainings/${c.slug}`}
-                    className="block py-2 pl-7 pr-3 text-[13px] font-medium text-white/85"
+                    className="block py-2.5 pl-7 pr-3 text-[13px] font-medium text-white/85"
                     onClick={() => setOpen(false)}
                   >
                     {c.title}
@@ -272,7 +272,7 @@ export default function Header() {
                     href={l.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="block py-2 pl-7 pr-3 text-[13px] font-medium text-white/85"
+                    className="block py-2.5 pl-7 pr-3 text-[13px] font-medium text-white/85"
                   >
                     {l.label} ↗
                   </a>
@@ -280,7 +280,7 @@ export default function Header() {
                   <Link
                     key={l.label}
                     href={l.href}
-                    className="block py-2 pl-7 pr-3 text-[13px] font-medium text-white/85"
+                    className="block py-2.5 pl-7 pr-3 text-[13px] font-medium text-white/85"
                     onClick={() => setOpen(false)}
                   >
                     {l.label}
@@ -301,7 +301,7 @@ export default function Header() {
               className="btn-primary mt-3 text-center"
               onClick={() => setOpen(false)}
             >
-              Get Started
+              Request a Callback
             </Link>
           </div>
         </nav>

@@ -5,7 +5,11 @@ import { business, telHref } from "@/data/site";
 // button on every page and a sticky Call / WhatsApp / Enquire bar on
 // mobile. Uses only the one published phone number — no new content.
 const phone = business.phones[0];
-const waHref = `https://wa.me/${phone.replace(/[^+\d]/g, "").replace(/^\+/, "")}`;
+const waNumber = phone.replace(/[^+\d]/g, "").replace(/^\+/, "");
+// Research rule: never open a blank chat window — always pre-fill.
+const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(
+  "Hi GradeSpot, I have an enquiry about your trainings and services. Please share the details.",
+)}`;
 
 function ChatIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (

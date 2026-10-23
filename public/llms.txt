@@ -1,0 +1,90 @@
+# GradeSpot IT Solutions
+
+> GradeSpot IT Solutions (GradeSpot IT Solutions Pvt. Ltd.) is an IT training institute and IT services company in Dilsukhnagar, Hyderabad, Telangana, India. It offers professional training programs for corporates and students across computer hardware, networking, cybersecurity, cloud computing, digital marketing and data science, with online and offline classes, plus IT services, corporate trainings, internships and certificate verification.
+
+## Contact
+
+- Address: 16-126, 2nd Floor, Near Sai Baba Temple, Road No.1, Sri Krishna Nagar, Dilsukhnagar, Hyderabad, Telangana - 500060
+- Phone: +91 91826 54056
+- Email: info@gsitssolutions.com
+- Office Hours: 8:00 AM - 9:00 PM
+
+## Key pages
+
+- [Home](https://gsitssolutions.com/): overview of trainings and services
+- [Trainings](https://gsitssolutions.com/trainings): the full training catalogue
+- [Services](https://gsitssolutions.com/services): corporate trainings, internships, cybersecurity services and more
+- [About Us](https://gsitssolutions.com/about-us)
+- [Testimonials](https://gsitssolutions.com/testimonials): student reviews posted on Google
+- [Student Certifications](https://gsitssolutions.com/student-certifications)
+- [Certificate Verification](https://gsitssolutions.com/certificate-verification): verify a GradeSpot certificate by its code
+- [Help & FAQs](https://gsitssolutions.com/faq)
+- [Contact Us](https://gsitssolutions.com/contact-us)
+
+## Trainings
+
+### Microsoft Azure
+
+- [Microsoft Certified: Azure Fundamentals | AZ-900](https://gsitssolutions.com/trainings/azure-fundamentals-az-900)
+- [Microsoft Certified: Azure Administrator Associate | AZ-104](https://gsitssolutions.com/trainings/azure-administrator-az-104)
+- [Microsoft Certified: Azure Security Engineer Associate | AZ-500](https://gsitssolutions.com/trainings/azure-security-engineer-az-500)
+- [Designing and Implementing Microsoft DevOps Solutions | AZ-400](https://gsitssolutions.com/trainings/microsoft-devops-az-400)
+- [Security, Compliance, and Identity Fundamentals | SC-900](https://gsitssolutions.com/trainings/sc-900)
+- [Microsoft Certified: Security Operations Analyst Associate | SC-200](https://gsitssolutions.com/trainings/sc-200)
+- [Microsoft Sentinel Training](https://gsitssolutions.com/trainings/microsoft-sentinel)
+
+### Cisco
+
+- [Cisco Certified Network Associate: CCNA 200-301](https://gsitssolutions.com/trainings/ccna-200-301)
+- [CCNP Enterprise 350-401 ENCOR](https://gsitssolutions.com/trainings/ccnp-350-401-encor)
+
+### CompTIA
+
+- [CompTIA Network+: N10-008](https://gsitssolutions.com/trainings/comptia-network-plus)
+- [CompTIA PenTest+: PT0-002](https://gsitssolutions.com/trainings/comptia-pentest-plus)
+- [CompTIA Security+: Sy0-701](https://gsitssolutions.com/trainings/comptia-security-plus)
+- [CompTIA A+ Core 1: 220-1101](https://gsitssolutions.com/trainings/comptia-a-plus-core-1)
+- [CompTIA A+ Core 2: 220-1102](https://gsitssolutions.com/trainings/comptia-a-plus-core-2)
+
+### Networking
+
+- [Computer Hardware and Networking Training](https://gsitssolutions.com/trainings/computer-hardware-and-networking)
+
+### Digital Marketing
+
+- [Complete Digital Marketing](https://gsitssolutions.com/trainings/digital-marketing)
+
+### Cybersecurity
+
+- [SOC Analyst Training in Hyderabad | Job-Ready in 90 Days](https://gsitssolutions.com/trainings/soc-analyst)
+- [Certified Ethical Hacker [CEH v13]](https://gsitssolutions.com/trainings/certified-ethical-hacker-ceh)
+- [Program in Cybersecurity Technologies](https://gsitssolutions.com/trainings/cybersecurity-technologies)
+- [Vulnerability Assessment & Penetration Testing [VA PT]](https://gsitssolutions.com/trainings/vapt)
+
+### AWS
+
+- [AWS Certified Cloud Practitioner | AWS CLF-C02](https://gsitssolutions.com/trainings/aws-cloud-practitioner)
+- [AWS Certified Solutions Architect – Associate | AWS SAA-C03](https://gsitssolutions.com/trainings/aws-solutions-architect-associate)
+- [AWS Certified DevOps Engineer - Professional | AWS DOP-C02](https://gsitssolutions.com/trainings/aws-devops-engineer)
+
+### Programming & Data
+
+- [Core Java](https://gsitssolutions.com/trainings/core-java)
+- [Java Full Stack](https://gsitssolutions.com/trainings/java-full-stack)
+- [Power BI](https://gsitssolutions.com/trainings/power-bi)
+- [MySQL](https://gsitssolutions.com/trainings/mysql)
+- [Data Analytics](https://gsitssolutions.com/trainings/data-analytics)
+- [Data Science](https://gsitssolutions.com/trainings/data-science)
+
+### Medical Coding
+
+- [Certified Professional Coder - CPC](https://gsitssolutions.com/trainings/certified-professional-coder-cpc)
+- [Hierarchical condition category - HCC](https://gsitssolutions.com/trainings/hcc-medical-coding)
+- [Inpatient Diagnosis-Related Group - IP-DRG](https://gsitssolutions.com/trainings/ip-drg-medical-coding)
+- [E&M (Evaluation and Management)](https://gsitssolutions.com/trainings/em-medical-coding)
+- [Radiology - Medical Coding](https://gsitssolutions.com/trainings/radiology-medical-coding)
+- [Anesthesia - Medical Coding](https://gsitssolutions.com/trainings/anesthesia-medical-coding)
+
+### Design & CAD
+
+- [AutoCAD](https://gsitssolutions.com/trainings/autocad)

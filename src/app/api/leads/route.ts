@@ -13,6 +13,10 @@ const leadSchema = z.object({
     .regex(/^[+\d][\d\s\-()]*$/, "Please enter a valid phone number"),
   interest: z.string().trim().min(2, "Tell us what you are interested in").max(200),
   message: z.string().trim().max(2000).optional(),
+  // Attribution + consent plumbing (research: 100% source attribution;
+  // WhatsApp policy requires an explicit opt-in before business messaging).
+  source: z.string().trim().max(200).optional(),
+  whatsappOptIn: z.boolean().optional(),
 });
 
 export async function POST(request: Request) {

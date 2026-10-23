@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getCourses } from "@/lib/data";
 import { courseCategories } from "@/data/courses";
-import { BlogCards, CourseCard, FeatureTrio, LogoWall, PageHero, SectionTitle, StatsRibbon } from "@/components/ui";
+import CatalogueSearch from "@/components/CatalogueSearch";
+import { BlogCards, FeatureTrio, LogoWall, PageHero, SectionTitle, StatsRibbon } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Trainings" };
 
@@ -32,7 +33,7 @@ export default async function TrainingsPage() {
             {showcaseItems.map((t) => (
               <article
                 key={t}
-                className="bg-white px-[30px] py-[40px] text-center shadow-[0_5px_30px_rgba(214,215,216,0.57)]"
+                className="rounded-2xl border border-[#dbe4ee] bg-white px-[30px] py-[40px] text-center shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(10,34,54,0.12)]"
               >
                 <h3 className="text-xl font-bold text-heading">{t}</h3>
               </article>
@@ -41,18 +42,18 @@ export default async function TrainingsPage() {
         </div>
       </section>
       <section className="section-pad">
-        <div className="wrap space-y-16">
-          {categories.map((cat) => (
-            <div key={cat}>
-              <h2 className="text-2xl font-semibold text-heading">{cat}</h2>
-              <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {(byCategory.get(cat) ?? []).map((c) => (
-                  <CourseCard key={c.slug} course={c} />
-                ))}
-              </div>
-            </div>
-          ))}
-          <div className="rounded-lg bg-surface-light p-8 text-center">
+        <div className="wrap">
+          <CatalogueSearch
+            courses={courses.map((c) => ({
+              slug: c.slug,
+              title: c.title,
+              category: c.category,
+              summary: c.summary,
+              image: c.image,
+            }))}
+            categories={categories}
+          />
+          <div className="mt-16 rounded-2xl bg-surface-light p-8 text-center">
             <h2 className="text-2xl font-semibold">Not sure which course fits you?</h2>
             <p className="mx-auto mt-2 max-w-xl">
               Talk to a Trainer — tell us your goal and we will help you pick the right training

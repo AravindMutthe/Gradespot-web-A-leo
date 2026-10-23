@@ -5,6 +5,9 @@ import { services as localServices } from "@/data/services";
 import { servicesFaqAnswers } from "@/data/pages";
 import { getService } from "@/lib/data";
 import { PageHero } from "@/components/ui";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbSchema, serviceSchema } from "@/lib/schema";
 
 export function generateStaticParams() {
   return localServices.map((s) => ({ slug: s.slug }));
@@ -32,10 +35,27 @@ export default async function ServicePage({
 
   return (
     <>
+      <JsonLd data={serviceSchema(service.title, service.slug)} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: service.title, path: `/services/${service.slug}` },
+        ])}
+      />
       <PageHero title={service.title} subtitle="A GradeSpot IT Solutions service — Dilsukhnagar, Hyderabad." />
       <section className="section-pad">
         <div className="wrap">
-          <div className="mx-auto max-w-4xl space-y-10">
+          <div className="mx-auto max-w-4xl">
+            <Breadcrumbs
+              items={[
+                { name: "Home", path: "/" },
+                { name: "Services", path: "/services" },
+                { name: service.title },
+              ]}
+            />
+          </div>
+          <div className="mx-auto mt-8 max-w-4xl space-y-10">
             <article>
               <h2 className="text-[28px] font-semibold leading-[34px]">What We Offer</h2>
               <p className="mt-3">{servicesFaqAnswers.services}</p>
@@ -46,7 +66,7 @@ export default async function ServicePage({
               <p className="mt-3">{servicesFaqAnswers.support}</p>
               <p className="mt-4">{servicesFaqAnswers.smart}</p>
             </article>
-            <div className="rounded-lg bg-surface-light p-8 text-center">
+            <div className="rounded-2xl bg-surface-light p-8 text-center">
               <h2 className="text-2xl font-semibold">Interested in {service.title}?</h2>
               <p className="mx-auto mt-2 max-w-xl">
                 Send an enquiry and our team will discuss your requirement, timelines and the

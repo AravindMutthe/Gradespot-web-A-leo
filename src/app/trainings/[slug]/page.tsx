@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { courses as localCourses, type CourseSection } from "@/data/courses";
-import { getCourse } from "@/lib/data";
-import { BlogCards, FeatureTrio, LogoWall, StatsRibbon } from "@/components/ui";
+import { getCourse, getCourses } from "@/lib/data";
+import { BlogCards, CourseCard, FeatureTrio, LogoWall, StatsRibbon } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import EnquiryRail from "@/components/EnquiryRail";
 import JsonLd from "@/components/JsonLd";
@@ -119,6 +119,11 @@ export default async function CoursePage({
   const { slug } = await params;
   const course = await getCourse(slug);
   if (!course) notFound();
+
+  // Related trainings: same published category, real catalogue data only.
+  const related = (await getCourses())
+    .filter((c) => c.category === course.category && c.slug !== course.slug)
+    .slice(0, 3);
 
   const crumbs = [
     { name: "Home", path: "/" },
@@ -237,6 +242,19 @@ export default async function CoursePage({
           )}
         </div>
       </section>
+
+      {related.length > 0 && (
+        <section className="section-pad bg-surface-light">
+          <div className="wrap">
+            <h2 className="text-[28px] font-semibold leading-[34px]">Related Trainings</h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {related.map((c) => (
+                <CourseCard key={c.slug} course={c} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {!course.catalogOnly && (
         <>

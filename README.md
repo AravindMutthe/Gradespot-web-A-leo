@@ -17,7 +17,7 @@ Both are frontend-only. Admin and the Axon products live in **`gradespot-axon`**
 - **Same stack:** Next.js 15 + TypeScript + Tailwind + Supabase data layer (reads the shared catalogue; falls back to local data).
 - **Same isolation:** never mixed with Royal Salon, the portfolio, or the replica repo's code.
 - **Free tier only.** All assets downloaded into the repo — nothing hotlinked.
-- **Branches:** `main` stable; features on branches; merges only on Aravind's review.
+- **Branches:** `main` is the single line since 2026-10-24 (`leo-build-v1` crowned as `main`); features on branches; merges only on Aravind's review.
 
 ## Design system (v1 — "Prospectus", 2026-10-23, DECISIONS.md §19–§20)
 
@@ -33,4 +33,4 @@ Aravind's v1 mandate: full creative control — forget the original site's theme
 
 ## Status
 
-**v1 built and verified (2026-10-23, branch `leo-build-v1`).** Next.js 15 + React + TS + Tailwind v4, data/content layer ported from the replica (same Supabase project, same local fallback). `npm run build` passes; route parity with the replica is exact (21 app routes, 65 prerendered pages, identical sets; `next.config.ts` byte-identical so all 233 legacy redirects match); every route returns 200 and a full internal-link crawl is clean. Not deployed — no Vercel/Supabase project created; merges to `main` only on Aravind's review.
+**v1 built, verified and approved (2026-10-23 build, approved 2026-10-24, branch `main`).** Next.js 15 + React + TS + Tailwind v4, data/content layer ported from the replica (its own Supabase project, same local fallback). `npm run build` passes; 90 routes, all returning 200 with a clean internal-link crawl; hardening + SEO/AEO passes done (self-canonicals, strict schema, local OG cards, llms-full.txt). **Live:** https://gradespot-leo-build-app.vercel.app (Vercel project `gradespot-leo-build-app`). Deploys are API uploads from the local working copy — pushing to GitHub does not deploy.

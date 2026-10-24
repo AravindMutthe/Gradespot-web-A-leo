@@ -7,6 +7,7 @@ import { courseDetails } from "@/data/course-details";
 import { testimonials } from "@/data/testimonials";
 import { business, telHref } from "@/data/site";
 import { getCourse } from "@/lib/data";
+import { lpPageMetadata } from "@/lib/metadata";
 import { generatedCourseFaqs, getJobRoles } from "@/lib/course-faqs";
 import { courseWaLink, syllabusWaLink } from "@/lib/wa";
 import { courseSchema, faqSchema } from "@/lib/schema";
@@ -62,12 +63,7 @@ export async function generateMetadata({
   const course = await resolve(slug);
   if (!course) return { title: "Training in Hyderabad" };
   const d = courseDetails[course.slug];
-  const short = d?.short ?? course.title;
-  return {
-    alternates: { canonical: `/lp/${slug}` },
-    title: `${short} Training in Hyderabad`,
-    description: `${short} training in Hyderabad at GradeSpot IT Solutions, Dilsukhnagar — online & offline classes. ${d?.outcome ?? "Book a free counselling call."}`,
-  };
+  return lpPageMetadata(course, d, `/lp/${slug}`);
 }
 
 export default async function LandingPage({ params }: { params: Promise<{ slug: string }> }) {

@@ -146,3 +146,20 @@ export function serviceSchema(title: string, slug: string) {
     areaServed: "Hyderabad, Telangana, IN",
   };
 }
+
+// Trainings index as an ItemList, generated from the live catalogue —
+// the index page's JSON-LD counterpart to trainingsIndexMetadata.
+export function trainingsIndexSchema(courses: Course[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "GradeSpot IT Solutions Trainings",
+    numberOfItems: courses.length,
+    itemListElement: courses.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.title,
+      url: `${SITE_URL}/trainings/${c.slug}`,
+    })),
+  };
+}

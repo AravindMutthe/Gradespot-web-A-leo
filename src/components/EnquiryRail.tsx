@@ -29,7 +29,7 @@ export default function EnquiryRail({ courseTitle }: { courseTitle: string }) {
         href={`https://wa.me/${waNumber}?text=${waText}`}
         target="_blank"
         rel="noreferrer"
-        className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-wa px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_24px_rgba(11,122,67,0.35)] transition-transform hover:scale-[1.02]"
+        className="mt-4 flex items-center justify-center gap-2 rounded-xl border-2 border-wa px-6 py-3 text-[15px] font-semibold text-wa transition-colors hover:bg-brand-soft dark:border-wa-bright dark:text-wa-bright dark:hover:bg-white/10"
       >
         Chat about this course on WhatsApp
       </a>
@@ -43,7 +43,7 @@ export default function EnquiryRail({ courseTitle }: { courseTitle: string }) {
       </a>
       <a
         href="#demo"
-        className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-navy px-6 py-3 text-[15px] font-semibold text-white transition-transform hover:scale-[1.02]"
+        className="btn-outline-navy mt-3 w-full"
       >
         Book a Free Demo Class
       </a>

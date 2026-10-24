@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { validateLead } from "@/lib/lead-validation";
 
 // Landing-page lead form (ppc report §1.4: size the form to the offer —
 // a free counselling call asks for name, phone and ONE qualifying
@@ -22,7 +23,7 @@ export default function LpLeadForm({
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setState("sending");
+    if (state === "sending") return; // double-submit guard
     setErrors({});
     const form = e.currentTarget;
     const fd = new FormData(form);
@@ -35,6 +36,13 @@ export default function LpLeadForm({
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/"}`,
     };
+    // Same validators as /api/leads (§25.18) — caught here, never sent.
+    const checked = validateLead(payload);
+    if (!checked.data) {
+      setErrors(checked.errors);
+      return;
+    }
+    setState("sending");
     try {
       const res = await fetch("/api/leads", {
         method: "POST",

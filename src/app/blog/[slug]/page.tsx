@@ -6,6 +6,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, SITE_URL } from "@/lib/schema";
 import { articles } from "@/data/articles";
+import { articlePageMetadata } from "@/lib/metadata";
 
 // Article pages (research expansion pack, DECISIONS.md §18) — original
 // Leo-authored educational content; every fact traces to the courses'
@@ -22,7 +23,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = articles.find((a) => a.slug === slug);
   if (!article) return { title: "Article not found" };
-  return { title: article.title, description: article.excerpt, alternates: { canonical: `/blog/${slug}` } };
+  return articlePageMetadata(article, `/blog/${article.slug}`);
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {

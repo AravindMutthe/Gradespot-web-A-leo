@@ -6,9 +6,14 @@ import { courseCategories } from "@/data/courses";
 import CatalogueSearch from "@/components/CatalogueSearch";
 import Ticker from "@/components/Ticker";
 import { BlogCards, FeatureTrio, LogoWall, PageHero, SectionTitle, StatsRibbon } from "@/components/ui";
+import JsonLd from "@/components/JsonLd";
+import { trainingsIndexSchema } from "@/lib/schema";
+import { trainingsIndexMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/trainings" }, title: "Trainings" };
+export async function generateMetadata(): Promise<Metadata> {
+  const courses = await getCourses();
+  return trainingsIndexMetadata(courses);
+}
 
 const showcaseItems = [
   { t: "IT Consultancy", img: "/images/courses/microsoft-sentinel.jpg" },
@@ -29,6 +34,7 @@ export default async function TrainingsPage() {
 
   return (
     <>
+      <JsonLd data={trainingsIndexSchema(courses)} />
       <PageHero
         title="Trainings"
         subtitle="Creating a better IT solutions — At GradeSpot, we empower future engineers with cutting-edge IT skills, practical training, and real-world projects. Our mission is to turn learners into tech leaders. Transform every Digital Process — intelligent automation, expert-driven solutions, and scalable technology."

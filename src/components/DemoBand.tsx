@@ -29,7 +29,7 @@ export default function DemoBand({ courseTitle }: { courseTitle: string }) {
               href={syllabusWaLink(courseTitle)}
               target="_blank"
               rel="noreferrer"
-              className="rounded-xl bg-wa px-6 py-3 text-[15px] font-semibold text-white transition-transform hover:scale-[1.02]"
+              className="rounded-xl border-2 border-wa px-6 py-3 text-[15px] font-semibold text-wa-bright transition-colors hover:bg-white/10"
             >
               Get the Syllabus on WhatsApp
             </a>

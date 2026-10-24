@@ -8,6 +8,7 @@ import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { comparisons } from "@/data/comparisons";
 import { courseDetails } from "@/data/course-details";
 import { getCourse } from "@/lib/data";
+import { comparisonPageMetadata } from "@/lib/metadata";
 import { getJobRoles, getPricingPlans, type PricingPlan } from "@/lib/course-faqs";
 
 // "X vs Y" comparison pages (research expansion pack, DECISIONS.md
@@ -37,11 +38,7 @@ export async function generateMetadata({
   const { pair } = await params;
   const r = await resolve(pair);
   if (!r) return { title: "Course Comparison" };
-  return {
-    alternates: { canonical: `/compare/${pair}` },
-    title: r.def.title,
-    description: `${r.def.title} A side-by-side comparison of ${r.a.title} and ${r.b.title} at GradeSpot IT Solutions, Hyderabad — focus, duration, certification, fees where published, and job roles.`,
-  };
+  return comparisonPageMetadata(r.def.title, r.a.title, r.b.title, `/compare/${pair}`);
 }
 
 function feesCell(plans: PricingPlan[]): string {

@@ -1595,3 +1595,110 @@ OPEN QUESTIONS for Aravind (left as-is, not guessed):
   `section-pad` values. NO deploy — commit only; the
   parent redeploys. NOTHING merged to main: this stays on
   `leo-build-v1`.
+
+### 25.18 v1 hardening — tighter form validation, shared client + server (2026-10-24)
+Aravind's pre-v2 gate, item 1. Before: the client sent with no
+validation at all (noValidate forms, server errors only) and the
+server's zod schema accepted weak phones (any 7–20 chars of digits)
+and an empty course selection ("Registration: " passed its interest
+check). After: ONE dependency-free module, `src/lib/lead-validation.ts`,
+run by LeadForm, LpLeadForm and RegisterForm before sending AND by
+`/api/leads` on receipt — the server never accepts what the client
+rejects, and no invalid lead is stored or acknowledged as success.
+- Name: required, 2–120 chars, letters/spaces/hyphen/apostrophe/dot
+  only, at least two letters.
+- Phone: required. Indian mobile (+91 / 91 / trunk-0 / bare 10-digit)
+  must be 10 digits starting 6–9; other numbers must be plausible
+  international (+country code, 7–15 digits, never 0-led). All-same-
+  digit numbers and sequential runs (0123456789, 1234567890,
+  9876543210) are rejected as obviously fake.
+- Email: optional everywhere (phone-first), strictly format-checked
+  when present (no "..", valid local/domain labels, TLD 2+ chars).
+- Interest: required; "Registration:" / "Demo:" with an empty course
+  is rejected. RegisterForm now sends a `course` field, required when
+  present; the route strips it before storage (LeadInput unchanged).
+- Message: optional, capped at 2000 chars. Double-submit prevented
+  by disabled-while-sending plus a sending-state guard in all three
+  forms. Inline per-field errors keep the existing error UI pattern;
+  server failures return 400 (was 422) with `{ error, errors }`.
+- DPDP consent lines and unticked WhatsApp opt-ins untouched.
+- Verified against the local production build (all 400 + field
+  errors, no storage): all-same-digit, sequential, short, and
+  0-led phones; bad email; missing name; digit-bearing name; empty
+  course; 2001-char message — each rejected with exactly its field
+  error. Valid payload → 201, stored in Supabase, then deleted
+  (test leads id 12 and 13 removed; table left clean). Two honest
+  process notes: the first test run exposed a real bug of mine (the
+  empty-email early return was dropped in an edit — fixed, then all
+  tests re-run green); and a stale first server held port 3103, so
+  one retest round hit the old build before the port was reclaimed
+  by PID and re-run.
+
+### 25.19 v1 hardening — dynamic course metadata, one data source (2026-10-24)
+Aravind's pre-v2 gate, item 2. New `src/lib/metadata.ts`: every
+dynamic route's metadata is GENERATED from the file-based course /
+service / article objects — title, description, canonical, OG and
+Twitter tags (including the per-route image, which previously fell
+back to the layout default everywhere). Title/description strings
+are byte-identical to the ones the routes previously inlined; the
+only additions are OG/Twitter images and the trainings-index
+description. No backend change: the catalogue stays file-based; a
+Supabase/CMS-driven catalogue is an admin-phase (gradespot-axon)
+decision, not this task. No course content, fee, duration or claim
+changed — plumbing only.
+- Refactored to builders: trainings/[slug] (coursePageMetadata),
+  lp/[slug] (lpPageMetadata), services/[slug]
+  (servicePageMetadata), compare/[pair] (comparisonPageMetadata),
+  blog/[slug] (articlePageMetadata), trainings index
+  (trainingsIndexMetadata — description derived from the live
+  catalogue: count + categories actually present).
+- Trainings index also gains an ItemList JSON-LD
+  (trainingsIndexSchema in @/lib/schema) generated from the same
+  catalogue; course/service JSON-LD and breadcrumbs were already
+  data-driven and are unchanged.
+- Static pages keep their hand-written metadata exports: those
+  strings are page copy, not duplicated course/service data, so
+  there is nothing to deduplicate them against (judgment call).
+- Spot-checks on the local production build (title / description /
+  canonical / OG / Twitter / JSON-LD all present and matching the
+  data object): full course CCNA 200-301 (OG = ccna.jpg, Course
+  schema); catalogue course AutoCAD (fallback description, OG =
+  autocad.jpg, Course schema, catalogue template confirmed);
+  LP azure-fundamentals-az-900-in-hyderabad (title/description
+  from courseDetails outcome, OG = az-900.jpg); trainings index
+  (36 trainings across the catalogue categories, ItemList schema);
+  service corporate-trainings (title, canonical, default OG).
+
+### 25.20 v1 hardening — one high-intent CTA hierarchy (2026-10-24)
+Aravind's pre-v2 gate, item 3. The rule, applied sitewide in both
+themes: exactly ONE primary high-intent action per context (the
+vermilion solid) — Register / Request a Callback / Enquire, whichever
+the context's goal is. Secondary actions (Free Demo, secondary
+enquiry) are outlines; low-intent actions (Explore, WhatsApp chat,
+Learn more) are links/chips, never competing solids. Labels and
+destinations are unchanged everywhere; only hierarchy styling moved.
+- Worst offender fixed — EnquiryRail: was solid-green WhatsApp +
+  outline syllabus + solid-navy Demo stacked under the form. Now the
+  form submit is the only solid; WhatsApp is a green outline
+  (border-wa, text-wa / dark:text-wa-bright, identity kept, weight
+  demoted) and Demo is btn-outline-navy.
+- DemoBand (ink panel): syllabus solid green → green outline
+  (border-wa, text-wa-bright on ink); the form submit stays the
+  only solid; "Book the Demo on WhatsApp" was already an outline.
+- Mobile sticky bar: keeps Call / WhatsApp / Register, but Register
+  is now visually dominant (solid brand background, white text);
+  Call and WhatsApp stay muted cells.
+- Already compliant, unchanged: home hero (primary + outline),
+  course heroes (primary + outline-light), header (§22 hierarchy),
+  CtaBand / PromoBanner / TestimonialSpotlight /
+  ForInstitutesBand (one primary + outlines/links each), LP pages
+  (one CTA repeated ×3, per the standing LP rule), form submits
+  (one primary per form).
+- Judgment calls: choice contexts keep equal weight — compare-pair
+  A-vs-B buttons and pricing-tier cards are alternatives the user
+  must pick between, not competing conversions, so their equal
+  primaries stand; the floating WhatsApp bubble stays as a
+  persistent chat affordance (small, corner, not a page CTA).
+- Verified: production build passes, shared JS still 103 kB,
+  crawl 89/89 URLs 200. NO deploy — commit only; the parent
+  redeploys. NOTHING merged to main: this stays on `leo-build-v1`.

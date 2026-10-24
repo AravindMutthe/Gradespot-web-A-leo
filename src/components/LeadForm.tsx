@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { validateLead } from "@/lib/lead-validation";
 import { business } from "@/data/site";
 
 // Lead form per the researched conversion rules:
@@ -40,7 +41,7 @@ export default function LeadForm({
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setState("sending");
+    if (state === "sending") return; // double-submit guard
     setErrors({});
     const form = e.currentTarget;
     const fd = new FormData(form);
@@ -53,6 +54,14 @@ export default function LeadForm({
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/"}`,
     };
+    // Client runs the SAME validators as /api/leads (§25.18) — bad
+    // input is caught here with inline per-field errors and never sent.
+    const checked = validateLead(payload);
+    if (!checked.data) {
+      setErrors(checked.errors);
+      return;
+    }
+    setState("sending");
     setSentInterest(payload.interest);
     try {
       const res = await fetch("/api/leads", {

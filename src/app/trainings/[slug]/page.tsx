@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { courses as localCourses, type CourseSection } from "@/data/courses";
 import { getCourse, getCourses } from "@/lib/data";
+import { coursePageMetadata } from "@/lib/metadata";
 import { BlogCards, CourseCard, FaqList, FeatureTrio, LogoWall, StatsRibbon } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import EnquiryRail from "@/components/EnquiryRail";
@@ -130,11 +131,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const course = await getCourse(slug);
   if (!course) return { title: "Course not found" };
-  return {
-    title: course.title,
-    description: course.summary || `${course.title} — training at GradeSpot IT Solutions, Hyderabad.`,
-    alternates: { canonical: `/trainings/${slug}` },
-  };
+  return coursePageMetadata(course, `/trainings/${slug}`);
 }
 
 export default async function CoursePage({

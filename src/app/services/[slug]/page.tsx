@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { services as localServices } from "@/data/services";
 import { getService } from "@/lib/data";
+import { servicePageMetadata } from "@/lib/metadata";
 import { PageHero } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
@@ -20,7 +21,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const service = await getService(slug);
   if (!service) return { title: "Service not found" };
-  return { title: service.title, description: service.summary ?? `${service.title} — a GradeSpot IT Solutions service, Hyderabad.`, alternates: { canonical: `/services/${slug}` } };
+  return servicePageMetadata(service, `/services/${slug}`);
 }
 
 export default async function ServicePage({

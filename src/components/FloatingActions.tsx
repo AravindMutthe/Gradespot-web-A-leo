@@ -62,7 +62,7 @@ export default function FloatingActions() {
         >
           WhatsApp
         </a>
-        <Link href="/register" className="flex min-h-[52px] items-center justify-center py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-brand-bright active:bg-white/10">
+        <Link href="/register" className="flex min-h-[52px] items-center justify-center bg-brand py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-white active:bg-brand-dark">
           Register
         </Link>
       </div>

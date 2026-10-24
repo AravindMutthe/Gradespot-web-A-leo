@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { validateLead } from "@/lib/lead-validation";
 import { business } from "@/data/site";
 
 // Course / demo registration form (Aravind's decision, 2026-10-23;
@@ -32,7 +33,7 @@ export default function RegisterForm({
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setState("sending");
+    if (state === "sending") return; // double-submit guard
     setErrors({});
     const form = e.currentTarget;
     const fd = new FormData(form);
@@ -44,10 +45,20 @@ export default function RegisterForm({
       phone: String(fd.get("phone") ?? ""),
       email: String(fd.get("email") ?? ""),
       interest,
+      course,
       message: "",
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/register"}`,
     };
+    // Same validators as /api/leads (§25.18) — this also closes the
+    // old empty-course hole: an unchosen course now fails here AND
+    // on the server instead of posting "Registration: ".
+    const checked = validateLead(payload);
+    if (!checked.data) {
+      setErrors(checked.errors);
+      return;
+    }
+    setState("sending");
     setSentText(interest);
     try {
       const res = await fetch("/api/leads", {
@@ -134,6 +145,7 @@ export default function RegisterForm({
               </option>
             ))}
           </select>
+          {errors.course && <p className="mt-1 text-xs text-field-error">{errors.course}</p>}
           {errors.interest && <p className="mt-1 text-xs text-field-error">{errors.interest}</p>}
         </div>
         <div>

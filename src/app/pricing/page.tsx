@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { getCourses, getServices } from "@/lib/data";
 import { PageHero, SectionTitle } from "@/components/ui";
@@ -7,12 +7,11 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/pricing" },
+export const metadata = staticPageMetadata({
   title: "Pricing",
-  description:
-    "GradeSpot pricing: published course fees for students, scoped quotes for businesses, and institute plans quoted after a demo.",
-};
+  description: "GradeSpot pricing: published course fees for students, scoped quotes for businesses, and institute plans quoted after a demo.",
+  path: "/pricing",
+});
 
 // Pricing page — harvested 2026-10-23 (DECISIONS.md §17), three-audience
 // structure from the Oct-6 site. Research rule: publish course prices,

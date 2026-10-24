@@ -1,18 +1,17 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
-import { PageHero, SectionTitle, FaqList } from "@/components/ui";
+import { PageHero, SectionTitle, FaqList, AnswerLead } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import LeadForm from "@/components/LeadForm";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { services } from "@/data/services";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/for-colleges" },
+export const metadata = staticPageMetadata({
   title: "For Colleges",
-  description:
-    "College workshops, industrial trainings and internships from GradeSpot IT Solutions — hands-on technical programs conducted for colleges and their students in Hyderabad.",
-};
+  description: "College workshops, industrial trainings and internships from GradeSpot IT Solutions — hands-on technical programs conducted for colleges and their students in Hyderabad.",
+  path: "/for-colleges",
+});
 
 // For Colleges (research expansion pack, DECISIONS.md §18) — the
 // third audience track. The nav research (folder 3, Part A2) puts the
@@ -84,6 +83,14 @@ export default function ForCollegesPage() {
         title="Workshops, Industrial Trainings & Internships for Your Students"
         subtitle="GradeSpot IT Solutions partners with colleges to give students hands-on technical skills and real industry exposure — conducted at your campus."
       />
+      <div className="wrap pt-8">
+        <AnswerLead id="answer-summary">
+          GradeSpot partners with colleges to run workshops, industrial trainings and internships
+          that give students hands-on technical skills and real industry exposure, conducted at
+          the college campus, with programs planned through the enquiry form and confirmed with
+          the college team directly.
+        </AnswerLead>
+      </div>
       <section className="section-pad">
         <div className="wrap">
           <div className="mx-auto max-w-4xl">

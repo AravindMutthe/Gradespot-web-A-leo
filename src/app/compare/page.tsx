@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { PageHero, SectionTitle } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -8,12 +8,11 @@ import { comparisons } from "@/data/comparisons";
 import { courseDetails } from "@/data/course-details";
 import { courses } from "@/data/courses";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/compare" },
+export const metadata = staticPageMetadata({
   title: "Course Comparisons",
-  description:
-    "Side-by-side comparisons of GradeSpot trainings — topics, duration, certification and job roles — built only from each course's published data.",
-};
+  description: "Side-by-side comparisons of GradeSpot trainings — topics, duration, certification and job roles — built only from each course's published data.",
+  path: "/compare",
+});
 
 // Comparison hub (research expansion pack, DECISIONS.md §18): the
 // entry point for the "X vs Y" pages the AEO research calls for.

@@ -5,19 +5,35 @@ import Link from "next/link";
 import { getCourses, getServices } from "@/lib/data";
 import { homeParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
-import { CourseCard, CredentialCard, CtaBand, ExperienceBadge, FaqList, FeatureTrio, ForInstitutesBand, SectionTitle, ServiceCard, SignatureBlock, StatsRibbon, TestimonialSpotlight, siteFaqs } from "@/components/ui";
+import { CourseCard, CredentialCard, CtaBand, ExperienceBadge, FaqList, FeatureTrio, ForInstitutesBand, SectionTitle, ServiceCard, SignatureBlock, StatsRibbon, TestimonialSpotlight, siteFaqs, AnswerLead } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "GradeSpot IT Solutions - Empower Your Business with Top-Notch IT Solutions",
+    absolute: "IT Training Institute in Hyderabad, Dilsukhnagar | GradeSpot IT Solutions",
   },
-  alternates: { canonical: "/" },
+  description:
+    "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad offering cybersecurity, cloud, networking, digital marketing and more — online & offline classes, corporate training, internships and IT services.",
+  alternates: { canonical: "/", languages: { en: "/" } },
+  openGraph: {
+    title: "IT Training Institute in Hyderabad, Dilsukhnagar | GradeSpot IT Solutions",
+    description:
+      "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad offering cybersecurity, cloud, networking, digital marketing and more — online & offline classes, corporate training, internships and IT services.",
+    images: [{ url: "/images/courses/ceh.jpg" }],
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IT Training Institute in Hyderabad, Dilsukhnagar | GradeSpot IT Solutions",
+    description:
+      "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad offering cybersecurity, cloud, networking, digital marketing and more — online & offline classes, corporate training, internships and IT services.",
+    images: ["/images/courses/ceh.jpg"],
+  },
 };
 import Ticker from "@/components/Ticker";
 import PromoBanner from "@/components/PromoBanner";
 import OfferCards from "@/components/OfferCards";
-import { faqSchema } from "@/lib/schema";
+import { faqSchema, webPageSchema } from "@/lib/schema";
 
 export default async function HomePage() {
   const [courses, services] = await Promise.all([getCourses(), getServices()]);
@@ -26,6 +42,7 @@ export default async function HomePage() {
   return (
     <>
       <JsonLd data={faqSchema(siteFaqs)} />
+      <JsonLd data={webPageSchema("/", "GradeSpot IT Solutions", "#answer-summary")} />
       {/* Hero — corporate split layout; headline and copy as published on the live homepage */}
       <section className="hero-paper relative overflow-hidden border-b border-line">
         <div className="wrap grid items-center gap-12 py-6 md:py-8 lg:grid-cols-[1.05fr_0.95fr]">
@@ -113,6 +130,18 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* AEO answer-first summary (§25.22): the direct answer to "what
+          is GradeSpot", drawn only from published copy, before detail. */}
+      <div className="wrap pt-8">
+        <AnswerLead id="answer-summary">
+          GradeSpot IT Solutions is an IT training institute and services company in
+          Dilsukhnagar, Hyderabad. It offers {courses.length} trainings in cybersecurity,
+          cloud, networking, programming, data and digital marketing, with online and
+          offline classes, plus corporate training, internships and IT services. Learners
+          can start with a free demo class.
+        </AnswerLead>
+      </div>
 
       <Ticker />
 

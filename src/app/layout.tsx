@@ -3,31 +3,32 @@ import "./globals.css";
 import Chrome from "@/components/Chrome";
 import JsonLd from "@/components/JsonLd";
 import RevealFX from "@/components/RevealFX";
-import { organizationSchema } from "@/lib/schema";
+import { organizationSchema, websiteSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  // Canonical/OG base — the production origin, matching sitemap.ts
-  // and robots.ts in this repo (DECISIONS.md §19 standards layer).
-  metadataBase: new URL("https://gsitssolutions.com"),
+  // Canonical/OG base — the LEO build itself is the ranking entity
+  // (DECISIONS.md §25.21): self-referential to the Leo domain.
+  metadataBase: new URL("https://gradespot-leo-build-app.vercel.app"),
   title: {
     default: "GradeSpot IT Solutions - Empower Your Business with Top-Notch IT Solutions",
     template: "%s - GradeSpot IT Solutions",
   },
   description:
-    "GradeSpot IT Solutions, Dilsukhnagar, Hyderabad — IT training institute and services company: cybersecurity, cloud, networking and digital marketing trainings, corporate training, internships and IT services.",
+    "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad — cybersecurity, cloud, networking, digital marketing and more, with online & offline classes, corporate training, internships and IT services.",
   openGraph: {
     type: "website",
     siteName: "GradeSpot IT Solutions",
+    locale: "en_IN",
     title: "GradeSpot IT Solutions - Empower Your Business with Top-Notch IT Solutions",
     description:
-      "GradeSpot IT Solutions, Dilsukhnagar, Hyderabad — IT training institute and services company: cybersecurity, cloud, networking and digital marketing trainings, corporate training, internships and IT services.",
+      "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad — cybersecurity, cloud, networking, digital marketing and more, with online & offline classes, corporate training, internships and IT services.",
     images: [{ url: "/images/courses/ceh.jpg", alt: "GradeSpot IT Solutions — training in Hyderabad" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "GradeSpot IT Solutions - Empower Your Business with Top-Notch IT Solutions",
     description:
-      "GradeSpot IT Solutions, Dilsukhnagar, Hyderabad — IT training institute and services company: cybersecurity, cloud, networking and digital marketing trainings, corporate training, internships and IT services.",
+      "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad — cybersecurity, cloud, networking, digital marketing and more, with online & offline classes, corporate training, internships and IT services.",
     images: ["/images/courses/ceh.jpg"],
   },
 };
@@ -61,6 +62,7 @@ export default function RootLayout({
       </head>
       <body>
         <JsonLd data={organizationSchema()} />
+        <JsonLd data={websiteSchema()} />
         <Chrome>{children}</Chrome>
         <RevealFX />
       </body>

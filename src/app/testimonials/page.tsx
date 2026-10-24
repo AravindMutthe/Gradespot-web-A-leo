@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import { testimonials } from "@/data/testimonials";
 import { CtaBand, LogoWall, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/testimonials" }, title: "Testimonials" };
+export const metadata = staticPageMetadata({
+  title: "Testimonials",
+  description: "The accomplishments of our students — voices of satisfaction and success from clients of GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.",
+  path: "/testimonials",
+});
 
 export default function TestimonialsPage() {
   return (

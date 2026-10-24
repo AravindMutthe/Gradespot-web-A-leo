@@ -1,27 +1,28 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { PageHero, SectionTitle, CourseCard, CtaBand, FaqList } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbSchema, faqSchema, localBusinessSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { business, telHref } from "@/data/site";
 import { testimonials } from "@/data/testimonials";
 import { getCourses } from "@/lib/data";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/training-institute-in-dilsukhnagar-hyderabad" },
+export const metadata = staticPageMetadata({
   title: "IT Training Institute in Dilsukhnagar, Hyderabad",
-  description:
-    "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad — cybersecurity, cloud, networking and digital marketing trainings with online & offline classes. Call +91 91826 54056.",
-};
+  description: "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad — cybersecurity, cloud, networking and digital marketing trainings with online & offline classes. Call +91 91826 54056.",
+  path: "/training-institute-in-dilsukhnagar-hyderabad",
+  image: "/images/map-dilsukhnagar.jpg",
+});
 
 // Local institute page (research expansion pack, DECISIONS.md §18 —
 // folder-1 tactic 8 local-SEO pattern + ppc report §2.5/§2.2: the
 // website + reviews win the AI answer; answer-first content with the
 // real address, phone and facts is what gets cited). Everything here
 // is a published fact: address, phone, hours, courses, and the verbatim
-// Google testimonials. No geo coordinates are published anywhere in
-// the record, so the map is a query link — never invented lat/long.
+// Google testimonials. The Organization entity (with locality-level
+// geo, DECISIONS §25.25) lives in the layout — this page carries only
+// its breadcrumb and FAQPage, never a second org definition.
 
 const localFaqs = [
   {
@@ -48,6 +49,14 @@ const localFaqs = [
     q: "Can I attend a demo before enrolling?",
     a: "Yes — every full course page carries a free demo booking form, and the landing pages for Hyderabad courses take a free counselling call request. The team confirms the timing with you.",
   },
+  {
+    q: "How do I reach or visit the institute?",
+    a: `The institute is in Dilsukhnagar, Hyderabad, at ${business.address}. Call ${business.phones[0]} for directions or to book a visit — the contact page also carries a map of the Dilsukhnagar location.`,
+  },
+  {
+    q: "Can I book a free counselling session?",
+    a: "Yes — free counselling is one of the published offers on the site. Send an enquiry or register for a course and the team will arrange a counselling call with you.",
+  },
 ];
 
 export default async function LocalInstitutePage() {
@@ -56,7 +65,6 @@ export default async function LocalInstitutePage() {
 
   return (
     <>
-      <JsonLd data={localBusinessSchema()} />
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", path: "/" },

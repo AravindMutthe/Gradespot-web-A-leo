@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
-import { PageHero, SectionTitle, LogoWall, CtaBand } from "@/components/ui";
+import { PageHero, SectionTitle, LogoWall, CtaBand, AnswerLead } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -10,12 +10,11 @@ import { getJobRoles } from "@/lib/course-faqs";
 import { services } from "@/data/services";
 import { testimonials } from "@/data/testimonials";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/career-support" },
+export const metadata = staticPageMetadata({
   title: "Career Support",
-  description:
-    "The job roles GradeSpot trainings prepare you for, the companies our students work with, and the career services we actually offer — roles and facts, no placement guarantees.",
-};
+  description: "The job roles GradeSpot trainings prepare you for, the companies our students work with, and the career services we actually offer — roles and facts, no placement guarantees.",
+  path: "/career-support",
+});
 
 // Career support page (research expansion pack, DECISIONS.md §18).
 // The Oct-6 build's /placements page carried a "Career Support Till
@@ -56,6 +55,15 @@ export default function CareerSupportPage() {
         title="Career Support — Roles, Proof, No Promises"
         subtitle="Every GradeSpot training is published with the job roles it prepares you for. This page gathers them, the companies our students work with, and the career services we actually run."
       />
+      <div className="wrap pt-8">
+        <AnswerLead id="answer-summary">
+          GradeSpot&apos;s career support gathers the job roles each training prepares learners
+          for, the companies its students work with, and the career services it actually runs,
+          including internships and consultancy. It publishes no placement percentages and
+          guarantees no job — preparation, certification guidance and hands-on labs are what
+          it offers.
+        </AnswerLead>
+      </div>
       <section className="section-pad">
         <div className="wrap">
           <div className="mx-auto max-w-4xl">

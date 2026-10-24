@@ -1,11 +1,16 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Image from "next/image";
 import Link from "next/link";
 import { team } from "@/data/team";
 import { CtaBand, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/team-members/nikhil-duth-d" }, title: "Nikhil Duth D — Founder, Managing Director" };
+export const metadata = staticPageMetadata({
+  title: "Nikhil Duth D — Founder, Managing Director",
+  description:
+    "Nikhil Duth D, Founder & Managing Director of GradeSpot IT Solutions, Dilsukhnagar, Hyderabad — SOC analysis and technical training, 9 years of experience.",
+  path: "/team-members/nikhil-duth-d",
+  image: "/images/team/nikhil-duth-d.jpg",
+});
 
 // Profile facts exactly as published on the live Team Single page
 // (crawl 2026-10-23): role, 9 years of experience, two 95% skill bars and

@@ -1,11 +1,15 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Image from "next/image";
 import Link from "next/link";
 import { team } from "@/data/team";
 import { CtaBand, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/team-members" }, title: "Team Members" };
+export const metadata = staticPageMetadata({
+  title: "Team Members",
+  description: "Expert team — meet the leadership behind GradeSpot IT Solutions, Dilsukhnagar, Hyderabad, including Founder & MD Nikhil Duth D.",
+  path: "/team-members",
+  image: "/images/team/nikhil-duth-d.jpg",
+});
 
 export default function TeamPage() {
   return (

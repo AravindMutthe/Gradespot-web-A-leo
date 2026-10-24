@@ -5,7 +5,7 @@ import { getCourses } from "@/lib/data";
 import { courseCategories } from "@/data/courses";
 import CatalogueSearch from "@/components/CatalogueSearch";
 import Ticker from "@/components/Ticker";
-import { BlogCards, FeatureTrio, LogoWall, PageHero, SectionTitle, StatsRibbon } from "@/components/ui";
+import { BlogCards, FeatureTrio, LogoWall, PageHero, SectionTitle, StatsRibbon, AnswerLead } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
 import { trainingsIndexSchema } from "@/lib/schema";
 import { trainingsIndexMetadata } from "@/lib/metadata";
@@ -40,6 +40,16 @@ export default async function TrainingsPage() {
         subtitle="Creating a better IT solutions — At GradeSpot, we empower future engineers with cutting-edge IT skills, practical training, and real-world projects. Our mission is to turn learners into tech leaders. Transform every Digital Process — intelligent automation, expert-driven solutions, and scalable technology."
       />
       <Ticker />
+      {/* AEO answer-first summary (§25.22): counts/categories are live data. */}
+      <div className="wrap pt-8">
+        <AnswerLead id="answer-summary">
+          GradeSpot&apos;s Dilsukhnagar, Hyderabad institute offers {courses.length} IT trainings
+          with online and offline classes, covering cybersecurity, cloud, networking,
+          programming, data and digital marketing. Courses prepare learners for industry
+          certifications and job roles. Learners can start with a free demo class; batch
+          schedules are confirmed on enquiry.
+        </AnswerLead>
+      </div>
       {/* §22: the catalogue + search used to sit BELOW a stats ribbon
           and a text-only showcase — students now meet the courses and
           the search box immediately after the hero. */}

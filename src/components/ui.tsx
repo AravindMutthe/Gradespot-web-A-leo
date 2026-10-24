@@ -218,7 +218,46 @@ export const siteFaqs = [
   { q: "What training programs do you offer?", a: servicesFaqAnswers.trainings },
   { q: "What services do you offer?", a: servicesFaqAnswers.services },
   { q: "What's the best way to get in touch with your team?", a: servicesFaqAnswers.contact },
+  {
+    q: "Do you offer online or offline classes?",
+    a: "Both. GradeSpot runs online and offline classes for its trainings from its institute in Dilsukhnagar, Hyderabad — live sessions with recorded videos and hands-on labs.",
+  },
+  {
+    q: "How do I know the current batch schedule?",
+    a: "Batch schedules are confirmed on enquiry — call +91 91826 54056 or send an enquiry and the team will share the current batch schedule.",
+  },
+  {
+    q: "Can I attend a free demo class?",
+    a: "Yes. GradeSpot offers a free demo class — register on the site and the team confirms the demo timing by phone.",
+  },
+  {
+    q: "What are the fees for a training?",
+    a: "Fees are published per course where a pricing section exists — for example the CCNA and CCNP plans on the course pages. For other trainings the fee is confirmed on enquiry — call +91 91826 54056. Nothing is charged before you confirm.",
+  },
+  {
+    q: "Do your trainings prepare for certifications?",
+    a: "Yes — each training prepares you for the certification named on its course page, with exam-oriented preparation as published in the curriculum. GradeSpot certificates can be verified by code on the certificate verification page.",
+  },
+  {
+    q: "Do you guarantee placements?",
+    a: "No. GradeSpot publishes the job roles each training prepares you for and the companies its students work with, and backs preparation with hands-on labs, certification guidance and career-oriented services — but it publishes no placement percentages and guarantees no job.",
+  },
 ];
+
+// AEO / zero-click answer-first lead (§25.22–25.23): a concise direct
+// answer rendered visibly at the top of a page/section, with the detail
+// after it. Text must be factual page copy only — never invented.
+export function AnswerLead({ id, children }: { id?: string; children: React.ReactNode }) {
+  return (
+    <p
+      id={id}
+      className="rounded-2xl border border-line bg-surface-light px-6 py-5 text-[15px] leading-7 text-body"
+    >
+      <span className="mr-2 font-display font-semibold text-heading">In short:</span>
+      {children}
+    </p>
+  );
+}
 
 export function FaqList({ items }: { items: { q: string; a: string }[] }) {
   return (

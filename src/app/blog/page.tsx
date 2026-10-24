@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { PageHero, SectionTitle, BlogCards, CtaBand } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -6,12 +6,11 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { articles } from "@/data/articles";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/blog" },
+export const metadata = staticPageMetadata({
   title: "Learning Articles",
-  description:
-    "Career roadmaps and course explainers from GradeSpot IT Solutions — how to start a cybersecurity career, CEH vs Security+, and what a SOC analyst actually does.",
-};
+  description: "Career roadmaps and course explainers from GradeSpot IT Solutions — how to start a cybersecurity career, CEH vs Security+, and what a SOC analyst actually does.",
+  path: "/blog",
+});
 
 // Blog index (research expansion pack, DECISIONS.md §18). The Oct-6
 // BLOG_POSTS were title stubs with "[Pending]" bodies, so the articles

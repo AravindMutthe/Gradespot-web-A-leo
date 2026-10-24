@@ -1,10 +1,13 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { business } from "@/data/site";
 import { CtaBand, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/resources" }, title: "Resources" };
+export const metadata = staticPageMetadata({
+  title: "Resources",
+  description: "Everything about the people, proof and credibility behind GradeSpot IT Solutions — team, testimonials, student certifications and career support.",
+  path: "/resources",
+});
 
 const items = [
   {

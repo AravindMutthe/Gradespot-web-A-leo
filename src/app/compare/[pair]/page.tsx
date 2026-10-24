@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PageHero, CtaBand } from "@/components/ui";
+import { PageHero, CtaBand, AnswerLead } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
@@ -101,6 +101,13 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
         title={def.title}
         subtitle="A factual side-by-side from each course's own published page — topics, duration, certification, fees where published, and the roles each one prepares you for."
       />
+      {/* AEO answer-first verdict (§25.22): focus sentences, verbatim data. */}
+      <div className="wrap pt-8">
+        <AnswerLead id="answer-summary">
+          In short: {shortA} — {def.focusA.split(". ")[0]}. {shortB} —{" "}
+          {def.focusB.split(". ")[0]}.
+        </AnswerLead>
+      </div>
       <section className="section-pad">
         <div className="wrap">
           <div className="mx-auto max-w-4xl">

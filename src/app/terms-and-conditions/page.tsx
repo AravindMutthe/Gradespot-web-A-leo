@@ -1,10 +1,13 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { termsSections } from "@/data/pages";
 import { PageHero } from "@/components/ui";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/terms-and-conditions" }, title: "Terms and Conditions" };
+export const metadata = staticPageMetadata({
+  title: "Terms and Conditions",
+  description: "Terms and conditions for using the GradeSpot IT Solutions website and services, Dilsukhnagar, Hyderabad.",
+  path: "/terms-and-conditions",
+});
 
 // Terms (§22 rich treatment): the published sections as numbered
 // ledger cards in the Prospectus language, closing with a next-step

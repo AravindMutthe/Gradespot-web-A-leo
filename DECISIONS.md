@@ -1702,3 +1702,305 @@ destinations are unchanged everywhere; only hierarchy styling moved.
 - Verified: production build passes, shared JS still 103 kB,
   crawl 89/89 URLs 200. NO deploy — commit only; the parent
   redeploys. NOTHING merged to main: this stays on `leo-build-v1`.
+
+### 25.21 SEO + AEO pass — canonical decision, technical audit (2026-10-24)
+
+Goal (Aravind): the LEO build itself should compete for top 3 in
+Hyderabad, top 5 in South India, first-page visibility in India and
+worldwide — for its REAL training business. Honest framing, stated
+up front: no on-site work can guarantee a ranking position. Rankings
+depend on Google, competition, and domain authority accumulated over
+time. Everything below is what is inside the site's control, done
+thoroughly. What on-site work CANNOT do: outrank the official site
+instantly, invent authority, or substitute for the off-site steps in
+§25.26 (Search Console, GBP claim, real reviews, real backlinks).
+
+**Canonical-base decision (the big one).** Before this pass, every
+canonical, OG URL, sitemap URL, robots sitemap and llms.txt link
+pointed at the OFFICIAL domain (`gsitssolutions.com`). That told
+search engines the official site was the canonical copy. Switched,
+everywhere, to SELF-REFERENTIAL Leo-domain URLs
+(`https://gradespot-leo-build-app.vercel.app`): `metadataBase` in
+`layout.tsx`, `SITE_URL` in `src/lib/schema.ts`, sitemap base,
+robots sitemap, all llms.txt links, every page's canonical + OG +
+Twitter + hreflang (via `src/lib/metadata.ts` helpers and
+`staticPageMetadata`). **Duplicate-content implication, stated
+plainly:** the Leo build and gsitssolutions.com carry the same
+content. Search engines will treat them as duplicates, and the
+self-canonical now tells them to prefer the LEO build. If the
+official site is meant to stay the primary property, this decision
+must be reversed — it is Aravind's call, and it is the one decision
+in this pass with an external consequence.
+
+**Technical audit — before/after.**
+
+| Area | Before | After |
+|---|---|---|
+| Canonical base | Official domain everywhere | Leo domain, self-referential, all 89 pages |
+| Sitemap | 89 URLs, official base | 89 URLs, Leo base; `lastmod` still deliberately omitted — no real per-page dates exist in the data, and inventing dates is worse than omitting them |
+| robots.txt | Wildcard allow + official sitemap | Wildcard allow + explicit allow for GPTBot, ChatGPT-User, OAI-SearchBot, ClaudeBot, anthropic-ai, Google-Extended, PerplexityBot, Applebot-Extended, Meta-ExternalAgent, Meta-ExternalFetcher + Leo sitemap. No standing rule against AI crawlers was found |
+| Titles/descriptions | Home absolute title had no location term; trainings index title was bare "Trainings"; 11 static pages inherited the layout default description (duplicates) | Home: "IT Training Institute in Hyderabad, Dilsukhnagar \| GradeSpot IT Solutions"; trainings index: "IT Trainings in Hyderabad" + description prefixed "IT courses and trainings in Hyderabad:" with live count + categories; all 11 description-less static pages got distinct descriptions from published copy (about-us, certificate-verification, contact-us, faq, resources, services, student-certifications, team-members, terms-and-conditions, testimonials, why-choose-us) |
+| H1 | Single H1 by construction (hero / PageHero) | Unchanged; crawl asserts exactly 1 H1 on all 89 pages |
+| Broken links / orphans | None found (89/89 crawl, sitemap reconciliation) | Unchanged; breadcrumbs, related courses, hub→LP→course paths all resolve |
+| Internal duplication | None (36 courses, 12 services, no true duplicates) | Unchanged; no routes removed, no new 301s |
+
+### 25.22 AEO — answer-first summaries + FAQ expansion (2026-10-24)
+
+New shared component `AnswerLead` (`src/components/ui.tsx`): a
+visible "In short:" box at the top of a page, answer first, detail
+after. Summaries are factual page copy only; anything unpublished is
+answered "confirmed on enquiry", never invented. Word counts
+measured from served HTML:
+
+| Page | Words | Source of facts |
+|---|---|---|
+| Home (`#answer-summary`, + WebPage speakable) | 47 | Published copy + live course count (36) |
+| Trainings index | 45 | Live count + real categories |
+| Career support | 49 | Page subtitle + no-guarantee line |
+| For institutes | 42 | Page subtitle + partner-page flow |
+| For colleges | 40 | Page hero subtitle + enquiry form |
+| Course pages (full, generated `src/lib/aeo.ts`) | CCNA 64, others ~45–65 | Title, harvested duration, published outcome, certification, top 3 job roles, free demo + batch-on-enquiry |
+| Course pages (catalogue, generated) | 45 | Catalogue membership, online/offline, labs, enquiry |
+| Compare pairs (verdict) | 43 | Verbatim focus sentences of both courses |
+
+CCNA at 64 words runs slightly over the 40–60 target because its
+outcome + certification + roles are all published and all belong in
+the answer; the target is a guideline, not a cut that would drop a
+fact. FAQ coverage expanded: `siteFaqs` grew from 3 to 9 Q&As
+(online/offline, batch schedule, free demo, fees only where
+published, certification preparation, no placement guarantee —
+answers paraphrased only from already-published template language,
+verbatim-consistent with page copy). FAQPage schema now also covers
+the services index (it rendered `siteFaqs` with no schema — fixed)
+and the local page gained 2 location Q&As (how to reach/visit, free
+counselling). FAQPage exists ONLY where the Q&As render visibly:
+home, /faq, services index, local page, course pages (generated +
+published), LP pages, compare pairs. Trainings index renders no
+FAQs, so it correctly carries none.
+
+### 25.23 Zero-click formatting — question headings + snippet structures (2026-10-24)
+
+Formatting/ordering only; meaning, claims and CTAs unchanged. Data
+files untouched — the heading mapping happens at render time in
+`trainings/[slug]/page.tsx` (`questionHeading`, prefix-matched so
+variants map identically: "Course Overview - CCNA 200-301 Training"
+and "Common Job Roles After CCNA" both map):
+
+| Published heading | Rendered question |
+|---|---|
+| Course Overview* | What is {short}? |
+| Course Curriculum / Our Curriculum | What does the {short} curriculum cover? |
+| Key Learning* | What will you learn in {short}? |
+| Program* Features | What does the {short} program include? |
+| Common Job Roles* | What jobs can you get after {short}? |
+| Our Pricing | What does {short} cost? (only where the pricing section exists) |
+| Our Students works for. | Where do our students work? |
+| About This Course (catalogue) | What is {short}? |
+
+Unchanged (not genuine questions, or published wording kept):
+"FAQ's", "Visit our Blog", "Get a Course Completion Certificate",
+certification-exam headings, skills headings. Snippet structures
+reused from existing content, not rebuilt: compare pages already
+render real-data tables (topics, outcomes, durations, fees where
+published, job roles); service pages already render `offerings` as
+`<ul>`; register already has an `<ol>`; partner steps grid converted
+to `<ol>` with identical card visuals (Talk → Understand → Pilot →
+Decide is a genuine published sequence). Verified in served HTML:
+home (answer paragraph under no heading — it IS the page answer,
+referenced by speakable), one course (answer box + question H2s),
+one compare page (answer box + table + FAQ schema), one LP (FAQ
+schema + Course schema; LPs carry no AnswerLead — their 3-field form
+and single CTA are the page, and the linked full course page carries
+the answer). Content gaps (facts missing, left absent, NOT filled):
+fees for 25 catalogue courses and most full courses (answered
+"confirmed on enquiry"); durations for 28 of 36 courses (only 8 in
+the harvested map); batch schedules everywhere (confirmed on
+enquiry). These are Aravind's content to publish, not ours to invent.
+
+### 25.24 Dynamic metadata on every page (2026-10-24)
+
+Rule now enforced: EVERY route exports its own metadata — no page
+inherits title/description/canonical/OG silently from the layout.
+Dynamic routes via `src/lib/metadata.ts` (`coursePageMetadata`,
+`lpPageMetadata`, `servicePageMetadata`, `comparisonPageMetadata`,
+`articlePageMetadata`, `trainingsIndexMetadata`); static routes via
+new `staticPageMetadata({ title, description, path, image })`.
+Course descriptions append "Training in Dilsukhnagar, Hyderabad
+with online and offline classes." ONLY when the summary does not
+already mention Hyderabad. Language: `html lang="en"` (layout),
+`og:locale="en_IN"` on every page (English content, India audience),
+hreflang carries ONLY self-referencing `en` — no Telugu/Hindi
+targets, because no alternate-language pages exist and inventing
+them would be false. No pagination exists (catalogue search is
+client-side), so no paginated-canonical edge case arises.
+
+OG image audit (served HTML, all 89 pages): every page declares an
+explicit `og:image` + `twitter:image`, absolute Leo-domain URL,
+local file underneath. Content images: 53 pages (36 course images,
+11 LP images, home hero, contact + local map image, student
+certification photo, team + Nikhil profile photos). Documented
+fallback (the catalogue flagship `ceh.jpg`, because the page
+genuinely has no image of its own): 36 pages — 17 static pages
+(about-us, accessibility, blog, career-support,
+certificate-verification, compare index, faq, for-colleges,
+for-institutes, partner-with-us, pricing, register, resources,
+services index, terms-and-conditions, testimonials, why-choose-us),
+12 service detail pages (services have no images in the data),
+3 blog articles (articles have no images in the data), 3 compare
+pairs, trainings index (catalogue index; flagship image is the
+honest fallback). The layout-default image is no longer the SOURCE
+for any page — each page's export names its image explicitly, even
+where that image is the shared fallback.
+
+Verification (production build, local crawl of all 89 sitemap URLs):
+canonical present + self-referential on 89/89 (home canonical is
+the bare Leo domain, no trailing slash — Next.js normalisation,
+still self-referential); og:title + og:description + og:image
+present + Leo-domain on 89/89; twitter card on 89/89; lang on 89/89;
+og:locale + hreflang en self-ref on 89/89; H1 exactly 1 on 89/89;
+zero canonicals/OG URLs pointing at the official domain. The one
+caveat from the previous round stands: course/service OG tags are
+crawler-facing only, not page-load assets.
+
+### 25.25 Strict schema + entity disambiguation + local SEO (2026-10-24)
+
+**One canonical entity.** `src/lib/schema.ts` rewritten. The
+Organization entity (`@id`
+`https://gradespot-leo-build-app.vercel.app/#organization`,
+`@type: ["EducationalOrganization", "LocalBusiness"]`) is defined
+ONCE, in the layout, on every page. All Course/Service/WebPage/
+AboutPage nodes reference it by `{"@id": ORG_ID}` — never redefined.
+The old `localBusinessSchema()` spread (a second, @id-less org
+definition on the local page) is DELETED; the local page now carries
+only breadcrumb + FAQPage. WebSite node added to the layout
+(`#website`, publisher = org @id, `inLanguage: "en"`). AboutPage
+added to /about-us (`mainEntity` = org @id). WebPage + speakable
+added to home (`#answer-summary`) and every course page.
+
+**Entity identity block (used identically in footer, contact page,
+schema, llms.txt).** Name: "GradeSpot IT Solutions". Legal name:
+"GradeSpot IT Solutions Pvt. Ltd.". @id: above. Phone: +91 91826
+54056 (single, sitewide; retired numbers 88866 60597 / 76600 43217
+never appear). Locality: Dilsukhnagar, Hyderabad, Telangana 500060.
+Street address (published on contact page + footer, NOT invented):
+"16-126, 2nd Floor, Near Sai Baba Temple, Road No.1, Sri Krishna
+Nagar, Dilsukhnagar". NAP check: footer, contact page, schema and
+llms.txt agree (all read the shared `business` data; footer shows
+full name, Dilsukhnagar/Hyderabad, tel link). Name-variant audit:
+short "GradeSpot" in body copy is natural readable usage and stays;
+"GSITS" appears only in the domain/emails, which are the business's
+own. `disambiguatingDescription` (verbatim): "GradeSpot IT
+Solutions is the IT training institute and services company based
+in Dilsukhnagar, Hyderabad, Telangana, India, founded and led by
+Founder & Managing Director Nikhil Duth D. It runs classroom and
+online IT trainings, corporate trainings, internships and IT
+services from its Dilsukhnagar institute and online across India.
+This entity is identified by its Dilsukhnagar, Hyderabad location,
+its founder, and its training-and-services business." No other
+entity is named, described or disparaged.
+
+**sameAs — verification status.** Kept (business's own web
+properties from repo data): gsitssolutions.com, digital.
+gsitssolutions.com, digidefense.in — plus the LinkedIn company page
+`in.linkedin.com/company/gradespot-it-solutions`, which the site
+itself links in its footer as its own profile (found during this
+pass's served-HTML check — the earlier "no social links in footer"
+note was wrong; the footer does carry LinkedIn/YouTube icons).
+Omitted as GAP for Aravind to confirm: a YouTube channel URL — the
+only YouTube URL on record is a single video
+(`watch?v=owhuBrGIOsE`), not a channel, and sameAs must not point
+at a video. No other company's page is ever linked.
+
+**Local SEO fields (verified facts only).** `geo`: 17.368784,
+78.524652 — the Dilsukhnagar locality centre per Wikipedia
+(17°22′08″N 78°31′29″E); the contact map centre (17.36878,
+78.52409) sits in the same locality. This is locality-level, NOT a
+surveyed premises pin — stated so crawlers and Aravind both read it
+honestly. `areaServed`: ["Dilsukhnagar, Hyderabad, Telangana,
+India", "India"] — in-person area plus India-wide for the real
+online-classes offering; NO invented branches in other cities.
+`hasMap`: the real Google Maps query link for the business address,
+same as the contact page uses. `openingHoursSpecification`:
+opens 08:00, closes 21:00 — the site's published hours (utility
+strip + local page). Days are NOT published anywhere, so NO
+dayOfWeek is asserted; that is a gap (see below). Location content
+audit: home (eyebrow + title + description), trainings index
+(title + description + Hyderabad LPs), local page (title, address,
+hours, FAQs) all carry natural Hyderabad/Dilsukhnagar targeting
+without stuffing; contact page map + address + phone + hours agree
+with schema (verified in served HTML). Local FAQ: 8 Q&As on the
+local page (location, hours, courses, online mode, fees, demo,
+reach/visit, counselling), all rendered visibly, all schema-backed.
+**Reviews: NO AggregateRating added.** The site carries 8 verbatim
+Google testimonials, but no aggregate star value or rating count is
+published anywhere on the site, and none can be derived from 8
+testimonials — inventing one would be false. If Aravind publishes
+a real Google rating, it can be added then.
+
+**Per-type validation table** (mechanical: every block parses as
+JSON; types/properties are real schema.org; org @id consistent):
+
+| Type | Pages | Required/recommended present | Fixed in this pass |
+|---|---|---|---|
+| EducationalOrganization + LocalBusiness | 89 (layout, once each) | name, legalName, url, logo, email, telephone, address, geo, areaServed, hasMap, sameAs, disambiguatingDescription, description, openingHoursSpecification (times only) | Was org-only, official-domain URLs, unverified sameAs set, no geo/areaServed/hasMap/disambiguatingDescription; duplicate @id-less LocalBusiness on local page removed |
+| WebSite | 89 (layout) | url, name, publisher (@id), inLanguage | NEW |
+| WebPage (+ speakable) | 37 (home + 36 courses) | url, name, isPartOf (@id), about (@id), inLanguage, speakable → visible answer | NEW |
+| AboutPage | 1 (about-us) | url, name, isPartOf (@id), about + mainEntity (@id) | NEW |
+| Course | 47 (36 courses + 11 LPs) | name, url, description, provider (@id) | Provider was a redefined object → @id ref; added url; courseMode lowercased to ["online","onsite"]; offers gained url |
+| Offer (inside Course) | Only courses with a published pricing section | price, priceCurrency INR, category, url | Unchanged rule — offers ONLY where a real "Plan — ₹Price" paragraph exists; no invented fees |
+| Service | 12 | name, url, provider (@id), areaServed | Provider → @id ref; added url |
+| BreadcrumbList | 61 | position, name, item (absolute Leo URL) | Base switched to Leo domain |
+| FAQPage | 55 (home, faq, services, local, courses, LPs, compare pairs) | Question + acceptedAnswer, matching visible answers | NEW on services index; +2 local Q&As; siteFaqs 3 → 9 |
+| ItemList | 1 (trainings index) | name, numberOfItems, ListItem name + url | Unchanged (already data-driven) |
+| Article | 3 (blog articles) | — | Unchanged; NOT in this pass's scope beyond metadata (see §25.24) |
+
+Omitted deliberately, with reason: SearchAction (site has no search
+function to describe — a placeholder would be invalid);
+AggregateRating (above); opening-hours days (unpublished);
+`priceRange` (the old sentence value was not a price-range format;
+per-course fees live in Course offers); foundingDate (unverified);
+any Telugu/Hindi hreflang (no such pages exist).
+
+### 25.26 Local SEO — GBP-ready checklist + manual steps (2026-10-24)
+
+NOT done, deliberately — these need Aravind's own account and
+verification, and no outward-facing submission was made: no Google
+Business Profile creation, no directory/citation submissions, no
+Search Console verification codes (none in hand, none invented).
+
+**GBP-ready NAP block (paste-ready):** GradeSpot IT Solutions |
+16-126, 2nd Floor, Near Sai Baba Temple, Road No.1, Sri Krishna
+Nagar, Dilsukhnagar, Hyderabad, Telangana - 500060 | +91 91826
+54056 | Hours 8:00 AM – 9:00 PM (confirm days first — see gaps) |
+Website: the Leo build URL once deployed (or the official site —
+Aravind's call, see §25.21). **Categories to choose from the real
+services** (pick from Google's list, don't invent): computer
+training school / training centre (core), plus education-adjacent
+categories matching corporate training, internships and IT services
+only. **Photos already local, ready to upload:** logo
+(`/images/logo-light.png`, `/images/logo-dark.png`), institute map
+(`/images/map-dilsukhnagar.jpg`), team photos
+(`/images/team/*.jpg`), student certification photos
+(`/images/certifications/*.jpg`), course images
+(`/images/courses/*.jpg`). **Content gaps for Aravind (do not
+guess):** (1) office-hours DAYS (hours published without days);
+(2) YouTube channel URL (only a video URL on record); (3) LinkedIn
+page ownership confirmation (footer-linked, but confirm it is the
+business's own before leaning on it); (4) a real Google aggregate
+rating, if one is to be published; (5) fees/durations/batch
+schedules for the courses that lack them (§25.23); (6) ISO 9001:2015
++ AICTE claims confirm-or-remove (standing, §3); (7) whether the
+official site or the Leo build is the primary property (§25.21 —
+the canonical decision cuts one way or the other).
+
+**Manual steps left for Aravind after deploy:** submit the Leo
+sitemap (`/sitemap.xml`) in Google Search Console; claim/verify the
+GBP listing with the NAP block above; confirm the LinkedIn + YouTube
+items; publish any missing fees/durations. **Performance notes
+(build-time indicators only, no Lighthouse from the sandbox — none
+fabricated):** hero images already `priority` (home, course, LP);
+all `@font-face` use `font-display: swap`; fonts self-hosted with
+preloads; Next.js Image width/height present (CLS-safe by
+construction); shared JS still 103 kB (no regression from this
+pass); build passes; crawl 89/89 200. **Commit only, NO deploy, NOT
+merged to main** — the parent redeploys from `leo-build-v1`.

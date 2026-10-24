@@ -11,104 +11,119 @@
 
 ## Key pages
 
-- [Home](https://gsitssolutions.com/): overview of trainings and services
-- [Trainings](https://gsitssolutions.com/trainings): the full training catalogue
-- [Services](https://gsitssolutions.com/services): corporate trainings, internships, cybersecurity services and more
-- [About Us](https://gsitssolutions.com/about-us)
-- [Testimonials](https://gsitssolutions.com/testimonials): student reviews posted on Google
-- [Student Certifications](https://gsitssolutions.com/student-certifications)
-- [Certificate Verification](https://gsitssolutions.com/certificate-verification): verify a GradeSpot certificate by its code
-- [Pricing](https://gsitssolutions.com/pricing): published course fees for students; scoped quotes for businesses and institutes
-- [Register](https://gsitssolutions.com/register): register for a course or a free demo class (lead registration — the team confirms by phone)
-- [Accessibility](https://gsitssolutions.com/accessibility): accessibility statement — the WCAG 2.2 AA measures this site implements
-- [Partner With Us](https://gsitssolutions.com/partner-with-us): collaborations and franchise discussions are welcome — an invitation to discuss, not a franchise offer
-- [For Institutes](https://gsitssolutions.com/for-institutes): WhatsApp lead automation, video LMS and lab setup products for training institutes
-- [For Colleges](https://gsitssolutions.com/for-colleges): college workshops, industrial trainings and internships conducted for colleges
-- [Career Support](https://gsitssolutions.com/career-support): the job roles each training prepares you for, the companies our students work with, and career services — no placement guarantees
-- [Training Institute in Dilsukhnagar, Hyderabad](https://gsitssolutions.com/training-institute-in-dilsukhnagar-hyderabad): address, office hours, courses and visiting FAQs for the Dilsukhnagar institute
-- [Course Comparisons](https://gsitssolutions.com/compare): CEH vs Security+, CCNA vs Network+, SOC Analyst vs CEH — compared from their published topics, durations, certifications and job roles
-- [Learning Articles](https://gsitssolutions.com/blog): how to start a cybersecurity career; CEH vs Security+ — which first; what a SOC analyst actually does
-- [Help & FAQs](https://gsitssolutions.com/faq)
-- [Contact Us](https://gsitssolutions.com/contact-us)
+- [Home](https://gradespot-leo-build-app.vercel.app/): overview of trainings and services
+- [Trainings](https://gradespot-leo-build-app.vercel.app/trainings): the full training catalogue
+- [Services](https://gradespot-leo-build-app.vercel.app/services): corporate trainings, internships, cybersecurity services and more
+- [About Us](https://gradespot-leo-build-app.vercel.app/about-us)
+- [Testimonials](https://gradespot-leo-build-app.vercel.app/testimonials): student reviews posted on Google
+- [Student Certifications](https://gradespot-leo-build-app.vercel.app/student-certifications)
+- [Certificate Verification](https://gradespot-leo-build-app.vercel.app/certificate-verification): verify a GradeSpot certificate by its code
+- [Pricing](https://gradespot-leo-build-app.vercel.app/pricing): published course fees for students; scoped quotes for businesses and institutes
+- [Register](https://gradespot-leo-build-app.vercel.app/register): register for a course or a free demo class (lead registration — the team confirms by phone)
+- [Accessibility](https://gradespot-leo-build-app.vercel.app/accessibility): accessibility statement — the WCAG 2.2 AA measures this site implements
+- [Partner With Us](https://gradespot-leo-build-app.vercel.app/partner-with-us): collaborations and franchise discussions are welcome — an invitation to discuss, not a franchise offer
+- [For Institutes](https://gradespot-leo-build-app.vercel.app/for-institutes): WhatsApp lead automation, video LMS and lab setup products for training institutes
+- [For Colleges](https://gradespot-leo-build-app.vercel.app/for-colleges): college workshops, industrial trainings and internships conducted for colleges
+- [Career Support](https://gradespot-leo-build-app.vercel.app/career-support): the job roles each training prepares you for, the companies our students work with, and career services — no placement guarantees
+- [Training Institute in Dilsukhnagar, Hyderabad](https://gradespot-leo-build-app.vercel.app/training-institute-in-dilsukhnagar-hyderabad): address, office hours, courses and visiting FAQs for the Dilsukhnagar institute
+- [Course Comparisons](https://gradespot-leo-build-app.vercel.app/compare): CEH vs Security+, CCNA vs Network+, SOC Analyst vs CEH — compared from their published topics, durations, certifications and job roles
+- [Learning Articles](https://gradespot-leo-build-app.vercel.app/blog): how to start a cybersecurity career; CEH vs Security+ — which first; what a SOC analyst actually does
+- [Help & FAQs](https://gradespot-leo-build-app.vercel.app/faq)
+- [Contact Us](https://gradespot-leo-build-app.vercel.app/contact-us)
+
+## Services
+
+- [Corporate Trainings](https://gradespot-leo-build-app.vercel.app/services/corporate-trainings)
+- [Internships](https://gradespot-leo-build-app.vercel.app/services/internships)
+- [Industrial Trainings](https://gradespot-leo-build-app.vercel.app/services/industrial-trainings)
+- [College Workshops](https://gradespot-leo-build-app.vercel.app/services/college-workshops)
+- [Cybersecurity Services](https://gradespot-leo-build-app.vercel.app/services/cybersecurity-services)
+- [Web Development](https://gradespot-leo-build-app.vercel.app/services/web-development)
+- [Digital Marketing Solutions](https://gradespot-leo-build-app.vercel.app/services/digital-marketing-solutions)
+- [Network Infrastructure Building](https://gradespot-leo-build-app.vercel.app/services/network-infrastructure-building)
+- [Logo Designing](https://gradespot-leo-build-app.vercel.app/services/logo-designing)
+- [US IT Staffing](https://gradespot-leo-build-app.vercel.app/services/us-it-staffing)
+- [Domestic Consultancy](https://gradespot-leo-build-app.vercel.app/services/domestic-consultancy)
+- [Abroad Consultancy](https://gradespot-leo-build-app.vercel.app/services/abroad-consultancy)
 
 ## Hyderabad course landing pages
 
-- [CEH Training in Hyderabad](https://gsitssolutions.com/lp/certified-ethical-hacker-ceh-in-hyderabad)
-- [SOC Analyst Training in Hyderabad](https://gsitssolutions.com/lp/soc-analyst-in-hyderabad)
-- [CCNA Training in Hyderabad](https://gsitssolutions.com/lp/ccna-200-301-in-hyderabad)
-- [CCNP Training in Hyderabad](https://gsitssolutions.com/lp/ccnp-350-401-encor-in-hyderabad)
-- [CompTIA Network+ Training in Hyderabad](https://gsitssolutions.com/lp/comptia-network-plus-in-hyderabad)
-- [CompTIA Security+ Training in Hyderabad](https://gsitssolutions.com/lp/comptia-security-plus-in-hyderabad)
-- [CompTIA PenTest+ Training in Hyderabad](https://gsitssolutions.com/lp/comptia-pentest-plus-in-hyderabad)
-- [Azure AZ-900 Training in Hyderabad](https://gsitssolutions.com/lp/azure-fundamentals-az-900-in-hyderabad)
-- [Azure AZ-104 Training in Hyderabad](https://gsitssolutions.com/lp/azure-administrator-az-104-in-hyderabad)
-- [Digital Marketing Training in Hyderabad](https://gsitssolutions.com/lp/digital-marketing-in-hyderabad)
-- [Computer Hardware & Networking Training in Hyderabad](https://gsitssolutions.com/lp/computer-hardware-and-networking-in-hyderabad)
+- [CEH Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/certified-ethical-hacker-ceh-in-hyderabad)
+- [SOC Analyst Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/soc-analyst-in-hyderabad)
+- [CCNA Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/ccna-200-301-in-hyderabad)
+- [CCNP Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/ccnp-350-401-encor-in-hyderabad)
+- [CompTIA Network+ Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/comptia-network-plus-in-hyderabad)
+- [CompTIA Security+ Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/comptia-security-plus-in-hyderabad)
+- [CompTIA PenTest+ Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/comptia-pentest-plus-in-hyderabad)
+- [Azure AZ-900 Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/azure-fundamentals-az-900-in-hyderabad)
+- [Azure AZ-104 Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/azure-administrator-az-104-in-hyderabad)
+- [Digital Marketing Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/digital-marketing-in-hyderabad)
+- [Computer Hardware & Networking Training in Hyderabad](https://gradespot-leo-build-app.vercel.app/lp/computer-hardware-and-networking-in-hyderabad)
 
 ## Trainings
 
 ### Microsoft Azure
 
-- [Microsoft Certified: Azure Fundamentals | AZ-900](https://gsitssolutions.com/trainings/azure-fundamentals-az-900)
-- [Microsoft Certified: Azure Administrator Associate | AZ-104](https://gsitssolutions.com/trainings/azure-administrator-az-104)
-- [Microsoft Certified: Azure Security Engineer Associate | AZ-500](https://gsitssolutions.com/trainings/azure-security-engineer-az-500)
-- [Designing and Implementing Microsoft DevOps Solutions | AZ-400](https://gsitssolutions.com/trainings/microsoft-devops-az-400)
-- [Security, Compliance, and Identity Fundamentals | SC-900](https://gsitssolutions.com/trainings/sc-900)
-- [Microsoft Certified: Security Operations Analyst Associate | SC-200](https://gsitssolutions.com/trainings/sc-200)
-- [Microsoft Sentinel Training](https://gsitssolutions.com/trainings/microsoft-sentinel)
+- [Microsoft Certified: Azure Fundamentals | AZ-900](https://gradespot-leo-build-app.vercel.app/trainings/azure-fundamentals-az-900)
+- [Microsoft Certified: Azure Administrator Associate | AZ-104](https://gradespot-leo-build-app.vercel.app/trainings/azure-administrator-az-104)
+- [Microsoft Certified: Azure Security Engineer Associate | AZ-500](https://gradespot-leo-build-app.vercel.app/trainings/azure-security-engineer-az-500)
+- [Designing and Implementing Microsoft DevOps Solutions | AZ-400](https://gradespot-leo-build-app.vercel.app/trainings/microsoft-devops-az-400)
+- [Security, Compliance, and Identity Fundamentals | SC-900](https://gradespot-leo-build-app.vercel.app/trainings/sc-900)
+- [Microsoft Certified: Security Operations Analyst Associate | SC-200](https://gradespot-leo-build-app.vercel.app/trainings/sc-200)
+- [Microsoft Sentinel Training](https://gradespot-leo-build-app.vercel.app/trainings/microsoft-sentinel)
 
 ### Cisco
 
-- [Cisco Certified Network Associate: CCNA 200-301](https://gsitssolutions.com/trainings/ccna-200-301)
-- [CCNP Enterprise 350-401 ENCOR](https://gsitssolutions.com/trainings/ccnp-350-401-encor)
+- [Cisco Certified Network Associate: CCNA 200-301](https://gradespot-leo-build-app.vercel.app/trainings/ccna-200-301) — 45 days
+- [CCNP Enterprise 350-401 ENCOR](https://gradespot-leo-build-app.vercel.app/trainings/ccnp-350-401-encor) — 45 days
 
 ### CompTIA
 
-- [CompTIA Network+: N10-008](https://gsitssolutions.com/trainings/comptia-network-plus)
-- [CompTIA PenTest+: PT0-002](https://gsitssolutions.com/trainings/comptia-pentest-plus)
-- [CompTIA Security+: Sy0-701](https://gsitssolutions.com/trainings/comptia-security-plus)
-- [CompTIA A+ Core 1: 220-1101](https://gsitssolutions.com/trainings/comptia-a-plus-core-1)
-- [CompTIA A+ Core 2: 220-1102](https://gsitssolutions.com/trainings/comptia-a-plus-core-2)
+- [CompTIA Network+: N10-008](https://gradespot-leo-build-app.vercel.app/trainings/comptia-network-plus) — 30 days
+- [CompTIA PenTest+: PT0-002](https://gradespot-leo-build-app.vercel.app/trainings/comptia-pentest-plus) — 60 hours
+- [CompTIA Security+: Sy0-701](https://gradespot-leo-build-app.vercel.app/trainings/comptia-security-plus) — 30 days
+- [CompTIA A+ Core 1: 220-1101](https://gradespot-leo-build-app.vercel.app/trainings/comptia-a-plus-core-1)
+- [CompTIA A+ Core 2: 220-1102](https://gradespot-leo-build-app.vercel.app/trainings/comptia-a-plus-core-2)
 
 ### Networking
 
-- [Computer Hardware and Networking Training](https://gsitssolutions.com/trainings/computer-hardware-and-networking)
+- [Computer Hardware and Networking Training](https://gradespot-leo-build-app.vercel.app/trainings/computer-hardware-and-networking)
 
 ### Digital Marketing
 
-- [Complete Digital Marketing](https://gsitssolutions.com/trainings/digital-marketing)
+- [Complete Digital Marketing](https://gradespot-leo-build-app.vercel.app/trainings/digital-marketing) — 45 days
 
 ### Cybersecurity
 
-- [SOC Analyst Training in Hyderabad | Job-Ready in 90 Days](https://gsitssolutions.com/trainings/soc-analyst)
-- [Certified Ethical Hacker [CEH v13]](https://gsitssolutions.com/trainings/certified-ethical-hacker-ceh)
-- [Program in Cybersecurity Technologies](https://gsitssolutions.com/trainings/cybersecurity-technologies)
-- [Vulnerability Assessment & Penetration Testing [VA PT]](https://gsitssolutions.com/trainings/vapt)
+- [SOC Analyst Training in Hyderabad | Job-Ready in 90 Days](https://gradespot-leo-build-app.vercel.app/trainings/soc-analyst) — 90 days
+- [Certified Ethical Hacker [CEH v13]](https://gradespot-leo-build-app.vercel.app/trainings/certified-ethical-hacker-ceh) — 45 days
+- [Program in Cybersecurity Technologies](https://gradespot-leo-build-app.vercel.app/trainings/cybersecurity-technologies)
+- [Vulnerability Assessment & Penetration Testing [VA PT]](https://gradespot-leo-build-app.vercel.app/trainings/vapt)
 
 ### AWS
 
-- [AWS Certified Cloud Practitioner | AWS CLF-C02](https://gsitssolutions.com/trainings/aws-cloud-practitioner)
-- [AWS Certified Solutions Architect – Associate | AWS SAA-C03](https://gsitssolutions.com/trainings/aws-solutions-architect-associate)
-- [AWS Certified DevOps Engineer - Professional | AWS DOP-C02](https://gsitssolutions.com/trainings/aws-devops-engineer)
+- [AWS Certified Cloud Practitioner | AWS CLF-C02](https://gradespot-leo-build-app.vercel.app/trainings/aws-cloud-practitioner)
+- [AWS Certified Solutions Architect – Associate | AWS SAA-C03](https://gradespot-leo-build-app.vercel.app/trainings/aws-solutions-architect-associate)
+- [AWS Certified DevOps Engineer - Professional | AWS DOP-C02](https://gradespot-leo-build-app.vercel.app/trainings/aws-devops-engineer)
 
 ### Programming & Data
 
-- [Core Java](https://gsitssolutions.com/trainings/core-java)
-- [Java Full Stack](https://gsitssolutions.com/trainings/java-full-stack)
-- [Power BI](https://gsitssolutions.com/trainings/power-bi)
-- [MySQL](https://gsitssolutions.com/trainings/mysql)
-- [Data Analytics](https://gsitssolutions.com/trainings/data-analytics)
-- [Data Science](https://gsitssolutions.com/trainings/data-science)
+- [Core Java](https://gradespot-leo-build-app.vercel.app/trainings/core-java)
+- [Java Full Stack](https://gradespot-leo-build-app.vercel.app/trainings/java-full-stack)
+- [Power BI](https://gradespot-leo-build-app.vercel.app/trainings/power-bi)
+- [MySQL](https://gradespot-leo-build-app.vercel.app/trainings/mysql)
+- [Data Analytics](https://gradespot-leo-build-app.vercel.app/trainings/data-analytics)
+- [Data Science](https://gradespot-leo-build-app.vercel.app/trainings/data-science)
 
 ### Medical Coding
 
-- [Certified Professional Coder - CPC](https://gsitssolutions.com/trainings/certified-professional-coder-cpc)
-- [Hierarchical condition category - HCC](https://gsitssolutions.com/trainings/hcc-medical-coding)
-- [Inpatient Diagnosis-Related Group - IP-DRG](https://gsitssolutions.com/trainings/ip-drg-medical-coding)
-- [E&M (Evaluation and Management)](https://gsitssolutions.com/trainings/em-medical-coding)
-- [Radiology - Medical Coding](https://gsitssolutions.com/trainings/radiology-medical-coding)
-- [Anesthesia - Medical Coding](https://gsitssolutions.com/trainings/anesthesia-medical-coding)
+- [Certified Professional Coder - CPC](https://gradespot-leo-build-app.vercel.app/trainings/certified-professional-coder-cpc)
+- [Hierarchical condition category - HCC](https://gradespot-leo-build-app.vercel.app/trainings/hcc-medical-coding)
+- [Inpatient Diagnosis-Related Group - IP-DRG](https://gradespot-leo-build-app.vercel.app/trainings/ip-drg-medical-coding)
+- [E&M (Evaluation and Management)](https://gradespot-leo-build-app.vercel.app/trainings/em-medical-coding)
+- [Radiology - Medical Coding](https://gradespot-leo-build-app.vercel.app/trainings/radiology-medical-coding)
+- [Anesthesia - Medical Coding](https://gradespot-leo-build-app.vercel.app/trainings/anesthesia-medical-coding)
 
 ### Design & CAD
 
-- [AutoCAD](https://gsitssolutions.com/trainings/autocad)
+- [AutoCAD](https://gradespot-leo-build-app.vercel.app/trainings/autocad)

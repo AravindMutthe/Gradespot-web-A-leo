@@ -1,12 +1,17 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Image from "next/image";
 import Link from "next/link";
 import { aboutParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
 import { CredentialCard, CtaBand, ExperienceBadge, FeatureTrio, LogoWall, PageHero, SectionTitle, SignatureBlock, StatsRibbon } from "@/components/ui";
+import JsonLd from "@/components/JsonLd";
+import { aboutPageSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/about-us" }, title: "About Us" };
+export const metadata = staticPageMetadata({
+  title: "About Us",
+  description: "GradeSpot IT Solutions assists companies in enhancing their digital presence and fortifying their security — IT training, corporate training and internships from Dilsukhnagar, Hyderabad, trusted by 1,500+ happy learners.",
+  path: "/about-us",
+});
 
 export default function AboutPage() {
   // aboutParagraphs order follows the live About page: intro, ISO, AICTE,
@@ -14,6 +19,7 @@ export default function AboutPage() {
   const narrative = aboutParagraphs.slice(5, 13);
   return (
     <>
+      <JsonLd data={aboutPageSchema()} />
       <PageHero title="About Us — GradeSpot IT Solutions" />
       <section className="section-pad">
         <div className="wrap grid items-start gap-10 lg:grid-cols-2">

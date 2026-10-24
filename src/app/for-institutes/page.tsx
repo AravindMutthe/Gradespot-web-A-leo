@@ -1,17 +1,16 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
-import { PageHero, SectionTitle, FaqList } from "@/components/ui";
+import { PageHero, SectionTitle, FaqList, AnswerLead } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import LeadForm from "@/components/LeadForm";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/for-institutes" },
+export const metadata = staticPageMetadata({
   title: "For Institutes",
-  description:
-    "WhatsApp lead automation, a secure video learning hub and resilient lab setup for training institutes — built by GradeSpot IT Solutions, an institute ourselves.",
-};
+  description: "WhatsApp lead automation, a secure video learning hub and resilient lab setup for training institutes — built by GradeSpot IT Solutions, an institute ourselves.",
+  path: "/for-institutes",
+});
 
 // For Institutes (B2B) page — harvested 2026-10-23 (DECISIONS.md §17).
 // Anatomy follows the research-demo page and the Stage-1 approved plan:
@@ -94,6 +93,14 @@ export default function ForInstitutesPage() {
         title="Never Miss Another Admission Enquiry"
         subtitle="WhatsApp automation, a secure video learning hub and complete lab setup — everything a modern training institute needs, from the team that runs one."
       />
+      <div className="wrap pt-8">
+        <AnswerLead id="answer-summary">
+          GradeSpot builds WhatsApp lead automation, a secure video learning hub and resilient
+          lab setup for training institutes — products built by an institute that runs them
+          itself. Institutes can discuss collaboration through the partner page; pricing is
+          scoped per institute on enquiry.
+        </AnswerLead>
+      </div>
       <section className="section-pad">
         <div className="wrap">
           <div className="mx-auto max-w-4xl">

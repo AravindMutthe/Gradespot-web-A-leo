@@ -1,17 +1,24 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { getServices } from "@/lib/data";
 import { servicesFaqAnswers } from "@/data/pages";
 import { business, telHref } from "@/data/site";
 import { FaqList, LogoWall, PageHero, SectionTitle, ServiceCard, siteFaqs } from "@/components/ui";
+import JsonLd from "@/components/JsonLd";
+import { faqSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/services" }, title: "Services" };
+export const metadata = staticPageMetadata({
+  title: "Services",
+  description: "GradeSpot IT Solutions services — IT trainings, web development, cybersecurity solutions, digital marketing, network infrastructure building and logo designing for businesses in Hyderabad and online.",
+  path: "/services",
+});
 
 export default async function ServicesPage() {
   const services = await getServices();
   return (
     <>
+      {/* FAQPage for the siteFaqs rendered below via FaqList (§25.21). */}
+      <JsonLd data={faqSchema(siteFaqs)} />
       <PageHero
         title="Our Services"
         subtitle="Comprehensive IT Training & Career Solutions — professional IT services tailored to your business needs."

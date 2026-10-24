@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { PageHero, SectionTitle } from "@/components/ui";
 import { business, telHref } from "@/data/site";
@@ -7,12 +7,11 @@ import { business, telHref } from "@/data/site";
 // written ONLY from what this build actually implements and has
 // verified; no aspirational claims. If a measure is not listed here,
 // this page does not claim it.
-export const metadata: Metadata = {
-  alternates: { canonical: "/accessibility" },
+export const metadata = staticPageMetadata({
   title: "Accessibility",
-  description:
-    "How the GradeSpot IT Solutions website is built for accessibility — the WCAG 2.2 AA measures implemented in this build, and how to reach us if anything does not work for you.",
-};
+  description: "How the GradeSpot IT Solutions website is built for accessibility — the WCAG 2.2 AA measures implemented in this build, and how to reach us if anything does not work for you.",
+  path: "/accessibility",
+});
 
 const measures = [
   {

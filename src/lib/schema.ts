@@ -1,21 +1,49 @@
-// Structured-data builders (research floor set: EducationalOrganization,
-// Course, FAQPage, BreadcrumbList — ppc report §2.4 / folder-1 Q5).
-// Every value comes from content already published on this site
-// (src/data/*). Nothing is invented: no AggregateRating (no verified
-// rating exists in the record), no geo coordinates, no opening-hours
-// days (the site publishes hours without days).
+// Structured-data builders — SEO/AEO + strict-schema pass (DECISIONS.md
+// §25.21–25.25). ONE canonical Organization entity, referenced by @id
+// everywhere else; never redefined per page. Every value comes from
+// content already published on this site (src/data/*) or from a verified
+// external fact noted in DECISIONS. Nothing is invented:
+// - NO AggregateRating (no verifiable aggregate exists in the record)
+// - sameAs carries only the business's own web properties from repo
+//   data plus the LinkedIn company page the site itself links in its
+//   footer; the YouTube URL on record is a single video, not a
+//   channel, so it is omitted and logged as a gap in DECISIONS
+// - NO opening-hours days (the site publishes hours without days, so the
+//   OpeningHoursSpecification carries opens/closes only)
+// - geo is the Dilsukhnagar locality centre, verified against Wikipedia
+//   (17.368784°N, 78.524652°E — the contact map centre sits in the same
+//   locality); it is locality-level, not a surveyed premises pin
+// - NO branches, NO invented fees/offers (offers only where a real
+//   published pricing section exists)
 
 import { business, telHref } from "@/data/site";
 import type { Course } from "@/data/courses";
 
-export const SITE_URL = "https://gsitssolutions.com";
+// Canonical base — the LEO build itself is the ranking entity
+// (DECISIONS §25.21): every canonical, OG URL and @id is
+// self-referential to the Leo domain, NOT the official domain.
+// Implication: the Leo build and gsitssolutions.com carry the same
+// content, so search engines will treat them as duplicates and the
+// self-canonical tells them to prefer the Leo build.
+export const SITE_URL = "https://gradespot-leo-build-app.vercel.app";
+export const ORG_ID = `${SITE_URL}/#organization`;
+export const WEBSITE_ID = `${SITE_URL}/#website`;
+
+const ORG_DESCRIPTION =
+  "GradeSpot IT Solutions is an IT training institute and services company in Dilsukhnagar, Hyderabad, Telangana, India, offering professional training programs for corporates and students across computer hardware, networking, cybersecurity, cloud computing, digital marketing and data science, with online and offline classes, plus IT services, corporate trainings, internships and certificate verification.";
+
+const DISAMBIGUATING_DESCRIPTION =
+  "GradeSpot IT Solutions is the IT training institute and services company based in Dilsukhnagar, Hyderabad, Telangana, India, founded and led by Founder & Managing Director Nikhil Duth D. It runs classroom and online IT trainings, corporate trainings, internships and IT services from its Dilsukhnagar institute and online across India. This entity is identified by its Dilsukhnagar, Hyderabad location, its founder, and its training-and-services business.";
 
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
-    "@type": "EducationalOrganization",
+    "@id": ORG_ID,
+    "@type": ["EducationalOrganization", "LocalBusiness"],
     name: business.name,
     legalName: business.legalName,
+    description: ORG_DESCRIPTION,
+    disambiguatingDescription: DISAMBIGUATING_DESCRIPTION,
     url: SITE_URL,
     logo: `${SITE_URL}/images/logo-light.png`,
     email: business.emails[0],
@@ -29,10 +57,81 @@ export function organizationSchema() {
       postalCode: "500060",
       addressCountry: "IN",
     },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 17.368784,
+      longitude: 78.524652,
+    },
+    // Hours as published on the site (utility strip + local page):
+    // 8:00 AM – 9:00 PM. Days are NOT published anywhere, so no
+    // dayOfWeek is asserted — Aravind to confirm the days (DECISIONS).
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      opens: "08:00",
+      closes: "21:00",
+    },
+    // In-person area + India-wide for the real online-classes offering.
+    areaServed: ["Dilsukhnagar, Hyderabad, Telangana, India", "India"],
+    hasMap: `https://www.google.com/maps?q=${encodeURIComponent(business.address)}`,
+    // Own web properties from repo data only (site.ts) plus the LinkedIn
+    // company page the site itself links in its footer (ui.tsx) as its
+    // own profile. The YouTube URL on record is a single video, not a
+    // channel/profile, so it is NOT a sameAs candidate — gap in DECISIONS.
     sameAs: [
+      "https://gsitssolutions.com",
+      "https://digital.gsitssolutions.com",
+      "https://digidefense.in",
       "https://in.linkedin.com/company/gradespot-it-solutions",
-      "https://www.youtube.com/watch?v=owhuBrGIOsE",
     ],
+  };
+}
+
+export function websiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@id": WEBSITE_ID,
+    "@type": "WebSite",
+    url: SITE_URL,
+    name: business.name,
+    description: ORG_DESCRIPTION,
+    inLanguage: "en",
+    publisher: { "@id": ORG_ID },
+  };
+}
+
+// Per-page WebPage node. speakableSelector, when given, must be the CSS
+// selector of a visible answer-first paragraph on that page.
+export function webPageSchema(path: string, name: string, speakableSelector?: string) {
+  const page: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${SITE_URL}${path}#webpage`,
+    url: `${SITE_URL}${path}`,
+    name,
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORG_ID },
+    inLanguage: "en",
+  };
+  if (speakableSelector) {
+    page.speakable = {
+      "@type": "SpeakableSpecification",
+      cssSelector: [speakableSelector],
+    };
+  }
+  return page;
+}
+
+export function aboutPageSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "@id": `${SITE_URL}/about-us#webpage`,
+    url: `${SITE_URL}/about-us`,
+    name: "About Us",
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORG_ID },
+    mainEntity: { "@id": ORG_ID },
+    inLanguage: "en",
   };
 }
 
@@ -81,20 +180,18 @@ export function courseSchema(course: Course) {
     "@context": "https://schema.org",
     "@type": "Course",
     name: course.title,
+    url: `${SITE_URL}/trainings/${course.slug}`,
     description:
       course.summary ||
       `${course.title} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.`,
-    provider: {
-      "@type": "EducationalOrganization",
-      name: business.name,
-      sameAs: SITE_URL,
-    },
+    // Single canonical entity by reference — never redefined here.
+    provider: { "@id": ORG_ID },
   };
   if (!course.catalogOnly) {
     // The site publishes "Online & Offline Classes" for its trainings.
     schema.hasCourseInstance = {
       "@type": "CourseInstance",
-      courseMode: ["Online", "Onsite"],
+      courseMode: ["online", "onsite"],
     };
     // Offers only where a real published pricing section exists
     // ("Plan Name — ₹Price" paragraphs), never invented fees.
@@ -109,6 +206,7 @@ export function courseSchema(course: Course) {
           category: p.split(" — ")[0] ?? "Course fee",
           price: m[1].replace(/,/g, ""),
           priceCurrency: "INR",
+          url: `${SITE_URL}/trainings/${course.slug}`,
         });
       }
     }
@@ -117,33 +215,14 @@ export function courseSchema(course: Course) {
   return schema;
 }
 
-// LocalBusiness view of the same organization for the Dilsukhnagar
-// local page (ppc report §2.4: LocalBusiness + address + areaServed for
-// local/AEO legibility). Same restraint as organizationSchema: no geo
-// coordinates and no opening-hours days exist in the published record,
-// so neither is emitted.
-export function localBusinessSchema() {
-  return {
-    ...organizationSchema(),
-    "@type": ["EducationalOrganization", "LocalBusiness"],
-    areaServed: "Hyderabad, Telangana, IN",
-    priceRange: "Course fees published per course; other fees confirmed on enquiry",
-    hasMap: `https://www.google.com/maps?q=${encodeURIComponent(business.address)}`,
-  };
-}
-
 export function serviceSchema(title: string, slug: string) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
     name: title,
     url: `${SITE_URL}/services/${slug}`,
-    provider: {
-      "@type": "EducationalOrganization",
-      name: business.name,
-      sameAs: SITE_URL,
-    },
-    areaServed: "Hyderabad, Telangana, IN",
+    provider: { "@id": ORG_ID },
+    areaServed: "Dilsukhnagar, Hyderabad, Telangana, India",
   };
 }
 

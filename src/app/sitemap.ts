@@ -4,7 +4,8 @@ import { services } from "@/data/services";
 import { comparisons } from "@/data/comparisons";
 import { articles } from "@/data/articles";
 
-const base = "https://gsitssolutions.com";
+// Canonical base — the LEO build itself (§25.21), not the official domain.
+const base = "https://gradespot-leo-build-app.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPaths = [

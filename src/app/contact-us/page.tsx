@@ -1,12 +1,16 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Image from "next/image";
 import LeadForm from "@/components/LeadForm";
 import { contactParagraphs } from "@/data/pages";
 import { business, telHref } from "@/data/site";
 import { PageHero } from "@/components/ui";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/contact-us" }, title: "Contact Us" };
+export const metadata = staticPageMetadata({
+  title: "Contact Us",
+  description: "Contact GradeSpot IT Solutions in Dilsukhnagar, Hyderabad — 16-126, 2nd Floor, Near Sai Baba Temple, Road No.1, Sri Krishna Nagar, Dilsukhnagar, Hyderabad, Telangana 500060. Call +91 91826 54056. Office hours 8:00 AM – 9:00 PM.",
+  path: "/contact-us",
+  image: "/images/map-dilsukhnagar.jpg",
+});
 
 export default function ContactPage() {
   const allPhones = [...business.phones, ...business.extraPhones];

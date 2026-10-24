@@ -1,12 +1,16 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Image from "next/image";
 import Link from "next/link";
 import { certificationsParagraphs } from "@/data/pages";
 import { certificationGallery } from "@/data/certifications";
 import { CtaBand, LogoWall, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/student-certifications" }, title: "Student Certifications" };
+export const metadata = staticPageMetadata({
+  title: "Student Certifications",
+  description: "Certifications achieved by GradeSpot students, as showcased on our live site — 100+ certifications from the Dilsukhnagar, Hyderabad institute.",
+  path: "/student-certifications",
+  image: "/images/certifications/cert-1.jpg",
+});
 
 export default function CertificationsPage() {
   return (

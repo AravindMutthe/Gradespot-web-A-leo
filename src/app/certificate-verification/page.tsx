@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import VerifyForm from "@/components/VerifyForm";
 import { CtaBand, LogoWall, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/certificate-verification" }, title: "Certificate Verification" };
+export const metadata = staticPageMetadata({
+  title: "Certificate Verification",
+  description: "Verify a GradeSpot certificate by its printed code — confirm it was issued by GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.",
+  path: "/certificate-verification",
+});
 
 export default function VerifyPage() {
   return (

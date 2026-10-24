@@ -5,14 +5,35 @@ import { notFound } from "next/navigation";
 import { courses as localCourses, type CourseSection } from "@/data/courses";
 import { getCourse, getCourses } from "@/lib/data";
 import { coursePageMetadata } from "@/lib/metadata";
-import { BlogCards, CourseCard, FaqList, FeatureTrio, LogoWall, StatsRibbon } from "@/components/ui";
+import { BlogCards, CourseCard, FaqList, FeatureTrio, LogoWall, StatsRibbon, AnswerLead } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import EnquiryRail from "@/components/EnquiryRail";
 import DemoBand from "@/components/DemoBand";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbSchema, courseFaqs, courseSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema, courseFaqs, courseSchema, faqSchema, webPageSchema } from "@/lib/schema";
 import { generatedCourseFaqs } from "@/lib/course-faqs";
+import { courseAnswerSummary } from "@/lib/aeo";
+import { courseDetails } from "@/data/course-details";
 import { comparisons } from "@/data/comparisons";
+
+// Zero-click formatting (§25.23): section headings that genuinely pose
+// a question the section answers are rendered as questions. Data is
+// untouched — the mapping happens at render. Anything not listed here
+// keeps its published heading verbatim. Variants (e.g. "Course Overview
+// - CCNA 200-301 Training", "Common Job Roles After CCNA") are matched
+// by prefix, so every course's wording maps the same way.
+function questionHeading(heading: string, short: string): string {
+  const h = heading.replace(/:\s*$/, "").trim();
+  if (h.startsWith("Course Overview")) return `What is ${short}?`;
+  if (h.startsWith("Common Job Roles")) return `What jobs can you get after ${short}?`;
+  if (h.startsWith("Key Learning")) return `What will you learn in ${short}?`;
+  if (h.startsWith("Program") && h.includes("Features")) return `What does the ${short} program include?`;
+  if (h === "Course Curriculum" || h === "Our Curriculum") return `What does the ${short} curriculum cover?`;
+  if (h === "Our Pricing") return `What does ${short} cost?`;
+  if (h === "Our Students works for") return "Where do our students work?";
+  if (h === "About This Course") return `What is ${short}?`;
+  return heading;
+}
 
 function SectionBody({ section }: { section: CourseSection }) {
   if (section.style === "cards") {
@@ -163,10 +184,14 @@ export default async function CoursePage({
   );
   const allFaqs = [...generatedFaqs, ...publishedFaqs];
   const comparePair = comparisons.find((c) => c.a === course.slug || c.b === course.slug);
+  const detail = courseDetails[course.slug];
+  const short = detail?.short ?? course.title;
+  const answerSummary = courseAnswerSummary(course, detail);
 
   return (
     <>
       <JsonLd data={courseSchema(course)} />
+      <JsonLd data={webPageSchema(`/trainings/${course.slug}`, course.title, "#answer-summary")} />
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
@@ -225,7 +250,8 @@ export default async function CoursePage({
         <div className="wrap">
           {course.catalogOnly ? (
             <div className="mx-auto max-w-3xl">
-              <h2 className="text-[32px] font-semibold leading-[38px]">About This Course</h2>
+              <AnswerLead id="answer-summary">{answerSummary}</AnswerLead>
+              <h2 className="mt-8 text-[32px] font-semibold leading-[38px]">{questionHeading("About This Course", short)}</h2>
               <p className="mt-4">
                 {course.title} is part of the GradeSpot IT Solutions training catalogue, offered
                 at our Dilsukhnagar, Hyderabad institute with online and offline classes. Our
@@ -260,12 +286,15 @@ export default async function CoursePage({
           ) : (
             <div className="grid items-start gap-12 lg:grid-cols-[1fr_370px]">
               <div className="order-2 min-w-0 lg:order-1">
+                <div className="mb-10">
+                  <AnswerLead id="answer-summary">{answerSummary}</AnswerLead>
+                </div>
                 <div className="space-y-12">
                   {course.sections.map((s, i) => (
                     <div key={i}>
                       <article>
                         {s.heading && (
-                          <h2 className="text-[28px] font-semibold leading-[34px]">{s.heading}</h2>
+                          <h2 className="text-[28px] font-semibold leading-[34px]">{questionHeading(s.heading, short)}</h2>
                         )}
                         <SectionBody section={s} />
                       </article>

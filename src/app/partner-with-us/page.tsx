@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, SectionTitle } from "@/components/ui";
 import LeadForm from "@/components/LeadForm";
 
@@ -10,12 +10,11 @@ import LeadForm from "@/components/LeadForm";
 // franchise terms appear here — none exist yet. Proof is limited to
 // facts: GradeSpot is Pilot Customer #1 for its own products, and
 // the products are real and in use on this site.
-export const metadata: Metadata = {
-  alternates: { canonical: "/partner-with-us" },
+export const metadata = staticPageMetadata({
   title: "Partner With Us",
-  description:
-    "Collaborations and franchise discussions are welcome at GradeSpot IT Solutions, Hyderabad — for institutes, colleges, trainers, content and community partners, and new-centre conversations.",
-};
+  description: "Collaborations and franchise discussions are welcome at GradeSpot IT Solutions, Hyderabad — for institutes, colleges, trainers, content and community partners, and new-centre conversations.",
+  path: "/partner-with-us",
+});
 
 const tracks = [
   {
@@ -95,9 +94,12 @@ export default function PartnerPage() {
       <section className="bg-surface-light section-pad">
         <div className="wrap">
           <SectionTitle label="How It Goes" title="Talk → Understand → Pilot → Decide" center />
-          <div className="mx-auto mt-10 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Ordered process, kept as styled cards (§25.23): the <ol>
+              makes the genuine Talk → Understand → Pilot → Decide
+              sequence machine-readable as steps, visuals unchanged. */}
+          <ol className="mx-auto mt-10 grid max-w-5xl list-none gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s, i) => (
-              <article
+              <li
                 key={s.t}
                 data-reveal
                 className="rounded-[18px] border border-line bg-parchment p-6"
@@ -107,9 +109,9 @@ export default function PartnerPage() {
                 </p>
                 <h3 className="mt-2 font-display text-[21px] font-semibold text-heading">{s.t}</h3>
                 <p className="mt-2 text-sm leading-6 text-body">{s.d}</p>
-              </article>
+              </li>
             ))}
-          </div>
+          </ol>
           <div className="mx-auto mt-10 max-w-3xl rounded-[18px] border border-line bg-parchment p-6 text-center">
             <h3 className="font-display text-[20px] font-semibold text-heading">
               The proof is this website

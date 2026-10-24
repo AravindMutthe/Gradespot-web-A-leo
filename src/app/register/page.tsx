@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { PageHero, SectionTitle } from "@/components/ui";
 import RegisterForm from "@/components/RegisterForm";
@@ -12,12 +12,11 @@ import { business, telHref } from "@/data/site";
 // accounts, which stay deferred to the LMS/admin phase
 // (gradespot-axon). A course can be pre-selected with ?course=<slug>
 // (the course-page Register buttons use it).
-export const metadata: Metadata = {
-  alternates: { canonical: "/register" },
+export const metadata = staticPageMetadata({
   title: "Register",
-  description:
-    "Register for a GradeSpot IT Solutions course or a free demo class in Dilsukhnagar, Hyderabad — online and offline trainings. The team confirms your seat or demo timing by phone.",
-};
+  description: "Register for a GradeSpot IT Solutions course or a free demo class in Dilsukhnagar, Hyderabad — online and offline trainings. The team confirms your seat or demo timing by phone.",
+  path: "/register",
+});
 
 export default async function RegisterPage({
   searchParams,

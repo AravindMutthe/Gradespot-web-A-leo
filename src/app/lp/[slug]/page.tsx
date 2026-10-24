@@ -105,8 +105,9 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       </div>
 
       {/* LP chrome: logo + phone only, no nav. Logo carries the
-          same §22 luminous plate as the main header (.logo-plate,
-          §25 per-theme variant + official light artwork in dark). */}
+          same §25.17 black glass board as the main header
+          (.logo-plate, black in both themes, official light
+          artwork on it in both themes). */}
       <div className="glass-panel border-b border-line">
         <div className="wrap flex items-center justify-between py-3">
           <Link
@@ -114,26 +115,14 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
             aria-label="GradeSpot IT Solutions — Home"
             className="logo-plate rounded-2xl px-3 py-1 ring-1 ring-line"
           >
-            <span className="dark:hidden">
-              <Image
-                src="/images/logo.png"
-                alt="GradeSpot IT Solutions"
-                width={193}
-                height={60}
-                className="h-11 w-auto"
-                priority
-              />
-            </span>
-            <span className="hidden dark:block">
-              <Image
-                src="/images/logo-light.png"
-                alt="GradeSpot IT Solutions"
-                width={193}
-                height={60}
-                className="h-11 w-auto"
-                priority
-              />
-            </span>
+            <Image
+              src="/images/logo-light.png"
+              alt="GradeSpot IT Solutions"
+              width={193}
+              height={60}
+              className="h-11 w-auto"
+              priority
+            />
           </Link>
           <a
             href={telHref(phone)}

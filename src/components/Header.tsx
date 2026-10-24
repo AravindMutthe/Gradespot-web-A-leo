@@ -314,38 +314,27 @@ export default function Header() {
       {/* Main navigation — paper bar, ink type, official logo */}
       <div className="glass-panel relative border-b border-line shadow-[0_1px_0_rgba(32,25,19,0.04)]">
         <div className="wrap flex items-center justify-between py-2.5">
-          {/* Logo brightening (§22): presentation only — a luminous
-              parchment plate + warm halo behind the unmodified
-              artwork at a stronger size. No filter, no recolor.
-              §25: the plate is now the .logo-plate class (ink-glow
-              variant in dark) and the artwork swaps to the official
-              light-text file on dark — both files render, CSS picks
-              one, so there is no flash or hydration mismatch. */}
+          {/* Logo board (§22, §25.17 black glass): presentation
+              only — the black frosted-glass signboard plate behind
+              the unmodified artwork. No filter, no recolor. Since
+              the board is black in BOTH themes, the plate always
+              carries the official LIGHT-text artwork (logo-light)
+              so it stays readable; the dark-text file is no longer
+              rendered here. Plate padding and artwork size are
+              unchanged. */}
           <Link
             href="/"
             aria-label="GradeSpot IT Solutions — Home"
             className="logo-plate shrink-0 rounded-2xl px-3 py-1 ring-1 ring-line nav:px-1.5 xl:px-3"
           >
-            <span className="dark:hidden">
-              <Image
-                src="/images/logo.png"
-                alt="GradeSpot IT Solutions"
-                width={193}
-                height={60}
-                className="h-12 w-auto nav:h-10 xl:h-12"
-                priority
-              />
-            </span>
-            <span className="hidden dark:block">
-              <Image
-                src="/images/logo-light.png"
-                alt="GradeSpot IT Solutions"
-                width={193}
-                height={60}
-                className="h-12 w-auto nav:h-10 xl:h-12"
-                priority
-              />
-            </span>
+            <Image
+              src="/images/logo-light.png"
+              alt="GradeSpot IT Solutions"
+              width={193}
+              height={60}
+              className="h-12 w-auto nav:h-10 xl:h-12"
+              priority
+            />
           </Link>
 
           <nav className="hidden items-center nav:flex" aria-label="Primary">

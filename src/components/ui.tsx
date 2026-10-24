@@ -548,6 +548,100 @@ export function SignatureBlock() {
   );
 }
 
+// Credential seal cards (§25.13): the two trust-weight cards — ISO
+// 9001:2015 certification and AICTE internship approval — as
+// unmistakable seal cards: text on the left, a stamp on the right.
+// The seals are built ONLY from the claim text itself (concentric
+// stamp rings + an arc label + the claim's own acronym/standard).
+// No official emblem artwork is used, deliberately: ISO's corporate
+// logo must not be used to imply certification (certification marks
+// are issued by the certifying body, not ISO), and no official AICTE
+// logo file could be cleanly obtained from an official source —
+// aicte-india.org was unreachable from the sandbox, the NIC design
+// page carries no logo file, and third-party copies are not an
+// official source. Drawing a lookalike government emblem would be a
+// fake, so the seals stay typographic and are reported as such in
+// DECISIONS §25.13. Copy is verbatim; only layout changes. The seal
+// is a fixed-size, non-overlapping flex item (never cropped, never
+// over the text) and its ring/ink tokens invert with the theme.
+function CredentialSeal({ kind }: { kind: "iso" | "aicte" }) {
+  const arc = kind === "iso" ? "ISO 9001:2015" : "AICTE APPROVED";
+  const center = kind === "iso" ? "ISO" : "AICTE";
+  const sub = kind === "iso" ? "CERTIFIED" : "INTERNSHIPS";
+  const label =
+    kind === "iso"
+      ? "Seal: ISO 9001:2015 Certified"
+      : "Seal: AICTE Internships Approved";
+  const pathId = kind === "iso" ? "seal-arc-iso" : "seal-arc-aicte";
+  return (
+    <div
+      className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28"
+      role="img"
+      aria-label={label}
+    >
+      <svg
+        viewBox="0 0 120 120"
+        className="h-full w-full text-signal"
+        aria-hidden="true"
+      >
+        <defs>
+          <path
+            id={pathId}
+            d="M 12,60 A 48,48 0 0 1 108,60"
+            fill="none"
+          />
+        </defs>
+        <circle cx="60" cy="60" r="57" fill="none" stroke="currentColor" strokeWidth="2" />
+        <circle
+          cx="60"
+          cy="60"
+          r="48"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeDasharray="2 4"
+          opacity="0.6"
+        />
+        <circle cx="60" cy="60" r="38" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.7" />
+        <circle cx="60" cy="108" r="2.5" fill="currentColor" />
+        <text fontSize="11" fontWeight="800" letterSpacing="2" fill="currentColor">
+          <textPath href={`#${pathId}`} startOffset="50%" textAnchor="middle">
+            {arc}
+          </textPath>
+        </text>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-heading">
+        <span className="font-display text-xl font-bold leading-none sm:text-2xl">
+          {center}
+        </span>
+        <span className="mt-1.5 text-[8px] font-bold tracking-[0.22em] sm:text-[9px]">
+          {sub}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export function CredentialCard({
+  title,
+  body,
+  seal,
+}: {
+  title: string;
+  body: string;
+  seal: "iso" | "aicte";
+}) {
+  return (
+    <article className="flex items-center gap-5 rounded-2xl border-2 border-brand/30 bg-parchment p-5 shadow-[0_18px_36px_rgba(31,24,16,0.10)] sm:gap-6 sm:p-6">
+      <div className="min-w-0 flex-1">
+        <h3 className="text-lg font-semibold">{title}</h3>
+        <p className="mt-2 text-sm leading-6">{body}</p>
+      </div>
+      <CredentialSeal kind={seal} />
+    </article>
+  );
+}
+
 // Social links (LinkedIn company page + YouTube) with inline SVG icons.
 export const socialLinks = [
   {

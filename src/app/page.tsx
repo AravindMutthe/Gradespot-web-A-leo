@@ -5,7 +5,7 @@ import Link from "next/link";
 import { getCourses, getServices } from "@/lib/data";
 import { homeParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
-import { CourseCard, CtaBand, ExperienceBadge, FaqList, FeatureTrio, ForInstitutesBand, SectionTitle, ServiceCard, SignatureBlock, StatsRibbon, TestimonialSpotlight, siteFaqs } from "@/components/ui";
+import { CourseCard, CredentialCard, CtaBand, ExperienceBadge, FaqList, FeatureTrio, ForInstitutesBand, SectionTitle, ServiceCard, SignatureBlock, StatsRibbon, TestimonialSpotlight, siteFaqs } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
@@ -180,14 +180,16 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="space-y-6">
-            <article className="rounded-2xl border border-line bg-parchment p-6 shadow-sm">
-              <h3 className="text-lg font-semibold">An ISO Certified Company</h3>
-              <p className="mt-2 text-sm leading-6">{homeParagraphs[8]}</p>
-            </article>
-            <article className="rounded-2xl border border-line bg-parchment p-6 shadow-sm">
-              <h3 className="text-lg font-semibold">AICTE Internships Approved</h3>
-              <p className="mt-2 text-sm leading-6">{homeParagraphs[10]}</p>
-            </article>
+            <CredentialCard
+              title="An ISO Certified Company"
+              body={homeParagraphs[8]}
+              seal="iso"
+            />
+            <CredentialCard
+              title="AICTE Internships Approved"
+              body={homeParagraphs[10]}
+              seal="aicte"
+            />
           </div>
         </div>
       </section>

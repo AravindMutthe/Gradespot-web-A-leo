@@ -1319,3 +1319,54 @@ inner page at both widths (same `py-10 md:py-14` first-section
 classes in the markup; no `py-16/py-20/py-24` first-section
 remains). NO deploy — commit only; the parent redeploys.
 NOTHING merged to main: this stays on `leo-build-v1`.
+
+### 25.13 Credential seal cards (2026-10-24)
+Aravind's ruling, with screenshot: the "An ISO Certified Company"
+and "AICTE Internships Approved" cards carry the most trust weight
+on the site but were plain cards — they needed recognizable
+credential design, a logo stamp on the RIGHT side of each card,
+and the related government logos. Redesign (one shared component,
+`CredentialCard` in `components/ui.tsx`, used on Home and
+About Us — the only two places these cards render):
+- Card: elevated seal treatment — 2px brand-tinted border,
+  deep warm shadow, parchment ground — text on the left, stamp
+  on the right.
+- Stamp: fixed-size flex item (96px mobile / 112px desktop,
+  `shrink-0`, `min-w-0` text column), so it is never cropped
+  and never overlaps the text at any width; concentric stamp
+  rings (solid + dashed + inner) with an arc label across the
+  top and the claim's own acronym/standard centred.
+- ISO seal: arc "ISO 9001:2015", centre "ISO / CERTIFIED".
+- AICTE seal: arc "AICTE APPROVED", centre "AICTE /
+  INTERNSHIPS".
+- Copy is VERBATIM on both cards (same `homeParagraphs` /
+  `aboutParagraphs` strings); no certificate numbers, dates, or
+  issuing-body wording were added. Layout only.
+- Both themes: the ring uses the `signal` token and the centre
+  type uses `heading` — both invert under §25 rules, so the
+  seals read on the parchment card in light and on the ink card
+  in dark. No filter recolors anywhere (the seals are inline
+  SVG, not artwork files).
+- LOGO SOURCING — substitution, reported plainly: NO official
+  emblem artwork is used on either card, because no genuine
+  official logo file could be cleanly obtained from an official
+  source. (1) AICTE: aicte-india.org was unreachable from the
+  sandbox (browser fetch failed, network error, not retried);
+  the Government of India NIC design page for AICTE carries
+  descriptive text but no logo file; the only downloadable
+  copies found were third-party sites, which are not an
+  official source. (2) ISO: ISO's corporate logo must not be
+  used to imply certification — certification marks are issued
+  by the certifying body, not by ISO — so lifting the ISO logo
+  would itself have been a misrepresentation. Drawing a
+  lookalike government/ISO emblem was explicitly ruled out, so
+  both seals are typographic, built only from the claim text.
+  If Aravind supplies the genuine AICTE logo file or his
+  certification body's ISO mark, either seal swaps to the real
+  artwork with no layout change.
+- Verified by local production build + crawl: build passes,
+  shared JS still 103 kB, 89/89 URLs 200, served-HTML audit on
+  Home and About Us confirms both seal aria-labels, both
+  verbatim copy strings, and zero remote `<img>` on those
+  pages. NO deploy — commit only; the parent redeploys.
+  NOTHING merged to main: this stays on `leo-build-v1`.

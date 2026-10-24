@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { aboutParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
-import { CtaBand, ExperienceBadge, FeatureTrio, LogoWall, PageHero, SectionTitle, SignatureBlock, StatsRibbon } from "@/components/ui";
+import { CredentialCard, CtaBand, ExperienceBadge, FeatureTrio, LogoWall, PageHero, SectionTitle, SignatureBlock, StatsRibbon } from "@/components/ui";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/about-us" }, title: "About Us" };
@@ -28,14 +28,16 @@ export default function AboutPage() {
               <SignatureBlock />
             </div>
             <div className="mt-6 space-y-4">
-              <article className="rounded-2xl border border-line bg-surface-light p-5">
-                <h3 className="text-lg font-semibold">An ISO Certified Company</h3>
-                <p className="mt-1 text-sm leading-6">{aboutParagraphs[2]}</p>
-              </article>
-              <article className="rounded-2xl border border-line bg-surface-light p-5">
-                <h3 className="text-lg font-semibold">AICTE Internships Approved</h3>
-                <p className="mt-1 text-sm leading-6">{aboutParagraphs[4]}</p>
-              </article>
+              <CredentialCard
+                title="An ISO Certified Company"
+                body={aboutParagraphs[2]}
+                seal="iso"
+              />
+              <CredentialCard
+                title="AICTE Internships Approved"
+                body={aboutParagraphs[4]}
+                seal="aicte"
+              />
             </div>
           </div>
           <div>

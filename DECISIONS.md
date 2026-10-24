@@ -2380,3 +2380,110 @@ llms-full (generated from repo files — the repo is the source of
 truth there, and it now diverges from the two DB rows until they
 are updated), sitemap, headers and the ticker are all local-only
 or metadata-only paths.
+
+## §25.40 Compliance-and-claims pass (2026-10-25, branch feature/compliance-fixes)
+
+Scoped pass against a pasted generic audit answer, following the owner's
+standing rules instead of that answer: no invented facts, no spending, no
+backend switch (Axon stays), both frontends kept, no merges/deploys, no
+finished-looking legal text without supplied facts.
+
+Claim sweep (grep for guarantee / 100% / assured-job / placement-guarantee
+plus a broader promise-word pass). Changed, all rewordings minimal:
+- courses.ts Digital Marketing summary + first paragraph: "land a job
+  with a guaranteed success rate" → "prepare for a career in digital
+  marketing" (both occurrences; the job-outcome promise was
+  unsubstantiated).
+- courses.ts CEH "Why Choose" list: "100% Practical-Oriented
+  Learning" → "Practical-Oriented Learning" (percentage dropped).
+- ui.tsx FeatureTrio: "100% Student Satisfaction" → "Student
+  Satisfaction" (unsubstantiated percentage dropped; qualitative label
+  kept, owner may ask for full removal).
+- student-certifications page: "'Pay after you Pass' methodology
+  guarantees the attainment of your desired credentials" → "is
+  designed to help you attain your desired credentials" (guarantee
+  verb removed; the methodology mention itself is untouched).
+Kept deliberately: the honest disclaimers (pages.ts "We do not
+guarantee job placements…", ui.tsx "Do you guarantee placements? —
+No…", course-faqs "does not guarantee placement", career-support
+"no placement guarantees") and all "placement assistance" service
+descriptions (assistance is a service, not a promise). Course
+learning-objective language ("you will have mastered…") was reviewed
+and kept: it describes course content, not a job/certification
+outcome. Re-grep after the edits: zero remaining guarantee / 100%
+hits outside the disclaimers.
+
+Vendor / partner names and logos:
+- No vendor logos exist in the repo (no Cisco / CompTIA / EC-Council /
+  Microsoft logo files). Vendor names appear only as course and
+  certification titles and syllabus references (CCNA, CompTIA
+  Security+, CEH, Microsoft SC-200/SC-900, Azure), including the
+  already-neutral "aligned to…" phrasing in articles.ts. Nothing
+  removed, nothing re-labeled: no partnership or endorsement is
+  claimed for any cert vendor, and no "official partner" /
+  "authorized" claim exists anywhere.
+- Employer logo wall (10 logos) kept: it is framed as alumni
+  employment ("Our Students works with — Our students have been
+  employed by some of the top companies"), NOT as a partnership.
+  The underlying alumni-employment claim itself is the owner's to
+  confirm, like ISO/AICTE below.
+- ISO + AICTE emblem cards: UNTOUCHED per the owner's confirm-or-
+  remove call. Flagged: they still need his proof before anyone
+  claims them as verified.
+
+Policy drafts (NOT finished legal text):
+- New routes /privacy-policy and /refund-policy, each with a
+  prominent DRAFT banner, a "do not treat as a published policy"
+  notice, structured sections, and every fact slot as a visible
+  TODO. Footer links + sitemap entries added following the existing
+  conventions (footer link arrays; sitemap staticPaths + LASTMOD
+  with the 2026-10-25 creation date, per the sitemap's own rule for
+  routes without history). Facts the owner must supply are listed on
+  each page's closing panel: legal entity name, registered address,
+  CIN, contact email, complete data list, purposes, third parties,
+  transfer safeguards, retention, rights process, grievance officer,
+  refund scope/eligibility/timelines/process/mode/deductions.
+- The one asserted technical fact in the privacy draft is the
+  audit-verified one: the site runs no analytics or advertising
+  trackers and sets no third-party cookies itself.
+
+Tracker / cookie audit: zero hotlinks (all assets local). External
+URLs in src/ are only canonical/social/contact links, wa.me, Google
+Maps, OpenStreetMap attribution, schema.org, YouTube links, and
+digidefense.in blog attribution. No analytics, no <Script> tags,
+no third-party cookies. The only dangerouslySetInnerHTML usages are
+the static JsonLd schema and the theme bootstrap script (both
+previously audited as static/trusted). No analytics added.
+
+Security headers: unchanged (CSP via proxy + CORP + nosniff/DENY/
+HSTS). Verified on localhost after these changes: the home response
+carries the full CSP (proxy active in build output); CORP/nosniff/
+DENY/HSTS config untouched since the audit-fix verification.
+
+Accessibility: skip link ("Skip to content", Header.tsx) intact;
+:focus-visible is a visible 2px brand outline with 2px offset (dark:
+signal color), intact; form inputs are labeled (LeadForm labels for
+name/phone/email/interest/message/country). Token-pair contrast
+(computed, not browser-measured): light body 7.80:1, heading
+16.10:1, brand 5.56:1, brand-dark 6.78:1, body-on-cream 7.03:1; dark
+body 9.28:1, heading 16.69:1, signal 7.70:1 — all pass WCAG 2.2 AA
+(4.5:1) for normal text. No redesign, logo plate untouched.
+
+Partner page: /partner-with-us has a form (LeadForm). Added an
+OPTIONAL "Country (optional)" field behind a showCountry prop,
+passed only by the partner page; no required-validation change, no
+other copy change. Honest limitation, stated on the code: the value
+travels with the payload but is NOT stored — validateLead ignores
+unknown fields by design and the leads table has no country column.
+Persisting it needs a DB migration + a createLead change (not done:
+DDL is out of this branch's scope).
+
+NOT done (needs the owner's word): course-finder quiz, live batch
+calendar, Open Badges verifiable certificates, partner portal,
+any backend switch (Axon stays), archiving either frontend, any
+spending or hosting move, DB updates. Related deployment caveat:
+course pages prerender from Supabase rows when env is configured,
+so the courses.ts claim rewordings above will NOT surface on a
+Supabase-backed deployment until the matching DB rows are updated
+(see the §25.39-era note on DB override) — no DB writes were made
+in this branch.

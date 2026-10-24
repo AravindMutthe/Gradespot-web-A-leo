@@ -26,6 +26,8 @@ const quickLinks = [
   { label: "Student Certifications", href: "/student-certifications" },
   { label: "Certificate Verification", href: "/certificate-verification" },
   { label: "Terms and Conditions", href: "/terms-and-conditions" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Refund Policy", href: "/refund-policy" },
   { label: "Accessibility", href: "/accessibility" },
 ];
 

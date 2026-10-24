@@ -1015,12 +1015,12 @@ export const courses: Course[] = [
     "title": "Complete Digital Marketing",
     "category": "Digital Marketing",
     "image": "/images/courses/digital-marketing.jpg",
-    "summary": "Master digital marketing in just 45 days with GradeSpot IT Solutions and land a job with a guaranteed success rate. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright…",
+    "summary": "Master digital marketing in just 45 days with GradeSpot IT Solutions and prepare for a career in digital marketing. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright…",
     "sections": [
       {
         "heading": "Digital Marketing",
         "paragraphs": [
-          "Master digital marketing in just 45 days with GradeSpot IT Solutions and land a job with a guaranteed success rate. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright professional future.",
+          "Master digital marketing in just 45 days with GradeSpot IT Solutions and prepare for a career in digital marketing. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright professional future.",
           "Complete your registration by filling out the form.",
           "Select an OptionCourse TrainingCertification VoucherOther Queries"
         ]
@@ -1344,7 +1344,7 @@ export const courses: Course[] = [
       {
         "heading": "Why Choose GradeSpot IT Solutions for CEH Training?",
         "paragraphs": [
-          "100% Practical-Oriented Learning",
+          "Practical-Oriented Learning",
           "Live Ethical Hacking Labs",
           "Learn from Certified Cybersecurity Experts",
           "Industry-Recognized CEH Certification Preparation",

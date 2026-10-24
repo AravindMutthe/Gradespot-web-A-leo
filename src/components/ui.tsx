@@ -548,76 +548,51 @@ export function SignatureBlock() {
   );
 }
 
-// Credential seal cards (§25.13): the two trust-weight cards — ISO
-// 9001:2015 certification and AICTE internship approval — as
-// unmistakable seal cards: text on the left, a stamp on the right.
-// The seals are built ONLY from the claim text itself (concentric
-// stamp rings + an arc label + the claim's own acronym/standard).
-// No official emblem artwork is used, deliberately: ISO's corporate
-// logo must not be used to imply certification (certification marks
-// are issued by the certifying body, not ISO), and no official AICTE
-// logo file could be cleanly obtained from an official source —
-// aicte-india.org was unreachable from the sandbox, the NIC design
-// page carries no logo file, and third-party copies are not an
-// official source. Drawing a lookalike government emblem would be a
-// fake, so the seals stay typographic and are reported as such in
-// DECISIONS §25.13. Copy is verbatim; only layout changes. The seal
-// is a fixed-size, non-overlapping flex item (never cropped, never
-// over the text) and its ring/ink tokens invert with the theme.
-function CredentialSeal({ kind }: { kind: "iso" | "aicte" }) {
-  const arc = kind === "iso" ? "ISO 9001:2015" : "AICTE APPROVED";
-  const center = kind === "iso" ? "ISO" : "AICTE";
-  const sub = kind === "iso" ? "CERTIFIED" : "INTERNSHIPS";
-  const label =
+// Credential cards (§25.15, SUPERSEDES §25.13): the two
+// trust-weight cards — ISO 9001:2015 certification and AICTE
+// internship approval — as formal, government-recognizable
+// credential presentations: text on the left, the body's OFFICIAL
+// emblem on the right, on a neutral white plate so the artwork
+// reads identically in light and dark. NO custom seal motifs, NO
+// filters, NO recolors, NO redraws of the official artwork.
+// Files live in the repo (never hotlinked):
+// - public/images/iso-logo.svg — ISO "Red Square" logo, via
+//   Wikimedia Commons File:ISO_Logo_(Red_square).svg (described
+//   there as the current ISO logo, author ISO).
+// - public/images/aicte-logo.png — official AICTE emblem, via the
+//   en.wikipedia.org file "All India Council for Technical
+//   Education logo.png" (source: the body itself).
+// Copy is verbatim; only presentation changes. The emblem is a
+// fixed-size, non-overlapping flex item (never cropped, never
+// over the text). Trademark note, kept on the record: both the
+// ISO name and logo are registered trademarks with restricted
+// use, and the ISO/AICTE claims themselves remain on Aravind's
+// confirm-or-remove list — if either claim is unconfirmed, its
+// emblem comes off.
+function CredentialEmblem({ kind }: { kind: "iso" | "aicte" }) {
+  const emblem =
     kind === "iso"
-      ? "Seal: ISO 9001:2015 Certified"
-      : "Seal: AICTE Internships Approved";
-  const pathId = kind === "iso" ? "seal-arc-iso" : "seal-arc-aicte";
+      ? {
+          src: "/images/iso-logo.svg",
+          alt: "Official logo of the International Organization for Standardization (ISO)",
+          width: 1181,
+          height: 1087,
+        }
+      : {
+          src: "/images/aicte-logo.png",
+          alt: "Official logo of the All India Council for Technical Education (AICTE)",
+          width: 316,
+          height: 316,
+        };
   return (
-    <div
-      className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28"
-      role="img"
-      aria-label={label}
-    >
-      <svg
-        viewBox="0 0 120 120"
-        className="h-full w-full text-signal"
-        aria-hidden="true"
-      >
-        <defs>
-          <path
-            id={pathId}
-            d="M 12,60 A 48,48 0 0 1 108,60"
-            fill="none"
-          />
-        </defs>
-        <circle cx="60" cy="60" r="57" fill="none" stroke="currentColor" strokeWidth="2" />
-        <circle
-          cx="60"
-          cy="60"
-          r="48"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1"
-          strokeDasharray="2 4"
-          opacity="0.6"
-        />
-        <circle cx="60" cy="60" r="38" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.7" />
-        <circle cx="60" cy="108" r="2.5" fill="currentColor" />
-        <text fontSize="11" fontWeight="800" letterSpacing="2" fill="currentColor">
-          <textPath href={`#${pathId}`} startOffset="50%" textAnchor="middle">
-            {arc}
-          </textPath>
-        </text>
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-heading">
-        <span className="font-display text-xl font-bold leading-none sm:text-2xl">
-          {center}
-        </span>
-        <span className="mt-1.5 text-[8px] font-bold tracking-[0.22em] sm:text-[9px]">
-          {sub}
-        </span>
-      </div>
+    <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-[0_8px_20px_rgba(31,24,16,0.10)] ring-1 ring-line sm:h-28 sm:w-28">
+      <Image
+        src={emblem.src}
+        alt={emblem.alt}
+        width={emblem.width}
+        height={emblem.height}
+        className="h-full w-full object-contain"
+      />
     </div>
   );
 }
@@ -632,12 +607,12 @@ export function CredentialCard({
   seal: "iso" | "aicte";
 }) {
   return (
-    <article className="flex items-center gap-5 rounded-2xl border-2 border-brand/30 bg-parchment p-5 shadow-[0_18px_36px_rgba(31,24,16,0.10)] sm:gap-6 sm:p-6">
+    <article className="flex items-center gap-5 rounded-2xl border-2 border-heading/25 bg-parchment p-5 shadow-[0_18px_36px_rgba(31,24,16,0.10)] sm:gap-6 sm:p-6">
       <div className="min-w-0 flex-1">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="mt-2 text-sm leading-6">{body}</p>
       </div>
-      <CredentialSeal kind={seal} />
+      <CredentialEmblem kind={seal} />
     </article>
   );
 }

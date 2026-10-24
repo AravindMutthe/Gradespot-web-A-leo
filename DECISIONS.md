@@ -1429,3 +1429,67 @@ tightened, not removed.
   keeps its ink background in both themes). NO deploy — commit
   only; the parent redeploys. NOTHING merged to main: this
   stays on `leo-build-v1`.
+
+### 25.15 Official ISO + AICTE emblems — SUPERSEDES §25.13 (2026-10-24)
+Aravind OVERRULED the §25.13 typographic seals: the cards must
+use the OFFICIAL logos and seals from the bodies themselves,
+designed in a government-recognizable way — NO custom seal
+designs. The §25.13 seal rings are deleted entirely (no
+`CredentialSeal` code remains); both cards now render one shared
+`CredentialEmblem` component (`components/ui.tsx`), used on Home
+and About Us — the only two places these cards render. Card
+treatment is formal and restrained: parchment ground, formal
+2px ink border, warm shadow, text on the left, the official
+emblem on the RIGHT on a neutral WHITE plate (fixed 96px mobile
+/ 112px desktop, `shrink-0`, `object-contain` — never cropped,
+never over the text), so the artwork reads identically in light
+and dark. NO filters, NO recolors, NO redraws of either artwork.
+Copy is VERBATIM — no new claims, numbers, or dates.
+
+SOURCES + AUTHENTICITY CHECKS (both files stored LOCALLY in
+`public/images/`, never hotlinked):
+- ISO — `public/images/iso-logo.svg` (4,952 bytes, SHA-256
+  453e4cf3…f06724c08c968b). Route tried: iso.org first — not
+  directly fetched; obtained via the Wikimedia Commons mirror
+  file "ISO_Logo_(Red_square).svg"
+  (commons.wikimedia.org/wiki/File:ISO_Logo_(Red_square).svg),
+  described there as "The current logo of the International
+  Organization for Standardization (ISO)", author: the
+  organization itself, dated 13 March 2018, current revision
+  8 June 2025. Checks passed: downloaded SVG dimensions
+  1181×1087pt match the file page metadata exactly; file size
+  ~5 KB matches; only two fills in the file — #e30613 (=
+  RGB 227 6 19, the file page's stated red) and white — the
+  ISO Red Square rendering.
+- AICTE — `public/images/aicte-logo.png` (167,402 bytes,
+  316×316, SHA-256 a790706e…f05f268). Route tried:
+  aicte-india.org first — UNREACHABLE from the sandbox
+  (browser fetch failed with a network error; a fetch failure
+  is not proof the site is down, and it was not retried after
+  the denial). Obtained via the verified mirror: the
+  en.wikipedia.org file "All India Council for Technical
+  Education logo.png", whose page states the source as "The
+  logo may be obtained from All India Council for Technical
+  Education". Checks passed: 316×316 matches the file's
+  recorded dimensions; the image was visually inspected and
+  is the genuine emblem — orange gear-wheel ring, "All India
+  Council for Technical Education" around the edge, "AICTE" in
+  red, motto "योगः कर्मसु कौशलम्", diya lamp in the blue
+  roundel — matching the Government of India NIC description
+  of the AICTE logo (stylised diya, flame of knowledge).
+  Third-party copies (e.g. institute blogs) were NOT used.
+
+TRADEMARK / CLAIM NOTE, kept on the record: both the ISO name
+and logo are registered trademarks with restricted use, and
+the ISO 9001:2015 / AICTE claims themselves remain on
+Aravind's confirm-or-remove list — if either claim is
+unconfirmed, its emblem comes off. This phase implements
+Aravind's explicit overrule; it does not itself verify the
+underlying claims.
+- Verified by local production build + crawl (see commit
+  verification): build passes, shared JS still 103 kB,
+  89/89 URLs 200, served-HTML audit on Home and About Us
+  confirms LOCAL paths `/images/iso-logo.svg` and
+  `/images/aicte-logo.png` on both pages. NO deploy — commit
+  only; the parent redeploys. NOTHING merged to main: this
+  stays on `leo-build-v1`.

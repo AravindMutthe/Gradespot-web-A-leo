@@ -9,7 +9,14 @@ import { getPromotions } from "@/lib/data";
 // can reprogram the board from site_promotions. "Featured", not
 // "Trending" — no view analytics exist to substantiate "trending".
 // The animation is CSS-only, pauses on hover, and becomes a static
-// wrapped board under prefers-reduced-motion.
+// wrapped board under prefers-reduced-motion. Duplication note
+// (DECISIONS §25.34): the scrolling track needs two identical rows for
+// the seamless loop; the second row is aria-hidden (visual-only), and
+// there is deliberately NO sr-only copy — the visible row already
+// exposes the text once to assistive tech, so a hidden copy would
+// double it. Raw HTML still contains the aria-hidden visual duplicate
+// (a marquee technique, not keyword text), but the accessible text is
+// a single copy.
 export default async function Ticker() {
   const lines = await getPromotions("ticker");
   const featured = courses.filter((c) => !c.catalogOnly).map((c) => c.title);
@@ -38,7 +45,6 @@ export default async function Ticker() {
       role="region"
       aria-label="Featured trainings and free services"
     >
-      <p className="sr-only">{items.join(". ")}</p>
       <span className="eyebrow z-10 flex shrink-0 items-center bg-gradient-to-r from-brand to-brand-dark px-4 py-3 text-white">
         Featured
       </span>

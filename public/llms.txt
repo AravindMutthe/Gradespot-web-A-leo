@@ -21,12 +21,13 @@
 - [Pricing](https://gradespot-leo-build-app.vercel.app/pricing): published course fees for students; scoped quotes for businesses and institutes
 - [Register](https://gradespot-leo-build-app.vercel.app/register): register for a course or a free demo class (lead registration — the team confirms by phone)
 - [Accessibility](https://gradespot-leo-build-app.vercel.app/accessibility): accessibility statement — the WCAG 2.2 AA measures this site implements
+- [Full catalogue — llms-full.txt](https://gradespot-leo-build-app.vercel.app/llms-full.txt): every training with its published fee, duration, certification and FAQs, in plain Markdown (missing values are absent, not guessed)
 - [Partner With Us](https://gradespot-leo-build-app.vercel.app/partner-with-us): collaborations and franchise discussions are welcome — an invitation to discuss, not a franchise offer
 - [For Institutes](https://gradespot-leo-build-app.vercel.app/for-institutes): WhatsApp lead automation, video LMS and lab setup products for training institutes
 - [For Colleges](https://gradespot-leo-build-app.vercel.app/for-colleges): college workshops, industrial trainings and internships conducted for colleges
 - [Career Support](https://gradespot-leo-build-app.vercel.app/career-support): the job roles each training prepares you for, the companies our students work with, and career services — no placement guarantees
 - [Training Institute in Dilsukhnagar, Hyderabad](https://gradespot-leo-build-app.vercel.app/training-institute-in-dilsukhnagar-hyderabad): address, office hours, courses and visiting FAQs for the Dilsukhnagar institute
-- [Course Comparisons](https://gradespot-leo-build-app.vercel.app/compare): CEH vs Security+, CCNA vs Network+, SOC Analyst vs CEH — compared from their published topics, durations, certifications and job roles
+- [Course Comparisons](https://gradespot-leo-build-app.vercel.app/compare): CEH vs Security+, CCNA vs Network+, SOC Analyst vs CEH, CEH vs PenTest+ — compared from their published topics, durations, certifications and job roles
 - [Learning Articles](https://gradespot-leo-build-app.vercel.app/blog): how to start a cybersecurity career; CEH vs Security+ — which first; what a SOC analyst actually does
 - [Help & FAQs](https://gradespot-leo-build-app.vercel.app/faq)
 - [Contact Us](https://gradespot-leo-build-app.vercel.app/contact-us)

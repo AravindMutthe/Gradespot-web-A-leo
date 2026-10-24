@@ -241,6 +241,7 @@ export default async function CoursePage({
             height={480}
             sizes="(min-width:1200px) 1140px, 100vw"
             priority
+            fetchPriority="high"
             className="h-72 w-full rounded-2xl object-cover md:h-96"
           />
         </div>
@@ -289,6 +290,46 @@ export default async function CoursePage({
                 <div className="mb-10">
                   <AnswerLead id="answer-summary">{answerSummary}</AnswerLead>
                 </div>
+                {/* Course facts (DECISIONS §25.37): rendered ONLY from
+                    course-details for the 11 full courses that have it —
+                    audience (eligibility), level, certification and
+                    topics. Courses without a detail entry show nothing
+                    here, never a guessed fact. Fees live in the pricing
+                    sections below, duration in the hero pill, batch
+                    timings stay "confirmed on enquiry" (no schedule is
+                    published anywhere), and no syllabus PDF exists in
+                    the repo, so no PDF is linked. */}
+                {detail && (
+                  <div className="mb-10 rounded-2xl border border-line bg-parchment p-7">
+                    <h2 className="text-lg font-bold text-heading">Course facts</h2>
+                    <dl className="mt-4 space-y-3 text-[15px] leading-7 text-body">
+                      <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
+                        <dt className="w-32 shrink-0 font-semibold text-heading">Who it&apos;s for</dt>
+                        <dd>{detail.who}</dd>
+                      </div>
+                      <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
+                        <dt className="w-32 shrink-0 font-semibold text-heading">Level</dt>
+                        <dd>{detail.level}</dd>
+                      </div>
+                      <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
+                        <dt className="w-32 shrink-0 font-semibold text-heading">Certification</dt>
+                        <dd>{detail.certification}</dd>
+                      </div>
+                      {detail.topics.length > 0 && (
+                        <div>
+                          <dt className="font-semibold text-heading">Topics covered</dt>
+                          <dd className="mt-2">
+                            <ul className="list-disc space-y-1 pl-5">
+                              {detail.topics.map((topic) => (
+                                <li key={topic}>{topic}</li>
+                              ))}
+                            </ul>
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                  </div>
+                )}
                 <div className="space-y-12">
                   {course.sections.map((s, i) => (
                     <div key={i}>

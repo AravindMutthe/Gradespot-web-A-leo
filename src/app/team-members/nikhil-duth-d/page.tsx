@@ -1,4 +1,6 @@
 import { staticPageMetadata } from "@/lib/metadata";
+import JsonLd from "@/components/JsonLd";
+import { personSchema } from "@/lib/schema";
 import Image from "next/image";
 import Link from "next/link";
 import { team } from "@/data/team";
@@ -25,6 +27,7 @@ export default function NikhilProfilePage() {
   const member = team.find((m) => m.name === "Nikhil Duth D") ?? team[0];
   return (
     <>
+      <JsonLd data={personSchema()} />
       <PageHero title={member.name} subtitle="Founder, Managing Director" />
       <section className="section-pad">
         <div className="wrap grid items-start gap-10 lg:grid-cols-[1fr_1.4fr]">

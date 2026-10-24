@@ -2004,3 +2004,379 @@ preloads; Next.js Image width/height present (CLS-safe by
 construction); shared JS still 103 kB (no regression from this
 pass); build passes; crawl 89/89 200. **Commit only, NO deploy, NOT
 merged to main** — the parent redeploys from `leo-build-v1`.
+
+### 25.27 SEO/AEO quick-wins batch — audit reconciliation (2026-10-24)
+
+The 2026-10-24 SEO/AEO audit of the 3 GradeSpot sites predates commit
+ac775a5. Every finding was re-verified against the current code and
+served HTML before acting. Status key: already-done (in ac775a5),
+done-now (this batch), blocked (missing fact, listed not filled).
+
+| Audit item | Status | Evidence / reason |
+|---|---|---|
+| Homepage title "generic" | Already-done (stale) | Home title is "IT Training Institute in Hyderabad, Dilsukhnagar \| GradeSpot IT Solutions" since ac775a5; not replaced |
+| robots.txt AI-crawler allow (GPTBot, PerplexityBot, ClaudeBot…) | Already-done | src/app/robots.ts lists 10 AI/search crawlers + wildcard allow |
+| Self-referential canonicals (Leo domain) | Already-done | All 89 (now 90) routes; zero official-domain canonicals/OG URLs |
+| Strict schema, one org @id, answer-first content, llms.txt | Already-done | §25.21–25.25; this batch only adds the upgrades in §25.30 |
+| Mobile LCP 2.3s, "57 script tags", aim <400 KiB | Unverifiable as stated | No Lighthouse from the sandbox (none fabricated). Measured instead: home served HTML 72 `<script>` tags (audit undercounted), CCNA 64 — see §25.28. No LCP score is claimed |
+| Security headers / nonce CSP | Done-now with fallback | §25.29 — nonce tested, then reverted to the strictest working CSP (see experiment) |
+| Organization geo / telephone / hours | Already-done | Geo locality-level, tel +91 91826 54056, hours 08:00–21:00 without days (§25.25) |
+| Organization priceRange | Blocked — no defensible range | Per-course fees exist for 2 courses only; a coarse "₹₹" guess was rejected, not added |
+| Organization dayOfWeek | Blocked — days unpublished | Hours are published without days anywhere on the site |
+| Organization sameAs (GBP/YouTube/Instagram) | Blocked — unverified | Kept set is only verified own properties + footer LinkedIn; YouTube URL on record is a single video, not a channel |
+| Course offers | Already-done | Only CCNA + CCNP, from real "Plan — ₹Price" sections; no other fee invented |
+| Course hasCourseInstance (online/onsite) | Already-done | Non-catalogue courses only; catalogue courses carry no per-course mode claim |
+| Course courseSchedule | Blocked — no schedule exists | Batches are "confirmed on enquiry" (site FAQ) — that is not a schedule, omitted |
+| Course educationalCredentialAwarded | Done-now | §25.30 — only where course-details names a certification (11 courses) |
+| Person schema | Done-now | §25.30 — Nikhil Duth D profile page only, real facts only |
+| Article author + datePublished | Already-done | Real authoring dates (2026-10-23) + "By the GradeSpot team"; this batch only links author/publisher to the org @id |
+| Review / AggregateRating | Blocked — no verifiable aggregate | 8 testimonials carry no aggregate star value or count; none invented |
+| OG fallback (36 pages share ceh.jpg) | Done-now | §25.31 — 37 generated cards (36 fallback + home) |
+| /llms-full.txt 404 | Done-now | §25.32 — generated from repo data only, linked from llms.txt |
+| Sitemap lastmod missing | Done-now | §25.33 — real git dates only, file-touch caveat stated |
+| Testimonial/FAQ lazy-loading | Not done — would not help / would harm | Both are server components (ui.tsx has no "use client"); they add zero client JS, and FAQ content + FAQPage schema must stay server-rendered for crawlers. Lazy-loading them would hide FAQ content behind client JS for no JS saving |
+| 301 map, domain pointing, noindex of Vercel domains, migration | Parked — untouched | Owner's word pending; no canonical/noindex state changed anywhere in this batch |
+| Rebuild site, official WordPress site | Untouched | Separate repo / live site; no edits, no access attempted beyond the read-only public homepage fetch in §25.38 |
+| New comparison/career/area/Telugu pages, Google/Bing/GBP/directory submissions | Not done, EXCEPT one owner-authorized exception | The second (Gemini) batch, authorized by the owner after this batch started, explicitly asked for a CEH vs PenTest+ compare page if both courses have real data (§25.36). That one page is the only new route created; no career/area/Telugu pages, no submissions |
+
+### 25.28 Performance — measured, then improved (2026-10-24)
+
+Baseline (production build at ac775a5, local server, before this
+batch): shared First Load JS 103 kB (unchanged after this batch —
+see verification); home served HTML 226,569 bytes with 72 `<script>`
+tags; CCNA page 158,252 bytes with 64 `<script>` tags. Of the home's
+72, only 8 are external JS files (Next runtime + page chunk); 1 is
+the theme bootstrap inline script; 4 are JSON-LD data blocks; the
+remaining ~59 are Next's inline RSC flight-data payload. The audit's
+"57" was an undercount, and the inline count cannot be reduced
+without breaking hydration — it is Next's rendering mechanism, not
+app code. No Lighthouse score is reported (sandbox cannot run it).
+
+Changes (design untouched, logo plate untouched):
+- `next.config.ts` `images.formats = ["image/avif", "image/webp"]`:
+  the image optimizer now serves AVIF to AVIF-capable browsers, WebP
+  otherwise, from the same local JPEG sources (no external service).
+  Verified: `/_next/image` for ceh.jpg returns `image/avif` on
+  `Accept: image/avif` and `image/webp` (30,886 bytes at w=1080,
+  down from the 46,551-byte JPEG at the same width) on
+  `Accept: image/webp`.
+- Home hero and course hero `Image` components gained
+  `fetchPriority="high"` alongside their existing `priority` (which
+  already emits a preload link). No other image changed; non-priority
+  images keep Next's default lazy loading (verified in served HTML:
+  below-fold images carry `loading="lazy"`).
+- No script was removed and no widget lazy-loaded (§25.27 explains
+  why). Page weight beyond the HTML above is therefore unchanged in
+  structure; the real transfer win is the AVIF/WebP hero path.
+
+### 25.29 Security headers — nonce CSP tested, fallback adopted (2026-10-24)
+
+What was tried first: `src/middleware.ts` generating a per-request
+nonce, passing it to Next via the request `content-security-policy`
+header (Next 15.5 reads the nonce from that header and stamps its
+own scripts) and enforcing it via the response header, with the
+theme script as the only app inline script left to cover. Result,
+measured on the local production server:
+- Dynamic route `/register`: 24 `nonce=` attributes — Next stamped
+  its scripts, nonce CSP enforced, page intact.
+- Static home page: 0 `nonce=` attributes — prerendered HTML is
+  served byte-for-byte from the build, so a nonce CSP would BLOCK
+  the page's inline RSC payload and break hydration (forms, search,
+  theme toggle, reveal) on all 89 static/SSG pages. Making every page
+  dynamic just to carry a nonce would be a far bigger regression
+  than the header gain.
+
+Fallback adopted (the strictest CSP that keeps the site working, as
+the brief allows): ONE headers approach, no duplicates — middleware
+owns CSP + Cross-Origin-Resource-Policy, `next.config.ts` keeps only
+the remaining static headers (HSTS, X-Content-Type-Options,
+X-Frame-Options, Referrer-Policy, Permissions-Policy); the old CSP
+entry was removed from `next.config.ts` so the two sources cannot
+disagree. Final CSP: `default-src 'self'; script-src 'self'
+'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self'
+data: blob:; font-src 'self' data:; connect-src 'self';
+frame-ancestors 'none'; base-uri 'self'; form-action 'self';
+object-src 'none'; worker-src 'none'; manifest-src 'self'`, plus
+`Cross-Origin-Resource-Policy: same-origin` on page/API responses
+(middleware matcher excludes `_next/static`, `_next/image` and
+favicon, which keep the next.config headers). Why each
+`'unsafe-inline'` survives: script — Next's prerendered inline RSC
+payload (see §25.28); style — React style attributes (widths,
+`--reveal-delay`) and Next inline styles. `worker-src 'none'` and
+`manifest-src 'self'` are safe additions (codebase uses no web
+workers, ships no manifest). No Observatory grade is claimed — no
+grade was measured from the sandbox. The nonce experiment is kept
+on record: if pages ever become dynamic, the middleware nonce path
+is proven for dynamic routes and can be re-enabled then.
+
+### 25.30 Schema upgrades (2026-10-24)
+
+All additions omit what is unverified; nothing below invents a fact.
+- Course `educationalCredentialAwarded`: added in `courseSchema`
+  from `course-details` certification, for the 11 full courses that
+  name one (e.g. CCNA → "Cisco CCNA 200-301", PenTest+ →
+  "CompTIA PenTest+ (PT0-002)", Hardware/Digital Marketing →
+  "Course completion certificate"). Catalogue courses get none.
+  `hasCourseInstance` (online/onsite) and `offers` (CCNA/CCNP only)
+  unchanged; `courseSchedule` deliberately absent (§25.27).
+- Person: new `personSchema()` in `src/lib/schema.ts`, rendered only
+  on `/team-members/nikhil-duth-d` — name, jobTitle "Founder &
+  Managing Director", published email, team photo, profile URL,
+  `worksFor` = org @id, `knowsAbout` = the profile page's two
+  published skill bars (SOC Analysis, Technical Trainer). No other
+  member gets a Person node (no profile page, no published detail);
+  no personal LinkedIn is linked (the site links only the company's
+  LinkedIn page). The "9 Years" experience line is NOT in the schema
+  (no fitting schema.org property was forced).
+- Article: author + datePublished were already real (§25.27). This
+  batch links author and publisher to the canonical org @id instead
+  of redefining the organization, and adds `image` = the article's
+  own generated OG card (articles have no content image in data).
+- Organization: verified unchanged — geo locality-level, telephone,
+  hours without days; `priceRange` and `dayOfWeek` still omitted for
+  the reasons in §25.27; sameAs still the verified set only.
+- Review/AggregateRating: still omitted (no verifiable aggregate).
+
+### 25.31 OG images — per-page cards, generated locally (2026-10-24)
+
+`scripts/generate-og-cards.py` (PIL + system DejaVu fonts, no
+external image service, no hotlinking) draws 1200×630 JPEG cards —
+warm paper background, deep-gold brand line, navy serif page title,
+"Dilsukhnagar, Hyderabad · +91 91826 54056" footer — into
+`public/images/og/`. 38 cards total: the 36 fallback pages from
+§25.24 (17 static, trainings index, 12 services, 3 articles, 3
+compare pairs) + the homepage (brand card, replacing the CEH photo
+as its OG image) + the new CEH vs PenTest+ compare card (§25.36).
+Total 1,727 KiB; cards are crawler/social-facing metadata only, not
+`<img>` page weight, so they do not affect page load. Wiring in
+`src/lib/metadata.ts`: `staticPageMetadata` maps the 17 static
+fallback paths to their cards (explicit `image` still wins for
+contact/local/team/certification pages, which keep real content
+images); service/article/compare/trainings helpers derive their
+card from the slug; home + layout defaults now use
+`/images/og/home.jpg`. The old shared `ceh.jpg` survives only as a
+last-resort fallback for a future route added without an image.
+Verified in served HTML from the local production build (home, one
+course, one fallback page, trainings index): `og:image` +
+`twitter:image` are absolute Leo-domain URLs pointing at the
+page's own card/content image, never at ceh.jpg for fallback pages.
+
+### 25.32 /llms-full.txt (2026-10-24)
+
+New `public/llms-full.txt` (32 KiB), generated by committed
+`scripts/generate-llms-full.py` from the repo's data files only
+(courses + durations map + course-details + services + articles +
+site FAQs + per-course published FAQs). Contents, all counts
+verified at generation: 36 trainings with category, summary, URL
+and — only where published — duration (8 courses), certification
+(11), fee plans (CCNA + CCNP only, 3 plans each); 12 services; 3
+articles with authoring dates; 9 site-wide FAQs; 55 per-course
+published FAQs. The file's header states the rule explicitly: a
+missing fee/duration/certification/schedule is unpublished
+(confirmed on enquiry), never guessed. Linked from `llms.txt`
+("Full catalogue — llms-full.txt" line). Re-run the script after
+any data change; it is deterministic and overwrites the file.
+
+### 25.33 Sitemap lastmod — real git dates only (2026-10-24)
+
+`src/app/sitemap.ts` now carries `lastmod` on every route, from
+committed `scripts/sitemap-lastmod.py`: static routes = last commit
+touching that route's `page.tsx`; dynamic routes = last commit
+changing that slug's occurrence count in its data file (the slug
+also appears in the course's image path, so the date is the last
+touch of the entry or its image reference — still a real touch of
+that route's source); LP routes = their course's date. All 89
+pre-existing routes resolved to a real date (2026-10-23 for most
+data-driven routes, 2026-10-24 for pages whose metadata the SEO
+pass touched). CAVEAT, stated in code and here: these are
+FILE-TOUCH dates, not a claim that visible content changed that
+day. The new compare pair carries its creation date 2026-10-24,
+noted at its entry. No route gets a date its history does not
+support; a route with no history would get no lastmod at all.
+
+### 25.34 Gemini audit — marquee duplication (fixed, 2026-10-24)
+
+Claim verified: the ticker (`src/components/Ticker.tsx`, on home
+and trainings index) rendered each featured title THREE times in
+source — visible row, aria-hidden duplicate row (the seamless-loop
+technique), and an `sr-only` paragraph joining all titles. Fix,
+visible design unchanged: the `sr-only` paragraph was REMOVED —
+the visible row already exposes the text once to assistive tech,
+so the hidden copy doubled it. The second scrolling row keeps
+`aria-hidden` (it is visual-only by construction). Honest
+remainder: raw HTML still contains the aria-hidden duplicate (the
+loop requires two rows); what changed is the ACCESSIBLE text is
+now a single copy, and the duplicate is explicitly marked
+visual-only. Verified in served HTML after the change: ticker
+titles appear once in accessible text (visible row) plus the
+aria-hidden row, and the ticker still renders (CSS animation,
+track and both rows intact).
+
+### 25.35 Gemini audit — Network+ copy + Hardware contamination (fixed + gap, 2026-10-24)
+
+Claim verified, and worse than stated: the sentence "Gain
+hands-on expertise in cybersecurity with our Practical Ethical
+Hacking Training…" was the summary AND first-section paragraph of
+TWO courses — CompTIA Network+ and Computer Hardware and
+Networking — neither of which is an ethical hacking course. (The
+CEH course's own ethical-hacking copy is legitimate and untouched.)
+Fix, real data only: each course's two occurrences were replaced
+with a sentence built verbatim from that course's own
+`course-details` topics/certification — Network+: networking
+topics (components/topologies, OSI/TCP-IP, IP addressing/routing,
+WANs/wireless/cloud/datacenter) + CompTIA Network+ (N10-008 /
+N10-009) certification; Hardware: hardware fundamentals,
+networking essentials, hands-on practical labs, live classes +
+course completion certification. Network+ is now fully clean
+(its remaining sections were already genuine networking copy; the
+contamination was exactly those 2 occurrences). Hardware GAP left
+for the owner: its deeper sections still carry wrong-template
+copy (headings "Cisco Certified Network Associate", "Common Job
+Roles for Ethical Hacking", "Skills To Measure In CCNA 200-301")
+that cannot be repaired from any repo source without inventing a
+hardware curriculum — summary/first paragraph fixed, sections
+flagged, not rewritten. The same sentence no longer occurs
+in the repo data file anywhere except the CEH course's own content
+(verified by grep: 3 occurrences, all CEH). DATA-LAYER CAVEAT (see
+§25.39): the repo fix alone does not change the deployed pages while
+the Supabase courses table still seeds the old copy — the two DB
+rows must be updated (follow-up, not done in this batch).
+
+### 25.36 Gemini audit — compare page + Certified Learners stat (2026-10-24)
+
+Compare page: no "CEH vs CompTIA PenTest+" page existed (3 pairs:
+CEH/Security+, CCNA/Network+, SOC/CEH). Both courses have full
+real data (full sections, course-details, durations, images), so
+the page was BUILT following the existing compare template with
+no new template code: one entry added to `src/data/comparisons.ts`
+(slug `ceh-vs-comptia-pentest-plus`; focus/choose sentences reuse
+the CEH pair's published CEH sentences verbatim and PenTest+
+sentences built from its course-details topics/outcome). The
+compare index, sitemap, OG card (§25.31) and "Still deciding?"
+course-page links all pick it up from the data automatically; its
+table renders duration, level, certification, outcome and fees
+(CCNA-style fees do not exist for either course, so both cells
+correctly read "Confirmed on enquiry"). Route count is now 90.
+Certified Learners stat: grep over `src/` finds NO rendered 1200
+for certified learners — `src/data/site.ts` carries 1250 (the
+owner's 2026-10-23 ruling) and the only other "1200" hits are a
+`min-width:1200px` breakpoint and an image width, plus a code
+comment recording that 1200 was the historically published
+variant. Nothing to align on Leo; the comment stays as history.
+NOTE (owner awareness, not a Leo fix): the live official homepage
+still publishes "1200, Certified Learners" (verified by a
+read-only public fetch during this batch) — the official site is
+excluded from edits, so that cross-site difference stands until
+the owner decides it.
+
+### 25.37 Gemini audit — course page facts (added where real, gaps listed, 2026-10-24)
+
+Course pages already rendered: title, summary, duration pill (8
+courses), pricing sections (CCNA/CCNP only), job-role sections,
+answer summary (outcome + certification sentence), demo/enquiry
+forms. NOT rendered anywhere, though present in `course-details`
+for 11 full courses: audience ("who"), level, certification and
+topic lists. Added: a "Course facts" block on full course pages,
+rendered only when a detail entry exists, showing Who it's for,
+Level, Certification and Topics covered — all verbatim from
+`course-details`. Everything else stays a gap, listed not filled:
+batch timings (no schedule published anywhere — pages say
+"confirmed on enquiry", correctly); syllabus PDF (no PDF exists
+anywhere in the repo — no link added); placement details (no
+placement percentages or guarantees published — the site
+explicitly publishes roles + employer names and no guarantee);
+fees for 34 courses and durations for 28 (unchanged from §25.23);
+eligibility/topics for the 25 catalogue-only courses (no detail
+entry exists for them).
+
+### 25.38 Gemini audit — redirect-map prep, Core Web Vitals basics, free resource, verification, parked list (2026-10-24)
+
+Redirect-map prep (prep only — no domain pointed, no canonical or
+noindex state changed): the repo ALREADY contains the map this
+item asks to build. `next.config.ts` `redirects()` holds 233
+entries over 59 distinct legacy base paths to 33 Leo destinations,
+and every one of the 59 carries its `/index.php/` variants (plain,
+trailing-slash, and both `/index.php/` forms) — verified by
+counting the config, not by assumption. The three plain forms
+that look "missing" (`/team-members`, `/contact-us`, `/faq`) are
+the live Leo routes themselves and must not be redirect sources.
+No new redirects were added: the only new route (CEH vs PenTest+)
+has no old equivalent, and the live sitemap could not be
+re-checked from here — the public homepage fetch surfaced no
+sitemap link and search surfaced no sitemap URL, and a sitemap
+URL must not be guessed or exec-scraped under this batch's rules.
+Follow-up for a live-browser pass (not done here): open the
+official site's WordPress sitemap and diff it against these 59
+paths; anything beyond them is the unmapped list. Unmapped from
+the known set: none.
+Core Web Vitals basics (folded into §25.28, no duplicate effort):
+fonts are self-hosted via `@font-face` in `globals.css` (NOT
+next/font) with `font-display: swap`, served from
+`/fonts/*.woff2` with preload links in the layout; image
+dimensions are present (Next `Image` width/height on every
+image); below-fold images lazy-load by Next default
+(`loading="lazy"` verified in served HTML), heroes are
+`priority` + `fetchPriority="high"`.
+Free resource — ASSESSMENT ONLY, nothing published: buildable
+purely from existing published data — (a) a "Cybersecurity career
+roadmap" from the 3 articles + course topics/outcomes/durations;
+(b) a "comparison cheat sheet" from the 4 comparison tables; (c)
+a "SOC analyst day-in-the-life" guide from article 3 + the SOC
+syllabus topics. NOT buildable without invention: salary figures,
+placement rates, batch calendars, glossaries of terms the site
+never defines. Any of (a)–(c) still needs the owner's content
+approval before publishing; no file was created for this item.
+Verification (this batch, local production builds — full numbers
+in the handoff report): `npm run build` passes; shared First Load
+JS still 103 kB; crawl of all 90 sitemap routes returns 200;
+served-HTML spot checks (home, CCNA, a fallback page, trainings
+index, llms-full.txt, robots.txt) for canonical, OG image, schema
+types and CSP + CORP headers; leads API path tested with an
+invalid POST (400 validation, no row written); register form
+renders. The Network+/Hardware copy fix was verified in a
+Supabase-free build (§25.39): heroes show the new summaries and
+the old sentence count is 0. In the default local build (Supabase
+configured via .env.local) those two pages still serve the old
+copy from the database — that is the §25.39 follow-up, not a repo
+regression. Parked / excluded, untouched:
+Leo→noindex flip (contradicts the owner's explicit rank-Leo
+order); paid Vercel plan or self-host migration; any official
+WordPress edit; GBP/directory submissions; moving the blog off
+digidefense.in; rebuild-site fixes; migration/301-map execution
+beyond the prep above; domain pointing. Commit only, NO deploy,
+NOT merged to main — the parent redeploys from `leo-build-v1`.
+
+### 25.39 Data-layer caveat — Supabase overrides repo course content (2026-10-24)
+
+Found during verification, and it changes how this batch's
+course-content fixes must be read. `src/lib/data.ts` reads courses
+from Supabase first when configured and falls back to the repo
+files only when the tables are absent or unreachable — and course
+pages are prerendered at BUILD time, so a build run with Supabase
+env vars bakes the DATABASE rows into the static HTML. The local
+production server (`.env.local` configured) therefore served the
+OLD Network+/Hardware summaries even after `src/data/courses.ts`
+was fixed, because `supabase/migrations/0001_init.sql` seeds those
+two rows with the old ethical-hacking copy (and the Hardware row's
+wrong-template sections). Proof: a second build with the Supabase
+env vars blanked renders the new summaries with old-sentence count
+0 on both pages, while the Supabase-backed build renders the old
+copy. Consequences, stated plainly: (1) the repo fixes in §25.35
+are correct but will NOT surface on a Supabase-backed deployment
+until the two courses rows in the Leo Supabase project are
+updated (summary + first-section paragraph at minimum; the
+Hardware row's deeper wrong sections need the owner's content
+decision from §25.35) — that DB update was NOT done in this batch
+(no DB writes, no secrets used, and the first batch's "no
+migration step" scope was read as covering deployment/migration
+actions); it is the single required follow-up before the copy fix
+is live. (2) The same override applies to any future repo edit
+to a course's title/summary/sections/image while the DB is the
+read source — edits to those fields need a matching DB update, or
+a deliberate switch of the read source. (3) Everything else in
+this batch is unaffected: comparisons, articles, services
+summaries, course-details facts, schema helpers, OG cards,
+llms-full (generated from repo files — the repo is the source of
+truth there, and it now diverges from the two DB rows until they
+are updated), sitemap, headers and the ticker are all local-only
+or metadata-only paths.

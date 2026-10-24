@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "IT Training Institute in Hyderabad, Dilsukhnagar | GradeSpot IT Solutions",
     description:
       "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad offering cybersecurity, cloud, networking, digital marketing and more — online & offline classes, corporate training, internships and IT services.",
-    images: [{ url: "/images/courses/ceh.jpg" }],
+    images: [{ url: "/images/og/home.jpg" }],
     locale: "en_IN",
   },
   twitter: {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title: "IT Training Institute in Hyderabad, Dilsukhnagar | GradeSpot IT Solutions",
     description:
       "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad offering cybersecurity, cloud, networking, digital marketing and more — online & offline classes, corporate training, internships and IT services.",
-    images: ["/images/courses/ceh.jpg"],
+    images: ["/images/og/home.jpg"],
   },
 };
 import Ticker from "@/components/Ticker";
@@ -73,6 +73,7 @@ export default async function HomePage() {
               height={600}
               className="relative h-auto w-full rounded-[22px] object-cover shadow-[0_28px_56px_rgba(31,24,16,0.22)]"
               priority
+              fetchPriority="high"
             />
             <Link
               href="/trainings/certified-ethical-hacker-ceh"

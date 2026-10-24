@@ -47,6 +47,20 @@ export const comparisons: Comparison[] = [
       "Choose Network+ if you want a vendor-neutral foundation first — the published audience is beginners and IT support staff building a networking base that transfers across vendors.",
   },
   {
+    slug: "ceh-vs-comptia-pentest-plus",
+    a: "certified-ethical-hacker-ceh",
+    b: "comptia-pentest-plus",
+    title: "CEH vs PenTest+: Ethical Hacking or Penetration Testing?",
+    focusA:
+      "Offensive security — ethical hacking methodology: footprinting, scanning, system hacking, malware analysis and vulnerability analysis, with live labs.",
+    focusB:
+      "Hands-on penetration testing — planning and scoping engagements, passive and active reconnaissance, vulnerability scanning with Nmap & Zenmap, social engineering, wireless and network attacks, and post-exploitation, reporting and remediation.",
+    chooseA:
+      "Choose CEH v13 if you want to think like an attacker: hands-on hacking labs, penetration-testing direction and the EC-Council CEH v13 certification.",
+    chooseB:
+      "Choose PenTest+ if you want penetration testing as the craft itself: planning and scoping engagements, reconnaissance and vulnerability scanning, toward the CompTIA PenTest+ certification and penetration tester roles.",
+  },
+  {
     slug: "soc-analyst-vs-ceh",
     a: "soc-analyst",
     b: "certified-ethical-hacker-ceh",

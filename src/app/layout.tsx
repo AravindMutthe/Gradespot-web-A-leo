@@ -22,14 +22,14 @@ export const metadata: Metadata = {
     title: "GradeSpot IT Solutions - Empower Your Business with Top-Notch IT Solutions",
     description:
       "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad — cybersecurity, cloud, networking, digital marketing and more, with online & offline classes, corporate training, internships and IT services.",
-    images: [{ url: "/images/courses/ceh.jpg", alt: "GradeSpot IT Solutions — training in Hyderabad" }],
+    images: [{ url: "/images/og/home.jpg", alt: "GradeSpot IT Solutions — IT training institute in Hyderabad, Dilsukhnagar" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "GradeSpot IT Solutions - Empower Your Business with Top-Notch IT Solutions",
     description:
       "GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad — cybersecurity, cloud, networking, digital marketing and more, with online & offline classes, corporate training, internships and IT services.",
-    images: ["/images/courses/ceh.jpg"],
+    images: ["/images/og/home.jpg"],
   },
 };
 

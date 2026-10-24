@@ -18,6 +18,7 @@
 
 import { business, telHref } from "@/data/site";
 import type { Course } from "@/data/courses";
+import { courseDetails } from "@/data/course-details";
 
 // Canonical base — the LEO build itself is the ranking entity
 // (DECISIONS §25.21): every canonical, OG URL and @id is
@@ -192,7 +193,16 @@ export function courseSchema(course: Course) {
     schema.hasCourseInstance = {
       "@type": "CourseInstance",
       courseMode: ["online", "onsite"],
+      // NO courseSchedule: batch schedules are "confirmed on enquiry"
+      // (site FAQ), which is not a schedule — omitted, never invented.
     };
+    // educationalCredentialAwarded ONLY where course-details names a
+    // certification for this course (11 full courses). Catalogue
+    // courses and courses without a named certification get none.
+    const detail = courseDetails[course.slug];
+    if (detail?.certification) {
+      schema.educationalCredentialAwarded = detail.certification;
+    }
     // Offers only where a real published pricing section exists
     // ("Plan Name — ₹Price" paragraphs), never invented fees.
     const offers: Record<string, unknown>[] = [];
@@ -240,5 +250,26 @@ export function trainingsIndexSchema(courses: Course[]) {
       name: c.title,
       url: `${SITE_URL}/trainings/${c.slug}`,
     })),
+  };
+}
+
+// Person schema — ONLY for the one team member with a dedicated profile
+// page carrying real published facts (Nikhil Duth D). No other member
+// gets a Person node: they have no profile page and no published
+// detail beyond name/role on the index. No personal LinkedIn is linked:
+// the site links only the company's LinkedIn page (see sameAs), never
+// a personal profile. Skill bars on the profile page (SOC Analysis,
+// Technical Trainer, 95%) become knowsAbout, not invented credentials.
+export function personSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Nikhil Duth D",
+    jobTitle: "Founder & Managing Director",
+    email: "nikhil@gsitssolutions.com",
+    image: `${SITE_URL}/images/team/nikhil-duth-d.jpg`,
+    url: `${SITE_URL}/team-members/nikhil-duth-d`,
+    worksFor: { "@id": ORG_ID },
+    knowsAbout: ["SOC Analysis", "Technical Trainer"],
   };
 }

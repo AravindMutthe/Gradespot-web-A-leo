@@ -561,12 +561,12 @@ export const courses: Course[] = [
     "title": "CompTIA Network+: N10-008",
     "category": "CompTIA",
     "image": "/images/courses/network-plus.jpg",
-    "summary": "Gain hands-on expertise in cybersecurity with our Practical Ethical Hacking Training, mastering essential techniques to safeguard digital assets and mitigate cyber threats.",
+    "summary": "Gain hands-on expertise in computer networking with CompTIA Network+ training — network components, topologies and architectures; OSI and TCP/IP models, media and cabling; IP addressing, routing and network services; WANs, wireless networks, cloud and datacenter — preparing for the CompTIA Network+ (N10-008 / N10-009) certification.",
     "sections": [
       {
         "heading": "CompTIA Network +",
         "paragraphs": [
-          "Gain hands-on expertise in cybersecurity with our Practical Ethical Hacking Training, mastering essential techniques to safeguard digital assets and mitigate cyber threats.",
+          "Gain hands-on expertise in computer networking with CompTIA Network+ training — network components, topologies and architectures; OSI and TCP/IP models, media and cabling; IP addressing, routing and network services; WANs, wireless networks, cloud and datacenter — preparing for the CompTIA Network+ (N10-008 / N10-009) certification.",
           "Complete your registration by filling out the form.",
           "Select an OptionCourse TrainingCertification VoucherOther Queries"
         ]
@@ -894,12 +894,12 @@ export const courses: Course[] = [
     "title": "Computer Hardware and Networking Training",
     "category": "Networking",
     "image": "/images/courses/hardware-networking.jpg",
-    "summary": "Gain hands-on expertise in cybersecurity with our Practical Ethical Hacking Training, mastering essential techniques to safeguard digital assets and mitigate cyber threats.",
+    "summary": "Gain hands-on expertise in computer hardware and networking — computer hardware fundamentals, networking essentials and hands-on practical labs, with live classes and recorded videos — toward a course completion certification.",
     "sections": [
       {
         "heading": "Computer Hardware & Networking",
         "paragraphs": [
-          "Gain hands-on expertise in cybersecurity with our Practical Ethical Hacking Training, mastering essential techniques to safeguard digital assets and mitigate cyber threats.",
+          "Gain hands-on expertise in computer hardware and networking — computer hardware fundamentals, networking essentials and hands-on practical labs, with live classes and recorded videos — toward a course completion certification.",
           "Complete your registration by filling out the form.",
           "Select an OptionCourse TrainingCertification VoucherOther Queries"
         ]

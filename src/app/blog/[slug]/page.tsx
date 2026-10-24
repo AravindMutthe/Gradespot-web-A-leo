@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { PageHero, CtaBand } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbSchema, SITE_URL } from "@/lib/schema";
+import { breadcrumbSchema, ORG_ID, SITE_URL } from "@/lib/schema";
 import { articles } from "@/data/articles";
 import { articlePageMetadata } from "@/lib/metadata";
 
@@ -37,8 +37,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     headline: article.title,
     description: article.excerpt,
     datePublished: article.date,
-    author: { "@type": "Organization", name: "GradeSpot IT Solutions" },
-    publisher: { "@type": "Organization", name: "GradeSpot IT Solutions" },
+    // Author is the GradeSpot team as rendered on the page ("By the
+    // GradeSpot team"); datePublished is the real authoring date from
+    // src/data/articles.ts (2026-10-23 for all three). Both were already
+    // present; this pass links author/publisher to the canonical org
+    // @id instead of redefining the organization, and adds the page's
+    // own OG card as its image (no article image exists in the data).
+    author: { "@id": ORG_ID },
+    publisher: { "@id": ORG_ID },
+    image: `${SITE_URL}/images/og/blog/${article.slug}.jpg`,
     mainEntityOfPage: `${SITE_URL}/blog/${article.slug}`,
   };
 

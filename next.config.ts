@@ -1179,12 +1179,10 @@ const legacyRedirects = [
 // pipeline; no external script/style/font origins are allowed at
 // all, images are same-origin (+ data:/blob: for inline assets),
 // and the app sets no third-party trackers to exempt.
+// CSP + Cross-Origin-Resource-Policy live in src/middleware.ts (the
+// single source for response security headers that vary per request);
+// the entries below are the static remainder. See DECISIONS §25.29.
 const securityHeaders = [
-  {
-    key: "Content-Security-Policy",
-    value:
-      "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
-  },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -1199,6 +1197,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  images: { formats: ["image/avif", "image/webp"] },
   async redirects() {
     return legacyRedirects;
   },

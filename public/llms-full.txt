@@ -1,0 +1,567 @@
+# GradeSpot IT Solutions — full catalogue
+
+> Full course details, fees, durations and FAQs for AI assistants
+> and search engines. Built ONLY from data published on this site
+> (see the repo's src/data/*). Where a fee, duration, certification
+> or schedule is absent below, it is NOT published on the site —
+> batches and unpublished fees are confirmed on enquiry, and nothing
+> here has been guessed to fill a gap.
+
+## Contact
+
+- Address: 16-126, 2nd Floor, Near Sai Baba Temple, Road No.1, Sri Krishna Nagar, Dilsukhnagar, Hyderabad, Telangana - 500060
+- Phone: +91 91826 54056
+- Email: info@gsitssolutions.com
+- Office Hours: 8:00 AM - 9:00 PM (days are not published on the site)
+- Modes: online and offline classes
+- Free demo class: available; register on the site and the team confirms timing by phone
+- Placement: no placement guarantee is published; the site publishes job roles per training and companies students work with
+
+## Trainings (36 courses)
+
+### Microsoft Certified: Azure Fundamentals | AZ-900
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/azure-fundamentals-az-900
+- Category: Microsoft Azure
+- Certification: Microsoft AZ-900
+- Summary: Gain hands-on expertise in Azure fundamentals with our Practical Microsoft Azure Fundamentals Training, mastering essential techniques to leverage cloud computing effectively and efficiently, empowering businesses to innovate and scale with confidence.
+
+### Microsoft Certified: Azure Administrator Associate | AZ-104
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/azure-administrator-az-104
+- Category: Microsoft Azure
+- Certification: Microsoft AZ-104
+- Summary: Empower your IT team with comprehensive Azure Administration Training, mastering essential skills to effectively manage and optimize Microsoft Azure cloud services for seamless business operations.
+
+### Cisco Certified Network Associate: CCNA 200-301
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/ccna-200-301
+- Category: Cisco
+- Duration: 45 days
+- Certification: Cisco CCNA 200-301
+- Fee — Live Training: ₹13,000
+- Fee — Live Training + Certification: ₹37,500
+- Fee — Certification: ₹28,000
+- Summary: Join our CCNA 200-301 training program and get hands-on experience in mastering the fundamentals of computer networking. Dive deep into practical exercises, simulations, and real-world scenarios to enhance your skills. Equip yourself with the knowledge needed to excel in the…
+
+### CCNP Enterprise 350-401 ENCOR
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/ccnp-350-401-encor
+- Category: Cisco
+- Duration: 45 days
+- Certification: Cisco CCNP 350-401 ENCOR
+- Fee — Live Training: ₹13,000
+- Fee — Live Training + Certification: ₹37,500
+- Fee — Certification: ₹28,000
+- Summary: Join our CCNP 350-401 training program and get hands-on experience in mastering the fundamentals of computer networking. Dive deep into practical exercises, simulations, and real-world scenarios to enhance your skills. Equip yourself with the knowledge needed to excel in the…
+
+### CompTIA Network+: N10-008
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-network-plus
+- Category: CompTIA
+- Duration: 30 days
+- Certification: CompTIA Network+ (N10-008 / N10-009)
+- Summary: Gain hands-on expertise in cybersecurity with our Practical Ethical Hacking Training, mastering essential techniques to safeguard digital assets and mitigate cyber threats.
+
+### CompTIA PenTest+: PT0-002
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-pentest-plus
+- Category: CompTIA
+- Duration: 60 hours
+- Certification: CompTIA PenTest+ (PT0-002)
+- Summary: Acquire practical skills in cybersecurity through our CompTIA Pentest+ Course training, where you'll delve into the core techniques of safeguarding digital assets and mitigating cyber threats.
+
+### CompTIA Security+: Sy0-701
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-security-plus
+- Category: CompTIA
+- Duration: 30 days
+- Certification: CompTIA Security+ (SY0-601 / SY0-701)
+- Summary: Elevate your cybersecurity expertise with CompTIA Security+ Training. Gain essential skills through hands-on learning and real-world scenarios. Enroll now!
+
+### Computer Hardware and Networking Training
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/computer-hardware-and-networking
+- Category: Networking
+- Certification: Course completion certificate
+- Summary: Gain hands-on expertise in cybersecurity with our Practical Ethical Hacking Training, mastering essential techniques to safeguard digital assets and mitigate cyber threats.
+
+### Complete Digital Marketing
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/digital-marketing
+- Category: Digital Marketing
+- Duration: 45 days
+- Certification: Course completion certificate
+- Summary: Master digital marketing in just 45 days with GradeSpot IT Solutions and land a job with a guaranteed success rate. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright…
+
+### SOC Analyst Training in Hyderabad | Job-Ready in 90 Days
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/soc-analyst
+- Category: Cybersecurity
+- Duration: 90 days
+- Certification: EC-Council CSA / SC-200 aligned
+- Summary: Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Become a certified SOC Analyst with our hands-on training. Learn threat detection, incident response, SIEM tools, and more. Enroll today!
+
+### Certified Ethical Hacker [CEH v13]
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/certified-ethical-hacker-ceh
+- Category: Cybersecurity
+- Duration: 45 days
+- Certification: EC-Council CEH v13
+- Summary: Master Ethical Hacking Skills – Start Your Cybersecurity Career Today! Become a certified Ethical Hacker with our hands-on training. Learn Hacking Concepts, System Hacking, Malware Analysis, and many more.
+
+### Microsoft Certified: Azure Security Engineer Associate | AZ-500
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/azure-security-engineer-az-500
+- Category: Microsoft Azure
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Designing and Implementing Microsoft DevOps Solutions | AZ-400
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/microsoft-devops-az-400
+- Category: Microsoft Azure
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Security, Compliance, and Identity Fundamentals | SC-900
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/sc-900
+- Category: Microsoft Azure
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Microsoft Certified: Security Operations Analyst Associate | SC-200
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/sc-200
+- Category: Microsoft Azure
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Microsoft Sentinel Training
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/microsoft-sentinel
+- Category: Microsoft Azure
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### AWS Certified Cloud Practitioner | AWS CLF-C02
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/aws-cloud-practitioner
+- Category: AWS
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### AWS Certified Solutions Architect – Associate | AWS SAA-C03
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/aws-solutions-architect-associate
+- Category: AWS
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### AWS Certified DevOps Engineer - Professional | AWS DOP-C02
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/aws-devops-engineer
+- Category: AWS
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### CompTIA A+ Core 1: 220-1101
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-a-plus-core-1
+- Category: CompTIA
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### CompTIA A+ Core 2: 220-1102
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-a-plus-core-2
+- Category: CompTIA
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Program in Cybersecurity Technologies
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/cybersecurity-technologies
+- Category: Cybersecurity
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Vulnerability Assessment & Penetration Testing [VA PT]
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/vapt
+- Category: Cybersecurity
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Core Java
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/core-java
+- Category: Programming & Data
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Java Full Stack
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/java-full-stack
+- Category: Programming & Data
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Power BI
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/power-bi
+- Category: Programming & Data
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### MySQL
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/mysql
+- Category: Programming & Data
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Data Analytics
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/data-analytics
+- Category: Programming & Data
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Data Science
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/data-science
+- Category: Programming & Data
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Certified Professional Coder - CPC
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/certified-professional-coder-cpc
+- Category: Medical Coding
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Hierarchical condition category - HCC
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/hcc-medical-coding
+- Category: Medical Coding
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Inpatient Diagnosis-Related Group - IP-DRG
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/ip-drg-medical-coding
+- Category: Medical Coding
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### E&M (Evaluation and Management)
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/em-medical-coding
+- Category: Medical Coding
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Radiology - Medical Coding
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/radiology-medical-coding
+- Category: Medical Coding
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### Anesthesia - Medical Coding
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/anesthesia-medical-coding
+- Category: Medical Coding
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+### AutoCAD
+
+- URL: https://gradespot-leo-build-app.vercel.app/trainings/autocad
+- Category: Design & CAD
+- Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
+- Summary: 
+
+## Services
+
+- [Corporate Trainings](https://gradespot-leo-build-app.vercel.app/services/corporate-trainings): Professional IT training programs for corporates and students across hardware, networking, cybersecurity, cloud computing, digital marketing and more.
+- [Internships](https://gradespot-leo-build-app.vercel.app/services/internships): Internship programs offering exceptional learning opportunities and industry exposure.
+- [Industrial Trainings](https://gradespot-leo-build-app.vercel.app/services/industrial-trainings): Practical training programs aligned to industry needs for students and working professionals.
+- [College Workshops](https://gradespot-leo-build-app.vercel.app/services/college-workshops): Technical workshops conducted for college students.
+- [Cybersecurity Services](https://gradespot-leo-build-app.vercel.app/services/cybersecurity-services): Cybersecurity solutions for diverse organizations, addressing security needs with expertise and precision.
+- [Web Development](https://gradespot-leo-build-app.vercel.app/services/web-development): Cost-effective solutions for premium web designs, featuring aesthetically pleasing themes.
+- [Digital Marketing Solutions](https://gradespot-leo-build-app.vercel.app/services/digital-marketing-solutions): Cost-effective digital marketing services to enhance online presence and business performance.
+- [Network Infrastructure Building](https://gradespot-leo-build-app.vercel.app/services/network-infrastructure-building): Efficient network infrastructure building services for businesses.
+- [Logo Designing](https://gradespot-leo-build-app.vercel.app/services/logo-designing): Creative logo designing services that leave a lasting impression.
+- [US IT Staffing](https://gradespot-leo-build-app.vercel.app/services/us-it-staffing): IT staffing services for US requirements.
+- [Domestic Consultancy](https://gradespot-leo-build-app.vercel.app/services/domestic-consultancy): Consultancy services for domestic (India) opportunities.
+- [Abroad Consultancy](https://gradespot-leo-build-app.vercel.app/services/abroad-consultancy): Consultancy services for overseas opportunities.
+
+## Learning articles
+
+- [How to Start a Cybersecurity Career](https://gradespot-leo-build-app.vercel.app/blog/how-to-start-a-cybersecurity-career) (authored 2026-10-23): A practical roadmap from zero: build the networking base, choose offence or defence, and use certifications as milestones — mapped to real GradeSpot courses and the roles they prepare you for.
+- [CEH vs Security+: Which Certification Should You Do First?](https://gradespot-leo-build-app.vercel.app/blog/ceh-vs-security-plus-which-first) (authored 2026-10-23): CEH teaches you to attack; Security+ teaches you to defend. A factual comparison of focus, duration, certification and roles — from the two courses' own published pages.
+- [What Does a SOC Analyst Actually Do?](https://gradespot-leo-build-app.vercel.app/blog/what-does-a-soc-analyst-do) (authored 2026-10-23): Monitoring, detection and response — the daily work of a Security Operations Centre analyst, explained through the topics and tools of a real SOC training syllabus.
+
+## Frequently asked questions (site-wide)
+
+### What training programs do you offer?
+
+Our organization offers an array of professional training programs for both corporates and students. With our courses ranging from computer hardware, networking, cybersecurity, cloud computing, digital marketing, data science, and many more, we are dedicated to providing comprehensive and up-to-date expertise in various IT technologies. Our approach to training is geared towards providing practical skills and knowledge that will equip our clients to succeed in their respective fields. We pride ourselves on our commitment to maintaining a high standard of quality in all our training sessions, and our team of expert instructors are fully equipped to offer individualized attention and support to all our clients.
+
+### What services do you offer?
+
+Our company offers an extensive range of professional services that cater to diverse industry and business needs. These services include top-quality IT trainings, expert web development, robust cybersecurity solutions, innovative digital marketing strategies, efficient network infrastructure building, creative logo designing, and many more. Our team of experienced professionals prides itself on delivering comprehensive solutions tailored to your unique requirements. We ensure that each service we provide adheres to the highest industry standards and is designed to enhance your business operations and strengthen your brand.
+
+### What's the best way to get in touch with your team?
+
+To get in touch with us, we offer multiple channels of communication. You may reach us by phone at +91 91826 54056, or by email at info@gsitssolutions.com for any inquiries you may have. Additionally, you are more than welcome to visit us at our office located at 16-126, 2nd Floor, Near Sai Baba Temple, Road No.1, Sri Krishna Nagar, Dilsukhnagar, Hyderabad, Telangana - 500060. We are dedicated to providing exceptional service to our clients and we look forward to hearing from you.
+
+### Do you offer online or offline classes?
+
+Both. GradeSpot runs online and offline classes for its trainings from its institute in Dilsukhnagar, Hyderabad — live sessions with recorded videos and hands-on labs.
+
+### How do I know the current batch schedule?
+
+Batch schedules are confirmed on enquiry — call +91 91826 54056 or send an enquiry and the team will share the current batch schedule.
+
+### Can I attend a free demo class?
+
+Yes. GradeSpot offers a free demo class — register on the site and the team confirms the demo timing by phone.
+
+### What are the fees for a training?
+
+Fees are published per course where a pricing section exists — for example the CCNA and CCNP plans on the course pages. For other trainings the fee is confirmed on enquiry — call +91 91826 54056. Nothing is charged before you confirm.
+
+### Do your trainings prepare for certifications?
+
+Yes — each training prepares you for the certification named on its course page, with exam-oriented preparation as published in the curriculum. GradeSpot certificates can be verified by code on the certificate verification page.
+
+### Do you guarantee placements?
+
+No. GradeSpot publishes the job roles each training prepares you for and the companies its students work with, and backs preparation with hands-on labs, certification guidance and career-oriented services — but it publishes no placement percentages and guarantees no job.
+
+## Frequently asked questions (per course, as published on course pages)
+
+### Complete Digital Marketing — Master digital marketing in just 45 days with GradeSpot IT Solutions and land a job with a guaranteed success rate. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright professional future.
+
+Complete your registration by filling out the form.
+
+### Complete Digital Marketing — Select an OptionCourse TrainingCertification VoucherOther Queries
+
+heading
+
+### Complete Digital Marketing — Digital Marketing
+
+paragraphs
+
+### Complete Digital Marketing — Unlock the full potential of Digital Marketing with our comprehensive Digital Marketing Course! Gain hands-on expertise in online advertising, social media management, search engine optimization, and more. Learn how to optimize digital marketing strategies, enhance brand visibility, and drive business growth in the digital landscape. Enroll now to become a certified Digital Marketing professional and lead your organization towards digital transformation.
+
+Empower your learning journey with our engaging live classes.
+
+### Complete Digital Marketing — Unlock a wealth of knowledge with our extensive collection of recorded videos.
+
+Get a course completion certification and elevate your skills for success.
+
+### Complete Digital Marketing — Immerse yourself in practical learning with our hands-on training sessions.
+
+heading
+
+### Complete Digital Marketing — Course Overview:
+
+paragraphs
+
+### Complete Digital Marketing — Welcome to our complete Digital Marketing Training Program designed to equip you with the vital abilities and knowledge required to excel within the dynamic field of digital advertising and marketing. Over the direction of forty five days, you will delve into diverse factors of virtual marketing, learning both foundational concepts and superior strategies. Our application is structured to ensure which you not most effective benefit theoretical knowledge however also practical arms-on experience through real-global projects.
+
+heading
+
+### Complete Digital Marketing — Key Learning Objectives:
+
+paragraphs
+
+### Complete Digital Marketing — Understand the fundamentals of digital marketing and its significance in the contemporary business landscape.
+
+Develop proficiency in utilizing various digital marketing channels such as SEO, SEM, social media, email marketing, and content marketing.
+
+### Complete Digital Marketing — Learn how to create effective digital marketing strategies tailored to different target audiences and business objectives.
+
+Gain practical experience in using popular digital marketing tools and platforms.
+
+### Complete Digital Marketing — Enhance your professional credibility and career prospects with a recognized industry certifications.
+
+Explore analytics and metrics to measure the performance of digital marketing campaigns and derive actionable insights.
+
+### Complete Digital Marketing — Develop skills in crafting compelling content for digital platforms that engage and resonate with audiences.
+
+Acquire knowledge of ethical considerations and best practices in digital marketing to maintain credibility and adhere to industry standards.
+
+### Complete Digital Marketing — heading
+
+Program Features:
+
+### Complete Digital Marketing — paragraphs
+
+Comprehensive Curriculum: Our Digital Marketing Training Program consists of a complete curriculum designed to equip you with all of the important capabilities and expertise you need to excel in digital advertising and marketing. You will delve into important elements of virtual marketing, which includes SEO, SEM, SMM, content material advertising and marketing, e mail advertising, analytics, and greater. Through palms-on revel in and sensible initiatives, you’ll discover ways to create powerful digital advertising techniques, optimize campaigns, analyze enterprise metrics, and get right of entry to the cutting-edge advancements and equipment in the industry.
+
+### Complete Digital Marketing — Expert Instructors: Our training program is led by industry professionals with extensive experience in Digital Marketing. They bring their real-world expertise into the classroom, providing valuable insights, practical tips, and best practices. You’ll have the opportunity to learn from the best and interact with instructors who are passionate about helping you succeed in your Digital Marketing journey.
+
+Hands-on Labs and Projects: To ensure a well-rounded learning experience, our course includes hands-on labs and projects that allow you to apply your knowledge in real-world scenarios. You’ll gain confidence in your abilities by working on practical exercises and projects that simulate the challenges you may encounter as a Digital Marketing Executive. This hands-on approach ensures that you’re well-prepared to tackle any Digital Marketing tasks with ease.
+
+### Complete Digital Marketing — Enroll in Our Digital Marketing Training Today!
+
+heading
+
+### Complete Digital Marketing — Skills Covered
+
+paragraphs
+
+### Complete Digital Marketing — Search Engine Optimization
+
+Search Engine Marketing
+
+### Complete Digital Marketing — Social Media Marketing
+
+Email Marketing
+
+### Complete Digital Marketing — Content Marketing
+
+Campaign Management
+
+### Complete Digital Marketing — Lead Generation
+
+Digital Ads
+
+### Complete Digital Marketing — style
+
+cards
+
+### Complete Digital Marketing — heading
+
+Enroll in Our Digital Marketing Training Today!
+
+### Complete Digital Marketing — paragraphs
+
+Are you equipped to embark on an interesting career path within the dynamic field of digital advertising and marketing? Enroll in our Online Digital Marketing Training Program and unlock the capability of the digital landscape. Our complete curriculum, led with the aid of expert teachers, and hands-on technique will equip you with the capabilities and confidence to thrive inside the international of digital advertising and marketing. Don’t miss out on this possibility to beautify your career potentialities and come to be an integral asset in the unexpectedly evolving digital enterprise. Join us and pave your way to success in digital marketing!
+
+### Complete Digital Marketing — heading
+
+Tools & Technologies Covered
+
+### Complete Digital Marketing — paragraphs
+
+Show your new skills and earn a certificate. Once you have finished the training, you can sit for the exam. You will receive tasks with instructions that you will need to complete to receive the certificate
+
+### Complete Digital Marketing — heading
+
+Skills To Measure In Digital Marketing Training
+
+### Complete Digital Marketing — paragraphs
+
+A Digital Marketing trainee typically operates within a dynamic team responsible for orchestrating an organization's online presence and strategy. They collaborate with various stakeholders to execute Digital Marketing initiatives, encompassing areas such as online advertising campaigns, social media management, search engine optimization (SEO), content creation, email marketing, and analytics. Prospective candidates for this Digital Marketing training should possess a strong foundation in online advertising platforms, social media algorithms, SEO techniques, content management systems, email marketing strategies, and data analytics tools.
+
+### Complete Digital Marketing — heading
+
+Course Curriculum
+
+### Complete Digital Marketing — paragraphs
+
+Manage device settings and device identity
+
+### Complete Digital Marketing — Manage guest accountsConfigure self-service password reset
+
+Create custom role-based access control (RBAC) and Azure AD roles
+
+### Complete Digital Marketing — Provide access to Azure resources by assigning roles at different scopes
+
+Manage costs by using alerts, budgets, and recommendations
+
+### Complete Digital Marketing — Configure network access to storage accounts
+
+Configure Azure AD authentication for a storage account
+
+### Complete Digital Marketing — Manage data by using Azure Storage Explorer and AzCopy
+
+Manage images by using the Azure Compute Gallery
+
+### Complete Digital Marketing — Move VMs from one resource group to another
+
+Configure sizing and scaling for Azure Container Instances
+
+### Complete Digital Marketing — Configure container groups for Azure Container Instances
+
+Create and configure Azure Container Apps
+
+### Complete Digital Marketing — Configure storage for Azure Kubernetes Service (AKS)
+
+Configure scaling settings in an App Service plan
+
+### Complete Digital Marketing — Create and configure virtual networks and subnets
+
+Create and configure virtual network peering
+
+### Complete Digital Marketing — Configure private and public IP addresses
+
+Create and configure network security groups (NSGs) and application security groups (ASGs)
+
+### Complete Digital Marketing — Configure an internal or public load balancer
+
+Configure and use Azure Monitor for networks
+
+### Complete Digital Marketing — Troubleshoot virtual network connectivity
+
+Configure monitoring of VMs, storage accounts, and networks by using VM insights
+
+### Complete Digital Marketing — Perform backup and restore operations by using Azure Backup
+
+Configure Azure Site Recovery for Azure resources
+
+### Complete Digital Marketing — Perform failover to a secondary region by using Azure Site Recovery
+
+heading
+
+### Complete Digital Marketing — Our Students works for.
+
+paragraphs
+
+### Complete Digital Marketing — Our students have been employed by some of the top companies in the industry.
+
+heading
+
+### Complete Digital Marketing — FAQ's
+
+paragraphs
+
+### Complete Digital Marketing — Who is eligible to enroll in the Digital Marketing Training Program?
+
+Our training program is open to individuals from all backgrounds and skill levels. Whether you're a beginner or an experienced professional looking to enhance your digital marketing skills, our program is designed to accommodate learners at various stages of their career journey.
+
+### Complete Digital Marketing — Do I need any prior experience or knowledge in digital marketing to join the program?
+
+No prior experience in digital marketing is required. Our training program is structured to cater to learners with diverse backgrounds. We provide comprehensive instruction starting from the fundamentals, making it accessible for beginners while also offering advanced topics for experienced professionals.
+
+### Complete Digital Marketing — What learning resources are provided during the training?
+
+Throughout the program, you will have access to a variety of learning resources including lecture materials, video tutorials, case studies, practical exercises, and supplementary reading materials. Additionally, you'll have access to digital marketing tools and platforms for hands-on learning.
+
+### Complete Digital Marketing — How long does it take to complete the Digital Marketing Training Program?
+
+The duration of the training program is 45 days. During this time, you will cover all the essential topics in digital marketing, gaining both theoretical knowledge and practical skills through hands-on projects and exercises.
+
+### Complete Digital Marketing — Will I receive a certificate upon completion of the training program?
+
+Yes, upon successful completion of the Digital Marketing Training Program, you will receive a course completion certificate from GradeSpot IT Solutions. This certificate serves as a testament to your skills and knowledge acquired during the training.
+
+### Complete Digital Marketing — Is job placement assistance provided after completing the training?
+
+Yes, we offer job placement assistance to our graduates. Our dedicated career support team provides assistance with resume building, interview preparation, and job placement opportunities within the digital marketing industry.
+
+### Complete Digital Marketing — How is the training delivered?
+
+The training is delivered through a combination of live instructor-led sessions, pre-recorded video lectures, interactive workshops, and hands-on practical exercises. Sessions are conducted both online and in-person, providing flexibility for learners to choose the mode of participation that best suits their schedule.
+
+### Complete Digital Marketing — How can I enroll in the Digital Marketing Training Program?
+
+To enroll in the program, simply visit our website or contact our admissions team for assistance. You can fill out the enrollment form online and complete the registration process to secure your spot in the upcoming batch of the training program.

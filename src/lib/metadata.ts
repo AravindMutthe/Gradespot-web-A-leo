@@ -15,8 +15,41 @@ import type { CourseDetail } from "@/data/course-details";
 import type { Service } from "@/data/services";
 import type { Article } from "@/data/articles";
 
+// Last-resort fallback only: every one of the 89 routes now names its own
+// image explicitly (content image, or a generated OG card below). The
+// flagship ceh.jpg survives here solely so a future route added without
+// an image still declares a valid local OG image instead of none.
 const DEFAULT_OG_IMAGE = "/images/courses/ceh.jpg";
 const OG_LOCALE = "en_IN";
+
+// Generated OG cards (scripts/generate-og-cards.py, DECISIONS §25.31):
+// the 17 static pages that had no content image of their own. A static
+// page outside this set with no explicit image falls back to
+// DEFAULT_OG_IMAGE rather than a card that does not exist.
+const STATIC_OG_CARDS = new Set([
+  "/about-us",
+  "/accessibility",
+  "/blog",
+  "/career-support",
+  "/certificate-verification",
+  "/compare",
+  "/faq",
+  "/for-colleges",
+  "/for-institutes",
+  "/partner-with-us",
+  "/pricing",
+  "/register",
+  "/resources",
+  "/services",
+  "/terms-and-conditions",
+  "/testimonials",
+  "/why-choose-us",
+]);
+
+function staticOgImage(path: string): string {
+  if (STATIC_OG_CARDS.has(path)) return `/images/og${path}.jpg`;
+  return DEFAULT_OG_IMAGE;
+}
 
 function social(title: string, description: string, image: string, path: string) {
   return {
@@ -49,7 +82,7 @@ export function staticPageMetadata(opts: {
   path: string;
   image?: string;
 }): Metadata {
-  const image = opts.image ?? DEFAULT_OG_IMAGE;
+  const image = opts.image ?? staticOgImage(opts.path);
   return {
     title: opts.title,
     description: opts.description,
@@ -99,7 +132,7 @@ export function servicePageMetadata(service: Service, canonicalPath: string): Me
   return {
     title: service.title,
     description,
-    ...social(service.title, description, DEFAULT_OG_IMAGE, canonicalPath),
+    ...social(service.title, description, `/images/og/services/${service.slug}.jpg`, canonicalPath),
   };
 }
 
@@ -113,7 +146,7 @@ export function comparisonPageMetadata(
   return {
     title,
     description,
-    ...social(title, description, DEFAULT_OG_IMAGE, canonicalPath),
+    ...social(title, description, `/images/og/compare/${canonicalPath.replace(/^\/compare\//, "")}.jpg`, canonicalPath),
   };
 }
 
@@ -121,7 +154,7 @@ export function articlePageMetadata(article: Article, canonicalPath: string): Me
   return {
     title: article.title,
     description: article.excerpt,
-    ...social(article.title, article.excerpt, DEFAULT_OG_IMAGE, canonicalPath),
+    ...social(article.title, article.excerpt, `/images/og/blog/${article.slug}.jpg`, canonicalPath),
   };
 }
 
@@ -135,6 +168,6 @@ export function trainingsIndexMetadata(courses: Course[]): Metadata {
   return {
     title,
     description,
-    ...social(title, description, DEFAULT_OG_IMAGE, "/trainings"),
+    ...social(title, description, "/images/og/trainings.jpg", "/trainings"),
   };
 }

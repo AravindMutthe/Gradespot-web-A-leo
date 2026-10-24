@@ -202,6 +202,64 @@ server never accepts what the client rejects. Promotions flow through
 `src/data/promotions.ts` today; the `site_promotions` table
 (migration `0005`) and admin CRUD live in `gradespot-axon` Phase 3.
 
+## How to work with it
+
+### Prerequisites
+
+- Node.js 20 LTS + npm, and Git.
+- No accounts needed to start: without `.env.local`, the site runs
+  entirely on the local files in `src/data/`. A Supabase project is
+  only needed for live-data work (keys via the Secure Vault / Vercel,
+  never committed).
+- Stack: Next.js 15, React 19, Tailwind CSS v4, TypeScript, zod
+  (form/API validation), `@supabase/supabase-js`.
+- Python 3 only if you regenerate derived files (llms-full.txt, OG
+  cards) — see step 4 below.
+
+### Build and test locally
+
+```
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build — must pass before any PR
+npm start        # preview the production build locally
+npm run lint
+```
+
+There is no automated test suite in this repo — verification is the
+production build + lint + manual checks: home, one training page,
+one service page, `/register`, `/partner-with-us`, one compare page,
+one landing page, the lead form, and certificate verification.
+
+### Feature development → PR for review
+
+1. Start from latest `main`: `git checkout main && git pull`.
+2. Branch, never commit to `main` directly:
+   `git checkout -b feature/<short-name>`.
+3. Build the feature following the Design and Rules sections above —
+   own design (never WordPress-dependent), content from the official
+   record only, assets downloaded into the repo, nothing hotlinked,
+   no invented data.
+4. Repo-specific upkeep when your change touches these:
+   - Data feeding `llms-full.txt` or OG cards changed → re-run
+     `scripts/generate-llms-full.py` / `scripts/generate-og-cards.py`.
+   - A route added or removed → update the sitemap
+     (`scripts/sitemap-lastmod.py`).
+   - Promotions → edit the typed config in `src/data/promotions.ts`
+     only; never invent offers.
+   - Metadata/schema → go through `src/lib/metadata.ts` and
+     `src/lib/schema.ts` (strict schema rules).
+   - A database schema change needs a new file in
+     `supabase/migrations/` and Aravind's approval.
+5. Run `npm run build` + `npm run lint` + the manual checks above.
+   Fix everything before pushing.
+6. Push the branch and open a pull request into `main`, describing
+   what changed and how you verified it.
+7. Review: Aravind reviews every PR; merge happens only on his word.
+   Merging does NOT deploy — production is API-uploaded from the
+   local working copy (Vercel project `gradespot-leo-build-app`)
+   only when he commissions it.
+
 ## Rules
 
 - **Own design, never WordPress-dependent.** This repo does not copy

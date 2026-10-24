@@ -39,6 +39,56 @@ design, §25 SEO/AEO) → `src/data/site.ts` → `src/app/page.tsx` →
 `src/lib/metadata.ts` → `src/lib/data.ts` →
 `src/data/promotions.ts`.
 
+## Design
+
+**Design — "Prospectus" (v1, DECISIONS.md §19–§20):** the site reads
+like a world-class institute prospectus crossed with a course-code
+ledger. Aravind's v1 mandate: full creative control — forget the
+original site's theme, style, layouts, fonts, colours and buttons.
+Only the menu options carry over (minus three logged trims), the
+official logo artwork stays unmodified, and the content truth layer
+is untouchable.
+
+**Layout:** ink mono utility strip + light paper bar with the dark
+logo; Trainings mega-menu and Resources dropdown restyled as paper
+panels. Menu = Trainings / Services / Pricing / About Us / Resources
+/ For Colleges / For Institutes (pill) + Register + Request a
+Callback. v1 trims (logged in §19): Home removed (logo is home),
+Contact Us removed from the bar (duplicated by the Callback CTA;
+kept in footer), Digital moved into Resources. Home order: hero →
+"In short:" answer-first box → What We Do → About (9 Years +
+signature) → ISO + AICTE emblem cards on white plates → counters →
+Top Class Trainings → Services → No-Cost First Steps (free
+counselling, syllabus on WhatsApp, free certificate verification) →
+For Institutes / Axon products → Learner Voices → FAQ → Free
+Consultation footer. A floating dark/light toggle (bottom-right)
+switches themes; the logo plate swaps per theme.
+
+**Structure:** design tokens → self-hosted fonts → components →
+pages. Layered course cards (image gradient, Free Demo badge,
+duration chip); ghost-numeral service/offer cards; a CSS scrolling
+Ticker board (featured trainings + free services, reduced-motion
+safe); a data-driven PromoBanner and OfferCards row, fed by the
+admin-shaped promotions seam (`src/data/promotions.ts`, migration
+`0005`). Content rule: only true offers (free demo, free
+counselling, syllabus on WhatsApp, free certificate verification) —
+no invented discounts or urgency.
+
+**Theme:** paper `#FAF6EE`, parchment `#FFFDF8`, cream `#F2EADA`,
+ink `#201913` / ink-deep `#171208`, line `#E0D4BE`; signal vermilion
+`#B23A0A` (logo orange deepened one step so text/buttons meet WCAG
+2.2 AA — 5.6:1 on paper, 5.0:1 on cream, 6.0:1 under white text),
+true logo orange `#F7631B` reserved for display accents on ink
+(6.0:1), brand-dark `#9A3412`, brand-soft `#FBEADA`; WhatsApp green
+deepened to `#0B7A43` (5.4:1 with white); body text `#5A4B38`
+(7.8:1). Fonts, self-hosted variable woff2 in `public/fonts/`:
+Fraunces (display serif, 100–900 + italic), Instrument Sans
+(text/UI, 400–700), IBM Plex Mono (codes, labels, eyebrows). Dark
+theme = inverted light palette, AA measured in both themes. The logo
+plate is the approved original: luminous parchment plate + halo,
+per-theme logo swap — never recolored, filtered or swapped by any
+theme.
+
 ## Complete folder / directory structure
 
 ```

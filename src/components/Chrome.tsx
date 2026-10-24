@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingActions from "@/components/FloatingActions";
+import ThemeToggle from "@/components/ThemeToggle";
 
 // Site chrome switch (research expansion pack, DECISIONS.md §18): the
 // global header/footer/floating actions render everywhere EXCEPT the
@@ -14,7 +15,14 @@ export default function Chrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isLp = pathname?.startsWith("/lp/") ?? false;
   if (isLp) {
-    return <main id="main">{children}</main>;
+    // Nav-free LP chrome still gets the ONE floating theme toggle
+    // (§25.9) — rendered outside <main>, like the global chrome.
+    return (
+      <>
+        <main id="main">{children}</main>
+        <ThemeToggle />
+      </>
+    );
   }
   return (
     <>
@@ -22,6 +30,7 @@ export default function Chrome({ children }: { children: React.ReactNode }) {
       <main id="main">{children}</main>
       <Footer />
       <FloatingActions />
+      <ThemeToggle />
     </>
   );
 }

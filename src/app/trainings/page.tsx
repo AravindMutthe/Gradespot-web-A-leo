@@ -79,6 +79,7 @@ export default async function TrainingsPage() {
                     alt={x.t}
                     width={600}
                     height={340}
+                    sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
                     className="h-32 w-full object-cover sepia-[0.12] transition duration-500 group-hover:scale-[1.04]"
                   />
                   <span className="eyebrow absolute left-3 top-3 rounded-md bg-ink/85 px-2.5 py-1.5 text-white">

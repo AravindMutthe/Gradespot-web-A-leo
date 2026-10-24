@@ -179,7 +179,7 @@ export default async function CoursePage({
       />
       <JsonLd data={faqSchema(allFaqs)} />
 
-      <section className="bg-ink py-14 text-white md:py-20">
+      <section className="bg-ink py-10 text-white md:py-14">
         <div className="wrap">
           <Breadcrumbs
             dark
@@ -217,6 +217,8 @@ export default async function CoursePage({
             alt={course.title}
             width={1140}
             height={480}
+            sizes="(min-width:1200px) 1140px, 100vw"
+            priority
             className="h-72 w-full rounded-2xl object-cover md:h-96"
           />
         </div>

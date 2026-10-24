@@ -28,7 +28,7 @@ export default async function HomePage() {
       <JsonLd data={faqSchema(siteFaqs)} />
       {/* Hero — corporate split layout; headline and copy as published on the live homepage */}
       <section className="hero-paper relative overflow-hidden border-b border-line">
-        <div className="wrap grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="wrap grid items-center gap-12 py-10 md:py-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div data-reveal>
             <p className="eyebrow text-signal-strong">Dilsukhnagar · Hyderabad</p>
             <h1 className="mt-4 max-w-xl font-display text-[44px] font-semibold leading-[1.05] text-heading md:text-[68px]">
@@ -139,6 +139,7 @@ export default async function HomePage() {
                     alt={x.t}
                     width={600}
                     height={340}
+                    sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
                     className="h-36 w-full object-cover sepia-[0.12] transition duration-500 group-hover:scale-[1.04]"
                   />
                   <span className="eyebrow absolute left-3 top-3 rounded-md bg-ink/85 px-2.5 py-1.5 text-white">
@@ -257,6 +258,7 @@ export default async function HomePage() {
                   alt={m.name}
                   width={350}
                   height={350}
+                  sizes="(min-width:640px) 33vw, 100vw"
                   className="mx-auto h-56 w-full rounded-2xl object-cover"
                 />
                 <h4 className="mt-3 text-lg font-semibold">{m.name}</h4>

@@ -35,6 +35,7 @@ export default function CertificationsPage() {
                   alt={c.caption}
                   width={300}
                   height={300}
+                  sizes="(min-width:1024px) 25vw, (min-width:640px) 33vw, 50vw"
                   className="mx-auto w-full rounded object-cover"
                 />
                 <figcaption className="mt-2 text-sm font-medium text-heading">

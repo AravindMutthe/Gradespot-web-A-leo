@@ -17,7 +17,7 @@ import { services as allServices } from "@/data/services";
 
 export function PageHero({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
-    <section className="hero-paper border-b border-line py-16 md:py-[84px]">
+    <section className="hero-paper border-b border-line py-10 md:py-14">
       <div className="wrap" data-reveal>
         <span className="block h-[3px] w-14 rounded-full bg-gradient-to-r from-brand-dark via-brand to-brand-bright" aria-hidden />
         <h1 className="mt-6 max-w-4xl text-[40px] font-semibold leading-[1.08] text-heading md:text-[56px]">
@@ -104,6 +104,7 @@ export function CourseCardBody({
             alt={title}
             width={600}
             height={340}
+            sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
             className="h-44 w-full object-cover sepia-[0.14] transition duration-500 group-hover:scale-[1.04]"
           />
           <div
@@ -442,6 +443,7 @@ export function BlogCards() {
               alt={p.title}
               width={600}
               height={340}
+              sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
               className="h-44 w-full object-cover transition duration-500 group-hover:scale-[1.04]"
             />
           </a>

@@ -28,6 +28,8 @@ export default function NikhilProfilePage() {
             alt={member.name}
             width={350}
             height={350}
+            sizes="(min-width:1024px) 40vw, 100vw"
+            priority
             className="w-full rounded object-cover"
           />
           <div>

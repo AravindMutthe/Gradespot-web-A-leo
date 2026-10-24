@@ -2,12 +2,26 @@
 
 import { useEffect, useState } from "react";
 
-// Theme toggle (DECISIONS §25) — salon-style sun/moon switch. The
-// initial `.dark` class is set pre-paint by the inline script in
-// layout.tsx; this control only flips it and persists the choice to
-// localStorage. The icon itself is CSS-driven by the root class, so
-// it renders correctly even before hydration; React state only
-// drives the accessible name / pressed state.
+// Theme toggle (DECISIONS §25, placement corrected §25.9) — ONE
+// floating on-screen button at the bottom of the viewport, on every
+// page, in both themes. Aravind's 2026-10-24 ruling: NOT in the
+// header strip, NOT a mobile-sheet row, NOT an LP strip — a floating
+// toggle, bottom side, like a floating action. The initial `.dark`
+// class is set pre-paint by the inline script in layout.tsx; this
+// control only flips it and persists the choice to localStorage.
+// The icon itself is CSS-driven by the root class, so it renders
+// correctly even before hydration; React state only drives the
+// accessible name / pressed state.
+//
+// Placement (no collisions, §25.9):
+// - Mobile (< nav breakpoint): the sticky Call/WhatsApp/Register
+//   bar is 52px tall at the viewport bottom, so the button sits at
+//   bottom 68px (52 + 16px clearance) + safe-area inset.
+// - Desktop (>= nav breakpoint): the floating WhatsApp bubble is
+//   56px tall at bottom 24px (top edge 80px), so the button sits at
+//   bottom 96px (80 + 16px clearance) + safe-area inset.
+// - Same right edge as the bubble (24px desktop, 16px mobile), same
+//   z-50 stacking as the other floating chrome.
 function MoonIcon() {
   return (
     <svg
@@ -52,11 +66,7 @@ function SunIcon() {
   );
 }
 
-export default function ThemeToggle({
-  variant = "icon",
-}: {
-  variant?: "icon" | "labeled";
-}) {
+export default function ThemeToggle() {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -85,31 +95,6 @@ export default function ThemeToggle({
 
   const label = dark ? "Switch to light theme" : "Switch to dark theme";
 
-  if (variant === "labeled") {
-    return (
-      <button
-        type="button"
-        onClick={toggle}
-        aria-label={label}
-        aria-pressed={dark}
-        className="flex w-full items-center justify-between gap-3 rounded-xl border border-line bg-parchment px-4 py-3 text-left"
-      >
-        <span>
-          <span className="block text-[15px] font-semibold text-heading">Theme</span>
-          <span className="block text-[13px] text-body">
-            {dark ? "Dark theme is on" : "Light theme is on"}
-          </span>
-        </span>
-        <span
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line text-heading"
-          aria-hidden="true"
-        >
-          {dark ? <SunIcon /> : <MoonIcon />}
-        </span>
-      </button>
-    );
-  }
-
   return (
     <button
       type="button"
@@ -117,7 +102,7 @@ export default function ThemeToggle({
       aria-label={label}
       aria-pressed={dark}
       title={label}
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 text-paper/85 transition-colors hover:border-brand-bright hover:text-brand-bright"
+      className="fixed bottom-[calc(68px+env(safe-area-inset-bottom))] right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-ink text-paper shadow-[0_10px_30px_rgba(31,24,16,0.35)] ring-1 ring-black/10 transition-transform hover:scale-[1.05] dark:bg-paper dark:text-ink dark:ring-white/25 nav:bottom-[calc(96px+env(safe-area-inset-bottom))] nav:right-6"
     >
       <span className="dark:hidden">
         <MoonIcon />

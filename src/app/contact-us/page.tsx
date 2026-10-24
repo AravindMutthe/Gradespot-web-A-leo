@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import LeadForm from "@/components/LeadForm";
 import { contactParagraphs } from "@/data/pages";
 import { business, telHref } from "@/data/site";
@@ -64,13 +65,47 @@ export default function ContactPage() {
 
         <div className="wrap mt-14">
           <h2 className="text-2xl font-semibold">Find Us</h2>
-          <iframe
-            title="GradeSpot IT Solutions — Dilsukhnagar, Hyderabad"
-            src={`https://www.google.com/maps?q=${encodeURIComponent(business.address)}&output=embed`}
-            className="mt-4 h-96 w-full rounded-lg border-0"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
+          {/* §25.10 — local map image, not the Google embed: the embed
+              was a remote page-load asset AND was blocked by this
+              site's own CSP (default-src 'self', no frame-src), so
+              it rendered nothing. The map below is a local file
+              built from OpenStreetMap tiles at build time; tapping
+              it opens Google Maps (an outbound link, not a load). */}
+          <a
+            href={`https://www.google.com/maps?q=${encodeURIComponent(business.address)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-4 block"
+            aria-label="Open GradeSpot IT Solutions location in Google Maps"
+          >
+            <Image
+              src="/images/map-dilsukhnagar.jpg"
+              alt="Map — GradeSpot IT Solutions, Dilsukhnagar, Hyderabad"
+              width={1200}
+              height={600}
+              className="h-96 w-full rounded-lg object-cover"
+            />
+          </a>
+          <p className="mt-2 text-sm text-body">
+            {business.address} · Map ©{" "}
+            <a
+              href="https://www.openstreetmap.org/copyright"
+              target="_blank"
+              rel="noreferrer"
+              className="underline"
+            >
+              OpenStreetMap contributors
+            </a>{" "}
+            ·{" "}
+            <a
+              href={`https://www.google.com/maps?q=${encodeURIComponent(business.address)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-brand"
+            >
+              Open in Google Maps →
+            </a>
+          </p>
         </div>
       </section>
     </>

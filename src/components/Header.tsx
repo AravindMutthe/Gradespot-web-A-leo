@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { business, telHref } from "@/data/site";
 import { SocialLinks } from "@/components/ui";
-import ThemeToggle from "@/components/ThemeToggle";
 import { categoryAnchor, navCategoryOrder, navCourses, type NavCourse } from "@/data/catalogue-nav";
 import { services } from "@/data/services";
 import { promotions } from "@/data/promotions";
@@ -255,21 +254,31 @@ export default function Header() {
         Skip to content
       </a>
 
-      {/* Utility strip — mono index voice on ink */}
+      {/* Utility strip — mono index voice on ink. SINGLE ROW at
+          every width (§25.11): no wrap anywhere, so the strip can
+          never grow a second row or a gap row on mobile — the
+          location/email group truncates with ellipsis on narrow
+          screens instead, and the socials/phones group is fully
+          absent below sm (not an empty flex item). Same py-2 and
+          text size at all widths, so the strip height is identical
+          on mobile and desktop. */}
       <div className="bg-ink-deep text-footer-text">
-        <div className="wrap flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-2 font-mono text-[11px] uppercase tracking-[0.14em]">
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
-            <span>{business.locationLabel}</span>
-            <a className="normal-case tracking-normal transition-colors hover:text-brand-bright" href={`mailto:${business.emails[0]}`}>
+        <div className="wrap flex flex-nowrap items-center justify-between gap-x-6 overflow-hidden py-2 font-mono text-[11px] uppercase tracking-[0.14em]">
+          <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-x-5">
+            <span className="min-w-0 truncate">{business.locationLabel}</span>
+            <a
+              className="min-w-0 truncate normal-case tracking-normal transition-colors hover:text-brand-bright"
+              href={`mailto:${business.emails[0]}`}
+            >
               {business.emails[0]}
             </a>
-            <span className="hidden md:inline">Office Hours: {business.officeHours}</span>
+            <span className="hidden shrink-0 md:inline">Office Hours: {business.officeHours}</span>
           </div>
-          <div className="flex items-center gap-3 sm:gap-4">
-            <span className="hidden items-center gap-3 sm:flex">
+          <div className="hidden shrink-0 items-center gap-3 sm:flex sm:gap-4">
+            <span className="flex items-center gap-3">
               <SocialLinks />
             </span>
-            <span className="hidden items-center gap-4 sm:flex">
+            <span className="flex items-center gap-4">
               {business.phones.map((p) => (
                 <a
                   key={p}
@@ -280,10 +289,6 @@ export default function Header() {
                 </a>
               ))}
             </span>
-            {/* §25 — theme toggle: salon-style placement in the
-                header utility strip, visible at every width; the
-                mobile sheet carries a labelled variant too. */}
-            <ThemeToggle />
           </div>
         </div>
       </div>
@@ -680,11 +685,6 @@ export default function Header() {
               <Link href="/contact-us" className="btn-primary" onClick={() => setOpen(false)}>
                 Request a Callback
               </Link>
-            </div>
-            {/* §25 — labelled theme row in the sheet (the utility-strip
-                icon toggle above covers the closed state). */}
-            <div className="pb-2">
-              <ThemeToggle variant="labeled" />
             </div>
 
             <button

@@ -1174,3 +1174,148 @@ v1 exactly; dark is an addition, not a restyle.
   aria-pressed) + both logo artworks present; LP carries the
   toggle in its slim utility strip.
 - NO deploy in this step — commit only; the parent redeploys.
+
+### 25.9 CORRECTION — floating toggle, bottom of screen (2026-10-24)
+Aravind's ruling, the day after §25 shipped: the toggle "shouldn't
+be like that — it should be like on screen floating toggle in
+bottom side for dark/light". The §25.2 placements were REMOVED in
+full: the header utility-strip icon, the mobile-sheet labelled
+row, and the LP slim-strip toggle are all gone — the LP strip
+itself stays as a location line only, so the LP chrome is
+otherwise unchanged. There is now exactly ONE toggle:
+`src/components/ThemeToggle.tsx` rewritten as a single floating
+button, rendered by `Chrome.tsx` on every page (global chrome and
+nav-free LP chrome alike), fixed at the bottom-right of the
+viewport in both themes — ink button with parchment icon on
+light, parchment button with ink icon on dark, 48×48 (above the
+44px minimum), `aria-label` + `aria-pressed` unchanged.
+- **Mobile (< nav 960px):** bottom
+  `calc(68px + env(safe-area-inset-bottom))`, right 16px. The
+  sticky Call/WhatsApp/Register bar is 52px tall (global bar
+  min-h 52px; LP bar ~46px), so the button clears it by 16px.
+- **Desktop (>= nav 960px):** bottom
+  `calc(96px + env(safe-area-inset-bottom))`, right 24px — the
+  floating WhatsApp bubble is 56px tall at bottom 24px (top edge
+  80px), so the button stacks above it with 16px clearance, on
+  the same right edge. No overlap with footer content beyond the
+  normal floating-action overlay behaviour.
+- Mechanism, persistence, pre-paint script, inverted palette,
+  logo swap, reduced-motion handling: all untouched from §25.
+- Light theme pixel-identical except the removed strip toggle;
+  dark tokens untouched. Verified by build + 89/89 crawl +
+  served-HTML audit counting exactly one toggle instance per
+  page (home, a course page, an LP) before commit. NO deploy —
+  commit only; the parent redeploys. NOTHING is merged to main:
+  this stays on `leo-build-v1`.
+
+### 25.10 Asset-locality audit — every image/asset local (2026-10-24)
+Aravind's rule, same commit batch: nothing fetched from a remote
+URL at page-load time, because remote assets are slow to appear.
+Audit method: grepped all of `src/` for `http(s)://`, CDN/image
+hosts (Pexels/Unsplash/Cloudinary/Supabase storage), `<img>` /
+`<script>` / `<link>` / `<iframe>` remote sources, and font
+`@import`s; checked `next.config.ts` (no `images.remotePatterns`)
+and the built output.
+- **Already local — no change needed:** all 85 images in
+  `public/images/` (8.5 MB total, largest single file 224 KB —
+  `cert-16.jpg`; no oversized file needed recompression, and no
+  photo was recompressed); all 7 font files self-hosted in
+  `public/fonts/` with `@font-face` + preloads in `layout.tsx`
+  (no Google Fonts fetch); OG/Twitter image is the local
+  `/images/courses/ceh.jpg`; the only inline script is the local
+  theme bootstrap; CSP already enforces it
+  (`img-src 'self' data: blob:`, no external script/style/font
+  origin allowed). Loading was already near-right: home hero +
+  header/LP logos + course hero + profile hero carry `priority`
+  with width/height; everything below the fold lazy-loads by
+  Next.js default. This pass added `sizes` to every card/grid
+  image (course cards, blog cards, trainings index, management,
+  team, certifications) so browsers fetch the right srcset
+  candidate, and `priority` + `sizes` to the course hero and the
+  Nikhil profile hero.
+- **The one remote page-load asset — FIXED:** `/contact-us`
+  embedded Google Maps (`output=embed` iframe). It was not only
+  remote — it was dead: the site's own CSP (`default-src
+  'self'`, no `frame-src`) blocks a google.com frame, so it
+  rendered nothing. Replaced with a local map image,
+  `public/images/map-dilsukhnagar.jpg` (1200×600, 231 KB,
+  lazy-loaded below the fold), built at build time from
+  OpenStreetMap tiles centred on the geocoded Dilsukhnagar point
+  (17.36878, 78.52409) with a vermilion pin, captioned with the
+  address + "© OpenStreetMap contributors" attribution; tapping
+  it opens Google Maps. The official logo files were NOT
+  touched (logo.png hash still 5669a470…).
+- **New local asset:** `public/favicon.ico` (2.9 KB, 48/32/16px
+  ICO derived from logo.png — the source file is untouched),
+  so browsers stop 404ing the default favicon request.
+- **Remaining remote references — all outbound links, NOT page
+  loads (kept deliberately):** `wa.me` chat links, social
+  profiles, `digital.gsitssolutions.com` / `digidefense.in`
+  (Resources links), Google Maps links, `metadataBase` /
+  sitemap / robots canonical URLs, and JSON-LD `sameAs` URLs.
+  None of these is fetched until the visitor clicks or a
+  crawler reads metadata. After this pass, built/served HTML
+  contains ZERO remote asset loads: no remote `<img>` src, no
+  remote `<script>` src, no remote stylesheet, no `<iframe>`
+  (the single remote `<link>` found in served HTML is the
+  canonical metadata URL, which browsers do not fetch as an
+  asset).
+- No photo was recompressed or resized: with a 224 KB maximum
+  and lazy loading below the fold, nothing justified quality
+  loss; the only new image is the 231 KB local map.
+
+### 25.11 Utility strip is ONE row at every width (2026-10-24)
+Aravind's screenshot of the live mobile top bar showed the bug:
+the moon toggle sat on its own row in the dark utility strip,
+adding a whole extra row and a visible gap on mobile, while
+desktop showed one clean line. The floating toggle (§25.9)
+removes the moon, but the strip itself could still wrap: it was
+`flex-wrap` with location + email in a wrapping group, and at
+~360px the two together overflow one line. Fixed in `Header.tsx`:
+outer strip is now `flex-nowrap overflow-hidden` (no `gap-y`
+anywhere, so no leftover row spacing), the location/email group
+is `min-w-0 flex-1` with both items `truncate` (ellipsis on
+narrow screens — email truncates rather than pushing a second
+row), Office Hours stays `hidden md:inline`, and the
+socials/phones group is `hidden sm:flex` on the wrapper itself
+(zero footprint below sm, not an empty flex item). Strip height
+is structurally identical on mobile and desktop: same `py-2`
+and same 11px mono text at all widths, one line always — no
+second row exists to measure. The LP slim strip (location line
+only) was already nowrap single-row and is unchanged.
+
+### 25.12 First-section top padding tightened (2026-10-24)
+Aravind's ruling, same batch: too much dead space between the
+logo nav bar and the top of page content — visible on the home
+hero (dead band above the "Dilsukhnagar · Hyderabad" eyebrow /
+"We Create Better IT Solutions" heading) and the same excess on
+ALL menu pages. Root cause: the first section / hero top
+padding in each page template. Fixed consistently, first
+sections ONLY (interior `section-pad` rhythm, 84/116px, is
+untouched): every first-section template now uses the SAME
+tightened value — mobile `py-10` (40px), desktop `md:py-14`
+(56px) — a modest breathing gap, not zero. Before → after:
+- `PageHero` (one component, covers 26 pages: about, services,
+  trainings index, why-choose-us, team, testimonials, resources,
+  certifications, verification, contact, FAQ, terms,
+  for-institutes, pricing, compare, Dilsukhnagar page,
+  for-colleges, career-support, blog, accessibility, register,
+  partner-with-us, service detail, compare pair, blog detail,
+  Nikhil profile): `py-16 / md:py-[84px]` (64/84px) → `py-10 /
+  md:py-14` (40/56px).
+- Home hero grid: `py-16 / md:py-24` (64/96px) → `py-10 /
+  md:py-14`.
+- Course hero: `py-14 / md:py-20` (56/80px) → `py-10 /
+  md:py-14`.
+- LP hero panel: `py-12 / md:py-16` (48/64px) → `py-10 /
+  md:py-14`.
+Anchor offsets are unaffected: the sticky header height is
+unchanged, and anchors clear it via the global
+`scroll-margin-top: 96px` (globals.css) plus `scroll-mt-32`
+utilities on `#enquire`/`#demo` — neither depends on hero
+padding, and no `scroll-mt` value was touched. Verified by
+build + 89/89 crawl + served-HTML class audit on home and an
+inner page at both widths (same `py-10 md:py-14` first-section
+classes in the markup; no `py-16/py-20/py-24` first-section
+remains). NO deploy — commit only; the parent redeploys.
+NOTHING merged to main: this stays on `leo-build-v1`.

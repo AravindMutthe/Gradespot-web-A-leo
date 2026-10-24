@@ -23,6 +23,7 @@ export default function TeamPage() {
                 alt={m.name}
                 width={350}
                 height={350}
+                sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
                 className="h-80 w-full object-cover"
               />
               <div className="p-6">

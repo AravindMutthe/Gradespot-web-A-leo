@@ -12,7 +12,6 @@ import { courseWaLink, syllabusWaLink } from "@/lib/wa";
 import { courseSchema, faqSchema } from "@/lib/schema";
 import JsonLd from "@/components/JsonLd";
 import LpLeadForm from "@/components/LpLeadForm";
-import ThemeToggle from "@/components/ThemeToggle";
 import { FaqList } from "@/components/ui";
 
 // City × course landing pages (research expansion pack, DECISIONS.md
@@ -95,14 +94,13 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       <JsonLd data={courseSchema(course)} />
       <JsonLd data={faqSchema(faqs)} />
 
-      {/* §25 — slim utility strip so the LP chrome carries the theme
-          toggle too (still no navigation, per the LP anatomy). */}
+      {/* Slim utility strip (location line only — the theme toggle
+          moved to the floating button, §25.9; the LP stays nav-free). */}
       <div className="bg-ink-deep text-footer-text">
         <div className="wrap flex items-center justify-between gap-3 py-1">
           <p className="font-mono text-[11px] uppercase tracking-[0.14em]">
             {business.locationLabel}
           </p>
-          <ThemeToggle />
         </div>
       </div>
 
@@ -147,7 +145,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       </div>
 
       {/* Hero: message-matched H1 + form above the fold */}
-      <section className="panel-ink py-12 md:py-16">
+      <section className="panel-ink py-10 md:py-14">
         <div className="wrap grid items-start gap-10 lg:grid-cols-2">
           <div>
             <p className="eyebrow text-brand-bright">

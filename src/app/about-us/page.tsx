@@ -94,6 +94,7 @@ export default function AboutPage() {
                   alt={m.name}
                   width={350}
                   height={350}
+                  sizes="(min-width:640px) 33vw, 100vw"
                   className="mx-auto h-56 w-full rounded object-cover"
                 />
                 <h3 className="mt-3 text-lg font-semibold">{m.name}</h3>

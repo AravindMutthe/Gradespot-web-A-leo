@@ -179,7 +179,7 @@ export default async function CoursePage({
       />
       <JsonLd data={faqSchema(allFaqs)} />
 
-      <section className="bg-ink py-10 text-white md:py-14">
+      <section className="bg-ink py-6 text-white md:py-8">
         <div className="wrap">
           <Breadcrumbs
             dark

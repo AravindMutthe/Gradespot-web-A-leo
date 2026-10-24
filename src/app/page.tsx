@@ -28,7 +28,7 @@ export default async function HomePage() {
       <JsonLd data={faqSchema(siteFaqs)} />
       {/* Hero — corporate split layout; headline and copy as published on the live homepage */}
       <section className="hero-paper relative overflow-hidden border-b border-line">
-        <div className="wrap grid items-center gap-12 py-10 md:py-14 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="wrap grid items-center gap-12 py-6 md:py-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div data-reveal>
             <p className="eyebrow text-signal-strong">Dilsukhnagar · Hyderabad</p>
             <h1 className="mt-4 max-w-xl font-display text-[44px] font-semibold leading-[1.05] text-heading md:text-[68px]">

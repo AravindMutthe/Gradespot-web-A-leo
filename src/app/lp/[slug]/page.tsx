@@ -145,7 +145,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       </div>
 
       {/* Hero: message-matched H1 + form above the fold */}
-      <section className="panel-ink py-10 md:py-14">
+      <section className="panel-ink py-6 md:py-8">
         <div className="wrap grid items-start gap-10 lg:grid-cols-2">
           <div>
             <p className="eyebrow text-brand-bright">

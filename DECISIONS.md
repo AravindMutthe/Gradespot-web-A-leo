@@ -1370,3 +1370,62 @@ About Us — the only two places these cards render):
   verbatim copy strings, and zero remote `<img>` on those
   pages. NO deploy — commit only; the parent redeploys.
   NOTHING merged to main: this stays on `leo-build-v1`.
+
+### 25.14 Mobile strip scrolls away + tightened nav-to-content gap (2026-10-24)
+Aravind's ruling, with annotated screenshot of the live mobile
+home page (purple scratches on the strip and on the band below
+the nav bar): (1) on mobile the dark utility strip must scroll
+away — only the logo nav bar stays sticky; desktop keeps strip
++ nav sticky together, unchanged. (2) Below the nav bar there
+is still a dead band of dotted paper before the hero eyebrow,
+on home and on all menu pages — he asked whether that gap is
+standard. Applied answer: a SMALL gap is standard (content must
+never touch the bar); a large empty band is not. So the gap was
+tightened, not removed.
+
+1. MOBILE SCROLL / DESKTOP STICKY SPLIT (`components/Header.tsx`):
+   the strip JSX is now a single `strip` const rendered twice —
+   once in normal flow ABOVE the sticky header, wrapped in
+   `nav:hidden` (mobile only: scrolls off the top, strip content
+   still fully present at the top of the page before scrolling),
+   and once INSIDE the sticky header, wrapped in `hidden
+   nav:block` (desktop only: strip + nav stick together exactly
+   as before). One instance is `display:none` at any width, so
+   assistive tech sees only one strip and the content cannot
+   drift between breakpoints. No JS, no hiding of content: the
+   strip is not removed on mobile, it just stops sticking.
+   Verified in served HTML: the strip markup appears with the
+   `nav:hidden` (flow) and `hidden nav:block` (sticky) wrappers
+   and the header itself remains `sticky top-0`. LP pages have
+   no strip in their nav-free chrome, so no LP change was needed
+   for this half.
+
+2. NAV-TO-CONTENT GAP, SITEWIDE — first-section top padding,
+   same unified set as §25.12, 40px mobile / 56px desktop →
+   **24px mobile / 32px desktop** (`py-6 md:py-8`): `PageHero`
+   (one component, 26 pages), home hero (`app/page.tsx`),
+   course hero (`app/trainings/[slug]/page.tsx`), LP hero
+   (`app/lp/[slug]/page.tsx`). NOT zero — the eyebrow keeps a
+   real gap under the bar. Double-gap check: the nav bar's only
+   bottom edge is its 1px `border-b`; `<main>` carries no top
+   padding; `hero-paper` is background-only (dot grid, no
+   padding); so the first-section padding was the sole gap and
+   no stacked spacing remains. Interior `section-pad` rhythm
+   (84/116px) untouched — first sections only.
+
+3. ANCHOR OFFSETS, RECHECKED after the mobile sticky height
+   shrank: mobile sticky header is now the nav bar alone —
+   bar `py-2.5` (20px) + logo plate `py-1` (8px) + `h-12`
+   artwork (48px) + 1px border = ~77px, comfortably under the
+   global `section[id], div[id]` `scroll-margin-top: 96px`
+   (`globals.css`), and `#enquire`/`#demo` carry `scroll-mt-32`
+   (128px) — both clear the new mobile header. Desktop sticky
+   height is UNCHANGED by this change (strip ~35px + nav ~69px
+   ≈ 104px by class arithmetic); that desktop figure predates
+   this change and is not a regression from it — the conversion
+   anchors at 128px clear it on both widths. No `scroll-mt`
+   value was touched.
+- Both themes unaffected (no token or colour change; the strip
+  keeps its ink background in both themes). NO deploy — commit
+  only; the parent redeploys. NOTHING merged to main: this
+  stays on `leo-build-v1`.

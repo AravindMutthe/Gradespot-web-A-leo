@@ -245,53 +245,71 @@ export default function Header() {
     </div>
   );
 
-  return (
-    <header className="sticky top-0 z-50">
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[70] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2.5 focus:font-semibold focus:text-paper"
-      >
-        Skip to content
-      </a>
-
-      {/* Utility strip — mono index voice on ink. SINGLE ROW at
-          every width (§25.11): no wrap anywhere, so the strip can
-          never grow a second row or a gap row on mobile — the
-          location/email group truncates with ellipsis on narrow
-          screens instead, and the socials/phones group is fully
-          absent below sm (not an empty flex item). Same py-2 and
-          text size at all widths, so the strip height is identical
-          on mobile and desktop. */}
-      <div className="bg-ink-deep text-footer-text">
-        <div className="wrap flex flex-nowrap items-center justify-between gap-x-6 overflow-hidden py-2 font-mono text-[11px] uppercase tracking-[0.14em]">
-          <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-x-5">
-            <span className="min-w-0 truncate">{business.locationLabel}</span>
-            <a
-              className="min-w-0 truncate normal-case tracking-normal transition-colors hover:text-brand-bright"
-              href={`mailto:${business.emails[0]}`}
-            >
-              {business.emails[0]}
-            </a>
-            <span className="hidden shrink-0 md:inline">Office Hours: {business.officeHours}</span>
-          </div>
-          <div className="hidden shrink-0 items-center gap-3 sm:flex sm:gap-4">
-            <span className="flex items-center gap-3">
-              <SocialLinks />
-            </span>
-            <span className="flex items-center gap-4">
-              {business.phones.map((p) => (
-                <a
-                  key={p}
-                  className="font-semibold normal-case tracking-normal text-brand-bright hover:text-paper"
-                  href={telHref(p)}
-                >
-                  {p}
-                </a>
-              ))}
-            </span>
-          </div>
+  // Utility strip — mono index voice on ink. SINGLE ROW at every
+  // width (§25.11): no wrap anywhere, so the strip can never grow
+  // a second row or a gap row on mobile — the location/email group
+  // truncates with ellipsis on narrow screens instead, and the
+  // socials/phones group is fully absent below sm (not an empty
+  // flex item). Same py-2 and text size at all widths.
+  //
+  // §25.14 — MOBILE SCROLL / DESKTOP STICKY SPLIT: the strip is
+  // rendered TWICE, one instance per breakpoint (display:none hides
+  // the other, so assistive tech sees only one). Below the 960px
+  // nav breakpoint the strip sits in normal flow ABOVE the sticky
+  // header, so it scrolls away with the page and only the logo nav
+  // bar stays stuck; at/above nav: the strip lives INSIDE the
+  // sticky header, so strip + nav stick together exactly as before.
+  // The two instances are the same JSX (the `strip` const), so the
+  // content can never drift between breakpoints.
+  const strip = (
+    <div className="bg-ink-deep text-footer-text">
+      <div className="wrap flex flex-nowrap items-center justify-between gap-x-6 overflow-hidden py-2 font-mono text-[11px] uppercase tracking-[0.14em]">
+        <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-x-5">
+          <span className="min-w-0 truncate">{business.locationLabel}</span>
+          <a
+            className="min-w-0 truncate normal-case tracking-normal transition-colors hover:text-brand-bright"
+            href={`mailto:${business.emails[0]}`}
+          >
+            {business.emails[0]}
+          </a>
+          <span className="hidden shrink-0 md:inline">Office Hours: {business.officeHours}</span>
+        </div>
+        <div className="hidden shrink-0 items-center gap-3 sm:flex sm:gap-4">
+          <span className="flex items-center gap-3">
+            <SocialLinks />
+          </span>
+          <span className="flex items-center gap-4">
+            {business.phones.map((p) => (
+              <a
+                key={p}
+                className="font-semibold normal-case tracking-normal text-brand-bright hover:text-paper"
+                href={telHref(p)}
+              >
+                {p}
+              </a>
+            ))}
+          </span>
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Mobile only: strip in normal flow — scrolls off the top. */}
+      <div className="nav:hidden">{strip}</div>
+
+      <header className="sticky top-0 z-50">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[70] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2.5 focus:font-semibold focus:text-paper"
+        >
+          Skip to content
+        </a>
+
+        {/* Desktop only: strip inside the sticky header — strip + nav
+            stick together, exactly as before §25.14. */}
+        <div className="hidden nav:block">{strip}</div>
 
       {/* Main navigation — paper bar, ink type, official logo */}
       <div className="glass-panel relative border-b border-line shadow-[0_1px_0_rgba(32,25,19,0.04)]">
@@ -848,6 +866,7 @@ export default function Header() {
           </div>
         </nav>
       )}
-    </header>
+      </header>
+    </>
   );
 }

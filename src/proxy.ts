@@ -11,7 +11,7 @@ import { NextResponse } from "next/server";
 // scripts and by React style attributes respectively. worker-src 'none'
 // and manifest-src 'self' are safe additions: the codebase uses no web
 // workers and ships no web app manifest.
-export function middleware() {
+export default function proxy() {
   const res = NextResponse.next();
   res.headers.set(
     "Content-Security-Policy",

@@ -1179,7 +1179,7 @@ const legacyRedirects = [
 // pipeline; no external script/style/font origins are allowed at
 // all, images are same-origin (+ data:/blob: for inline assets),
 // and the app sets no third-party trackers to exempt.
-// CSP + Cross-Origin-Resource-Policy live in src/middleware.ts (the
+// CSP + Cross-Origin-Resource-Policy live in src/proxy.ts (the
 // single source for response security headers that vary per request);
 // the entries below are the static remainder. See DECISIONS §25.29.
 const securityHeaders = [

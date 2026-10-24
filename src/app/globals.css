@@ -416,9 +416,16 @@
 }
 
 @utility section-pad {
-  padding-block: 84px;
+  /* §25.16 dead-space pass: was 84/116px. Two adjacent sections
+     stacked 168px mobile / 232px desktop of pure padding — the
+     dead bands across the site. 64/88px keeps generous breathing
+     room (junctions 128/176px) while removing the empty look.
+     Interior block gaps (mt-12/14/16) and band paddings
+     (StatsRibbon py-14, CtaBand py-16, footer py-16) are
+     deliberate rhythm and were left alone. */
+  padding-block: 64px;
   @media (min-width: 768px) {
-    padding-block: 116px;
+    padding-block: 88px;
   }
 }
 

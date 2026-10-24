@@ -1493,3 +1493,105 @@ underlying claims.
   `/images/aicte-logo.png` on both pages. NO deploy — commit
   only; the parent redeploys. NOTHING merged to main: this
   stays on `leo-build-v1`.
+
+### 25.16 Sitewide dead-space pass (2026-10-24)
+Aravind's order: deep-inspect the whole site for dead spaces —
+"a lot of dead spaces across the website" — and fix them
+systematically through shared values, not per-page hacks.
+Audit method (no live browser in this pass): every route's
+section structure was mapped from source — all 89 routes'
+section open tags, component bands, and inner spacers — at
+both widths via the shared values (mobile base vs `md:`
+desktop step). Rendered-pixel confirmation is still owed on
+the parent's visual pass after redeploy.
+
+FINDING — one systematic cause, not scattered bugs: the
+shared `section-pad` utility (84px mobile / 116px desktop,
+top AND bottom) is used by 53+ sections sitewide, and sections
+stack directly. Every junction between two sections was
+168px mobile / 232px desktop of pure padding — that is the
+dead band Aravind kept screenshotting: content ends, a long
+empty field, next heading. Worst on Home, which runs seven
+`section-pad` sections plus two more section-pad bands
+(`TestimonialSpotlight`, `ForInstitutesBand`) in one scroll:
+hero → courses → about → stats → trainings → services →
+offers → institutes → features → testimonials → CTA, with a
+232px desktop void at nearly every joint. Same stacking on
+course pages (content sections + related-trainings section),
+LP pages (two `section-pad` sections after the hero strip),
+compare/blog/article pages, and all index pages.
+
+FIX (one shared value, `globals.css` @utility section-pad):
+padding-block 84px → **64px** mobile, 116px → **88px**
+desktop. Junctions become 128px mobile / 176px desktop —
+still generous breathing room, squarely standard section
+rhythm, but no longer reading as empty. Applied sitewide by
+the single change; no page was touched individually.
+
+AUDIT LIST (before → after, why it was dead):
+- Home, all section junctions (courses/about/trainings/
+  services/offers/institutes/features/testimonials):
+  168/232px → 128/176px. Dead because two full paddings
+  stacked with no content between them.
+- Home, StatsRibbon junction: section-pad bottom + ribbon
+  `py-14` + section-pad top meant the thin stats strip sat
+  between two voids; ribbon padding itself kept (56px is a
+  band, not a gap) — the junction shrinks via section-pad.
+- Home, TestimonialSpotlight → CtaBand junction:
+  116 + 64 = 180px desktop → 88 + 64 = 152px; CtaBand
+  `py-16` kept (CTA bands need their own air).
+- Course pages, content → related-trainings junction and
+  LP pages, hero-strip → content sections: same stacking,
+  same fix; LP hero itself was already tightened in §25.14
+  and is untouched here.
+- Compare / blog / index / about / services / for-colleges /
+  for-institutes / career-support / register / partner /
+  legal pages: all `section-pad` sections inherit the fix;
+  the one `section-pad pt-0` (for-colleges, top already
+  removed) is unaffected in intent.
+- Hero → first-section junctions (all pages): hero bottom
+  24/32px (§25.14) + section-pad top 88px desktop = 120px
+  desktop / 88px mobile — kept as breathing room (see open
+  question 2).
+
+KEPT DELIBERATELY (audited, not dead):
+- Inner block gaps `mt-12` (21×), `mt-14` (5×), `mt-16`
+  (9×), `space-y-10/12`: these separate distinct content
+  blocks inside a section (services page intro → grid →
+  split → CTA → grid; career-support blocks; catalogue
+  search groups). 48–64px between major blocks is rhythm,
+  not emptiness; tightening them would need per-page calls.
+- Band paddings: StatsRibbon `py-14`, CtaBand `py-16`,
+  footer grid `py-16` + bottom bar `py-5` — distinct zones
+  (ink bands, footer) need their own air; junctions around
+  them shrink via section-pad instead.
+- Hero values from §25.14 (24/32px) and the floating toggle
+  / sticky-header work: untouched.
+- Card/grid gaps (`gap-6`, `gap-8`, `gap-10`, `gap-12` on
+  hero grid): gaps between visible cards, not empty bands.
+
+ANCHORS: no section was removed or reordered; `scroll-
+margin-top: 96px` and `scroll-mt-32` on `#enquire`/`#demo`
+are untouched and still clear the sticky header (mobile
+~77px after §25.14; desktop unchanged). Both themes
+untouched (no colour/token change).
+
+OPEN QUESTIONS for Aravind (left as-is, not guessed):
+1. Internal block rhythm: should the `mt-16` (64px) gaps
+   between major blocks inside long pages (services,
+   career-support, local page) also tighten, or is the
+   current airy feel right once the section voids are gone?
+2. Hero → first-section junction (120px desktop after
+   this pass): is that tight enough, or should the first
+   section after a hero sit closer still?
+3. Alternating paper / surface-light section backgrounds
+   make every junction visible as a colour change; with
+   tighter padding the banding reads denser — confirm on
+   his phone whether that look is right or whether some
+   sections should lose the alternating tint.
+- Verified by local production build + crawl (see commit
+  verification): build passes, shared JS still 103 kB,
+  89/89 URLs 200, compiled-CSS audit confirms the new
+  `section-pad` values. NO deploy — commit only; the
+  parent redeploys. NOTHING merged to main: this stays on
+  `leo-build-v1`.

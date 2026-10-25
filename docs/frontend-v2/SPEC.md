@@ -1,437 +1,516 @@
-# GradeSpot Frontend 2.0 — Specification (DRAFT)
+# GradeSpot Frontend 2.0 — Specification (v2, LOCKED DIRECTION)
 
-Status: DRAFT, on branch `feat/frontend-v2-platform` only.
-Not approved, not merged, not deployed. `main` and the live Leo site are untouched.
-This spec is the source of truth for Frontend 2.0 work in this branch.
-No UI change in this branch may contradict this spec without an updated spec first.
+Status: v2 DRAFT, on branch `feat/frontend-v2-platform` only.
+Not approved as a built redesign, not merged, not deployed to production.
+`main` and all live sites are untouched.
+This spec is the single versioned source of truth for Frontend 2.0 work in
+this branch. No UI change in this branch may contradict this spec without
+an updated spec first.
 
-Source: the Final Website, Business Platform & Migration Blueprint shared
-2026-10-25, grounded the same day against the actual Leo codebase
-(`Gradespot-web-A-leo`, formerly `gradespot-leo-build-app`, `main` 289fe2b).
-Where the blueprint and an earlier standing rule disagree, the disagreement is
-listed under Open decisions — it is not silently resolved here.
+## Changelog — what this version supersedes, and why
 
-## 1. Final direction — Leo 2.0 + Axon
+- v1 spec (commit c6a97a0) and its implementation (commit f584ee5, preview
+  dpl_FkroYxCmFmayZTHFsNF2ov7cpQCu) are SUPERSEDED and are NOT the final
+  redesign. v1 improved information architecture, but it kept almost the
+  same homepage, card placements, hero and section structure, only
+  reorganizing Leo's existing components. That is not a genuine GradeSpot 2.0.
+- v1 implementation must NOT be merged. The Nexus build below replaces it,
+  in staged releases, on this same branch. The v1 preview is not a Nexus
+  preview. Its SSO-open / delete-preview cleanup is still pending the user's
+  word (see §14).
+- v2 (this file, 2026-10-25) settles the direction from the user's two
+  verdicts of 2026-10-25: (a) the Academy / Technology Solutions / Labs &
+  Career Pathways direction, and (b) the final GradeSpot Nexus verdict.
+  Where those verdicts correct v1, v2 follows the verdicts, not v1.
 
-- Primary frontend: Leo's Next.js architecture, upgraded visually and structurally.
-- Rebuild (`Gradespot-web-B-replica` site) is an alternative design and
-  reusable-component reference only. Do not copy its pages wholesale, and do
-  not claim a visual winner over Leo without a real screenshot comparison
-  (see §11).
+## 0. Identity — GradeSpot Nexus (internal) / GradeSpot IT Solutions (public)
+
+- Public brand, unchanged: **GradeSpot IT Solutions**.
+- Internal name for the redesigned experience: **GradeSpot Nexus**.
+- Tagline: Technology Academy · Certifications · Applied Labs ·
+  Enterprise IT Solutions.
+- Design philosophy: IBM Carbon's engineering discipline + GradeSpot's
+  existing visual identity + modern technology-product storytelling.
+- Three clearly differentiated experiences:
+  1. **Academy** — education and certifications.
+  2. **Technology Solutions** — business clients, professional services and
+     enterprise delivery.
+  3. **Labs & Career Pathways** — practical learning and professional
+     development.
+
+### Non-negotiable brand rule
+
+- Preserve the original GradeSpot logo, its proportions, and its existing
+  brand colors. The logo is the source of truth for the brand palette.
+- Do NOT replace the logo with a generic gradient symbol, and do NOT
+  replace the brand with a navy-and-purple identity from a concept image.
+  That concept identity is NOT approved.
+- Prior verified live-site tokens (Oct 2026 audit of gsitssolutions.com)
+  were primary orange #F7631B, secondary orange #F98238, heading navy
+  #0E2B3D, black footer, Inter / Roboto Slab. Those are prior audit values,
+  not a substitute for the pre-implementation sampling step below.
+- **Pre-implementation step, mandatory:** sample the actual brand tokens
+  from the repository's original logo files (`public/images/logo.png`,
+  `public/images/logo-light.png`) and the current approved CSS before any
+  Nexus implementation. Until that sampling is done, no Nexus palette is
+  final. The illustrative token hexes in §3 are NOT a verified logo
+  extraction.
+
+## 1. Direction — frontend first, staged, production preserved
+
+- Primary frontend: Next.js (see §7 for the full stack), on this branch.
+- Rebuild (`Gradespot-web-B-replica`) remains a reference only, not a
+  source to copy wholesale. No visual winner is claimed over it without a
+  real, clean-render screenshot comparison.
 - Operating model: frontend first, backend progressively. Launch the new
-  design safely, then activate administration and business services in stages.
-- Delivery: iterative, small releases, feature flags, rollback. Not waterfall.
-- Production rule: replace the WordPress frontend (gsitssolutions.com) only
-  after migration and acceptance testing, with the previous site and a tested
-  rollback path retained. Until then, the official WordPress site is untouched.
+  public experience safely, then connect Axon module by module.
+- Delivery: iterative DevOps delivery, not waterfall. Four releases (§12),
+  staged pull requests, feature flags where useful, rollback available.
+- Production rule: replace the WordPress frontend (gsitssolutions.com)
+  only after migration and acceptance testing, with the previous site and
+  a tested rollback path retained. Until then, the official WordPress site,
+  the Leo production site and the replica production site are untouched.
+- Proof that `main` is unaffected is NOT a preview URL alone. It is the
+  Git branch + deployment settings together: branch tip vs `main` tip,
+  deployment target (preview, not production), and aliases (empty for a
+  preview). Every Nexus preview report must state all three.
 
-Business positioning (proposed, in priority order):
+## 2. Navigation and business structure — six top-level groups
 
-1. Cybersecurity, cloud, networking and certification training — students,
-   professionals, corporate teams.
-2. Advanced infrastructure, Linux, DevOps, SRE, Docker, Kubernetes — IT
-   professionals and enterprise teams.
-3. Hands-on labs, technical assessments and real-world projects — learners,
-   companies, institutions.
-4. Cybersecurity and IT infrastructure services — SMEs, enterprises, institutes.
-5. Software development and digital solutions — businesses and institutions.
-6. Corporate training, staffing and consulting — B2B clients.
-7. Other existing training categories — relevant learners and partners.
+| Navigation | What belongs inside |
+| ---------- | ------------------- |
+| Academy | All Programs, Cybersecurity, Cloud, Networking, Linux & Infrastructure, DevOps & SRE, Software Engineering, AI & Data, other existing disciplines |
+| Certifications | AWS, Microsoft, Cisco, CompTIA, EC-Council, Red Hat, Kubernetes and other supported certification pathways |
+| Career Pathways | Job-role roadmaps, skill matrices, prerequisites, tools, projects, readiness assessments |
+| Labs & Projects | Practice environments, guided labs, capstones, quizzes, portfolios, challenges |
+| IT Solutions | Cybersecurity, cloud and infrastructure, software engineering, digital solutions, IT consulting |
+| Company & Resources | About, enterprise training, institutional partnerships, articles, student outcomes, verification, support, policies |
 
-This positioning does NOT delete medical coding, digital marketing, or other
-existing offerings. It reorders emphasis only. Hyderabad differentiation must
-come from real labs, documented projects, verifiable instructors,
-professional assessment and credible certification preparation.
-Never advertise guaranteed jobs or guaranteed external certifications.
+- For enterprise clients, make **For Business** a prominent utility link
+  or mega-menu feature within IT Solutions — do not bury the entire B2B
+  offering inside the Academy.
+- Remove duplicate calls to action, repetitive promotional banners and
+  redundant navigation labels. Content may be rewritten in professional
+  language while preserving the underlying service promises and factual
+  meaning. Merging a label does not delete a URL: existing indexed URLs
+  stay live or get a planned permanent redirect to equivalent content.
+- Brand vocabulary, kept distinct everywhere:
+  - **Academy:** learning programs, cohorts, curricula, learning outcomes,
+    assessments, faculty, certification preparation.
+  - **Professional Services:** discovery, technical consultation, solution
+    architecture, implementation, managed operations, support agreements.
+  - **Enterprise Solutions:** organizational capability building, workforce
+    enablement, infrastructure modernization, cybersecurity readiness and
+    technology delivery.
 
-## 2. Navigation — six menus, two actions
+## 3. Visual system — custom public system, Carbon-inspired rigor
 
-Top bar: location line "Hyderabad, India · Online & Classroom Training",
-plus Contact and Student Support links.
+### What Carbon is, and is not, for Nexus
 
-Primary menus:
+- IBM Carbon is an excellent design-system reference and is particularly
+  suitable for dense administrative interfaces, tables, enterprise forms,
+  filters, workflows and dashboards. Carbon v11 supports React and Web
+  Components, with tokens, icons, grids and accessibility guidance.
+- Carbon is NOT the visual foundation for the entire public-facing
+  GradeSpot website. A public EdTech site also needs editorial
+  storytelling, course discovery, immersive labs and conversion-focused
+  landing pages, which Carbon's enterprise components alone do not give.
+- Preferred direction — hybrid: preserve GradeSpot's brand, build a
+  **custom public design system inspired by Carbon's rigor**, and use
+  Carbon more directly where appropriate in future administration and
+  student-management interfaces.
 
-| Menu | Purpose |
-| ---- | ------- |
-| Training | All courses, domains, learning pathways, beginner-to-advanced programs |
-| Certifications | Vendor certification preparation and exam-aligned programs |
-| Labs & Projects | Practical labs, assessments, portfolios and advanced programs |
-| IT Solutions | Professional technical services and consulting |
-| For Organizations | Corporate training, colleges, institutes, staffing and partnerships |
-| Explore | About, resources, articles, careers, testimonials, verification, support |
+| GradeSpot surface | Choice |
+| ----------------- | ------ |
+| Marketing homepage | Custom GradeSpot design |
+| Academy catalog | Custom design + accessible component primitives |
+| Course details | Custom learning-focused layout |
+| Career roadmaps | Custom interactive visualizations |
+| Labs and student portal | Carbon-inspired application UI |
+| Admin dashboard | Carbon React, after compatibility testing |
+| CRM and reporting | Carbon tables, filters and forms |
+| Enterprise client portal | Carbon-inspired or Carbon React |
 
-Primary CTA: "Talk to an Advisor". Secondary action: "Explore Programs"
-in the hero and on training pages. Registration is contextual, not an
-equally prominent button on every page.
+- Do NOT mix Carbon and another full UI library indiscriminately on the
+  same screen. That creates inconsistent spacing, typography, focus states
+  and styling.
 
-### Merge / move map (labels, not URLs)
+### 40-token color system — tokens, not 40 competing accents
 
-| Existing options | Final treatment |
-| ---------------- | --------------- |
-| Trainings + scattered certification links | Training and Certifications |
-| Courses + course comparisons | Training discovery; comparisons under Resources |
-| Career Support + Testimonials + Student Certifications | Student Outcomes & Support; individual pages retained where useful |
-| For Colleges + For Institutes + Partner With Us | For Organizations mega menu |
-| Corporate Trainings + Industrial Trainings + Workshops | Enterprise & Institutional Training |
-| Cybersecurity Services + Network Infrastructure | IT Solutions, distinct service categories |
-| Web Development + Digital Marketing Solutions + Logo Designing | Digital & Software Solutions |
-| Domestic Consultancy + Abroad Consultancy + US IT Staffing | Talent & Consulting |
-| About Us + Why Choose Us + Team Members | About GradeSpot hub |
-| Blog + Resources + FAQ + DigiDefense Blog | Knowledge & Resources |
-| Contact Us + Request Callback + Counselling | Contact & Advisory flow |
-| Register | Contextual enrollment / application action |
-| Pricing | Course-specific pricing, plus a pricing information page where applicable |
+- Use **40 design tokens, not 40 equally prominent colors**. An interface
+  with 40 competing accents would be visually noisy and less professional.
+- In actual use, most pages rely on neutral surfaces, two or three brand
+  accents, and a limited set of semantic colors. The 40 tokens provide
+  depth for hover states, charts, light/dark themes, category badges,
+  diagrams and feedback.
+- The token architecture below is ILLUSTRATIVE only. It is not a verified
+  extraction of the existing logo. Brand accents in it must be replaced or
+  confirmed by the §0 sampling step before implementation. Do not ship
+  these hexes as GradeSpot brand colors on the strength of this spec alone.
+  - Brand & interaction (illustrative): #0C57B7, #F5A477
+  - Backgrounds (illustrative): #FFFFFF, #EEF5FF
+  - Text & surfaces (illustrative): #111827, #E2E8F0
+  - Feedback & data (illustrative): #166534, #F87171
+  - Technical accents (illustrative): #7C3AED, #CCFBF1
+- The earlier v1 direction (Prospectus paper/ink/vermilion, and the
+  navy/graphite/ivory/electric-blue concept) is superseded for Nexus by
+  this section: the public palette is logo-derived, with a custom system
+  built on top of it. The Leo v1 production tokens are unchanged on `main`
+  and live; they are not the Nexus palette.
 
-Rule: merging a navigation label does NOT merge every URL. Existing indexed
-URLs stay live, or get a carefully planned permanent redirect to equivalent
-content. A full URL inventory of the official site is required before any
-production switch (see §9).
+### Page compositions — genuinely different, not repeated card rows
 
-### Mega-menu shape
+- The homepage must be visually different: alternating editorial,
+  technical and application-style sections, not repeated rows of identical
+  cards.
+- Hero direction (conceptual copy, colors per §0): "Engineering Skills.
+  Real-World Solutions." — professional technology education, certification
+  preparation, hands-on labs and enterprise IT services — with Explore
+  Academy and IT Solutions actions, plus Cybersecurity Academy, Cloud &
+  Infrastructure, Career Pathways and Enterprise Solutions blocks.
+- Distinct visual grammar per major page type:
+  - Academy: structured discovery.
+  - Course pages: curriculum and learning-outcome layouts.
+  - Career pathways: skill graphs.
+  - Labs: technical workspaces.
+  - IT Solutions: case-study and service-delivery layouts.
+  - Enterprise pages: solution briefs and proposal workflows.
 
-Desktop: three structured columns plus an optional featured panel.
-Mobile: one level of accordion navigation plus a dedicated search experience.
-Search: "Search courses, services, certifications..." — available from the header.
+## 4. Course catalog — decisions, not identical cards
 
-Training mega menu, as proposed:
+Do not present every course as an identical card. Each program needs a
+clear classification:
 
-- By Domain: Cybersecurity, Cloud Computing, Networking & Infrastructure,
-  Linux & System Administration, DevOps & SRE, Software & Data, Other Programs.
-- By Experience: Foundation, Intermediate, Advanced, Professional Upskilling.
-- Discover: All Training Programs, Upcoming Batches, Free Demo, Training Modes.
+| Level | Audience | Curriculum | Access model |
+| ----- | -------- | ---------- | ------------ |
+| Foundation | Beginners and career starters | Fundamentals, guided exercises, basic quizzes | Open enrollment |
+| Professional | Learners with basic knowledge | Tools, troubleshooting, projects, certification objectives | Recommended prerequisites and optional assessment |
+| Advanced / Specialist | Experienced learners | Architecture, complex labs, case studies, capstones | Prerequisite verification and technical assessment |
 
-New items such as advanced cohorts, labs and certification roadmaps become
-public links only when the corresponding offering actually exists.
+- "Premium" describes depth, instructor access, lab resources and
+  specialized delivery — not that everyone who pays more is automatically
+  technically qualified.
+- Catalog filters: category, level, delivery mode, duration, prerequisite
+  level, certification alignment, price visibility, lab availability.
+- Syllabus access: a public curriculum preview, with protected material
+  behind a paid enrollment entitlement. Do not hide basic course
+  objectives or essential purchase information behind payment.
+- Free demos are a per-program setting:
+  `demo_policy = none | free_intro | scheduled_demo | paid_orientation | consultation_only`
+  A specialist cohort may offer an application discussion or paid
+  orientation instead of a free technical demo; a beginner course may
+  offer a free introductory class.
+- Program status, mandatory on every listing: `Available | Planned |
+  Waitlist | Not Offered`. Only published, deliverable programs are promoted
+  as enrollable.
 
-## 3. Route map — grounded in the Leo codebase at 289fe2b
+### Target domain taxonomy — target, not a claim of current teaching
 
-Existing Leo routes checked 2026-10-25 (under `src/app`):
+| Domain | Example offerings |
+| ------ | ----------------- |
+| Cybersecurity | Security fundamentals, SOC, SIEM, incident response, ethical hacking, cloud security, digital forensics |
+| Cloud & Platforms | AWS, Azure, GCP, cloud architecture, IaaS/PaaS/SaaS fundamentals, cloud networking |
+| Networking | TCP/IP, Cisco, routing, switching, firewalls, network automation |
+| Linux & Infrastructure | Linux administration, Windows Server, virtualization, storage, backup, infrastructure engineering |
+| DevOps, SRE & Platform Engineering | Git, CI/CD, Docker, Kubernetes, Terraform, Ansible, monitoring, GitOps |
+| Software Engineering | Frontend, backend, full-stack, APIs, testing, architecture, databases |
+| AI, Data & Automation | Python, data engineering, ML, LLM applications, RAG, agentic AI, MLOps |
+| Enterprise Applications | SaaS administration, identity, collaboration, ITSM and business platforms |
+| Other existing programs | Medical coding, digital marketing and other current offerings |
 
-- Training: `/trainings`, `/trainings/[slug]`, `/compare`, `/compare/[pair]`,
-  `/lp/[slug]`.
-- Services: `/services`, `/services/[slug]`.
-- Organizations: `/for-colleges`, `/for-institutes`, `/partner-with-us`,
-  `/corporate-and-international`.
-- Explore / trust: `/about-us`, `/why-choose-us`, `/team-members`,
-  `/testimonials`, `/student-certifications`, `/career-support`, `/blog`,
-  `/blog/[slug]`, `/resources`, `/faq`, `/certificate-verification`,
-  `/accessibility`, `/pricing`, `/contact-us`, `/register`.
-- Legal (drafts, facts still open): `/privacy-policy`, `/refund-policy`,
-  `/terms-and-conditions`.
-- Local SEO: `/training-institute-in-dilsukhnagar-hyderabad`.
-- APIs in the repo today: `/api/leads`, `/api/verify`.
+- This taxonomy is a TARGET, not a claim that GradeSpot already teaches
+  every listed course. Local relevance (a Dilsukhnagar provider marketing
+  AWS, DevOps, Linux, cybersecurity, Azure DevOps, multi-cloud, data and
+  AI training) supports category relevance locally; it does not establish
+  demand volumes or justify launching all of them immediately.
+- Grounding gap, carried forward: the current Leo catalogue has no Linux
+  or DevOps category, and no standalone labs offering. Those domains are
+  therefore `Planned` / `Waitlist` until real courses exist — never
+  presented as available.
 
-Gaps this spec creates (new work, not existing routes):
+## 5. Career pathways — a major differentiator, interactive
 
-- No `/certifications` route exists today; Certifications must be built as
-  its own pages or as clearly labelled filtered Training views, and vendor
-  names (AWS, Azure, Cisco, CompTIA, etc.) may appear only for programs
-  genuinely offered — verify against `src/data/certifications.ts` and the
-  course catalogue before publishing any vendor pathway.
-- No labs/projects route exists today. Labs & Projects pages are new and
-  must not be published until labs, assessments or projects exist.
-- Data today: `src/data/courses.ts`, `course-details.ts`, `services.ts`,
-  `certifications.ts`, `catalogue-nav.ts`, `promotions.ts`, plus
-  `src/lib/supabase.ts`, `lead-validation.ts`, `metadata.ts`, `schema.ts`,
-  `aeo.ts`, `wa.ts`. The shared Supabase project is `yrbpolqhipwfmvwdgtvc`
-  (same project/tables as the replica) — any catalogue change must account
-  for production copy coming from live Supabase rows, not just repo data.
+Each career roadmap connects job responsibilities, prerequisite skills,
+tools, certifications, projects and relevant GradeSpot programs. Pathways
+are interactive — a visitor selects a role, inspects required skills,
+compares current knowledge and finds appropriate programs — not merely
+long blog articles.
 
-## 4. Homepage — eleven sections, replacing the current hierarchy
+| Career pathway | Skills and tools to cover |
+| -------------- | ------------------------- |
+| Frontend Engineer | HTML, CSS, TypeScript, React, Next.js, accessibility, testing, Git, browser tooling |
+| Backend Engineer | Node.js, NestJS, REST, SQL, PostgreSQL, authentication, caching, testing, observability |
+| Full-Stack Engineer | Frontend + backend + databases + deployment + application security |
+| Software Engineer | Data structures, algorithms, software design, testing, Git, CI/CD |
+| Systems Engineer | Linux, Windows, networking, virtualization, scripting, identity, backups |
+| Cloud Engineer | AWS/Azure/GCP, IAM, VPC/VNet, compute, storage, infrastructure as code |
+| DevOps Engineer | Linux, Git, Docker, Kubernetes, Terraform, CI/CD, Helm, GitOps |
+| SRE | SLIs/SLOs, monitoring, incident response, automation, reliability, capacity planning |
+| Infrastructure Engineer | Networking, servers, storage, virtualization, automation, resilience |
+| SOC Analyst | SIEM, log analysis, detection, triage, incident response, threat intelligence |
+| Security Engineer | Secure architecture, IAM, vulnerability management, cloud security, defensive engineering |
+| AI/LLM Engineer | Python, APIs, embeddings, retrieval, evaluation, model deployment, guardrails |
 
-Replace the current section hierarchy; reuse existing content and components
-where practical instead of adding repetitive blocks. The current Leo homepage
-already has a split hero, three audience cards, an answer-first summary and a
-ticker — those are inputs, not the final structure.
+## 6. Forms, qualification and security
 
-1. Hero — technology training + IT solutions, two clear customer pathways.
-   The hero must represent GradeSpot's full offering, not a single course.
-   CEH belongs as a featured cybersecurity program card, not as the visual
-   for the whole business.
-2. Choose Your Path — Students · Professionals · Businesses · Institutions.
-3. Explore Technology Domains — Cybersecurity, Cloud, Networking, DevOps,
-   Software and other programs.
-4. Certification Pathways — genuinely offered programs only (see §3).
-5. Hands-on Learning — labs, real projects, assessments, instructor-guided learning.
-6. Professional IT Solutions — security, infrastructure, software, digital
-   and consulting services.
-7. Why GradeSpot — real differentiators, teaching approach, expertise and
-   verifiable evidence.
-8. Enterprise & Institutional Programs — corporate training, colleges,
-   institutes and partnerships.
-9. Success & Trust — verified testimonials, certificate verification and
-   documented outcomes.
-10. Insights & Resources — technical articles, certification guides,
-    comparisons and FAQs.
-11. Speak With GradeSpot — training enquiry, service consultation, location,
-    contact and footer.
+Avoid collecting excessive data before trust is established. Progressive
+disclosure throughout.
 
-## 5. Customer journey and page templates
+| Customer action | Collect initially | Collect later if needed |
+| --------------- | ----------------- | ----------------------- |
+| Training enquiry | Name, verified contact method, program, preferred mode | Experience, learning goals |
+| Program application | Contact, program, education/experience, prerequisites | Assessment, portfolio |
+| Advanced cohort admission | Verified applicant, skill test, lab exercise, objectives | Interview, identity checks when justified |
+| Business consultation | Contact, company, business email, service need | Scope, timeline, budget |
+| Service proposal | Authorized contact, requirements, expected deliverables | Contract and billing details |
+| Enterprise training | Company, team size, skills needed, preferred delivery | Learner roster and scheduling |
+| Support | Ticket category, verified contact, issue | Secure attachments |
 
-Journey: Discover (search, navigation, guides) → Evaluate (syllabus, labs,
-pricing, FAQs) → Engage (demo, consultation, application) → Deliver
-(training, labs, service projects).
+- A person asking about AWS training must not have to provide employment
+  history, home address and identity documents.
+- Advanced courses: weighted assessment emphasizing foundational
+  knowledge, hands-on tasks and troubleshooting, with a bridging route
+  for learners who need preparation. Sensitive cybersecurity labs require
+  acceptable-use commitments and isolated, authorized environments.
+- Security baseline: client-side Zod validation for feedback;
+  server-side schema validation for enforcement; rate limits; bot
+  protection; email/phone verification when justified; upload scanning;
+  secure authentication; staff MFA; role-based access; audit logs;
+  verified payment webhooks. Use OWASP ASVS 5.0 as the application-security
+  verification baseline (risk-based controls — see §10).
+- Never publish student private data, assessment scores, certificates or
+  client information by default. Public certificate verification discloses
+  only the minimum information necessary.
 
-Every course page must answer: what students will learn, who it is suitable
-for, prerequisites, duration, learning mode, lab requirements, certification
-relationship, assessment methods, fees or quotation process, and the next
-available action. Do not force registration before viewing useful information;
-registration is needed only for applications, protected assessments,
-purchases and student access.
+## 7. Frontend technology stack (Nexus)
 
-Every business service page must answer: what problem GradeSpot solves, what
-is included, how engagement works, what the client must provide, expected
-deliverables, support arrangements, and how to request a proposal.
+| Layer | Recommended technology |
+| ----- | ---------------------- |
+| Framework | Next.js 16 App Router |
+| UI language | TypeScript 5 |
+| Rendering | React Server Components, SSR and static generation |
+| Styling | Tailwind CSS 4 + CSS custom properties |
+| Component foundations | Radix UI primitives + custom GradeSpot components |
+| Enterprise components | IBM Carbon React where appropriate (see §3) |
+| Icons | Lucide React; Carbon icons where Carbon is used |
+| Forms | React Hook Form + Zod |
+| Animations | Motion, selectively and with reduced-motion support |
+| Search | Meilisearch or Typesense when catalog scale justifies it |
+| Data visualization | Recharts for standard charts; React Flow for career roadmaps |
+| Data access | Typed repository interfaces and generated API clients |
+| Content configuration | Versioned JSON schemas, later served by Axon |
+| Testing | Vitest, React Testing Library, Playwright, axe-core |
+| Monitoring | OpenTelemetry-compatible telemetry and error reporting |
+| CI/CD | GitHub Actions + Vercel previews |
+| Future backend | NestJS Axon + PostgreSQL |
 
-## 6. Forms — short and progressive, one purpose each
+- Next.js recommends Server Components by default and selective Client
+  Components to reduce client-side JavaScript — especially important for
+  fast public pages and search-engine crawlability.
+- React Compiler is an EVALUATED optimization, not enabled blindly.
+  Next.js 16 supports it, but build and compatibility testing come first.
+- Existing Leo stack (Next.js 16.4.3, React 19, Tailwind 4, Zod) is
+  compatible in direction; the stack table above is the Nexus target, not
+  a claim that every item is already in the repo.
+- Future backend note: NestJS Axon + PostgreSQL is the verdict's future
+  direction. It still conflicts with the earlier Axon v1 decision (a
+  single Next.js + Route Handlers + Supabase app). That conflict is OPEN
+  and is not settled by this spec — frontend work must not depend on a
+  backend swap, and no backend migration happens on the strength of this
+  spec alone.
 
-No generic form for everything, and no long application form for someone who
-only wants a brochure. Every production CTA must have a working destination;
-never launch a form that pretends to submit successfully. Submitted data must
-be stored or delivered reliably (today: `/api/leads` with shared
-client+server validation in `src/lib/lead-validation.ts`).
+## 8. AI integration — discovery first, not a decorative chatbot
 
-| Form | Essential fields | Later-stage / optional |
-| ---- | ---------------- | ---------------------- |
-| Quick enquiry | Name, phone or email, interest, preferred contact method | Message |
-| Free demo | Name, contact, course, preferred mode | Preferred date |
-| Course application | Name, verified contact, selected program, education/experience, prerequisites acknowledgement | Assessment after application |
-| Advanced cohort | Course, verified identity/contact, relevant experience, skills assessment, learning objectives | Portfolio/GitHub, interview |
-| Service consultation | Name, work email, organization, service category, problem summary | Budget range, timeline |
-| Request for proposal | Organization, authorized contact, scope, requirements, timeline | Supporting documents, budget |
-| College/institute partnership | Institution name, authorized representative, official contact, collaboration type | Student count, dates |
-| Support request | Verified contact or account, category, issue | Attachments |
-| Certificate verification | Certificate code | Additional verification only when necessary |
+AI is a genuine product feature in Nexus, starting with AI-assisted
+discovery — not a generic chatbot on every page.
 
-Existing standing rules still apply: `/register` is lead only, no accounts;
-`/partner-with-us` is a discussion invitation only; promotions only via the
-`getPromotions()` seam (migration 0005), no invented offers; zero B2B prices
-until real prices are supplied.
+- **AI Program Finder:** a visitor describes background and goals; the
+  assistant suggests appropriate published courses, prerequisites, levels
+  and career pathways, with links to the actual catalog.
+- **AI Career Roadmap Assistant:** generates a personalized sequence of
+  skills, tools, certifications and projects for a selected role.
+- **AI Learning Assistant:** explains authorized course material, offers
+  practice questions and hints. It must NOT disclose protected premium
+  content to unenrolled visitors.
+- **AI Solutions Advisor:** helps business visitors clarify service
+  requirements and prepare a structured consultation request, without
+  inventing prices or commitments.
 
-## 7. Learning levels and advanced selection (proposed)
+Architecture:
 
-Three levels, with assessment-based placement, not arbitrary exclusion:
-
-- Level 1 — Foundation / Regular: computing, networking, operating systems,
-  Linux, scripting and security fundamentals as appropriate.
-- Level 2 — Professional / Applied: structured projects, troubleshooting,
-  cloud administration, defensive security and certification-aligned labs.
-- Level 3 — Advanced / Selective Cohort: complex infrastructure scenarios,
-  incident response, advanced cloud/security engineering, supervised
-  penetration-testing labs and capstone projects.
-
-Proposed advanced admission weights (a proposal, not an industry standard):
-
-| Criterion | Weight |
-| --------- | ------ |
-| Foundational knowledge | 25% |
-| Practical lab assessment | 35% |
-| Troubleshooting ability | 20% |
-| Project evidence | 10% |
-| Learning objectives and readiness | 10% |
-
-Starting policy (proposed): 75/100 direct advanced admission; 60–74
-conditional admission with bridging modules; below 60, a foundation pathway.
-Require separate minimum scores for safety-critical labs. Domain assessments:
-cybersecurity (TCP/IP, Linux, authentication, security fundamentals, log
-analysis, incident handling, authorization boundaries); cloud (networking,
-IAM, compute, storage, troubleshooting, infrastructure fundamentals);
-DevOps/SRE (Linux, Git, CI/CD, containers, observability, incident response);
-networking (subnetting, routing, switching, troubleshooting); software
-(programming, debugging, testing, Git, application design).
-
-Advanced cybersecurity access additionally requires: a signed acceptable-use
-agreement, isolated lab environments, scoped permissions, supervised practical
-work, and a prohibition on testing third-party systems without explicit
-authorization. Outcomes must be explainable, retakes and reasonable
-accommodations allowed, bridging programs provided. Placement, not labelling
-beginners as inferior.
-
-## 8. Anti-fraud and spam — layered, server-side
-
-Frontend validation is usability only; it is not a security boundary.
-Attackers can call APIs directly.
-
-| Risk | Controls |
-| ---- | -------- |
-| Spam enquiries | Rate limiting, honeypots, bot-risk challenges, server-side validation |
-| Fake email/phone | Email verification or OTP where justified |
-| Fake company enquiries | Business-domain verification, manual qualification, company evidence for high-value engagements |
-| Dummy registrations | Verified accounts, enrollment limits, duplicate detection |
-| Malicious form content | Strict schema validation, length limits, output encoding, parameterized SQL |
-| File-upload abuse | Type/size validation, malware scanning, private storage |
-| Credential attacks | MFA for staff, rate limits, secure sessions, breached-password screening |
-| Payment fraud | Hosted checkout, signed webhook verification, idempotency, reconciliation |
-| Fake certificates | Random non-guessable verification IDs, minimal public disclosure, rate limits |
-| Advanced lab misuse | Isolated environments, authorization, quotas, monitoring, automatic teardown |
-
-Workflow: new enquiry → automated checks → verified contact → lead
-qualification → human review when necessary → accepted / follow-up / rejected.
-Do not treat a personal email, limited technical knowledge, or a missing
-company website as proof of fraud. Store fraud-risk indicators carefully,
-with short retention and a route to correct false positives. For high-value
-B2B contracts, verify legal entity details, authority to sign, scope and
-payment terms before work begins. Collect GST information only when required
-for invoicing or relevant verification.
-
-## 9. Migration — frontend first, backend later
-
-Stage 1 — Frontend redesign: Leo 2.0 navigation, pages, forms and content,
-using stable local or existing approved data sources.
-Stage 2 — Production readiness: SEO migration, redirects, working lead
-capture, legal pages, analytics, security, backups, rollback testing.
-Stage 3 — Replace official frontend: deploy Leo to the official domain only
-after acceptance; retain the previous production site and a tested rollback path.
-Stage 4 — Connect Axon iteratively: catalog and content publishing, then
-enquiries, identity, admissions, assessments, bookings and payments.
-Stage 5 — Advanced platform: student portal, labs, projects, quizzes,
-enterprise workflows, AI search and AI-assisted support.
-
-Compatibility rule: public components must talk to business data through
-stable interfaces, so a later backend swap does not force a redesign:
-
-```ts
-interface CatalogRepository {
-  getCourses(): Promise<Course[]>;
-  getCourse(slug: string): Promise<Course | null>;
-}
-
-interface LeadService {
-  submitEnquiry(input: EnquiryInput): Promise<EnquiryResult>;
-}
+```text
+Next.js public frontend
+       |
+       v
+Authenticated / rate-limited AI gateway
+       |
+       +-- Catalog and career-pathway retrieval
+       +-- Knowledge-base retrieval
+       +-- Entitlement and permission checks
+       +-- Safety and abuse controls
+       +-- Model provider adapter
+       |
+       v
+Grounded answer with source links
 ```
 
-Initially these use existing approved data and the functional `/api/leads`
-endpoint. Axon later replaces the adapters.
+- Do not expose model API keys in the browser.
+- Do not let the model independently authorize course purchases, change
+  assessment scores or grant access to labs.
+- AI can start with a protected Next.js server endpoint and later move
+  behind Axon without changing the public interface.
 
-Deployment workflow: feature branch → PR → automated tests → preview
-deployment → accessibility/security review → staging → founder approval →
-production → monitoring. For this repo, note the correction to the blueprint's
-assumption: Leo's Vercel project is not git-connected, so a branch push does
-not auto-create a preview; previews are API-upload deployments and do not
-draw on the same path as a git push. No preview or production deploy happens
-from this branch without explicit approval.
+## 9. CMS-ready frontend
 
-## 10. Admin configuration and future AI (Axon, staged)
+Every important design choice is configuration-driven from the beginning,
+even before Axon is fully operational. Use typed component schemas, never
+arbitrary HTML/JavaScript injection by administrators.
 
-Admin modules (capabilities, not arbitrary code execution):
+| Configuration | What admins can control |
+| ------------- | ----------------------- |
+| Navigation | Menu labels, grouping, order, icons, visibility, destinations |
+| Homepage | Section order, layouts, featured programs, campaigns, CTAs |
+| Design | Approved themes, typography presets, colors, spacing, component variants |
+| Academy | Courses, levels, curriculum previews, prices, batches, demo eligibility |
+| Career Pathways | Roles, skill maps, tools, roadmaps, assessments |
+| Services | Offerings, consultation types, deliverables, engagement models |
+| Forms | Approved fields, validation rules, routing, consent text |
+| Publishing | Draft, preview, approval, scheduling, rollback |
+| AI readiness | Search provider, retrieval sources, recommendation features, safety settings |
 
-| Module | Capabilities |
-| ------ | ------------ |
-| Navigation Studio | Menus, mega-menu groups, order, links, featured cards |
-| Page Studio | Homepage sections, landing pages, templates, visibility |
-| Design System | Approved themes, fonts, colors, buttons, spacing |
-| Training Catalog | Courses, levels, prerequisites, syllabi, batches |
-| Certification Catalog | Exam relationships, vendor details, roadmaps |
-| Lab & Assessment Manager | Quizzes, lab assignments, grading rules, access |
-| Services Manager | Capabilities, deliverables, service enquiries |
-| CRM | Leads, qualification, follow-up, pipeline |
-| Admissions | Applications, assessment scores, cohort decisions |
-| Publishing | Drafts, previews, approvals, scheduled release, rollback |
-| Compliance | Consent records, policies, data requests, audit logs |
-| Integrations | Email, payments, WhatsApp, CRM, AI providers |
+## 10. Measurable quality gates — success is not visual appearance alone
 
-AI boundaries: separate services for search, recommendations, document
-retrieval and conversational assistance; model providers replaceable. AI must
-not directly modify grades, admission decisions, payments or published
-content without an explicit authorized workflow.
+| Metric | Target |
+| ------ | ------ |
+| Lighthouse performance | 90+ on representative public pages |
+| Accessibility | WCAG 2.2 AA |
+| LCP | ≤2.5 seconds at the 75th percentile |
+| INP | ≤200 ms at the 75th percentile |
+| CLS | ≤0.1 at the 75th percentile |
+| Security verification | OWASP ASVS 5.0 risk-based controls |
+| Mobile usability | No horizontal overflow; usable touch targets and navigation |
+| Navigation success | Users can find a course or service without unnecessary detours |
+| Forms | Clear validation, reliable delivery, spam resistance |
+| SEO | Crawlable pages, correct canonical URLs, redirects and structured data |
 
-## 11. Design tokens — start from approved Leo v1
+- WCAG 2.2 provides testable accessibility requirements; OWASP ASVS 5.0
+  provides a security verification framework. Neither is automatically
+  satisfied by choosing Carbon or Next.js.
+- Legal baseline, publish only what reflects actual practice: Privacy
+  Policy, Website Terms, Training Terms, Refund and Cancellation Policy,
+  IT Services Terms, Acceptable Use Policy, Cookie Notice where
+  applicable, Accessibility Statement, grievance/contact process.
+  India's DPDP Rules have a phased implementation timeline, so
+  privacy-by-design matters now. Still open, do not invent: grievance
+  officer, CIN and registered office, refund terms, data practices.
 
-Leo v1 (approved 2026-10-24) is the foundation: Prospectus design, Fraunces +
-Instrument Sans + IBM Plex Mono, self-hosted fonts, paper `#FAF6EE`,
-ink `#201913`, vermilion `#B23A0A`. Direction for 2.0: keep that editorial
-foundation and move toward a premium technology-enterprise appearance —
-disciplined typography, excellent spacing, strong real-world imagery,
-restrained motion, clear service categories, polished forms.
+## 11. Customer journey, page templates and existing-route grounding
 
-Hard guards, unchanged by this spec unless explicitly overridden by the user:
+- Journey: Discover (search, navigation, guides) → Evaluate (syllabus,
+  labs, pricing, FAQs) → Engage (demo, consultation, application) →
+  Deliver (training, labs, service projects).
+- Course pages answer: what students learn, suitability, prerequisites,
+  duration, mode, lab requirements, certification relationship, assessment,
+  fees or quotation process, next action. Do not force registration before
+  useful information; registration only for applications, protected
+  assessments, purchases and student access.
+- Service pages answer: problem solved, what is included, engagement
+  model, client inputs, deliverables, support, how to request a proposal.
+- Existing Leo routes at `main` 289fe2b (under `src/app`): `/trainings`,
+  `/trainings/[slug]`, `/compare`, `/services`, `/services/[slug]`,
+  `/for-colleges`, `/for-institutes`, `/partner-with-us`,
+  `/corporate-and-international`, `/about-us`, `/why-choose-us`,
+  `/team-members`, `/testimonials`, `/student-certifications`,
+  `/career-support`, `/blog`, `/resources`, `/faq`,
+  `/certificate-verification`, `/accessibility`, `/pricing`,
+  `/contact-us`, `/register` (lead only), `/api/leads`, `/api/verify`.
+  No `/certifications` route and no standalone labs route exist today.
+  The shared Supabase project is `yrbpolqhipwfmvwdgtvc` (same
+  project/tables as the replica) — production copy can come from live rows,
+  not just repo data.
+- Compatibility rule: public components talk to business data through
+  stable typed interfaces (e.g. `CatalogRepository.getCourses() /
+  getCourse(slug)`, `LeadService.submitEnquiry()`). Initially these use
+  existing approved data and `/api/leads`; Axon later replaces the
+  adapters without a public redesign. Never launch a form that pretends
+  to submit successfully.
 
-- The approved Leo logo plate (original luminous parchment + halo,
-  per-theme logo swap) stays untouched.
-- All assets local in the repo, never hotlinked.
-- Official GradeSpot logo unmodified; content-truth layer stays; no invented
-  fees, dates, trainers, stats, ratings, prices or placement claims.
-- No vendor logos or partner badges without proof of partner status.
-- The `package.json` name is still `gradespot-leo-build-app` locally; the
-  GitHub rename to `Gradespot-web-A-leo` does not by itself rename the
-  package or the Vercel project.
+## 12. Rollout — four releases, staged PRs, on this branch
 
-## 12. Compliance — targets, not claims
+1. **Release 1 — Design system and navigation:** logo-sampled 40-token
+   system, custom public components (Carbon-inspired rigor, Carbon only
+   where §3 says so), six-group navigation, homepage composition.
+2. **Release 2 — Academy and career discovery:** catalog with levels,
+   filters, curriculum previews, `demo_policy`, program status, and
+   interactive career pathways.
+3. **Release 3 — IT Solutions and conversion workflows:** service and
+   enterprise pages with case-study / solution-brief grammars, For
+   Business prominence, progressive forms and consultation/proposal flows.
+4. **Release 4 — AI integration and CMS configuration readiness:** the
+   four AI products behind the §8 gateway, plus versioned JSON
+   configuration schemas for navigation, homepage, design, Academy,
+   pathways, services, forms and publishing.
 
-Targets: WCAG 2.2 AA for accessibility; OWASP ASVS / OWASP Top 10 for web
-security; dependency and secret scanning, signed releases where practical;
-ISO/IEC 27001-aligned controls (alignment only — do not claim certification
-unless independently achieved); India's DPDP Act and applicable Rules;
-GDPR or other local privacy laws when they actually apply to a customer;
-PCI DSS obligations appropriate to the payment model, preferring hosted
-gateways; documented learning outcomes and fair assessment.
+- After the releases: test all official URLs and forms, migrate the
+  official site with rollback available, then connect Axon module by
+  module — content, catalog, enquiries, CRM, enrollment, assessments,
+  labs and payments. Iterative DevOps delivery, not waterfall.
+- Merge only after visual review, functional testing and production
+  approval. Until then, work stays on `feat/frontend-v2-platform`, in
+  staged pull requests, with `main` untouched.
+- Vercel previews for this branch are API-upload previews (the Leo
+  project is not git-connected), preview target only, no alias, and a
+  preview report must state branch tip, `main` tip, target and aliases.
 
-Policy pages to publish (only when they reflect actual practice):
-Privacy Policy (purposes, processors, retention, rights, contact); Terms of
-Website Use; Training Enrollment Terms (fees, attendance, assessment,
-completion); Refund, Cancellation and Rescheduling Policy; IT Services Terms
-with separate statements of work; Acceptable Use Policy for portals, labs
-and cybersecurity training; Cookie Notice and preferences where applicable;
-Intellectual Property and Training Materials Policy; Grievance and Privacy
-Contact; Accessibility Statement.
+## 13. Illustrative material and screenshot limitation — do not misuse
 
-Still open (do not invent): grievance officer, privacy/refund text details,
-CIN and registered office, refund terms, data practices. These are the same
-gaps already in the policy drafts and in Axon `DECISIONS-NEEDED.md`.
-Do not promise automatic refunds, certification eligibility or 24/7 support
-unless GradeSpot can deliver them.
+- Any design-preview statistics, course prices, ratings, named offerings
+  and UI claims in concept material are ILLUSTRATIVE PLACEHOLDERS, not
+  verified GradeSpot facts or live-site measurements. Do not publish them
+  as facts.
+- Simulated "current site" panels in concept material are NOT actual
+  screenshots of `gradespot-leo-build-app.vercel.app`,
+  `gradespot-app.vercel.app`, or the official site, and must not be used
+  as evidence of their present designs.
+- Likewise, no visual score or claim that Nexus definitively looks better
+  than any live site is valid without a real, clean-render comparison at
+  identical viewports.
 
-External claims in the blueprint (DSCI September 2026 research, DPDP Rules
-notified November 2025 with duties phasing through 13 May 2027, OWASP
-bot-management guidance, Google AI-search guidance) are recorded here as
-blueprint citations only. They were not independently verified for this spec
-and must not be published as GradeSpot facts until sourced.
+## 14. Open decisions and pending cleanup — confirm before building beyond this spec
 
-## 13. Screenshot limitation — do not claim what was not seen
-
-The blueprint's author could not retrieve the live Leo or Rebuild deployments
-for inspection and presented proposed layouts, not live screenshots. This
-spec likewise makes no visual score and no claim that Leo definitively looks
-better than Rebuild. A proper comparison, if wanted later, captures desktop
-homepage, open mega menu, mobile homepage, mobile drawer, course page and
-service page for both sites at identical viewport sizes, in a clean render —
-not from memory or from proposed layouts.
-
-## 14. Open decisions — confirm before building beyond this spec
-
-1. Navigation merge: the blueprint changes the earlier rule (preserve every
-   existing menu item) to "preserve business meaning, merge redundant
-   navigation". Confirm this supersedes the old rule.
-2. Backend stack: the blueprint proposes a NestJS modular monolith (Axon)
-   with PostgreSQL and reconciliation of existing Supabase data. This
-   conflicts with the earlier Axon v1 decision (a single Next.js + Route
-   Handlers + Supabase app, Supabase recommended over Firebase, monorepo
-   only when deployables genuinely split). Confirm before any backend change.
-3. Pricing Set A vs Set B: still unanswered, parked in Axon
-   `DECISIONS-NEEDED.md`. Do not nag; do not invent prices.
-4. Certification vendors actually offered: verify against the catalogue
-   before publishing AWS/Azure/Cisco/CompTIA pathways.
-5. Labs, projects and advanced cohorts: publish only when the offering exists.
-6. Future organization `gradespot-official/gradespot-web-leo` and the
-   backend/admin/contracts/infrastructure repos: later, not now. Current
-   personal repos and live deployments stay untouched during planning.
-7. Vercel preview path for this branch: API-upload preview, not git-triggered,
-   and only on explicit approval.
+1. Logo token sampling (§0) must be completed before Nexus implementation.
+   Exact Nexus palette values are not in this spec.
+2. Navigation merge vs preserve-every-menu-item: the Nexus six groups
+   merge redundant labels; the old preserve-every-item rule is superseded
+   for Nexus by this spec, but no URL is deleted without a redirect plan.
+3. Backend: NestJS Axon + PostgreSQL (future verdict) vs earlier Axon v1
+   Next.js + Supabase — OPEN, not settled here.
+4. Pricing Set A vs Set B: still unanswered, parked in Axon
+   `DECISIONS-NEEDED.md`. Do not invent prices.
+5. Certification vendors actually offered, labs actually offered, and
+   Linux/DevOps courses actually offered: verify against the catalogue
+   before publishing; otherwise mark `Planned` / `Waitlist`.
+6. Search provider (Meilisearch vs Typesense) only when catalog scale
+   justifies it; React Compiler only after build/compatibility testing.
+7. Future organization `gradespot-official/gradespot-web-leo` and
+   backend/admin/contracts/infra repos: later, not now.
+8. **Pending cleanup, unchanged by this revision:** Leo Vercel SSO is
+   temporarily null for the v1 preview, and preview
+   dpl_FkroYxCmFmayZTHFsNF2ov7cpQCu still exists. Restore SSO to
+   `all_except_custom_domains` and delete that preview when the user says
+   he is done reviewing it. Do not confuse that v1 preview with Nexus.
 
 ## 15. Phased backlog (from this spec, in order)
 
-1. This spec, reviewed and corrected by the user.
-2. Route inventory + redirect plan for the official site (before any switch).
-3. Navigation 2.0: six menus, mega menus, mobile accordion, search.
-4. Homepage 2.0: the eleven sections in §4, reusing existing components.
-5. Training discovery + course/service page templates (§5).
-6. Progressive forms (§6) with working `/api/leads` destinations only.
-7. CMS configuration contracts (Navigation/Page/Design/Catalog modules, §10)
-   — contracts first, admin UI later.
-8. SEO/security/accessibility acceptance pass (WCAG 2.2 AA target, OWASP,
-   structured data, validation, spam controls).
-9. Preview → accessibility/security review → staging → founder approval →
-   production, with rollback tested. Production switch is a separate decision.
-10. Axon integration in the §9 order, starting with catalog/content, only
-    after Open decision 2 is settled.
+1. This spec (v2), reviewed and corrected by the user. ← current step
+2. Logo token sampling (§0) + 40-token system, Release 1 design system.
+3. Navigation (§2) + homepage composition (§3), Release 1.
+4. Academy catalog + career pathways (§4–§5), Release 2.
+5. IT Solutions + enterprise conversion workflows (§2, §6), Release 3.
+6. AI gateway + four AI products (§8) and CMS configuration schemas
+   (§9), Release 4.
+7. SEO/security/accessibility acceptance pass against §10 gates.
+8. Preview → visual review → functional testing → staging → founder
+   approval → production, with rollback tested. Production switch is a
+   separate decision.
+9. Axon integration in §12 order, only after Open decision 3 is settled.

@@ -148,6 +148,7 @@ export default function PartnerPage() {
               idPrefix="partner"
               submitLabel="Start the Conversation"
               interestOptions={["Collaboration", "Franchise Discussion"]}
+              showCountry
             />
           </div>
         </div>

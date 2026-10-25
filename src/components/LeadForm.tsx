@@ -18,6 +18,7 @@ export default function LeadForm({
   interestOptions,
   hideMessage = false,
   submitLabel = "Request a Callback",
+  showCountry = false,
 }: {
   interest?: string;
   idPrefix?: string;
@@ -26,6 +27,11 @@ export default function LeadForm({
   interestOptions?: string[];
   hideMessage?: boolean;
   submitLabel?: string;
+  // Optional, never required: a free-text country field (used by the
+  // Partner With Us form). validateLead accepts it (max 100 chars) and
+  // createLead includes it in the insert, but it persists ONLY once the
+  // leads.country column exists — that DB migration is still pending.
+  showCountry?: boolean;
 }) {
   const pathname = usePathname();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -53,6 +59,10 @@ export default function LeadForm({
       message: String(fd.get("message") ?? ""),
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/"}`,
+      // Optional country (partner form only). validateLead accepts it
+      // (max 100 chars); it persists only once the leads.country column
+      // exists — see the showCountry note.
+      country: String(fd.get("country") ?? ""),
     };
     // Client runs the SAME validators as /api/leads (§25.18) — bad
     // input is caught here with inline per-field errors and never sent.
@@ -178,6 +188,20 @@ export default function LeadForm({
         )}
         {errors.interest && <p className="mt-1 text-xs text-field-error">{errors.interest}</p>}
       </div>
+      {showCountry && (
+        <div className="mt-4">
+          <label htmlFor={id("country")} className={label}>
+            Country <span className="font-normal text-body">(optional)</span>
+          </label>
+          <input
+            id={id("country")}
+            name="country"
+            autoComplete="country-name"
+            className={field}
+            placeholder="Your country"
+          />
+        </div>
+      )}
       {!hideMessage && (
         <div className="mt-4">
           <label htmlFor={id("message")} className={label}>

@@ -123,6 +123,7 @@ export interface LeadInput {
   message?: string;
   source?: string;
   whatsappOptIn?: boolean;
+  country?: string;
 }
 
 export interface LeadResult {
@@ -147,11 +148,16 @@ export async function createLead(lead: LeadInput): Promise<LeadResult> {
     // added by migration 0004). If that insert fails — e.g. the migration
     // has not been applied yet — retry with the core columns so a lead is
     // never lost to a missing column.
+    // Country rides in the full insert too, but it persists ONLY once
+    // the leads.country column exists (migration pending, applied
+    // separately — do not deploy expecting country to be stored until
+    // that column exists; until then the full insert fails and the
+    // core-column retry stores the lead without country).
     try {
       const { data, error } = await withTimeout(
         supabase
           .from("leads")
-          .insert({ ...core, source: lead.source ?? null, whatsapp_opt_in: lead.whatsappOptIn ?? false })
+          .insert({ ...core, source: lead.source ?? null, whatsapp_opt_in: lead.whatsappOptIn ?? false, country: lead.country ?? null })
           .select("id")
           .single(),
       );

@@ -1015,12 +1015,12 @@ export const courses: Course[] = [
     "title": "Complete Digital Marketing",
     "category": "Digital Marketing",
     "image": "/images/courses/digital-marketing.jpg",
-    "summary": "Master digital marketing in just 45 days with GradeSpot IT Solutions and land a job with a guaranteed success rate. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright…",
+    "summary": "Master digital marketing in just 45 days with GradeSpot IT Solutions and prepare for a career in digital marketing. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright…",
     "sections": [
       {
         "heading": "Digital Marketing",
         "paragraphs": [
-          "Master digital marketing in just 45 days with GradeSpot IT Solutions and land a job with a guaranteed success rate. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright professional future.",
+          "Master digital marketing in just 45 days with GradeSpot IT Solutions and prepare for a career in digital marketing. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright professional future.",
           "Complete your registration by filling out the form.",
           "Select an OptionCourse TrainingCertification VoucherOther Queries"
         ]
@@ -1197,7 +1197,7 @@ export const courses: Course[] = [
       {
         "heading": "Program - Features",
         "paragraphs": [
-          "Our 90-day SOC Analyst Training is designed to provide a comprehensive, hands-on learning experience that prepares you for real-world cybersecurity challenges. From SIEM mastery to incident response, this program equips you with the essential skills needed to succeed as a SOC Analyst. Expert-Led Training Learn from industry professionals and SOC practitioners with real-world experience. Get insights into the latest cyber threats, attack tactics, and defense strategies. Hands-On Labs & Real-World Scenarios Work on live cybersecurity incidents and develop threat detection skills. Perform log analysis, SIEM correlation, malware analysis, and forensic investigations. Flexible Online Learning with Mentorship Self-paced learning modules with live Q&A sessions and mentorship.Access course materials, cybersecurity tools, and practice labs anytime. Career Support & Resume Building Receive resume guidance, mock interviews, and career coaching. Get connected with hiring partners and job placement assistance. Career Guidance Receive career guidance and support from our team of experts, including resume building, interview preparation, and job placement assistance, to help you pursue rewarding opportunities in cybersecurity. Networking Opportunities Connect with fellow cybersecurity enthusiasts, industry professionals, and potential employers through networking events, workshops, and online forums, expanding your professional network and enhancing your career prospects.",
+          "Our 90-day SOC Analyst Training is designed to provide a comprehensive, hands-on learning experience that prepares you for real-world cybersecurity challenges. From SIEM mastery to incident response, this program equips you with the essential skills needed to succeed as a SOC Analyst. Expert-Led Training Learn from industry professionals and SOC practitioners with real-world experience. Get insights into the latest cyber threats, attack tactics, and defense strategies. Hands-On Labs & Real-World Scenarios Work on live cybersecurity incidents and develop threat detection skills. Perform log analysis, SIEM correlation, malware analysis, and forensic investigations. Flexible Online Learning with Mentorship Self-paced learning modules with live Q&A sessions and mentorship.Access course materials, cybersecurity tools, and practice labs anytime. Career Support & Resume Building Receive resume guidance, mock interviews, and career coaching. Get guidance on connecting with employers, plus job placement assistance. Career Guidance Receive career guidance and support from our team of experts, including resume building, interview preparation, and job placement assistance, to help you pursue rewarding opportunities in cybersecurity. Networking Opportunities Connect with fellow cybersecurity enthusiasts, industry professionals, and potential employers through networking events, workshops, and online forums, expanding your professional network and enhancing your career prospects.",
           "Enroll in Our Practical SOC Analysis Training Today!"
         ]
       },
@@ -1344,7 +1344,7 @@ export const courses: Course[] = [
       {
         "heading": "Why Choose GradeSpot IT Solutions for CEH Training?",
         "paragraphs": [
-          "100% Practical-Oriented Learning",
+          "Practical-Oriented Learning",
           "Live Ethical Hacking Labs",
           "Learn from Certified Cybersecurity Experts",
           "Industry-Recognized CEH Certification Preparation",

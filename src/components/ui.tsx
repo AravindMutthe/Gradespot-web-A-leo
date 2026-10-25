@@ -519,7 +519,7 @@ export function BlogCards() {
 // not a footnote.
 export function FeatureTrio() {
   const items = [
-    "100% Student Satisfaction",
+    "Student Satisfaction",
     "Top Class Trainings",
     "Online & Offline Classes",
   ];

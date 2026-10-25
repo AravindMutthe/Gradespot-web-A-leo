@@ -269,14 +269,20 @@ disclosure throughout.
 - A person asking about AWS training must not have to provide employment
   history, home address and identity documents.
 
-### 6A. Billing-style form pattern — agreement, payment and partnership ONLY
+### 6A. Billing-style form pattern — deals, agreements and exchanges ONLY
 
-- Use the structured billing-address form pattern (as in the reference
-  screenshot shared 2026-10-25) ONLY for agreement, payment and
-  partnership forms — the forms where a contract, invoice or authorized
-  organizational relationship is actually being created. Do NOT use this
-  pattern on enquiry forms; enquiries stay short and progressive per the
-  table above.
+- The reference screenshot shared 2026-10-25 is an EXAMPLE ONLY, not a
+  field list to copy literally. Build whatever fields GradeSpot actually
+  needs for its own deal/agreement/exchange flows, using that
+  structured billing-style design as the pattern — not only the fields
+  shown in the screenshot.
+- Use this pattern ONLY where a deal, agreement or exchange is actually
+  being created: commercial deals, service agreements, payment/billing
+  arrangements, partnerships, and other exchanges of value or
+  obligations between GradeSpot and another party. Do NOT use this
+  pattern on enquiry forms — course enquiries and service enquiries
+  stay short and progressive per the table above, and general enquiries
+  never get the billing block.
 - Field structure for those three form types (grouped, labelled, with
   inline validation and clear required/optional marking):
   - Billing / legal contact: first name, last name (separate fields, not

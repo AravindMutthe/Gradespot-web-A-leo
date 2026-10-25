@@ -11,18 +11,17 @@ export const metadata = staticPageMetadata({
 
 // DRAFT — not a finished legal policy. Every TODO below is a fact slot
 // the owner must supply and verify before this page may be presented as
-// a real policy. No fact on this page is asserted from outside sources:
-// the only stated technical fact is the observed one that the site runs
-// no analytics or advertising trackers (verified by code audit).
+// a real policy. Stated facts here are limited to published contact
+// details, the observed processors (Supabase for data storage, Vercel
+// for web hosting), and the observed no-trackers fact (verified by code
+// audit); everything else remains a TODO.
 const sections = [
   {
     heading: "Who we are",
-    body: "This policy describes how GradeSpot IT Solutions handles personal data collected through this website.",
+    body: "This policy describes how GradeSpot IT Solutions handles personal data collected through this website. Published contact details for GradeSpot IT Solutions: info@gsitssolutions.com, +91 91826 54056, 16-126, 2nd Floor, Near Sai Baba Temple, Road No.1, Sri Krishna Nagar, Dilsukhnagar, Hyderabad, Telangana - 500060.",
     todos: [
-      "TODO: legal entity name",
-      "TODO: registered address",
       "TODO: CIN / registration number, if any",
-      "TODO: contact email for privacy questions",
+      "TODO: confirm whether the published contact address is also the registered address",
     ],
   },
   {
@@ -43,9 +42,9 @@ const sections = [
   },
   {
     heading: "Sharing",
-    body: "No sharing arrangement is described here until confirmed.",
+    body: "Enquiry data is stored using Supabase (data storage) and this website is hosted on Vercel (web hosting). No other sharing arrangement is described here until confirmed.",
     todos: [
-      "TODO: list every third party that receives personal data (hosting, database, messaging, analytics — if any) and why",
+      "TODO: confirm whether any third party beyond Supabase (data storage) and Vercel (web hosting) receives personal data",
       "TODO: confirm whether any data leaves India, and under what safeguards",
     ],
   },
@@ -84,7 +83,7 @@ const sections = [
 ];
 
 const checklist = [
-  "Legal entity name, registered address, CIN (if any), contact email",
+  "CIN (if any), and confirmation of whether the published contact address is also the registered address",
   "Complete list of personal data collected",
   "Every purpose data is used for, and every third party it is shared with",
   "Whether any data leaves India, and under what safeguards",

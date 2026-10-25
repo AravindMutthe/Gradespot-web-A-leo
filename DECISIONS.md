@@ -2487,3 +2487,42 @@ so the courses.ts claim rewordings above will NOT surface on a
 Supabase-backed deployment until the matching DB rows are updated
 (see the §25.39-era note on DB override) — no DB writes were made
 in this branch.
+
+## Compliance finish (on feature/compliance-fixes, after 68d6740)
+
+SOC "hiring partners" phrase (courses.ts, SOC Analyst long description):
+"Get connected with hiring partners and job placement assistance."
+reworded to "Get guidance on connecting with employers, plus job
+placement assistance." — neutral wording implying no partnership.
+No other "hiring partners" hit exists in src/.
+
+Partner country, code side only (no DB change): LeadPayload and
+LeadInput gained an optional `country` (free text, max 100 chars);
+validateLead accepts it via validateCountry (absent/empty = fine);
+createLead includes it in the full leads insert. The value persists
+ONLY once the leads.country column exists (migration pending,
+applied separately — do not deploy expecting country to be stored
+until then; until then the full insert fails and the core-column
+retry stores the lead without country). LeadForm comments updated
+to match; no POST test was run with country, per the no-DB-change
+scope (verification is build + page render only).
+
+Policy published facts filled (drafts stay drafts): privacy
+"Who we are" now states the published contact details — business
+name GradeSpot IT Solutions, info@gsitssolutions.com,
++91 91826 54056, and the published full street address 16-126,
+2nd Floor, Near Sai Baba Temple, Road No.1, Sri Krishna Nagar,
+Dilsukhnagar, Hyderabad, Telangana - 500060 (replacing the partial
+Dilsukhnagar location). Privacy "Sharing" now states the observed
+processors: Supabase (data storage) and Vercel (web hosting).
+Still TODO, not invented: CIN, registered-address confirmation,
+grievance officer name/email, refund terms/eligibility/timelines,
+retention periods, rights-request timelines, and whether any data
+leaves India. The no-trackers statement is untouched (still
+audit-verified). Refund contact email filled as
+info@gsitssolutions.com (request + questions sections).
+
+Font check: zero Google Fonts references in src/ — layout and
+globals reference only self-hosted /fonts/*.woff2 files (Fraunces,
+Instrument Sans, IBM Plex Mono); no googleapis/gstatic string
+anywhere in src/. No change made.

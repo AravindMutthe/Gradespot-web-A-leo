@@ -28,10 +28,9 @@ export default function LeadForm({
   hideMessage?: boolean;
   submitLabel?: string;
   // Optional, never required: a free-text country field (used by the
-  // Partner With Us form). The value travels with the payload but is
-  // NOT stored: validateLead ignores unknown fields by design and the
-  // leads table has no country column. Persisting it needs a DB
-  // migration + a createLead change — deliberately not done here.
+  // Partner With Us form). validateLead accepts it (max 100 chars) and
+  // createLead includes it in the insert, but it persists ONLY once the
+  // leads.country column exists — that DB migration is still pending.
   showCountry?: boolean;
 }) {
   const pathname = usePathname();
@@ -60,9 +59,9 @@ export default function LeadForm({
       message: String(fd.get("message") ?? ""),
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/"}`,
-      // Optional country (partner form only). validateLead ignores
-      // unknown fields, so this never affects validation; it is not
-      // stored (no leads.country column) — see the showCountry note.
+      // Optional country (partner form only). validateLead accepts it
+      // (max 100 chars); it persists only once the leads.country column
+      // exists — see the showCountry note.
       country: String(fd.get("country") ?? ""),
     };
     // Client runs the SAME validators as /api/leads (§25.18) — bad

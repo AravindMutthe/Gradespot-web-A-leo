@@ -40,11 +40,10 @@ const sections = [
   },
   {
     heading: "How to request a refund",
-    body: "No request process is described here until confirmed.",
+    body: "No request process is described here until confirmed. The contact email for refund requests is info@gsitssolutions.com.",
     todos: [
       "TODO: channel for refund requests (form, email, in person)",
       "TODO: information the requester must provide",
-      "TODO: contact email for refund requests",
     ],
   },
   {
@@ -62,9 +61,8 @@ const sections = [
   },
   {
     heading: "Contact and grievance",
-    body: "No contact or grievance route is named here until confirmed.",
+    body: "Refund questions can be sent to info@gsitssolutions.com. No grievance officer is named here until confirmed.",
     todos: [
-      "TODO: contact email for refund questions",
       "TODO: grievance officer name and email, if different from the privacy policy",
     ],
   },
@@ -74,7 +72,7 @@ const checklist = [
   "Which fees and services are covered (and how instalments are treated)",
   "Eligibility rules and non-refundable cases",
   "Request window and processing time",
-  "Request channel, required information, and contact email",
+  "Request channel and required information",
   "Refund mode and any deductions",
   "Grievance route",
 ];

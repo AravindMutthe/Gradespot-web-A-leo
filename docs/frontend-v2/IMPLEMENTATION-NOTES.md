@@ -1,4 +1,56 @@
-# Frontend 2.0 — Implementation Notes (Navigation + Homepage)
+# Frontend 2.0 — Implementation Notes (Nexus Release 1)
+
+Branch: `feat/frontend-v2-platform`. Local only — not pushed, not merged,
+not deployed (in this release). `main` and live are untouched.
+
+## Nexus Release 1 — SUPERSEDES the v1 notes below
+
+- **Brand tokens** (`docs/frontend-v2/BRAND-TOKENS.md`): sampled from the
+  repo logo files by Pillow pixel counts — primary #E57439 (50.96% of
+  opaque pixels), charcoal #434140 (39.36%), pale tint #F4EAE6, 0 navy
+  pixels. The 40-token system is built from those colours plus
+  same-hue AA derivatives (#C24E1F / #9C3E18 for text and buttons).
+  Live-site #F7631B/#F98238, Leo #B23A0A and heading navy #0E2B3D are
+  NOT the sampled logo colours and are not used as Nexus brand colours.
+  Illustrative spec hexes (#0C57B7 etc.) are not used as brand colours.
+- **Design system** (`src/app/globals.css`): legacy token names repointed
+  to Nexus values; 40 `--color-nexus-*` tokens; Nexus utilities
+  (`nexus-editorial`, `nexus-app`, `nexus-diagram`, `nexus-row`,
+  `nexus-status`); light/dark themes via the existing `.dark` toggle.
+  Logo files and `.logo-plate` rules are untouched. No Carbon React on
+  public pages in this release — Carbon-inspired rigor only.
+- **Navigation** (`src/components/Header.tsx`, `src/data/nexus-nav.ts`,
+  v1 file `src/data/frontend-v2-nav.ts` removed): six Nexus groups —
+  Academy, Certifications, Career Pathways, Labs & Projects, IT Solutions,
+  Company & Resources. Desktop mega panels, mobile accordion, header
+  search over real catalogue/services, Talk to an Advisor → /contact-us,
+  For Business prominent in the IT Solutions featured panel.
+- **Homepage** (`src/app/page.tsx`, rewritten): alternating editorial /
+  structured-discovery table / technical workspace / editorial feature /
+  service-delivery table / editorial proof / application enquiry —
+  NOT the v1 eleven-section card-row reorder. Hero: "Engineering Skills.
+  Real-World Solutions." with Explore Academy / IT Solutions actions and
+  a skill-graph panel. PromoBanner, FeatureTrio and the trailing CtaBand
+  were removed from the homepage to remove duplicate/repetitive banners
+  and CTAs; promotions remain once, via OfferCards in the final section.
+- **Guards kept:** `/register` lead-only, `/partner-with-us`
+  discussion-only, promotions via `getPromotions()`, all assets local,
+  no new routes, no backend/Supabase/Axon/replica/portfolio/Royal Salon
+  changes. No Carbon, Meilisearch/Typesense, Recharts, React Flow,
+  React Hook Form or React Compiler was added in this release — those
+  are Release 2–4 / evaluated items, not Release 1.
+- **Gaps, not done (carried forward):** no standalone Labs portal;
+  no Certification route (filtered Training views, training-toward
+  wording); no Linux/DevOps/AI standalone domains (Planned, except real
+  data courses); no level tags (Release 2); no interactive career
+  roadmaps (Release 2, role links go to real courses / Career Support);
+  no upcoming-batches page; backend NestJS vs Next.js+Supabase still
+  open; logo wordmark proportions/clear-space not measured (files used
+  unmodified, so preserved by construction); phone tap check still owed.
+
+---
+
+# Frontend 2.0 — Implementation Notes (Navigation + Homepage) — v1, SUPERSEDED
 
 Branch: `feat/frontend-v2-platform`. Local only — not pushed, not merged,
 not deployed. `main` and live are untouched. No preview deployment exists yet.

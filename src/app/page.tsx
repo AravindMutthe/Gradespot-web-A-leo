@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getCourses, getServices } from "@/lib/data";
 import { homeParagraphs } from "@/data/pages";
-import { team } from "@/data/team";
 import { testimonials } from "@/data/testimonials";
-import { BlogCards, CourseCard, CredentialCard, CtaBand, ExperienceBadge, FaqList, FeatureTrio, ForInstitutesBand, SectionTitle, ServiceCard, SignatureBlock, StatsRibbon, siteFaqs, AnswerLead } from "@/components/ui";
+import { BlogCards, CourseCard, CredentialCard, ExperienceBadge, FaqList, SectionTitle, SignatureBlock, siteFaqs, AnswerLead } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
@@ -32,21 +30,26 @@ export const metadata: Metadata = {
   },
 };
 import Ticker from "@/components/Ticker";
-import PromoBanner from "@/components/PromoBanner";
 import OfferCards from "@/components/OfferCards";
 import { faqSchema, webPageSchema } from "@/lib/schema";
 
-// Homepage 2.0 — docs/frontend-v2/SPEC.md §4, eleven sections in
-// order, reusing existing content/components. No new claims, no new
-// routes, no invented offers. Hero represents the full offering:
-// a four-domain image grid, NOT a single CEH course. CEH appears
-// only in §4 as one featured cybersecurity program card.
+// Homepage — GradeSpot Nexus Release 1 (docs/frontend-v2/SPEC.md §3).
+// This is NOT the v1 eleven-section card-row reorder (commit f584ee5,
+// superseded). Compositions alternate on purpose:
+//   editorial (hero, why) → structured discovery (Academy table) →
+//   technical workspace (labs + pathway graph) → editorial pathway
+//   feature (certifications) → service-delivery table (Enterprise) →
+//   editorial proof (why, insights) → application enquiry (Speak).
+// No repeated rows of identical cards. No invented fees, dates,
+// trainers, stats, ratings or placement claims. Counts below are
+// computed from the real catalogue at render time. Programs marked
+// Planned are never presented as available.
 
-const heroDomains = [
-  { label: "Cybersecurity", href: "/trainings#category-cybersecurity", img: "/images/courses/cybersecurity-technologies.jpg" },
-  { label: "Cloud Computing", href: "/trainings#category-aws", img: "/images/courses/aws-solutions-architect-associate.jpg" },
-  { label: "Networking", href: "/trainings#category-cisco", img: "/images/courses/ccna.jpg" },
-  { label: "Software & Data", href: "/trainings#category-programming-data", img: "/images/courses/java-full-stack.jpg" },
+const heroBlocks = [
+  { label: "Cybersecurity Academy", body: "Role-based training and authorized labs.", href: "/trainings#category-cybersecurity", img: "/images/courses/cybersecurity-technologies.jpg" },
+  { label: "Cloud & Infrastructure", body: "Cloud platforms, Linux, networking and DevOps.", href: "/trainings#category-aws", img: "/images/courses/aws-solutions-architect-associate.jpg" },
+  { label: "Career Pathways", body: "Skills, tools, certifications and projects.", href: "/career-support", img: "/images/courses/soc-analyst.jpg" },
+  { label: "Enterprise Solutions", body: "Consulting, engineering and technical services.", href: "/services", img: "/images/courses/ccna.jpg" },
 ];
 
 export default async function HomePage() {
@@ -59,13 +62,17 @@ export default async function HomePage() {
     .filter((c): c is NonNullable<typeof c> => Boolean(c));
   const proofTestimonials = testimonials.slice(0, 3);
 
-  const domains = [
-    { t: "Cybersecurity", href: "/trainings#category-cybersecurity", n: countIn("Cybersecurity") },
-    { t: "Cloud Computing", href: "/trainings", n: countIn("AWS", "Microsoft Azure") },
-    { t: "Networking & Infrastructure", href: "/trainings#category-cisco", n: countIn("Cisco", "Networking") },
-    { t: "Software & Data", href: "/trainings#category-programming-data", n: countIn("Programming & Data") },
-    { t: "Other Programs", href: "/trainings#category-medical-coding", n: countIn("Medical Coding", "Digital Marketing", "Design & CAD") },
+  const academyRows = [
+    { domain: "Cybersecurity", href: "/trainings#category-cybersecurity", n: countIn("Cybersecurity"), status: "Available" },
+    { domain: "Cloud — AWS / Microsoft Azure", href: "/trainings", n: countIn("AWS", "Microsoft Azure"), status: "Available" },
+    { domain: "Networking — Cisco / Networking", href: "/trainings#category-cisco", n: countIn("Cisco", "Networking"), status: "Available" },
+    { domain: "Software Engineering", href: "/trainings#category-programming-data", n: countIn("Programming & Data"), status: "Available" },
+    { domain: "Linux & Infrastructure", href: "/trainings", n: 0, status: "Planned" },
+    { domain: "DevOps & SRE", href: "/trainings#category-microsoft-azure", n: countIn("Microsoft Azure"), status: "Planned — AZ-400 under Azure" },
+    { domain: "AI & Data", href: "/trainings#category-programming-data", n: countIn("Programming & Data"), status: "Planned — data courses exist" },
+    { domain: "Other Existing Programs", href: "/trainings#category-medical-coding", n: countIn("Medical Coding", "Digital Marketing", "Design & CAD"), status: "Available" },
   ];
+
   const vendors = [
     { t: "AWS Training", href: "/trainings#category-aws", n: countIn("AWS") },
     { t: "Microsoft Azure Training", href: "/trainings#category-microsoft-azure", n: countIn("Microsoft Azure") },
@@ -79,49 +86,61 @@ export default async function HomePage() {
       <JsonLd data={faqSchema(siteFaqs)} />
       <JsonLd data={webPageSchema("/", "GradeSpot IT Solutions", "#answer-summary")} />
 
-      {/* 01 · Hero — full offering, two customer pathways */}
+      {/* EDITORIAL HERO — Nexus §3. No single-course hero. */}
       <section className="hero-paper relative overflow-hidden border-b border-line" aria-label="Hero">
-        <div className="wrap grid items-center gap-12 py-6 md:py-8 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="wrap grid items-start gap-10 py-10 md:py-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div data-reveal>
-            <p className="eyebrow text-signal-strong">Hyderabad, India · Online &amp; Classroom Training</p>
-            <h1 className="mt-4 max-w-xl font-display text-[44px] font-semibold leading-[1.05] text-heading md:text-[68px]">
-              Technology Training <span className="font-medium italic text-signal">and IT Solutions</span>
+            <p className="eyebrow text-nexus-brand-600">GradeSpot IT Solutions · Technology Academy · Certifications · Applied Labs · Enterprise IT Solutions</p>
+            <h1 className="nexus-editorial mt-5 max-w-xl text-[44px] font-semibold text-heading md:text-[68px]">
+              Engineering Skills. Real-World Solutions.
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-body">{homeParagraphs[1]}</p>
+            <p className="mt-5 max-w-xl text-base leading-7 text-body">
+              Professional technology education, certification preparation, hands-on labs
+              and enterprise IT services — in Dilsukhnagar, Hyderabad, online and in
+              the classroom.
+            </p>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-body">{homeParagraphs[1]}</p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/contact-us" className="btn-primary">
-                Talk to an Advisor
-              </Link>
-              <Link href="/trainings" className="btn-outline-navy">
-                Explore Programs
-              </Link>
+              <Link href="/trainings" className="btn-primary">Explore Academy</Link>
+              <Link href="/services" className="btn-outline-navy">IT Solutions</Link>
             </div>
-            <p className="mt-4 text-sm text-body">
-              Two pathways: <Link href="/trainings" className="font-semibold text-signal hover:underline">I&apos;m learning →</Link>
-              {" "}·{" "}
-              <Link href="/services" className="font-semibold text-signal hover:underline">I need IT services →</Link>
+            <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-body">
+              Academy · Technology Solutions · Labs &amp; Career Pathways
             </p>
           </div>
-          <div className="relative mx-auto w-full max-w-[520px]" data-reveal>
-            <div className="grid grid-cols-2 gap-3">
-              {heroDomains.map((d) => (
-                <Link key={d.label} href={d.href} className="group relative block overflow-hidden rounded-[18px]">
-                  <Image
-                    src={d.img}
-                    alt={d.label}
-                    width={400}
-                    height={300}
-                    className="h-40 w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-                  />
-                  <span className="absolute bottom-3 left-3 rounded-md bg-ink/85 px-2.5 py-1.5 text-[12px] font-semibold text-paper">
-                    {d.label}
-                  </span>
-                </Link>
+          <div className="nexus-diagram rounded-2xl p-5" data-reveal>
+            <p className="eyebrow text-nexus-brand-600">Skill graph — real catalogue, no invented pathways</p>
+            <ul className="mt-4 space-y-0">
+              {[
+                ["Cybersecurity", "SOC Analyst · CEH · VAPT →", "/trainings#category-cybersecurity"],
+                ["Cloud & Infrastructure", "AWS · Azure · CCNA →", "/trainings#category-aws"],
+                ["Career Pathways", "Roles, skills, tools, projects →", "/career-support"],
+                ["Enterprise Solutions", "Consulting · Engineering · Services →", "/services"],
+              ].map(([label, detail, href]) => (
+                <li key={label} className="nexus-row">
+                  <span className="w-40 shrink-0 font-display text-[15px] font-semibold text-heading">{label}</span>
+                  <span className="grow text-[13px] text-body">{detail}</span>
+                  <Link href={href} className="shrink-0 text-[13px] font-bold text-nexus-brand-600 hover:underline">Open →</Link>
+                </li>
               ))}
-            </div>
-            <p className="mt-3 text-center text-sm text-body">
-              Cybersecurity, cloud, networking and software — plus the full catalogue on the Trainings page.
+            </ul>
+            <p className="mt-4 text-[12.5px] leading-5 text-body">
+              Interactive career roadmaps arrive in Release 2. Today, role links go to
+              real course pages and to Career Support.
             </p>
+          </div>
+        </div>
+        <div className="wrap pb-8">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {heroBlocks.map((b) => (
+              <Link key={b.label} href={b.href} className="group relative block overflow-hidden rounded-[18px]">
+                <Image src={b.img} alt={b.label} width={400} height={300} className="h-36 w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
+                <span className="absolute inset-x-0 bottom-0 bg-nexus-ink-950/85 px-4 py-3">
+                  <span className="block text-[13px] font-bold text-nexus-text-inverse">{b.label}</span>
+                  <span className="block text-[12px] text-nexus-text-inverse/80">{b.body}</span>
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -138,200 +157,168 @@ export default async function HomePage() {
 
       <Ticker />
 
-      {/* 02 · Choose Your Path */}
-      <section className="section-pad" aria-label="Choose your path">
+      {/* STRUCTURED DISCOVERY — Academy table, not a card grid. */}
+      <section className="section-pad" aria-label="Academy discovery">
         <div className="wrap">
-          <SectionTitle label="02 · Choose Your Path" title="Who are you here for?" center />
-          <div className="mt-10 grid gap-3.5 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              { audience: "Students", title: "Trainings & Free Demo Classes", href: "/trainings" },
-              { audience: "Professionals", title: "Upskill & Certification Preparation", href: "/trainings" },
-              { audience: "Businesses", title: "IT Services & Consulting", href: "/services" },
-              { audience: "Institutions", title: "Workshops, Internships & Collaboration", href: "/for-institutes" },
-            ].map((d, i) => (
-              <Link
-                key={d.audience}
-                href={d.href}
-                data-reveal
-                style={{ "--reveal-delay": `${i * 80}ms` } as CSSProperties}
-                className="group flex items-center justify-between gap-4 rounded-[16px] border border-line bg-parchment px-6 py-5 shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_rgba(31,24,16,0.12)]"
-              >
-                <span>
-                  <span className="eyebrow block text-[10.5px] text-signal-strong">{d.audience}</span>
-                  <span className="mt-1.5 block font-display text-[17.5px] font-semibold leading-snug text-heading">
-                    {d.title}
-                  </span>
-                </span>
-                <span aria-hidden className="font-display text-xl text-signal transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 03 · Explore Technology Domains */}
-      <section className="bg-surface-light section-pad" aria-label="Explore technology domains">
-        <div className="wrap">
-          <SectionTitle label="03 · Explore Technology Domains" title="Find your domain" center />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {domains.map((d) => (
-              <Link
-                key={d.t}
-                href={d.href}
-                className="group rounded-2xl border border-line bg-parchment px-6 py-7 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
-              >
-                <span className="block font-display text-[19px] font-semibold leading-snug text-heading group-hover:text-signal">{d.t}</span>
-                <span className="mt-2 block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-signal-strong">
-                  {d.n} training{d.n === 1 ? "" : "s"}
-                </span>
-              </Link>
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Link href="/trainings" className="btn-primary">View All Trainings</Link>
-          </div>
-        </div>
-      </section>
-
-      <div className="pb-4">
-        <PromoBanner />
-      </div>
-
-      {/* 04 · Certification Pathways — vendor training only, no guarantees */}
-      <section className="section-pad" aria-label="Certification pathways">
-        <div className="wrap">
-          <SectionTitle label="04 · Certification Pathways" title="Training toward industry certifications" center />
-          <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-6 text-body">
-            These are training programs in each vendor area. Certification itself is awarded
-            by the vendor/exam body, not by this page.
+          <SectionTitle label="Academy · Structured Discovery" title="Find a program by domain — and see what is actually available" />
+          <p className="mt-4 max-w-3xl text-sm leading-6 text-body">
+            Counts are computed from the real catalogue. Planned domains are labelled
+            Planned and are not promoted as enrollable. Levels, curriculum previews and
+            demo eligibility arrive with Release 2 tagging.
           </p>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {vendors.map((v) => (
-              <Link
-                key={v.t}
-                href={v.href}
-                className="group rounded-2xl border border-line bg-parchment px-6 py-7 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
-              >
-                <span className="block font-display text-[19px] font-semibold leading-snug text-heading group-hover:text-signal">{v.t}</span>
-                <span className="mt-2 block font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-signal-strong">
-                  {v.n} training{v.n === 1 ? "" : "s"}
-                </span>
-              </Link>
+          <div className="nexus-app mt-8 overflow-hidden">
+            <div className="nexus-row bg-nexus-surface-sunken font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-nexus-text-secondary">
+              <span className="grow">Domain</span>
+              <span className="hidden w-32 sm:block">Programs</span>
+              <span className="w-36 text-right">Status</span>
+            </div>
+            {academyRows.map((r) => (
+              <div key={r.domain} className="nexus-row">
+                <Link href={r.href} className="grow font-display text-[16px] font-semibold text-heading hover:text-nexus-brand-600 hover:underline">{r.domain} →</Link>
+                <span className="hidden w-32 font-mono text-[12px] text-body sm:block">{r.n > 0 ? `${r.n} training${r.n === 1 ? "" : "s"}` : "—"}</span>
+                <span className="w-36 text-right"><span className="nexus-status">{r.status}</span></span>
+              </div>
             ))}
+          </div>
+          <div className="mt-6 flex flex-wrap gap-4">
+            <Link href="/trainings" className="btn-primary">View All Trainings</Link>
+            <Link href="/compare" className="text-sm font-bold text-nexus-brand-600 hover:underline">Course Comparisons →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* TECHNICAL WORKSPACE — labs + pathway graph, Carbon-inspired. */}
+      <section className="bg-nexus-surface-sunken section-pad" aria-label="Labs and career pathways">
+        <div className="wrap grid items-start gap-10 lg:grid-cols-2">
+          <div>
+            <SectionTitle label="Labs & Projects · Technical Workspace" title="Learn by doing, inside the course" />
+            <p className="mt-4 text-sm leading-6 text-body">
+              There is no separate labs portal yet. Hands-on labs, simulations and
+              projects are delivered inside these training programs, as described on
+              their course pages. Standalone capstones, quizzes and portfolios are
+              Planned, not available.
+            </p>
+            <div className="nexus-app mt-6 overflow-hidden">
+              {labCourses.map((c) => (
+                <div key={c.slug} className="nexus-row">
+                  <Link href={`/trainings/${c.slug}`} className="grow font-semibold text-heading hover:text-nexus-brand-600 hover:underline">{c.title} →</Link>
+                  <span className="nexus-status">Labs in course</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="nexus-diagram rounded-2xl p-5">
+            <p className="eyebrow text-nexus-brand-600">Career pathway — SOC Analyst (real course)</p>
+            <ol className="mt-4 space-y-0">
+              {[
+                ["1 · Foundations", "Networking, Linux, security fundamentals"],
+                ["2 · Detection", "SIEM, log analysis, triage"],
+                ["3 · Response", "Incident response, threat intelligence"],
+                ["4 · Proof", "SOC Analyst training page, certificate verification"],
+              ].map(([step, detail]) => (
+                <li key={step} className="nexus-row">
+                  <span className="w-36 shrink-0 font-display text-[14px] font-semibold text-heading">{step}</span>
+                  <span className="text-[13px] text-body">{detail}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-4 text-[12.5px] leading-5 text-body">
+              Full interactive roadmaps for all twelve spec pathways arrive in
+              Release 2. This graph uses only published SOC Analyst content.
+            </p>
+            <Link href="/trainings/soc-analyst" className="mt-3 inline-block text-[13px] font-bold text-nexus-brand-600 hover:underline">SOC Analyst Training →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* EDITORIAL FEATURE — certification pathways, training-toward wording. */}
+      <section className="section-pad" aria-label="Certification pathways">
+        <div className="wrap grid items-start gap-10 lg:grid-cols-[1fr_1.2fr]">
+          <div>
+            <SectionTitle label="Certifications · Editorial Feature" title="Training toward industry certifications" />
+            <p className="mt-4 text-sm leading-6 text-body">
+              These are training programs in each vendor area. Certification itself is
+              awarded by the vendor or exam body, not by this page. No exam date, fee
+              or eligibility is claimed here. Red Hat and Kubernetes pathways are
+              Planned — no such courses are published.
+            </p>
+            <ul className="mt-6 space-y-2">
+              {vendors.map((v) => (
+                <li key={v.t} className="flex items-center justify-between gap-4 border-b border-line py-2.5">
+                  <Link href={v.href} className="font-semibold text-heading hover:text-nexus-brand-600 hover:underline">{v.t} →</Link>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.06em] text-nexus-brand-600">{v.n} trainings</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6 flex flex-wrap gap-4">
+              <Link href="/student-certifications" className="text-sm font-bold text-nexus-brand-600 hover:underline">Student Certifications →</Link>
+              <Link href="/certificate-verification" className="text-sm font-bold text-nexus-brand-600 hover:underline">Verify a Certificate →</Link>
+            </div>
           </div>
           {ceh && (
-            <div className="mt-10">
-              <p className="eyebrow text-center text-signal-strong">Featured Cybersecurity Program</p>
-              <div className="mx-auto mt-4 max-w-md">
-                <CourseCard course={ceh} />
-              </div>
+            <div>
+              <p className="eyebrow text-nexus-brand-600">Featured Cybersecurity Program</p>
+              <div className="mt-4"><CourseCard course={ceh} /></div>
+              <p className="mt-3 text-[12.5px] leading-5 text-body">CEH is one featured program, not the visual for the whole business.</p>
             </div>
           )}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/student-certifications" className="text-sm font-bold text-signal hover:underline">Student Certifications →</Link>
-            <Link href="/certificate-verification" className="text-sm font-bold text-signal hover:underline">Verify a Certificate →</Link>
+        </div>
+      </section>
+
+      {/* SERVICE-DELIVERY TABLE + FOR BUSINESS PANEL — Enterprise. */}
+      <section className="bg-nexus-surface-sunken section-pad" aria-label="IT solutions and enterprise">
+        <div className="wrap grid items-start gap-10 lg:grid-cols-[1.4fr_1fr]">
+          <div>
+            <SectionTitle label="IT Solutions · Service Delivery" title="Security, infrastructure, software, digital and consulting" />
+            <div className="nexus-app mt-6 overflow-hidden">
+              {services.slice(0, 8).map((s) => (
+                <div key={s.slug} className="nexus-row">
+                  <Link href={`/services/${s.slug}`} className="grow font-semibold text-heading hover:text-nexus-brand-600 hover:underline">{s.title} →</Link>
+                  <span className="hidden font-mono text-[11px] uppercase tracking-[0.06em] text-body sm:block">Service delivery</span>
+                </div>
+              ))}
+            </div>
+            <Link href="/services" className="btn-primary mt-6">All Services</Link>
+          </div>
+          <div className="rounded-2xl bg-nexus-ink-950 p-7 text-nexus-text-inverse">
+            <p className="eyebrow text-nexus-brand-300">For Business — Prominent</p>
+            <h3 className="mt-3 font-display text-[26px] font-semibold leading-snug">Request a service consultation</h3>
+            <p className="mt-3 text-sm leading-6 text-nexus-text-inverse/85">
+              For Business lives here, in IT Solutions — not buried in the Academy.
+              Tell us the problem and the scope; the team replies with the next step.
+              Services are quoted to scope; no prices are published here.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/contact-us" className="btn-primary">Talk to an Advisor</Link>
+              <Link href="/corporate-and-international" className="text-sm font-bold text-nexus-text-inverse underline">Corporate &amp; International →</Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 05 · Hands-on Learning — labs inside courses, no standalone portal */}
-      <section className="bg-surface-light section-pad" aria-label="Hands-on learning">
-        <div className="wrap">
-          <SectionTitle label="05 · Hands-on Learning" title="Learn by doing, inside the course" center />
-          <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-6 text-body">
-            There is no separate labs portal yet. Hands-on labs, simulations and projects are
-            delivered inside these training programs, as described on their course pages.
-          </p>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {labCourses.map((c) => (
-              <CourseCard key={c.slug} course={c} />
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Link href="/trainings" className="btn-primary">Explore Programs</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 06 · Professional IT Solutions */}
-      <section className="section-pad" aria-label="Professional IT solutions">
-        <div className="wrap">
-          <SectionTitle label="06 · Professional IT Solutions" title="Security, infrastructure, software, digital and consulting" center />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {services.slice(0, 8).map((s) => (
-              <ServiceCard key={s.slug} service={s} />
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Link href="/services" className="btn-primary">All Services</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 07 · Why GradeSpot — published copy, credentials, features */}
-      <section className="bg-surface-light section-pad" aria-label="Why GradeSpot">
+      {/* EDITORIAL PROOF — Why GradeSpot, published copy only. */}
+      <section className="section-pad" aria-label="Why GradeSpot">
         <div className="wrap grid items-start gap-10 lg:grid-cols-2">
           <div>
             <SectionTitle
-              label="07 · Why GradeSpot"
+              label="Why GradeSpot"
               title="We assist companies in enhancing their digital presence and fortifying their Security"
             />
             <p className="mt-4">{homeParagraphs[6]}</p>
-            <div className="mt-6">
-              <ExperienceBadge />
-            </div>
-            <Link href="/about-us" className="btn-primary mt-6">
-              About Us
-            </Link>
-            <div className="mt-8">
-              <SignatureBlock />
-            </div>
+            <div className="mt-6"><ExperienceBadge /></div>
+            <Link href="/about-us" className="btn-primary mt-6">About Us</Link>
+            <div className="mt-8"><SignatureBlock /></div>
           </div>
           <div className="space-y-6">
             <CredentialCard title="An ISO Certified Company" body={homeParagraphs[8]} seal="iso" />
             <CredentialCard title="AICTE Internships Approved" body={homeParagraphs[10]} seal="aicte" />
           </div>
         </div>
-      </section>
-
-      <FeatureTrio />
-
-      {/* 08 · Enterprise & Institutional Programs */}
-      <section className="section-pad" aria-label="Enterprise and institutional programs">
-        <div className="wrap">
-          <SectionTitle label="08 · Enterprise & Institutional Programs" title="For colleges, institutes and businesses" center />
-          <div className="mt-10 grid gap-3.5 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              { t: "For Colleges", d: "Workshops, industrial trainings and internships at your campus.", href: "/for-colleges" },
-              { t: "For Institutes", d: "Admissions automation, learning hub and labs — book a live demo.", href: "/for-institutes" },
-              { t: "Partner With Us", d: "Collaborations and franchise discussions are welcome.", href: "/partner-with-us" },
-              { t: "Corporate & International", d: "Corporate training and international programs.", href: "/corporate-and-international" },
-            ].map((x) => (
-              <Link
-                key={x.t}
-                href={x.href}
-                className="group rounded-[16px] border border-line bg-parchment px-6 py-5 shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_rgba(31,24,16,0.12)]"
-              >
-                <span className="block font-display text-[17.5px] font-semibold leading-snug text-heading group-hover:text-signal">{x.t} →</span>
-                <span className="mt-1.5 block text-sm leading-6 text-body">{x.d}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <ForInstitutesBand />
-
-      {/* 09 · Success & Trust — published proof only */}
-      <section className="section-pad" aria-label="Success and trust">
-        <div className="wrap">
-          <div className="mx-auto max-w-3xl text-center">
-            <SectionTitle label="09 · Success & Trust" title="Trusted by 1,500+ Happy Learners" center />
-            <p className="mt-4">{homeParagraphs[11]}</p>
-          </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="wrap mt-14">
+          <h3 className="text-center text-2xl font-semibold text-heading">Learner voices — published testimonials only</h3>
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
             {proofTestimonials.map((t) => (
-              <figure key={t.name} className="flex flex-col rounded-[18px] border border-line bg-parchment p-7 shadow-[0_1px_2px_rgba(31,24,16,0.05)]">
+              <figure key={t.name} className="flex flex-col rounded-[18px] border border-line bg-parchment p-7">
                 <blockquote className="grow text-[14.5px] leading-7 text-heading">{t.text}</blockquote>
                 <figcaption className="mt-4 border-t border-line pt-3.5">
                   <span className="block text-sm font-semibold text-heading">{t.name}</span>
@@ -341,67 +328,52 @@ export default async function HomePage() {
             ))}
           </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/testimonials" className="text-sm font-bold text-signal hover:underline">Read all learner voices →</Link>
-            <Link href="/certificate-verification" className="text-sm font-bold text-signal hover:underline">Verify a Certificate →</Link>
-            <Link href="/contact-us" className="btn-primary">Talk to an Advisor</Link>
-          </div>
-          <h3 className="mt-14 text-center text-2xl font-semibold text-heading">Meet Our Leadership</h3>
-          <div className="mx-auto mt-8 grid max-w-4xl gap-6 sm:grid-cols-3">
-            {team.map((m) => (
-              <article key={m.name} className="text-center">
-                <Image
-                  src={m.image}
-                  alt={m.name}
-                  width={350}
-                  height={350}
-                  sizes="(min-width:640px) 33vw, 100vw"
-                  className="mx-auto h-56 w-full rounded-2xl object-cover"
-                />
-                <h4 className="mt-3 text-lg font-semibold">{m.name}</h4>
-                <p className="text-sm text-signal">{m.role}</p>
-              </article>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Link href="/team-members" className="text-sm font-semibold text-signal hover:underline">Meet Our Team →</Link>
+            <Link href="/testimonials" className="text-sm font-bold text-nexus-brand-600 hover:underline">Read all learner voices →</Link>
+            <Link href="/certificate-verification" className="text-sm font-bold text-nexus-brand-600 hover:underline">Verify a Certificate →</Link>
+            <Link href="/team-members" className="text-sm font-bold text-nexus-brand-600 hover:underline">Meet Our Team →</Link>
           </div>
         </div>
       </section>
 
-      <StatsRibbon />
-
-      {/* 10 · Insights & Resources */}
-      <section className="section-pad" aria-label="Insights and resources">
+      {/* INSIGHTS — editorial list + FAQ, not a card grid. */}
+      <section className="bg-nexus-surface-sunken section-pad" aria-label="Insights and resources">
         <div className="wrap grid gap-10 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <SectionTitle label="10 · Insights & Resources" title="Articles, guides, comparisons and FAQs" />
+            <SectionTitle label="Insights & Resources" title="Articles, guides, comparisons and FAQs" />
             <div className="mt-6 flex flex-wrap gap-4">
-              <Link href="/blog" className="text-sm font-bold text-signal hover:underline">Learning Articles →</Link>
-              <Link href="/resources" className="text-sm font-bold text-signal hover:underline">Resources →</Link>
-              <Link href="/compare" className="text-sm font-bold text-signal hover:underline">Course Comparisons →</Link>
+              <Link href="/blog" className="text-sm font-bold text-nexus-brand-600 hover:underline">Learning Articles →</Link>
+              <Link href="/resources" className="text-sm font-bold text-nexus-brand-600 hover:underline">Resources →</Link>
+              <Link href="/compare" className="text-sm font-bold text-nexus-brand-600 hover:underline">Course Comparisons →</Link>
             </div>
           </div>
           <FaqList items={siteFaqs} />
         </div>
-        <div className="wrap mt-10">
-          <BlogCards />
-        </div>
+        <div className="wrap mt-10"><BlogCards /></div>
       </section>
 
-      {/* 11 · Speak With GradeSpot */}
-      <section className="bg-surface-light section-pad" aria-label="Speak with GradeSpot">
+      {/* APPLICATION ENQUIRY — steps, then the existing promotions seam once. */}
+      <section className="section-pad" aria-label="Speak with GradeSpot">
         <div className="wrap">
-          <SectionTitle label="11 · Speak With GradeSpot" title="Training enquiry, service consultation, contact" center />
-          <div className="mt-10">
-            <OfferCards excludeSlug="free-demo-card" />
+          <SectionTitle label="Speak With GradeSpot · Application" title="Training enquiry, service consultation, contact" center />
+          <div className="nexus-app mx-auto mt-8 max-w-3xl overflow-hidden">
+            {[
+              ["Discover", "Search, navigation, guides →"],
+              ["Evaluate", "Syllabus, labs, pricing, FAQs →"],
+              ["Engage", "Demo, consultation, application →"],
+              ["Deliver", "Training, labs, service projects →"],
+            ].map(([step, detail]) => (
+              <div key={step} className="nexus-row">
+                <span className="w-32 shrink-0 font-display text-[16px] font-semibold text-heading">{step}</span>
+                <span className="text-[13.5px] text-body">{detail}</span>
+              </div>
+            ))}
           </div>
+          <div className="mt-10"><OfferCards excludeSlug="free-demo-card" /></div>
           <div className="mt-10 text-center">
             <Link href="/contact-us" className="btn-primary">Talk to an Advisor</Link>
           </div>
         </div>
       </section>
-
-      <CtaBand />
     </>
   );
 }

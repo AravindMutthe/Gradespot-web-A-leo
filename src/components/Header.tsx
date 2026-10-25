@@ -24,6 +24,13 @@ import { nexusMenus, type NavMenu } from "@/data/nexus-nav";
 // Logo plate: UNTOUCHED — official artwork only, per-theme swap.
 // Do not recolor, filter, crop or replace the logo files. Nexus
 // brand colours come from BRAND-TOKENS.md, not from the plate.
+// CTA harmonization (Nexus revenue application): the primary actions
+// are Book Free Demo → /register (the existing demo/registration lead
+// flow, no payment taken there), Explore Programs → /trainings, and
+// Talk to an Advisor → /contact-us (kept, never removed). The full trio
+// shows at xl and on mobile; at the compact 960–1280px nav breakpoint
+// only Talk to an Advisor shows, so the bar cannot overflow — the trio
+// is also complete on the homepage hero at every size.
 
 type PanelKey = NavMenu["key"];
 
@@ -278,6 +285,18 @@ export default function Header() {
                 <HeaderSearch />
               </div>
               <Link
+                href="/register"
+                className="btn-outline-navy ml-3 hidden whitespace-nowrap xl:ml-2 xl:flex xl:min-h-[50px] xl:items-center xl:px-5 xl:text-[14px]"
+              >
+                Book Free Demo
+              </Link>
+              <Link
+                href="/trainings"
+                className="hidden whitespace-nowrap text-[14px] font-bold text-heading hover:text-signal xl:ml-2 xl:block"
+              >
+                Explore Programs
+              </Link>
+              <Link
                 href="/contact-us"
                 className="btn-primary ml-3 whitespace-nowrap nav:ml-1.5 nav:min-h-[44px] nav:px-2.5 nav:text-[12.5px] xl:ml-3 xl:min-h-[50px] xl:px-7 xl:text-[15px]"
               >
@@ -383,6 +402,9 @@ export default function Header() {
                   Explore Programs
                 </Link>
               </div>
+              <Link href="/register" className="btn-outline-navy mb-2 w-full" onClick={() => setOpen(false)}>
+                Book Free Demo
+              </Link>
 
               {nexusMenus.map((menu) => (
                 <div key={menu.key}>

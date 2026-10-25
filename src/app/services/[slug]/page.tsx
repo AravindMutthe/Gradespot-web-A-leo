@@ -97,11 +97,25 @@ export default async function ServicePage({
               <h2 className="text-2xl font-semibold">Interested in {service.title}?</h2>
               <p className="mx-auto mt-2 max-w-xl">
                 Send an enquiry and our team will discuss your requirement, timelines and the
-                right way to engage this service.
+                right way to engage this service. No price is quoted here —
+                scope is agreed on consultation, and nothing is purchased on
+                this page.
               </p>
-              <Link href="/contact-us" className="btn-primary mt-5">
-                Enquire Now
-              </Link>
+              <div className="mt-5 flex flex-wrap justify-center gap-3">
+                <Link href="/corporate-and-international" className="btn-primary">
+                  Get a Quote
+                </Link>
+                <Link href="/contact-us" className="btn-outline-navy">
+                  Book a Consultation
+                </Link>
+              </div>
+              <p className="mt-4 text-sm text-body">
+                Prefer a short enquiry?{" "}
+                <Link href="/contact-us" className="font-semibold text-signal hover:underline">
+                  Send an enquiry
+                </Link>{" "}
+                — the enquiry form stays short and asks for no billing details.
+              </p>
             </div>
             <p>
               <Link href="/services" className="text-sm font-semibold text-signal hover:underline">

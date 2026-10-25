@@ -285,6 +285,24 @@ export default async function CoursePage({
                 For the current batch schedule, curriculum and enrolment details for this
                 course, talk to a trainer and we will walk you through the complete program.
               </p>
+              {/* Syllabus transparency (Nexus revenue application): this
+                  catalogue course has NO published syllabus in the repo
+                  (empty summary, empty sections), so no syllabus is shown
+                  or invented here — not even as example modules. The
+                  syllabus, batch schedule and fees are confirmed on
+                  enquiry. Real syllabus material from GradeSpot is still
+                  needed before this course can carry an outline. */}
+              <div className="mt-8 rounded-2xl border border-line bg-parchment p-7">
+                <h2 className="text-lg font-bold text-heading">
+                  Course outline — not yet published
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-body">
+                  A detailed syllabus for {course.title} is not published on
+                  this page yet. Ask for it on WhatsApp or on enquiry below
+                  and a trainer will walk you through the complete program —
+                  including its modules, batch schedule and enrolment details.
+                </p>
+              </div>
               <div id="enquire" className="mt-8 scroll-mt-32">
                 <EnquiryRail courseTitle={course.title} />
               </div>
@@ -348,6 +366,31 @@ export default async function CoursePage({
                         </div>
                       )}
                     </dl>
+                  </div>
+                )}
+                {/* Course outline at a glance (Nexus revenue application):
+                    HIGH-LEVEL ONLY, and ONLY from this course's own
+                    published sections — verbatim headings, in order.
+                    No module is invented here. Full detail follows
+                    below; batch schedules and demo registration stay
+                    behind the enquiry/demo forms, never behind a paywall
+                    on this page. */}
+                {course.sections.length > 0 && (
+                  <div className="mb-10 rounded-2xl border border-line bg-parchment p-7">
+                    <h2 className="text-lg font-bold text-heading">
+                      Course outline at a glance — {course.title}
+                    </h2>
+                    <p className="mt-2 text-sm leading-6 text-body">
+                      The published sections of this course, in order.
+                      Read the full detail below; for batch schedules,
+                      ask on enquiry, and for a free demo use the demo
+                      form below.
+                    </p>
+                    <ol className="mt-4 list-decimal space-y-1.5 pl-5 text-[15px] leading-7 text-heading">
+                      {course.sections.map((s, i) => (
+                        <li key={i}>{s.heading || "Course section"}</li>
+                      ))}
+                    </ol>
                   </div>
                 )}
                 <div className="space-y-12">

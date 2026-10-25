@@ -1,3 +1,98 @@
+## Nexus revenue application — Release 3 prep (branch-only, 2026-10-25)
+
+Source: GradeSpot revenue strategy (Axon `docs/REVENUE-STRATEGY.md`,
+saved 2026-10-25, internal only) + the Site A vs Site B comparison
+(Site A = Nexus preview 6pdz1fjzr, 8.0/10; Site B = production
+build-app, 6.9/10; Site A wins IA/UX/transparency, Site B wins
+aggressive above-the-fold lead capture).
+
+- **What was applied:**
+  - Seven revenue divisions (`src/data/revenue-divisions.ts`), grouped
+    on `/services` above the existing 12-service grid, each with a
+    status badge and a clear next action. Only real, existing services
+    are listed under a division; no service was invented.
+  - Service detail pages (`/services/[slug]`): Get a Quote →
+    `/corporate-and-international` (draft-only deal brief) and Book a
+    Consultation → `/contact-us`, alongside the existing short enquiry
+    link. Nothing is purchased on a service page.
+  - Ongoing support & maintenance panel on `/services`: a consultation
+    concept only — scope and terms agreed on consultation, no price,
+    no subscription, no recurring-billing claim.
+  - CTA harmonization: Book Free Demo → `/register` (existing demo /
+    registration lead flow, no payment taken there) paired with Explore
+    Programs → `/trainings`, alongside the kept Talk to an Advisor →
+    `/contact-us`. Full trio on the homepage hero (all sizes), at xl in
+    the desktop header, and stacked on mobile; at the compact 960–1280px
+    nav breakpoint only Talk to an Advisor shows, so the bar cannot
+    overflow. No working lead path was removed to do this.
+  - Ungated high-level outlines on full course pages: a "Course outline
+    at a glance" box listing the course's own published section headings
+    verbatim, in order, before the full sections. Batch schedules and
+    demo registration stay behind the enquiry/demo forms.
+  - Transparency kept: Available vs Planned badges and real catalogue
+    counts are unchanged; Planned domains/courses are never promoted as
+    available or enrollable.
+- **MERGE EXCLUSION — deliberately NOT applied:** the comparison's
+  recommendation to "adopt Site A as main" is a merge/production
+  decision. It is NOT done here. This work stays on
+  `feat/frontend-v2-platform`, local commits only; `main` and live are
+  untouched and no new preview exists yet. Merging needs the user's
+  explicit word in chat.
+- **Deliberately NOT applied — prices:** no price, price range or price
+  claim from the revenue table (web ₹8K–60K, training ₹3K–35K,
+  maintenance ₹1K–8K/mo, cloud ₹15K–1.5L, etc.) appears on any page.
+  Quote/consultation CTAs lead to quote/consultation/enquiry flows,
+  never to a priced checkout.
+- **Deliberately NOT applied — traffic/figures:** no counter, stat or
+  claim uses the unverified 3,000–4,000 monthly visitors, 4–6
+  clients/month or 7–9 students/day figures.
+- **Deliberately NOT applied — payment:** no Razorpay, no card/bank/UPI
+  collection, no Purchase/Subscribe checkout. No "Purchase" or
+  "Subscribe" button was added; actions are Get a Quote, Book a
+  Consultation, Enroll Now (real courses, existing lead flow) and Book
+  Free Demo.
+- **Deliberately NOT applied — authorized claims:** no "authorized
+  reseller" or "authorized partner" wording was added anywhere.
+  Partnerships remain a discussion, and partnership terms are drafted,
+  never signed, through a form alone.
+- **Deliberately NOT applied — invented syllabus, AutoCAD named:**
+  the AutoCAD catalogue entry is catalogOnly with an empty summary and
+  empty sections, so there is NO verified AutoCAD syllabus in the repo.
+  The comparison's example modules (2D Drafting, 3D Modeling, Isometric
+  Views) are illustrative, NOT GradeSpot syllabus data, and were NOT
+  published. AutoCAD (and every catalogOnly course) now carries an
+  explicit "Course outline — not yet published" box, with syllabus,
+  batch schedule and fees confirmed on enquiry.
+- **Syllabus gap list — courses with no published syllabus (all
+  catalogOnly, summary + sections empty):** azure-security-engineer-az-500,
+  microsoft-devops-az-400, sc-900, sc-200, microsoft-sentinel,
+  aws-cloud-practitioner, aws-solutions-architect-associate,
+  aws-devops-engineer, comptia-a-plus-core-1, comptia-a-plus-core-2,
+  cybersecurity-technologies, vapt, core-java, java-full-stack, power-bi,
+  mysql, data-analytics, data-science, certified-professional-coder-cpc,
+  hcc-medical-coding, ip-drg-medical-coding, em-medical-coding,
+  radiology-medical-coding, anesthesia-medical-coding, autocad.
+  Real syllabus material from GradeSpot is needed before any of these
+  can carry an outline. The 11 full courses (azure-fundamentals-az-900,
+  azure-administrator-az-104, ccna-200-301, ccnp-350-401-encor,
+  comptia-network-plus, comptia-pentest-plus, comptia-security-plus,
+  computer-hardware-and-networking, digital-marketing, soc-analyst,
+  certified-ethical-hacker-ceh) already render their published sections
+  and now also show the at-a-glance outline.
+- **Divisions with no real offering (Planned, labelled as such):**
+  AI, Automation & Business Solutions; Digital Learning Products &
+  SaaS. Cloud, DevOps & Managed IT Services is Partial — network
+  infrastructure building is available, a standalone cloud/DevOps
+  implementation offering is Planned.
+- **Enquiry rule still applies:** billing-style fields appear ONLY on
+  the deal/agreement/exchange brief forms. Course, service and all
+  related enquiry flows are unchanged in scope and stay short; no
+  enquiry form file was touched in this build.
+- **Remaining gaps:** no `/api/deal-briefs` endpoint (deal briefs stay
+  draft-only); no standalone Labs portal or Certification route; no
+  level tags or interactive roadmaps (Release 2); phone tap check still
+  owed, including for the new header CTA trio and the division cards.
+
 ## Nexus deal/agreement/exchange forms (branch-only, after Release 1)
 
 - **Scope rule, reinforced 2026-10-25:** the billing-style pattern (SPEC §6A)

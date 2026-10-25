@@ -102,6 +102,7 @@ export default async function HomePage() {
             <p className="mt-4 max-w-xl text-sm leading-6 text-body">{homeParagraphs[1]}</p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/trainings" className="btn-primary">Explore Academy</Link>
+              <Link href="/register" className="btn-outline-navy">Book Free Demo</Link>
               <Link href="/services" className="btn-outline-navy">IT Solutions</Link>
             </div>
             <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-body">

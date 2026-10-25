@@ -1,3 +1,47 @@
+## Nexus deal/agreement/exchange forms (branch-only, after Release 1)
+
+- **Scope rule, reinforced 2026-10-25:** the billing-style pattern (SPEC §6A)
+  applies ONLY to genuine deal/agreement/exchange flows. It is NOT
+  applicable to course enquiries, service enquiries, contact/general
+  enquiries, or ANY enquiry-like form related to them — those stay short
+  and progressive with NO billing fields, NO address block and NO
+  organization/VAT/GST/account-type block. Enquiry forms checked and
+  unchanged in this build: `LeadForm` (contact-us, for-institutes demo,
+  for-colleges, partner discussion form), `RegisterForm` (/register),
+  `LpLeadForm` (landing pages), trainings/service enquiry flows.
+- **New component** (`src/components/nexus/DealAgreementForm.tsx`,
+  schema `src/lib/deal-brief-validation.ts`): split first/last name,
+  authorized email/phone, organization + account type, country selector,
+  address line 1 / line 2 (optional), city, state selector (India) or
+  region text (international), country-aware ZIP/postal code, VAT/GST
+  (optional), plus GradeSpot deal fields — deal type (service agreement,
+  partnership, enterprise training deal, payment arrangement, other
+  exchange), scope, expected deliverables, timeline range, indicative
+  budget range (respondent's band, never a GradeSpot price), decision-maker
+  ("who signs off on scope and payment"), success criteria ("how will
+  you know this worked?"). Screenshot fields NOT copied literally: no
+  "Change payment method" action that does anything (see below), no
+  pre-filled values, no screenshot address data.
+- **Submission mode — draft/unsent, chosen deliberately:** the form
+  validates client-side with Zod and shows a review brief with a copy
+  button. It makes NO network request. Sending through `/api/leads` was
+  rejected because that schema ignores unknown fields, so address and
+  deal terms would be silently dropped, and its 2000-char message cap
+  could truncate a brief; `/api/leads` is NOT widened and its validation
+  is untouched. A future `/api/deal-briefs` endpoint (own storage, rate
+  limits, auth, server-side run of this schema) is a gap, not built here.
+- **Payment placeholder:** a visually distinct dashed box labelled
+  "Change payment method — not here" that submits nothing and changes
+  nothing; no card, bank or UPI details are collected anywhere.
+- **Applied to:** `/corporate-and-international` ("Enterprise deal
+  brief", default enterprise training) and `/partner-with-us` (separate
+  "Draft Terms" section below the untouched discussion form, default
+  partnership). `/partner-with-us` remains a discussion invitation,
+  not a franchise offer and not a signed agreement; `/register` remains
+  lead-only. No new public route was invented — both flows already
+  existed as business routes. No backend/Supabase/Axon/replica/portfolio/
+  Royal Salon changes.
+
 # Frontend 2.0 — Implementation Notes (Nexus Release 1)
 
 Branch: `feat/frontend-v2-platform`. Local only — not pushed, not merged,

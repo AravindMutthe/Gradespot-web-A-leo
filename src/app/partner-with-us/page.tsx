@@ -1,6 +1,7 @@
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, SectionTitle } from "@/components/ui";
 import LeadForm from "@/components/LeadForm";
+import DealAgreementForm from "@/components/nexus/DealAgreementForm";
 
 // Partner With Us (DECISIONS.md §21) — Aravind's decision,
 // 2026-10-23: the site openly welcomes collaborations and franchise
@@ -150,6 +151,38 @@ export default function PartnerPage() {
               showCountry
               showPartnership
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Partnership deal brief — separate from the discussion form
+          above, which stays untouched and short. This is for partners
+          past the conversation stage who want to draft terms. It is
+          a draft brief only: it does NOT turn this page into a
+          franchise offer, and it adds no investment figure, ROI or
+          earnings claim, territory promise or franchise terms — none
+          exist yet. Nothing here is signed, charged or sent. */}
+      <section id="deal-brief" className="bg-surface-light section-pad scroll-mt-32">
+        <div className="wrap grid items-start gap-12 lg:grid-cols-2">
+          <div data-reveal>
+            <SectionTitle label="Draft Terms" title="Ready to draft partnership terms?" />
+            <p className="mt-4 max-w-xl text-[15px] leading-7 text-body">
+              If you have already talked with us and want to put the
+              partnership on paper, use this brief: scope, deliverables,
+              timeline, who signs off on scope and payment, success
+              criteria, and the billing and legal address a signed deal
+              would need.
+            </p>
+            <p className="mt-5 max-w-xl rounded-[14px] border border-line bg-cream px-5 py-4 text-sm leading-6 text-body">
+              <strong className="text-heading">Please note:</strong> this is
+              still a discussion, not a franchise offer and not a signed
+              agreement. This brief is prepared in your browser only — it
+              is not sent, not stored, not signed, and no payment is
+              taken or changed here.
+            </p>
+          </div>
+          <div data-reveal>
+            <DealAgreementForm idPrefix="partner-deal" defaultDealType="partnership" />
           </div>
         </div>
       </section>

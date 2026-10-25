@@ -1,5 +1,6 @@
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, SectionTitle } from "@/components/ui";
+import DealAgreementForm from "@/components/nexus/DealAgreementForm";
 import Link from "next/link";
 
 // Corporate & International (international build, 2026-10-25) — stands
@@ -92,6 +93,37 @@ export default function CorporateAndInternationalPage() {
             <Link href="/partner-with-us" className="btn-primary">
               Start a Partnership Conversation
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Enterprise deal brief — a genuine deal flow, not an enquiry.
+          Draft only: nothing here is signed, charged or sent. The
+          billing-style pattern (SPEC §6A) belongs on deal/agreement/
+          exchange flows like this one, never on enquiry forms. */}
+      <section id="deal-brief" className="section-pad scroll-mt-32">
+        <div className="wrap grid items-start gap-12 lg:grid-cols-2">
+          <div>
+            <SectionTitle
+              label="Enterprise Deal Brief"
+              title="Ready to talk terms, not just enquire?"
+            />
+            <p className="mt-4 max-w-xl text-[15px] leading-7 text-body">
+              If you are past the enquiry stage and want to draft the terms of a
+              corporate training deal or service agreement, use this brief. It
+              covers scope, deliverables, timeline, who signs off on scope and
+              payment, and how success will be judged — plus the billing and
+              legal address a signed deal would need.
+            </p>
+            <p className="mt-5 max-w-xl rounded-[14px] border border-line bg-cream px-5 py-4 text-sm leading-6 text-body">
+              <strong className="text-heading">Draft only:</strong> this form
+              prepares a brief for discussion. It is not sent, not stored, not
+              signed, and no payment is taken or changed here. No GradeSpot
+              prices appear in it — pricing is scoped per engagement.
+            </p>
+          </div>
+          <div>
+            <DealAgreementForm idPrefix="corporate-deal" defaultDealType="enterprise-training" />
           </div>
         </div>
       </section>

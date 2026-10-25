@@ -268,6 +268,46 @@ disclosure throughout.
 
 - A person asking about AWS training must not have to provide employment
   history, home address and identity documents.
+
+### 6A. Billing-style form pattern — agreement, payment and partnership ONLY
+
+- Use the structured billing-address form pattern (as in the reference
+  screenshot shared 2026-10-25) ONLY for agreement, payment and
+  partnership forms — the forms where a contract, invoice or authorized
+  organizational relationship is actually being created. Do NOT use this
+  pattern on enquiry forms; enquiries stay short and progressive per the
+  table above.
+- Field structure for those three form types (grouped, labelled, with
+  inline validation and clear required/optional marking):
+  - Billing / legal contact: first name, last name (separate fields, not
+    a single name field).
+  - Country (selector), address line 1, address line 2 (optional).
+  - City, state/region (selector), ZIP/postal code.
+  - Organization name (optional, except where the agreement or invoice
+    legally requires it — then required and labelled as such).
+  - Account type (selector: e.g. individual / business, as applicable to
+    the form), VAT/GST number (optional, except where invoicing requires
+    it).
+  - A separate "Change payment method" action, kept distinct from the
+    address block — changing a payment method is never bundled silently
+    into submitting an agreement or partnership form.
+- Validation and behaviour: country/state selectors with clear/remove
+  controls; ZIP/postal format validated per country where known, never
+  assumed to be Indian format for international clients; organization
+  and VAT/GST fields validated only when supplied (or when required by
+  the agreement type); field-level error states, not a generic failure
+  banner; no pre-filled personal or billing values from a screenshot or
+  from another user's session — values in the reference screenshot are
+  a design example only, not GradeSpot data and not to be copied into the
+  forms as defaults.
+- Placement: this pattern belongs to Release 3 (IT Solutions and
+  conversion workflows) in §12, not to Release 1 (design system +
+  navigation) and not to enquiry flows. If a prototype of these three
+  forms is built before a Release 1 preview push, it must still follow
+  this section and must not widen enquiry forms.
+- No payment is submitted, no payment method is changed, and no agreement
+  is signed by building this pattern — those actions remain separate,
+  explicitly authorized steps with their own confirmation.
 - Advanced courses: weighted assessment emphasizing foundational
   knowledge, hands-on tasks and troubleshooting, with a bridging route
   for learners who need preparation. Sensitive cybersecurity labs require

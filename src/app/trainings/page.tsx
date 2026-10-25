@@ -72,9 +72,14 @@ export default async function TrainingsPage() {
               Talk to a Trainer — tell us your goal and we will help you pick the right training
               path.
             </p>
-            <Link href="/contact-us" className="btn-primary mt-5">
-              Talk to a Trainer
-            </Link>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-4">
+              <Link href="/contact-us" className="btn-primary">
+                Talk to a Trainer
+              </Link>
+              <Link href="#course-search" className="text-sm font-bold text-signal hover:underline">
+                Explore Programs ↑
+              </Link>
+            </div>
           </div>
         </div>
       </section>

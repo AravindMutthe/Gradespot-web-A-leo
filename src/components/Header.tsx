@@ -2,192 +2,128 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { business, telHref } from "@/data/site";
 import { SocialLinks } from "@/components/ui";
-import { categoryAnchor, navCategoryOrder, navCourses, type NavCourse } from "@/data/catalogue-nav";
+import { navCourses } from "@/data/catalogue-nav";
 import { services } from "@/data/services";
-import { promotions } from "@/data/promotions";
+import { frontendV2Menus, type NavMenu } from "@/data/frontend-v2-nav";
 
-// Header — Leo v1 ("Prospectus", DECISIONS.md §19; engagement +
-// menu-effectiveness pass §22).
-// The rich mega menu is the primary navigation instrument (Aravind,
-// 2026-10-23 14:02 IST): the top bar stays lean because the panels
-// carry the depth — the full catalogue grouped by domain with codes
-// and published durations, a featured-training + Free Demo panel fed
-// by the promotions data layer, grouped services with the three B2B
-// doors, and grouped resources. Panels open on hover AND click, are
-// fully keyboard-operable (chevron buttons, Escape closes, focus
-// opens), and the mobile menu is a rich accordion with the same
-// groupings. CTA hierarchy is stacked by colour, not competing:
-// vermilion = the one conversion CTA (Request a Callback), ink =
-// audience door (For Institutes), outline = self-serve (Register).
-//
-// Menu history: v1 trims (§19) — Home removed from the bar (logo is
-// home), Contact Us removed from the DESKTOP bar (duplicated by the
-// Callback CTA; kept in footer + mobile sheet), Digital moved into
-// Resources. §22 verdicts on those three are logged in DECISIONS.md.
-//
-// §23 desktop fix (Aravind's ruling from his phone review): the full
-// salon-style inline bar + mega panels moved from xl (1280px) down
-// to the same breakpoint as the rest of the chrome.
-// §24 single-threshold rule: ALL chrome now switches at the custom
-// `nav` breakpoint (960px, --breakpoint-nav in globals.css) — header,
-// mega panels, FloatingActions, the LP sticky bar and the body
-// bottom-padding. 960px because a phone browser's desktop mode
-// (Edge/Copilot) reports ~980 CSS px: at lg (1024px) it still got
-// the hamburger. From 960 the bar runs the compact measure (smaller
-// logo step, tighter links/CTAs) and restores the full measure at
-// xl. Mobile (<960) markup and behaviour are untouched — only the
-// visibility threshold moved.
+// Header — Frontend 2.0, Navigation 2.0 (docs/frontend-v2/SPEC.md §2).
+// Six primary menus only: Training, Certifications, Labs & Projects,
+// IT Solutions, For Organizations, Explore. Desktop mega panels are
+// three structured columns plus a featured panel; mobile is a
+// one-level accordion (each top menu expands once; groups inside are
+// headings, not nested accordions). Panels open on hover AND click,
+// are keyboard-operable (chevron buttons, Escape closes, focus
+// opens), and the header search filters the real catalogue + services
+// — it never invents a destination. Primary CTA is "Talk to an
+// Advisor" → /contact-us (the existing advisory flow). Registration
+// is contextual only: a small link inside the Training panel /
+// accordion, never a prominent button on every page.
+// Logo plate: UNTOUCHED from Leo v1 — luminous parchment plate +
+// halo, official artwork, per-theme swap. Do not recolor or filter it.
 
-type PanelKey = "trainings" | "services" | "resources";
-
-const featuredCourse = navCourses.find((c) => c.slug === "certified-ethical-hacker-ceh");
-const demoPromo =
-  promotions.find((p) => p.slug === "free-demo-card" && p.active) ??
-  promotions.find((p) => p.kind === "card" && p.active);
-
-const coursesByCategory = navCategoryOrder
-  .map((category) => ({
-    category,
-    courses: navCourses.filter((c) => c.category === category),
-  }))
-  .filter((g) => g.courses.length > 0);
-
-const serviceGroups: { title: string; note: string; slugs: string[] }[] = [
-  {
-    title: "Training & Talent",
-    note: "Programs for teams, colleges and students",
-    slugs: ["corporate-trainings", "college-workshops", "industrial-trainings", "internships"],
-  },
-  {
-    title: "Technology Services",
-    note: "Build, secure and grow your systems",
-    slugs: [
-      "cybersecurity-services",
-      "web-development",
-      "network-infrastructure-building",
-      "digital-marketing-solutions",
-      "logo-designing",
-    ],
-  },
-  {
-    title: "Consultancy & Staffing",
-    note: "People and opportunities, India and abroad",
-    slugs: ["us-it-staffing", "domestic-consultancy", "abroad-consultancy"],
-  },
-];
-
-const businessDoors = [
-  {
-    title: "For Institutes",
-    desc: "WhatsApp Lead Engine, Learning Hub and Linux labs — book a live demo.",
-    href: "/for-institutes",
-  },
-  {
-    title: "For Colleges",
-    desc: "Workshops, industrial trainings and internships at your campus.",
-    href: "/for-colleges",
-  },
-  {
-    title: "Partner With Us",
-    desc: "Collaborations and franchise discussions are welcome.",
-    href: "/partner-with-us",
-  },
-];
-
-const resourceGroups: {
-  title: string;
-  links: { label: string; href: string; external?: boolean }[];
-}[] = [
-  {
-    title: "Proof & People",
-    links: [
-      { label: "Why Choose Us", href: "/why-choose-us" },
-      { label: "Testimonials", href: "/testimonials" },
-      { label: "Team Members", href: "/team-members" },
-      { label: "Student Certifications", href: "/student-certifications" },
-      { label: "Certificate Verification", href: "/certificate-verification" },
-    ],
-  },
-  {
-    title: "Learning & Career",
-    links: [
-      { label: "Career Support", href: "/career-support" },
-      { label: "Learning Articles", href: "/blog" },
-      { label: "Course Comparisons", href: "/compare" },
-      { label: "Local Institute Page", href: "/training-institute-in-dilsukhnagar-hyderabad" },
-    ],
-  },
-  {
-    title: "More From GradeSpot",
-    links: [
-      { label: "DigiDefense Blog", href: business.blogUrl, external: true },
-      { label: "GradeSpot Digital", href: business.digitalUrl, external: true },
-      { label: "Help & FAQs", href: "/faq" },
-      { label: "Partner With Us", href: "/partner-with-us" },
-      { label: "Accessibility", href: "/accessibility" },
-    ],
-  },
-];
+type PanelKey = NavMenu["key"];
 
 const navLink =
-  "block whitespace-nowrap px-2.5 py-3 text-[14px] font-semibold text-nav underline-offset-4 transition-colors hover:text-signal hover:underline hover:decoration-2 nav:px-1 nav:py-2.5 nav:text-[12px] xl:px-2.5 xl:py-3 xl:text-[14px]";
+  "block whitespace-nowrap px-2 py-3 text-[14px] font-semibold text-nav underline-offset-4 transition-colors hover:text-signal hover:underline hover:decoration-2 nav:px-1.5 nav:py-2.5 nav:text-[12px] xl:px-2.5 xl:py-3 xl:text-[13px]";
 const chevronBtn =
-  "-ml-1.5 flex h-11 w-7 items-center justify-center text-[12px] text-nav transition-colors hover:text-signal nav:-ml-1 nav:w-4 xl:-ml-1.5 xl:w-7";
+  "-ml-1 flex h-11 w-6 items-center justify-center text-[12px] text-nav transition-colors hover:text-signal nav:-ml-0.5 nav:w-4 xl:-ml-1 xl:w-6";
 const mobileLink =
   "flex min-h-[48px] items-center px-3 text-[15px] font-semibold text-heading transition-colors hover:text-signal";
 
-function CourseEntry({ course, onNavigate }: { course: NavCourse; onNavigate?: () => void }) {
-  const meta = [course.code, course.duration].filter(Boolean).join(" · ");
+function HeaderSearch({ onNavigate, compact }: { onNavigate?: () => void; compact?: boolean }) {
+  const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
+  const q = query.trim().toLowerCase();
+  const results = useMemo(() => {
+    if (q.length < 2) return [];
+    const courseHits = navCourses
+      .filter((c) => c.label.toLowerCase().includes(q) || c.title.toLowerCase().includes(q) || c.category.toLowerCase().includes(q))
+      .slice(0, 5)
+      .map((c) => ({ label: c.label, href: `/trainings/${c.slug}`, kind: "Training" }));
+    const serviceHits = services
+      .filter((s) => s.title.toLowerCase().includes(q))
+      .slice(0, 3)
+      .map((s) => ({ label: s.title, href: `/services/${s.slug}`, kind: "Service" }));
+    return [...courseHits, ...serviceHits].slice(0, 8);
+  }, [q]);
+  const showResults = focused && q.length >= 2;
   return (
-    <Link
-      href={`/trainings/${course.slug}`}
-      onClick={onNavigate}
-      className="group flex items-start justify-between gap-3 rounded-lg px-2 py-[7px] transition-colors hover:bg-cream"
-    >
-      <span className="text-[13.5px] font-medium leading-snug text-body group-hover:text-heading">
-        {course.label}
-      </span>
-      {meta && (
-        <span className="shrink-0 pt-[1px] font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-signal-strong">
-          {meta}
-        </span>
+    <div className="relative">
+      <label htmlFor={compact ? "header-search-mobile" : "header-search"} className="sr-only">
+        Search courses, services, certifications
+      </label>
+      <input
+        id={compact ? "header-search-mobile" : "header-search"}
+        type="search"
+        role="searchbox"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => window.setTimeout(() => setFocused(false), 150)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setQuery("");
+        }}
+        placeholder="Search courses, services, certifications…"
+        className="w-full rounded-full border border-line bg-parchment px-4 py-2.5 text-[13px] text-heading outline-none transition-colors placeholder:text-body/70 focus:border-brand nav:w-[150px] nav:focus:w-[210px] xl:w-[180px] xl:focus:w-[240px]"
+      />
+      {showResults && (
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-line bg-parchment shadow-[0_28px_56px_rgba(31,24,16,0.18)] nav:w-[300px]">
+          {results.length === 0 ? (
+            <p className="px-4 py-3 text-[13px] text-body" role="status">
+              No courses or services match. Try “CCNA”, “Azure” or “SOC”.
+            </p>
+          ) : (
+            <ul>
+              {results.map((r) => (
+                <li key={r.href}>
+                  <Link
+                    href={r.href}
+                    onClick={() => {
+                      setQuery("");
+                      onNavigate?.();
+                    }}
+                    className="flex items-center justify-between gap-3 px-4 py-2.5 text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-signal"
+                  >
+                    <span>{r.label}</span>
+                    <span className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.06em] text-signal-strong">
+                      {r.kind}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Link
+            href="/trainings#course-search"
+            onClick={() => {
+              setQuery("");
+              onNavigate?.();
+            }}
+            className="block border-t border-line px-4 py-2.5 text-[13px] font-bold text-signal hover:text-signal-strong"
+          >
+            Search all trainings →
+          </Link>
+        </div>
       )}
-    </Link>
+    </div>
   );
 }
 
-function CategoryBlock({
-  category,
-  courses,
-  onNavigate,
-}: {
-  category: string;
-  courses: NavCourse[];
-  onNavigate?: () => void;
-}) {
-  return (
-    <div className="mb-5 break-inside-avoid">
-      <Link
-        href={`/trainings#${categoryAnchor(category)}`}
-        onClick={onNavigate}
-        className="flex items-baseline justify-between gap-2 border-b-2 border-heading/70 px-2 pb-1.5"
-      >
-        <span className="eyebrow text-[10.5px] text-heading">{category}</span>
-        <span className="font-mono text-[10.5px] font-semibold text-signal-strong">
-          {courses.length} course{courses.length === 1 ? "" : "s"}
-        </span>
-      </Link>
-      <ul className="mt-1">
-        {courses.map((c) => (
-          <li key={c.slug}>
-            <CourseEntry course={c} onNavigate={onNavigate} />
-          </li>
-        ))}
-      </ul>
-    </div>
+function MenuLinkItem({ label, href, external, note, onNavigate }: { label: string; href: string; external?: boolean; note?: string; onNavigate?: () => void }) {
+  const cls =
+    "block rounded-lg px-2 py-[7px] text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-signal";
+  return external ? (
+    <a href={href} target="_blank" rel="noreferrer" className={cls}>
+      {label} ↗{note ? <span className="block text-[11.5px] font-normal text-body">{note}</span> : null}
+    </a>
+  ) : (
+    <Link href={href} onClick={onNavigate} className={cls}>
+      {label}
+      {note ? <span className="block text-[11.5px] font-normal text-body">{note}</span> : null}
+    </Link>
   );
 }
 
@@ -216,69 +152,63 @@ export default function Header() {
     if (e.key === "Escape") setPanel(null);
   };
 
-  const megaTrigger = (
-    key: PanelKey,
-    href: string,
-    label: string,
-    controls: string,
-  ) => (
+  const megaTrigger = (menu: NavMenu) => (
     <div
+      key={menu.key}
       className="relative flex items-center"
-      onMouseEnter={() => openNow(key)}
+      onMouseEnter={() => openNow(menu.key)}
       onMouseLeave={scheduleClose}
-      onFocus={() => openNow(key)}
+      onFocus={() => openNow(menu.key)}
       onBlur={closeOnBlur}
     >
-      <Link className={navLink} href={href} onClick={() => setPanel(null)}>
-        {label}
+      <Link className={navLink} href={menu.href} onClick={() => setPanel(null)}>
+        {menu.label}
       </Link>
       <button
         type="button"
         className={chevronBtn}
-        aria-expanded={panel === key}
-        aria-controls={controls}
-        aria-label={`${label} menu`}
-        onClick={() => togglePanel(key)}
+        aria-expanded={panel === menu.key}
+        aria-controls={`mega-${menu.key}`}
+        aria-label={`${menu.label} menu`}
+        onClick={() => togglePanel(menu.key)}
       >
-        <span aria-hidden>{panel === key ? "▴" : "▾"}</span>
+        <span aria-hidden>{panel === menu.key ? "▴" : "▾"}</span>
       </button>
     </div>
   );
 
-  // Utility strip — mono index voice on ink. SINGLE ROW at every
-  // width (§25.11): no wrap anywhere, so the strip can never grow
-  // a second row or a gap row on mobile — the location/email group
-  // truncates with ellipsis on narrow screens instead, and the
-  // socials/phones group is fully absent below sm (not an empty
-  // flex item). Same py-2 and text size at all widths.
-  //
-  // §25.14 — MOBILE SCROLL / DESKTOP STICKY SPLIT: the strip is
-  // rendered TWICE, one instance per breakpoint (display:none hides
-  // the other, so assistive tech sees only one). Below the 960px
-  // nav breakpoint the strip sits in normal flow ABOVE the sticky
-  // header, so it scrolls away with the page and only the logo nav
-  // bar stays stuck; at/above nav: the strip lives INSIDE the
-  // sticky header, so strip + nav stick together exactly as before.
-  // The two instances are the same JSX (the `strip` const), so the
-  // content can never drift between breakpoints.
+  const activeMenu = frontendV2Menus.find((m) => m.key === panel) ?? null;
+
+  // Utility strip — spec §2 top bar: Hyderabad, India · Online &
+  // Classroom Training, plus Contact and Student Support links.
+  // Rendered twice, one instance per breakpoint (display:none hides
+  // the other, so assistive tech sees only one), exactly as in v1:
+  // below the 960px nav breakpoint it scrolls away; at/above nav it
+  // sticks with the header.
   const strip = (
     <div className="bg-ink-deep text-footer-text">
       <div className="wrap flex flex-nowrap items-center justify-between gap-x-6 overflow-hidden py-2 font-mono text-[11px] uppercase tracking-[0.14em]">
         <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-x-5">
-          <span className="min-w-0 truncate">{business.locationLabel}</span>
+          <span className="min-w-0 truncate">Hyderabad, India · Online &amp; Classroom Training</span>
+          <span className="hidden shrink-0 truncate md:inline">{business.locationLabel}</span>
           <a
-            className="min-w-0 truncate normal-case tracking-normal transition-colors hover:text-brand-bright"
+            className="hidden min-w-0 truncate normal-case tracking-normal transition-colors hover:text-brand-bright lg:inline"
             href={`mailto:${business.emails[0]}`}
           >
             {business.emails[0]}
           </a>
-          <span className="hidden shrink-0 md:inline">Office Hours: {business.officeHours}</span>
         </div>
-        <div className="hidden shrink-0 items-center gap-3 sm:flex sm:gap-4">
-          <span className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+          <Link href="/contact-us" className="transition-colors hover:text-brand-bright">
+            Contact
+          </Link>
+          <Link href="/career-support" className="hidden transition-colors hover:text-brand-bright sm:inline">
+            Student Support
+          </Link>
+          <span className="hidden items-center gap-3 sm:flex sm:gap-4">
             <SocialLinks />
           </span>
-          <span className="flex items-center gap-4">
+          <span className="hidden items-center gap-4 md:flex">
             {business.phones.map((p) => (
               <a
                 key={p}
@@ -296,7 +226,6 @@ export default function Header() {
 
   return (
     <>
-      {/* Mobile only: strip in normal flow — scrolls off the top. */}
       <div className="nav:hidden">{strip}</div>
 
       <header className="sticky top-0 z-50">
@@ -307,565 +236,213 @@ export default function Header() {
           Skip to content
         </a>
 
-        {/* Desktop only: strip inside the sticky header — strip + nav
-            stick together, exactly as before §25.14. */}
         <div className="hidden nav:block">{strip}</div>
 
-      {/* Main navigation — paper bar, ink type, official logo */}
-      <div className="glass-panel relative border-b border-line shadow-[0_1px_0_rgba(32,25,19,0.04)]">
-        <div className="wrap flex items-center justify-between py-2.5">
-          {/* Logo brightening (§22): presentation only — a luminous
-              parchment plate + warm halo behind the unmodified
-              artwork at a stronger size. No filter, no recolor.
-              §25: the plate is now the .logo-plate class (ink-glow
-              variant in dark) and the artwork swaps to the official
-              light-text file on dark — both files render, CSS picks
-              one, so there is no flash or hydration mismatch. */}
-          <Link
-            href="/"
-            aria-label="GradeSpot IT Solutions — Home"
-            className="logo-plate shrink-0 rounded-2xl px-3 py-1 ring-1 ring-line nav:px-1.5 xl:px-3"
-          >
-            <span className="dark:hidden">
-              <Image
-                src="/images/logo.png"
-                alt="GradeSpot IT Solutions"
-                width={193}
-                height={60}
-                className="h-12 w-auto nav:h-10 xl:h-12"
-                priority
-              />
-            </span>
-            <span className="hidden dark:block">
-              <Image
-                src="/images/logo-light.png"
-                alt="GradeSpot IT Solutions"
-                width={193}
-                height={60}
-                className="h-12 w-auto nav:h-10 xl:h-12"
-                priority
-              />
-            </span>
-          </Link>
-
-          <nav className="hidden items-center nav:flex" aria-label="Primary">
-            {megaTrigger("trainings", "/trainings", "Trainings", "mega-trainings")}
-            {megaTrigger("services", "/services", "Services", "mega-services")}
-            <Link className={navLink} href="/pricing">
-              Pricing
-            </Link>
-            <Link className={navLink} href="/about-us">
-              About Us
-            </Link>
-            {megaTrigger("resources", "/resources", "Resources", "mega-resources")}
-
-            {/* Audience doors — colleges as a peer link, institutes as
-                an ink door (audience, not the conversion CTA). */}
-            <Link className={navLink} href="/for-colleges">
-              For Colleges
-            </Link>
+        {/* Main navigation — paper bar, ink type, official logo.
+            Logo plate UNTOUCHED from Leo v1: luminous parchment
+            plate + warm halo behind the unmodified artwork, per-theme
+            swap via CSS (both files render, CSS picks one). */}
+        <div className="glass-panel relative border-b border-line shadow-[0_1px_0_rgba(32,25,19,0.04)]">
+          <div className="wrap flex items-center justify-between gap-3 py-2.5">
             <Link
-              className="ml-1 whitespace-nowrap rounded-xl bg-ink px-4 py-2.5 text-[14px] font-bold text-paper shadow-[0_8px_20px_rgba(23,18,8,0.25)] transition hover:bg-navy nav:ml-0.5 nav:px-2.5 nav:py-2 nav:text-[12px] xl:px-4 xl:py-2.5 xl:text-[14px]"
-              href="/for-institutes"
+              href="/"
+              aria-label="GradeSpot IT Solutions — Home"
+              className="logo-plate shrink-0 rounded-2xl px-3 py-1 ring-1 ring-line nav:px-1.5 xl:px-3"
             >
-              For Institutes
+              <span className="dark:hidden">
+                <Image
+                  src="/images/logo.png"
+                  alt="GradeSpot IT Solutions"
+                  width={193}
+                  height={60}
+                  className="h-12 w-auto nav:h-10 xl:h-12"
+                  priority
+                />
+              </span>
+              <span className="hidden dark:block">
+                <Image
+                  src="/images/logo-light.png"
+                  alt="GradeSpot IT Solutions"
+                  width={193}
+                  height={60}
+                  className="h-12 w-auto nav:h-10 xl:h-12"
+                  priority
+                />
+              </span>
             </Link>
-            <Link
-              href="/register"
-              className="ml-3 flex min-h-[48px] items-center whitespace-nowrap rounded-xl border-[1.5px] border-heading/60 px-4 text-[14px] font-bold text-heading transition hover:border-heading hover:bg-ink hover:text-paper nav:ml-1.5 nav:min-h-[44px] nav:px-2.5 nav:text-[12px] xl:ml-3 xl:min-h-[48px] xl:px-4 xl:text-[14px]"
-            >
-              Register
-            </Link>
-            <Link
-              href="/contact-us"
-              className="btn-primary ml-3 whitespace-nowrap nav:ml-1.5 nav:min-h-[44px] nav:px-2.5 nav:text-[12.5px] xl:ml-3 xl:min-h-[50px] xl:px-7 xl:text-[15px]"
-            >
-              Request a Callback
-            </Link>
-          </nav>
 
-          <button
-            className="flex min-h-[48px] items-center rounded-xl border border-heading/25 px-5 text-sm font-semibold text-heading nav:hidden"
-            onClick={() => setOpen(!open)}
-            aria-expanded={open}
-            aria-label="Toggle menu"
-          >
-            ☰ Menu
-          </button>
+            <nav className="hidden items-center nav:flex" aria-label="Primary">
+              {frontendV2Menus.map(megaTrigger)}
+              <div className="ml-2 hidden xl:block">
+                <HeaderSearch />
+              </div>
+              <Link
+                href="/contact-us"
+                className="btn-primary ml-3 whitespace-nowrap nav:ml-1.5 nav:min-h-[44px] nav:px-2.5 nav:text-[12.5px] xl:ml-3 xl:min-h-[50px] xl:px-7 xl:text-[15px]"
+              >
+                Talk to an Advisor
+              </Link>
+            </nav>
+
+            <div className="flex items-center gap-2 nav:hidden">
+              <button
+                className="flex min-h-[48px] items-center rounded-xl border border-heading/25 px-5 text-sm font-semibold text-heading"
+                onClick={() => setOpen(!open)}
+                aria-expanded={open}
+                aria-label="Toggle menu"
+              >
+                ☰ Menu
+              </button>
+            </div>
+          </div>
+
+          {/* Search row below the bar at the compact nav breakpoint,
+              where the inline search field does not fit. */}
+          <div className="hidden border-t border-line px-3 py-2 nav:block xl:hidden">
+            <HeaderSearch />
+          </div>
+
+          {/* ——— GENERIC MEGA PANEL: three columns + featured panel ——— */}
+          {activeMenu && (
+            <div
+              id={`mega-${activeMenu.key}`}
+              className="absolute inset-x-0 top-full z-40 hidden nav:block"
+              onMouseEnter={() => openNow(activeMenu.key)}
+              onMouseLeave={scheduleClose}
+              onKeyDown={onPanelKeyDown}
+            >
+              <div className="mx-auto w-full max-w-[1240px] px-3 pb-4">
+                <div className="glass-panel overflow-hidden rounded-2xl border border-line border-t-2 border-t-brand shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
+                  <div className="grid max-h-[calc(100vh-170px)] grid-cols-[1fr_300px]">
+                    <div className="grid gap-7 overflow-y-auto p-6 sm:grid-cols-3">
+                      {activeMenu.columns.map((col) => (
+                        <div key={col.title}>
+                          <p className="eyebrow border-b-2 border-heading/70 pb-1.5 text-[10.5px] text-heading">
+                            {col.title}
+                          </p>
+                          <ul className="mt-2 space-y-0.5">
+                            {col.links.map((l) => (
+                              <li key={`${col.title}-${l.label}`}>
+                                <MenuLinkItem {...l} onNavigate={() => setPanel(null)} />
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="panel-ink overflow-y-auto p-5">
+                      <p className="eyebrow text-brand-bright">{activeMenu.featured.eyebrow}</p>
+                      <p className="mt-2 font-display text-[17px] font-semibold leading-snug text-paper">
+                        {activeMenu.featured.title}
+                      </p>
+                      <p className="mt-1.5 text-[12.5px] leading-5 text-paper/75">{activeMenu.featured.body}</p>
+                      <Link
+                        href={activeMenu.featured.ctaHref}
+                        onClick={() => setPanel(null)}
+                        className="mt-3 inline-block text-[13px] font-bold text-brand-bright hover:text-paper"
+                      >
+                        {activeMenu.featured.ctaLabel} →
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 bg-ink px-6 py-3">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-paper/75">
+                      Hyderabad, India · Online &amp; Classroom Training
+                    </span>
+                    <Link
+                      href={activeMenu.href}
+                      onClick={() => setPanel(null)}
+                      className="text-[13px] font-bold text-brand-bright hover:text-paper"
+                    >
+                      View {activeMenu.label} →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* ——— TRAININGS MEGA PANEL ——— */}
-        {panel === "trainings" && (
-          <div
-            id="mega-trainings"
-            className="absolute inset-x-0 top-full z-40 hidden nav:block"
-            onMouseEnter={() => openNow("trainings")}
-            onMouseLeave={scheduleClose}
-            onKeyDown={onPanelKeyDown}
-          >
-            <div className="mx-auto w-full max-w-[1240px] px-3 pb-4">
-              <div className="glass-panel overflow-hidden rounded-2xl border border-line border-t-2 border-t-brand shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
-                <div className="grid max-h-[calc(100vh-170px)] grid-cols-[290px_1fr]">
-                  {/* Featured rail — featured training + the Free Demo
-                      promotion from the promotions data layer (§19). */}
-                  <div className="overflow-y-auto bg-cream p-5">
-                    <p className="eyebrow text-signal-strong">Featured Training</p>
-                    {featuredCourse && (
-                      <div className="mt-3 overflow-hidden rounded-xl border border-line bg-parchment">
-                        {featuredCourse.image && (
-                          <div className="relative">
-                            <Image
-                              src={featuredCourse.image}
-                              alt={featuredCourse.title}
-                              width={520}
-                              height={260}
-                              className="h-28 w-full object-cover"
-                            />
-                            <span className="eyebrow absolute right-2.5 top-2.5 rounded-md bg-brand px-2 py-1 text-white">
-                              Free Demo
-                            </span>
-                          </div>
-                        )}
-                        <div className="p-4">
-                          <p className="font-display text-[16.5px] font-semibold leading-snug text-heading">
-                            {featuredCourse.title}
-                          </p>
-                          <p className="mt-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-signal-strong">
-                            {[featuredCourse.code, featuredCourse.duration]
-                              .filter(Boolean)
-                              .join(" · ")}
-                          </p>
-                          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
-                            <Link
-                              href={`/trainings/${featuredCourse.slug}`}
-                              onClick={() => setPanel(null)}
-                              className="text-[13px] font-bold text-signal hover:text-signal-strong"
-                            >
-                              View Course →
-                            </Link>
-                            <Link
-                              href={`/trainings/${featuredCourse.slug}#demo`}
-                              onClick={() => setPanel(null)}
-                              className="text-[13px] font-bold text-heading hover:text-signal"
-                            >
-                              Book the Free Demo →
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    {demoPromo && (
-                      <div className="mt-4 rounded-xl bg-ink p-4">
-                        <p className="eyebrow text-brand-bright">Free First Step</p>
-                        <p className="mt-2 font-display text-[16px] font-semibold text-paper">
-                          {demoPromo.title}
-                        </p>
-                        {demoPromo.body && (
-                          <p className="mt-1.5 text-[12.5px] leading-5 text-paper/75">
-                            {demoPromo.body}
-                          </p>
-                        )}
-                        {demoPromo.ctaHref && demoPromo.ctaLabel && (
-                          <Link
-                            href={demoPromo.ctaHref}
-                            onClick={() => setPanel(null)}
-                            className="mt-2.5 inline-block text-[13px] font-bold text-brand-bright hover:text-paper"
-                          >
-                            {demoPromo.ctaLabel} →
-                          </Link>
-                        )}
-                      </div>
-                    )}
-                    <Link
-                      href="/compare"
-                      onClick={() => setPanel(null)}
-                      className="mt-4 block rounded-xl border border-heading/20 px-4 py-3 text-[13px] font-bold text-heading transition-colors hover:border-brand hover:text-signal"
-                    >
-                      Can&apos;t decide? Compare courses side by side →
-                    </Link>
-                  </div>
-
-                  {/* Grouped catalogue — every category, every course,
-                      code + published duration as mono meta. */}
-                  <div className="overflow-y-auto p-6">
-                    <div className="columns-2 gap-7 2xl:columns-3">
-                      {coursesByCategory.map((g) => (
-                        <CategoryBlock
-                          key={g.category}
-                          category={g.category}
-                          courses={g.courses}
-                          onNavigate={() => setPanel(null)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 bg-ink px-6 py-3">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-paper/75">
-                    {navCourses.length} Trainings · Online &amp; Offline Classes
-                  </span>
-                  <span className="flex flex-wrap gap-x-5 gap-y-1">
-                    <Link
-                      href="/trainings#course-search"
-                      onClick={() => setPanel(null)}
-                      className="text-[13px] font-bold text-brand-bright hover:text-paper"
-                    >
-                      Search Trainings
-                    </Link>
-                    <Link
-                      href="/register"
-                      onClick={() => setPanel(null)}
-                      className="text-[13px] font-bold text-brand-bright hover:text-paper"
-                    >
-                      Register / Book a Demo
-                    </Link>
-                    <Link
-                      href="/trainings"
-                      onClick={() => setPanel(null)}
-                      className="text-[13px] font-bold text-brand-bright hover:text-paper"
-                    >
-                      View All Trainings →
-                    </Link>
-                  </span>
-                </div>
+        {/* Mobile menu — one-level accordion, same six menus */}
+        {open && (
+          <nav className="border-b border-line bg-canvas nav:hidden" aria-label="Mobile">
+            <div className="wrap py-3">
+              <div className="pb-3">
+                <HeaderSearch compact onNavigate={() => setOpen(false)} />
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* ——— SERVICES MEGA PANEL ——— */}
-        {panel === "services" && (
-          <div
-            id="mega-services"
-            className="absolute inset-x-0 top-full z-40 hidden nav:block"
-            onMouseEnter={() => openNow("services")}
-            onMouseLeave={scheduleClose}
-            onKeyDown={onPanelKeyDown}
-          >
-            <div className="mx-auto w-full max-w-[1240px] px-3 pb-4">
-              <div className="glass-panel overflow-hidden rounded-2xl border border-line border-t-2 border-t-brand shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
-                <div className="grid max-h-[calc(100vh-170px)] grid-cols-[1fr_300px]">
-                  <div className="grid gap-7 overflow-y-auto p-6 sm:grid-cols-3">
-                    {serviceGroups.map((g) => (
-                      <div key={g.title}>
-                        <p className="eyebrow border-b-2 border-heading/70 pb-1.5 text-[10.5px] text-heading">
-                          {g.title}
-                        </p>
-                        <p className="mt-1.5 text-[11.5px] leading-4 text-body">{g.note}</p>
-                        <ul className="mt-2 space-y-0.5">
-                          {g.slugs.map((slug) => {
-                            const s = services.find((x) => x.slug === slug);
-                            if (!s) return null;
-                            return (
-                              <li key={slug}>
-                                <Link
-                                  href={`/services/${slug}`}
-                                  onClick={() => setPanel(null)}
-                                  className="group block rounded-lg px-2 py-[7px] transition-colors hover:bg-cream"
-                                >
-                                  <span className="block text-[13.5px] font-semibold leading-snug text-heading group-hover:text-signal">
-                                    {s.title}
-                                  </span>
-                                  {s.summary && (
-                                    <span className="mt-0.5 line-clamp-2 block text-[12px] leading-4.5 text-body">
-                                      {s.summary}
-                                    </span>
-                                  )}
-                                </Link>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* B2B doors rail */}
-                  <div className="panel-ink overflow-y-auto p-5">
-                    <p className="eyebrow text-brand-bright">For Business</p>
-                    <div className="mt-3 space-y-3">
-                      {businessDoors.map((d) => (
-                        <Link
-                          key={d.href}
-                          href={d.href}
-                          onClick={() => setPanel(null)}
-                          className="block rounded-xl bg-white/[0.05] px-4 py-3.5 ring-1 ring-white/10 transition hover:bg-white/[0.09]"
-                        >
-                          <span className="font-display text-[15.5px] font-semibold text-paper">
-                            {d.title} →
-                          </span>
-                          <span className="mt-1 block text-[12.5px] leading-5 text-paper/75">
-                            {d.desc}
-                          </span>
-                        </Link>
-                      ))}
-                    </div>
-                    <Link
-                      href="/pricing"
-                      onClick={() => setPanel(null)}
-                      className="mt-4 inline-block text-[13px] font-bold text-brand-bright hover:text-paper"
-                    >
-                      See Pricing &amp; Plans →
-                    </Link>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between bg-ink px-6 py-3">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-paper/75">
-                    {services.length} Services · Quoted to Scope
-                  </span>
-                  <Link
-                    href="/services"
-                    onClick={() => setPanel(null)}
-                    className="text-[13px] font-bold text-brand-bright hover:text-paper"
-                  >
-                    View All Services →
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ——— RESOURCES PANEL ——— */}
-        {panel === "resources" && (
-          <div
-            id="mega-resources"
-            className="absolute inset-x-0 top-full z-40 hidden nav:block"
-            onMouseEnter={() => openNow("resources")}
-            onMouseLeave={scheduleClose}
-            onKeyDown={onPanelKeyDown}
-          >
-            <div className="mx-auto flex w-full max-w-[1240px] justify-end px-3 pb-4">
-              <div className="w-[760px] glass-panel overflow-hidden rounded-2xl border border-line border-t-2 border-t-brand shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
-                <div className="grid grid-cols-3 gap-6 p-6">
-                  {resourceGroups.map((g) => (
-                    <div key={g.title}>
-                      <p className="eyebrow border-b-2 border-heading/70 pb-1.5 text-[10.5px] text-heading">
-                        {g.title}
-                      </p>
-                      <ul className="mt-2 space-y-0.5">
-                        {g.links.map((l) => (
-                          <li key={l.label}>
-                            {l.external ? (
-                              <a
-                                href={l.href}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="block rounded-lg px-2 py-[7px] text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-signal"
-                              >
-                                {l.label} ↗
-                              </a>
-                            ) : (
-                              <Link
-                                href={l.href}
-                                onClick={() => setPanel(null)}
-                                className="block rounded-lg px-2 py-[7px] text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-signal"
-                              >
-                                {l.label}
-                              </Link>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between bg-ink px-6 py-3">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-paper/75">
-                    People · Proof · Credibility
-                  </span>
-                  <Link
-                    href="/resources"
-                    onClick={() => setPanel(null)}
-                    className="text-[13px] font-bold text-brand-bright hover:text-paper"
-                  >
-                    All Resources →
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Mobile menu — rich accordion sheet, same groupings */}
-      {open && (
-        <nav className="border-b border-line bg-canvas nav:hidden" aria-label="Mobile">
-          <div className="wrap py-3">
-            <div className="grid grid-cols-2 gap-3 pb-2">
-              <Link
-                href="/register"
-                className="flex min-h-[48px] items-center justify-center rounded-xl border-[1.5px] border-heading/60 px-4 text-[14px] font-bold text-heading"
-                onClick={() => setOpen(false)}
-              >
-                Register
-              </Link>
-              <Link href="/contact-us" className="btn-primary" onClick={() => setOpen(false)}>
-                Request a Callback
-              </Link>
-            </div>
-
-            <button
-              className={`${mobileLink} w-full justify-between text-left`}
-              onClick={() => setMobilePanel(mobilePanel === "trainings" ? null : "trainings")}
-              aria-expanded={mobilePanel === "trainings"}
-            >
-              Trainings <span aria-hidden>{mobilePanel === "trainings" ? "▴" : "▾"}</span>
-            </button>
-            {mobilePanel === "trainings" && (
-              <div className="max-h-[62vh] overflow-y-auto pb-2 pl-3">
+              <div className="grid grid-cols-2 gap-3 pb-2">
+                <Link href="/contact-us" className="btn-primary" onClick={() => setOpen(false)}>
+                  Talk to an Advisor
+                </Link>
                 <Link
                   href="/trainings"
-                  className="flex min-h-[44px] items-center py-2 pr-3 text-[13.5px] font-bold text-signal"
+                  className="flex min-h-[48px] items-center justify-center rounded-xl border-[1.5px] border-heading/60 px-4 text-[14px] font-bold text-heading"
                   onClick={() => setOpen(false)}
                 >
-                  View All {navCourses.length} Trainings
+                  Explore Programs
                 </Link>
-                {coursesByCategory.map((g) => (
-                  <div key={g.category} className="mt-2">
-                    <Link
-                      href={`/trainings#${categoryAnchor(g.category)}`}
-                      onClick={() => setOpen(false)}
-                      className="eyebrow block px-2 py-1.5 text-[10.5px] text-signal-strong"
-                    >
-                      {g.category} · {g.courses.length}
-                    </Link>
-                    {g.courses.map((c) => (
+              </div>
+
+              {frontendV2Menus.map((menu) => (
+                <div key={menu.key}>
+                  <button
+                    className={`${mobileLink} w-full justify-between text-left`}
+                    onClick={() => setMobilePanel(mobilePanel === menu.key ? null : menu.key)}
+                    aria-expanded={mobilePanel === menu.key}
+                    aria-controls={`mobile-${menu.key}`}
+                  >
+                    {menu.label} <span aria-hidden>{mobilePanel === menu.key ? "▴" : "▾"}</span>
+                  </button>
+                  {mobilePanel === menu.key && (
+                    <div id={`mobile-${menu.key}`} className="max-h-[62vh] overflow-y-auto pb-2 pl-3">
                       <Link
-                        key={c.slug}
-                        href={`/trainings/${c.slug}`}
-                        className="flex min-h-[44px] items-center justify-between gap-3 py-1.5 pl-4 pr-3 text-[13.5px] font-medium text-body"
+                        href={menu.href}
+                        className="flex min-h-[44px] items-center py-2 pr-3 text-[13.5px] font-bold text-signal"
                         onClick={() => setOpen(false)}
                       >
-                        <span>{c.label}</span>
-                        {[c.code, c.duration].filter(Boolean).length > 0 && (
-                          <span className="shrink-0 font-mono text-[10px] font-semibold uppercase text-signal-strong">
-                            {[c.code, c.duration].filter(Boolean).join(" · ")}
-                          </span>
-                        )}
+                        View {menu.label} →
                       </Link>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <button
-              className={`${mobileLink} w-full justify-between text-left`}
-              onClick={() => setMobilePanel(mobilePanel === "services" ? null : "services")}
-              aria-expanded={mobilePanel === "services"}
-            >
-              Services <span aria-hidden>{mobilePanel === "services" ? "▴" : "▾"}</span>
-            </button>
-            {mobilePanel === "services" && (
-              <div className="max-h-[62vh] overflow-y-auto pb-2 pl-3">
-                <Link
-                  href="/services"
-                  className="flex min-h-[44px] items-center py-2 pr-3 text-[13.5px] font-bold text-signal"
-                  onClick={() => setOpen(false)}
-                >
-                  View All Services
-                </Link>
-                {serviceGroups.map((g) => (
-                  <div key={g.title} className="mt-2">
-                    <p className="eyebrow px-2 py-1.5 text-[10.5px] text-signal-strong">{g.title}</p>
-                    {g.slugs.map((slug) => {
-                      const s = services.find((x) => x.slug === slug);
-                      if (!s) return null;
-                      return (
+                      {menu.columns.map((col) => (
+                        <div key={col.title} className="mt-2">
+                          <p className="eyebrow px-2 py-1.5 text-[10.5px] text-signal-strong">{col.title}</p>
+                          {col.links.map((l) => (
+                            <div key={l.label} className="pl-2">
+                              <MenuLinkItem {...l} onNavigate={() => setOpen(false)} />
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                      <div className="mt-3 rounded-xl bg-cream px-4 py-3">
+                        <p className="eyebrow text-[10.5px] text-signal-strong">{menu.featured.eyebrow}</p>
+                        <p className="mt-1 text-[13.5px] font-bold text-heading">{menu.featured.title}</p>
                         <Link
-                          key={slug}
-                          href={`/services/${slug}`}
-                          className="flex min-h-[44px] items-center py-1.5 pl-4 pr-3 text-[13.5px] font-medium text-body"
+                          href={menu.featured.ctaHref}
+                          className="mt-1 inline-block text-[13px] font-bold text-signal"
                           onClick={() => setOpen(false)}
                         >
-                          {s.title}
+                          {menu.featured.ctaLabel} →
                         </Link>
-                      );
-                    })}
-                  </div>
-                ))}
-                <p className="eyebrow px-2 pb-1.5 pt-4 text-[10.5px] text-signal-strong">
-                  For Business
-                </p>
-                {businessDoors.map((d) => (
-                  <Link
-                    key={d.href}
-                    href={d.href}
-                    className="flex min-h-[44px] items-center py-1.5 pl-4 pr-3 text-[13.5px] font-bold text-heading"
-                    onClick={() => setOpen(false)}
-                  >
-                    {d.title} →
-                  </Link>
-                ))}
-              </div>
-            )}
-
-            <Link className={mobileLink} href="/pricing" onClick={() => setOpen(false)}>
-              Pricing
-            </Link>
-            <Link className={mobileLink} href="/about-us" onClick={() => setOpen(false)}>
-              About Us
-            </Link>
-
-            <button
-              className={`${mobileLink} w-full justify-between text-left`}
-              onClick={() => setMobilePanel(mobilePanel === "resources" ? null : "resources")}
-              aria-expanded={mobilePanel === "resources"}
-            >
-              Resources <span aria-hidden>{mobilePanel === "resources" ? "▴" : "▾"}</span>
-            </button>
-            {mobilePanel === "resources" && (
-              <div className="max-h-[62vh] overflow-y-auto pb-2 pl-3">
-                {resourceGroups.map((g) => (
-                  <div key={g.title} className="mt-2">
-                    <p className="eyebrow px-2 py-1.5 text-[10.5px] text-signal-strong">{g.title}</p>
-                    {g.links.map((l) =>
-                      l.external ? (
-                        <a
-                          key={l.label}
-                          href={l.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex min-h-[44px] items-center py-1.5 pl-4 pr-3 text-[13.5px] font-medium text-body"
-                        >
-                          {l.label} ↗
-                        </a>
-                      ) : (
+                      </div>
+                      {menu.key === "training" && (
                         <Link
-                          key={l.label}
-                          href={l.href}
-                          className="flex min-h-[44px] items-center py-1.5 pl-4 pr-3 text-[13.5px] font-medium text-body"
+                          href="/register"
+                          className="mt-2 block px-2 py-2 text-[13px] font-semibold text-body hover:text-signal"
                           onClick={() => setOpen(false)}
                         >
-                          {l.label}
+                          Register / Book a Demo (contextual)
                         </Link>
-                      ),
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
 
-            <Link className={mobileLink} href="/for-colleges" onClick={() => setOpen(false)}>
-              For Colleges
-            </Link>
-            <Link
-              className="flex min-h-[48px] items-center px-3 text-[15px] font-bold text-signal"
-              href="/for-institutes"
-              onClick={() => setOpen(false)}
-            >
-              For Institutes
-            </Link>
-            <Link className={mobileLink} href="/partner-with-us" onClick={() => setOpen(false)}>
-              Partner With Us
-            </Link>
-            <Link className={mobileLink} href="/contact-us" onClick={() => setOpen(false)}>
-              Contact Us
-            </Link>
-          </div>
-        </nav>
-      )}
+              <Link className={mobileLink} href="/contact-us" onClick={() => setOpen(false)}>
+                Contact Us
+              </Link>
+            </div>
+          </nav>
+        )}
       </header>
     </>
   );

@@ -7,11 +7,11 @@ import { business, telHref } from "@/data/site";
 import { SocialLinks } from "@/components/ui";
 import { navCourses } from "@/data/catalogue-nav";
 import { services } from "@/data/services";
-import { frontendV2Menus, type NavMenu } from "@/data/frontend-v2-nav";
+import { nexusMenus, type NavMenu } from "@/data/nexus-nav";
 
-// Header — Frontend 2.0, Navigation 2.0 (docs/frontend-v2/SPEC.md §2).
-// Six primary menus only: Training, Certifications, Labs & Projects,
-// IT Solutions, For Organizations, Explore. Desktop mega panels are
+// Header — GradeSpot Nexus Release 1 (docs/frontend-v2/SPEC.md §2).
+// Six primary menus only: Academy, Certifications, Career Pathways,
+// Labs & Projects, IT Solutions, Company & Resources. Desktop mega panels are
 // three structured columns plus a featured panel; mobile is a
 // one-level accordion (each top menu expands once; groups inside are
 // headings, not nested accordions). Panels open on hover AND click,
@@ -21,8 +21,9 @@ import { frontendV2Menus, type NavMenu } from "@/data/frontend-v2-nav";
 // Advisor" → /contact-us (the existing advisory flow). Registration
 // is contextual only: a small link inside the Training panel /
 // accordion, never a prominent button on every page.
-// Logo plate: UNTOUCHED from Leo v1 — luminous parchment plate +
-// halo, official artwork, per-theme swap. Do not recolor or filter it.
+// Logo plate: UNTOUCHED — official artwork only, per-theme swap.
+// Do not recolor, filter, crop or replace the logo files. Nexus
+// brand colours come from BRAND-TOKENS.md, not from the plate.
 
 type PanelKey = NavMenu["key"];
 
@@ -177,7 +178,7 @@ export default function Header() {
     </div>
   );
 
-  const activeMenu = frontendV2Menus.find((m) => m.key === panel) ?? null;
+  const activeMenu = nexusMenus.find((m) => m.key === panel) ?? null;
 
   // Utility strip — spec §2 top bar: Hyderabad, India · Online &
   // Classroom Training, plus Contact and Student Support links.
@@ -272,7 +273,7 @@ export default function Header() {
             </Link>
 
             <nav className="hidden items-center nav:flex" aria-label="Primary">
-              {frontendV2Menus.map(megaTrigger)}
+              {nexusMenus.map(megaTrigger)}
               <div className="ml-2 hidden xl:block">
                 <HeaderSearch />
               </div>
@@ -383,7 +384,7 @@ export default function Header() {
                 </Link>
               </div>
 
-              {frontendV2Menus.map((menu) => (
+              {nexusMenus.map((menu) => (
                 <div key={menu.key}>
                   <button
                     className={`${mobileLink} w-full justify-between text-left`}
@@ -423,7 +424,7 @@ export default function Header() {
                           {menu.featured.ctaLabel} →
                         </Link>
                       </div>
-                      {menu.key === "training" && (
+                      {menu.key === "academy" && (
                         <Link
                           href="/register"
                           className="mt-2 block px-2 py-2 text-[13px] font-semibold text-body hover:text-signal"

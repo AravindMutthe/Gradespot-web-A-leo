@@ -48,6 +48,7 @@ const LASTMOD: Record<string, string> = {
   "/lp/digital-marketing-in-hyderabad": "2026-10-23",
   "/lp/soc-analyst-in-hyderabad": "2026-10-23",
   "/partner-with-us": "2026-10-24",
+  "/corporate-and-international": "2026-10-25",
   "/pricing": "2026-10-24",
   "/register": "2026-10-24",
   "/resources": "2026-10-24",
@@ -140,6 +141,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/register",
     "/accessibility",
     "/partner-with-us",
+    "/corporate-and-international",
   ];
   return [
     ...staticPaths.map((p) => ({ url: `${base}${p || "/"}`, lastModified: LASTMOD[p || "/"] })),

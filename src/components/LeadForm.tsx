@@ -19,6 +19,7 @@ export default function LeadForm({
   hideMessage = false,
   submitLabel = "Request a Callback",
   showCountry = false,
+  showPartnership = false,
 }: {
   interest?: string;
   idPrefix?: string;
@@ -27,6 +28,11 @@ export default function LeadForm({
   interestOptions?: string[];
   hideMessage?: boolean;
   submitLabel?: string;
+  // Partner With Us form: an Organisation field plus a partnership-type
+  // select that REPLACES the interest qualifier. The lead's interest
+  // value is derived from the type ("Partnership: <type>") because the
+  // leads table requires an interest value on every row.
+  showPartnership?: boolean;
   // Optional, never required: a free-text country field (used by the
   // Partner With Us form). validateLead accepts it (max 100 chars) and
   // createLead includes it in the insert, but it persists ONLY once the
@@ -55,7 +61,14 @@ export default function LeadForm({
       name: String(fd.get("name") ?? ""),
       phone: String(fd.get("phone") ?? ""),
       email: String(fd.get("email") ?? ""),
-      interest: String(fd.get("interest") ?? ""),
+      // Partner form: no interest input is rendered; the interest value
+      // is derived from the partnership type (see the showPartnership
+      // prop note). Other forms send interest as entered.
+      interest: showPartnership
+        ? `Partnership: ${String(fd.get("partnershipType") ?? "")}`
+        : String(fd.get("interest") ?? ""),
+      organisation: String(fd.get("organisation") ?? ""),
+      partnershipType: String(fd.get("partnershipType") ?? ""),
       message: String(fd.get("message") ?? ""),
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/"}`,
@@ -158,35 +171,77 @@ export default function LeadForm({
         />
         {errors.email && <p className="mt-1 text-xs text-field-error">{errors.email}</p>}
       </div>
-      <div className="mt-4">
-        <label htmlFor={id("interest")} className={label}>
-          I&apos;m interested in *
-        </label>
-        {interestOptions ? (
-          <select
-            id={id("interest")}
-            name="interest"
-            required
-            defaultValue={interestOptions[0]}
-            className={field}
-          >
-            {interestOptions.map((o) => (
-              <option key={o} value={o}>
-                {o}
-              </option>
-            ))}
-          </select>
-        ) : (
+      {showPartnership && (
+        <div className="mt-4">
+          <label htmlFor={id("organisation")} className={label}>
+            Organisation *
+          </label>
           <input
-            id={id("interest")}
-            name="interest"
+            id={id("organisation")}
+            name="organisation"
             required
-            defaultValue={interest ?? ""}
+            autoComplete="organization"
             className={field}
-            placeholder="Course Training, Certification Voucher, a Service…"
+            placeholder="Your organisation"
           />
+          {errors.organisation && <p className="mt-1 text-xs text-field-error">{errors.organisation}</p>}
+        </div>
+      )}
+      <div className="mt-4">
+        {showPartnership ? (
+          <>
+            <label htmlFor={id("partnershipType")} className={label}>
+              Partnership type *
+            </label>
+            <select
+              id={id("partnershipType")}
+              name="partnershipType"
+              required
+              defaultValue="training"
+              className={field}
+            >
+              {["training", "university MoU", "reseller", "white-label"].map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+            {errors.partnershipType && (
+              <p className="mt-1 text-xs text-field-error">{errors.partnershipType}</p>
+            )}
+          </>
+        ) : (
+          <>
+            <label htmlFor={id("interest")} className={label}>
+              I&apos;m interested in *
+            </label>
+            {interestOptions ? (
+              <select
+                id={id("interest")}
+                name="interest"
+                required
+                defaultValue={interestOptions[0]}
+                className={field}
+              >
+                {interestOptions.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                id={id("interest")}
+                name="interest"
+                required
+                defaultValue={interest ?? ""}
+                className={field}
+                placeholder="Course Training, Certification Voucher, a Service…"
+              />
+            )}
+            {errors.interest && <p className="mt-1 text-xs text-field-error">{errors.interest}</p>}
+          </>
         )}
-        {errors.interest && <p className="mt-1 text-xs text-field-error">{errors.interest}</p>}
       </div>
       {showCountry && (
         <div className="mt-4">

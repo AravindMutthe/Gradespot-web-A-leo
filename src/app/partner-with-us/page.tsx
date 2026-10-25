@@ -132,8 +132,8 @@ export default function PartnerPage() {
           <div data-reveal>
             <SectionTitle label="Start" title="Start the conversation" />
             <p className="mt-4 max-w-xl text-[15px] leading-7 text-body">
-              Use the form and choose what the conversation is about — a collaboration or a
-              franchise discussion. We reply to every serious enquiry personally.
+              Use the form and tell us about your organisation and the partnership type you
+              have in mind. We reply to every serious enquiry personally.
             </p>
             <p className="mt-5 max-w-xl rounded-[14px] border border-line bg-cream px-5 py-4 text-sm leading-6 text-body">
               <strong className="text-heading">Please note:</strong> this page is an invitation
@@ -147,8 +147,8 @@ export default function PartnerPage() {
             <LeadForm
               idPrefix="partner"
               submitLabel="Start the Conversation"
-              interestOptions={["Collaboration", "Franchise Discussion"]}
               showCountry
+              showPartnership
             />
           </div>
         </div>

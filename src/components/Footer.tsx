@@ -16,6 +16,7 @@ const companyLinks = [
   { label: "Career Support", href: "/career-support" },
   { label: "For Colleges", href: "/for-colleges" },
   { label: "Partner With Us", href: "/partner-with-us" },
+  { label: "Corporate & International", href: "/corporate-and-international" },
   { label: "Help & FAQs", href: "/faq" },
 ];
 

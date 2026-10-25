@@ -124,6 +124,8 @@ export interface LeadInput {
   source?: string;
   whatsappOptIn?: boolean;
   country?: string;
+  organisation?: string;
+  partnershipType?: string;
 }
 
 export interface LeadResult {
@@ -153,11 +155,15 @@ export async function createLead(lead: LeadInput): Promise<LeadResult> {
     // separately — do not deploy expecting country to be stored until
     // that column exists; until then the full insert fails and the
     // core-column retry stores the lead without country).
+    // Organisation and partnership type ride the same way (partner form
+    // only): they persist ONLY once the leads.organisation and
+    // leads.partnership_type columns exist — same migration story, same
+    // fallback, so a lead is never lost to a missing column.
     try {
       const { data, error } = await withTimeout(
         supabase
           .from("leads")
-          .insert({ ...core, source: lead.source ?? null, whatsapp_opt_in: lead.whatsappOptIn ?? false, country: lead.country ?? null })
+          .insert({ ...core, source: lead.source ?? null, whatsapp_opt_in: lead.whatsappOptIn ?? false, country: lead.country ?? null, organisation: lead.organisation ?? null, partnership_type: lead.partnershipType ?? null })
           .select("id")
           .single(),
       );

@@ -19,6 +19,14 @@
 // - course: optional field; when a form sends one it must be non-empty.
 // - country: optional free text, max 100 chars (partner form only;
 //   persists only once the leads.country column exists).
+// - organisation: partner form only; required in the form UI, and when
+//   present must be 2–200 chars (absent/empty counts as absent here so
+//   other forms are unaffected; persists only once the leads
+//   .organisation column exists).
+// - partnershipType: partner form only; when present must be one of
+//   training, university MoU, reseller, white-label (absent/empty counts
+//   as absent here so other forms are unaffected; persists only once
+//   the leads.partnership_type column exists).
 // - message: optional, capped at 2000 chars.
 // - DPDP consent lines and the unticked WhatsApp opt-in are untouched
 //   by this module — they live in the form components.
@@ -33,6 +41,8 @@ export interface LeadPayload {
   whatsappOptIn?: boolean;
   course?: string;
   country?: string;
+  organisation?: string;
+  partnershipType?: string;
 }
 
 export type LeadErrors = Record<string, string>;
@@ -132,6 +142,27 @@ export function validateCountry(value: unknown): string | null {
   return null;
 }
 
+export function validateOrganisation(value: unknown): string | null {
+  if (value === undefined) return null; // other forms don't send it
+  if (typeof value !== "string") return "Organisation must be text";
+  const v = value.trim();
+  if (v.length === 0) return null; // absent counts as absent here
+  if (v.length < 2) return "Please enter your organisation name";
+  if (v.length > 200) return "Organisation name is too long (max 200 characters)";
+  return null;
+}
+
+const PARTNERSHIP_TYPES = ["training", "university MoU", "reseller", "white-label"];
+
+export function validatePartnershipType(value: unknown): string | null {
+  if (value === undefined) return null; // other forms don't send it
+  if (typeof value !== "string") return "Partnership type must be text";
+  const v = value.trim();
+  if (v.length === 0) return null; // absent counts as absent here
+  if (!PARTNERSHIP_TYPES.includes(v)) return "Please choose a partnership type";
+  return null;
+}
+
 export function validateMessage(value: unknown): string | null {
   if (value === undefined) return null;
   if (typeof value !== "string") return "Message must be text";
@@ -159,6 +190,8 @@ export function validateLead(
   put("interest", validateInterest(b.interest));
   put("course", validateCourse(b.course));
   put("country", validateCountry(b.country));
+  put("organisation", validateOrganisation(b.organisation));
+  put("partnershipType", validatePartnershipType(b.partnershipType));
   put("message", validateMessage(b.message));
   if (b.source !== undefined) {
     const s = asString(b.source);
@@ -179,6 +212,8 @@ export function validateLead(
       whatsappOptIn: (b.whatsappOptIn as boolean | undefined) ?? false,
       course: asString(b.course)?.trim() || undefined,
       country: asString(b.country)?.trim() || undefined,
+      organisation: asString(b.organisation)?.trim() || undefined,
+      partnershipType: asString(b.partnershipType)?.trim() || undefined,
     },
     errors: {},
   };

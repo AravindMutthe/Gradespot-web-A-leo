@@ -68,7 +68,7 @@ export const servicesFaqAnswers = {
 
 export const homeParagraphs: string[] = [
   "OFFICE HOURS Office Hours: 8:00 AM – 9:00 PM",
-  "At GradeSpot IT Solutions, our commitment is to craft superior IT solutions that redefine industry standards. With a dedication to innovation and excellence, we seamlessly blend cutting-edge technology with strategic insights to create bespoke solutions tailored to meet the unique needs of our clients. Our team of skilled professionals leverages a wealth of experience to deliver forward-thinking and robust IT solutions that drive efficiency, foster growth, and empower businesses to thrive in the dynamic digital landscape. Trust us to be your partner in advancing technological frontiers and achieving unparalleled success.",
+  "Cybersecurity and networking training in Hyderabad. Free demo class.",
   "We deliver exemplary training services across a spectrum of IT technologies, ensuring top-tier education for our clients",
   "We offer cost-effective solutions for premium web designs, featuring aesthetically pleasing themes.",
   "We offer cybersecurity solutions to diverse organizations, addressing their security needs with expertise and precision.",

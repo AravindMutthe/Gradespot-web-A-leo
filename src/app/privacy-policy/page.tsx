@@ -26,7 +26,7 @@ const sections = [
   },
   {
     heading: "Data we collect",
-    body: "The enquiry forms on this site ask for your name and phone number, with email, interest, message, and a WhatsApp opt-in as optional fields. The certificate verification page accepts a certificate code for lookup.",
+    body: "The enquiry forms on this site ask for your name and phone number, with email, interest, message, and a WhatsApp opt-in as optional fields. The partner form additionally asks for organisation, country, and partnership type. The certificate verification page accepts a certificate code for lookup.",
     todos: [
       "TODO: confirm this is the complete list of personal data collected",
       "TODO: confirm whether server logs, form metadata, or any other data is collected",
@@ -49,6 +49,14 @@ const sections = [
     ],
   },
   {
+    heading: "International transfers",
+    body: "This website is hosted in India (Mumbai) and enquiry data is stored in India (Mumbai: Supabase ap-south-1; site served from Vercel bom1, Mumbai). When a visitor from the UK or the EU sends an enquiry, their data is therefore transferred to India. No transfer safeguard is claimed here until confirmed.",
+    todos: [
+      "TODO: EU/UK representative decision (lawyer question)",
+      "TODO: transfer safeguards (lawyer confirmation)",
+    ],
+  },
+  {
     heading: "Cookies and trackers",
     body: "A code audit of this site found no analytics scripts, no advertising trackers, and no third-party cookies set by the site itself. Outbound links (for example WhatsApp, maps, and social profiles) are ordinary links, not embedded trackers.",
     todos: ["TODO: re-confirm before publication if any tracker is ever added"],
@@ -64,7 +72,7 @@ const sections = [
   },
   {
     heading: "Your rights",
-    body: "No rights process is described here until confirmed.",
+    body: "Under the GDPR and UK GDPR, visitors from the UK and the EU have rights including access to their personal data, erasure, rectification, restriction of processing, data portability, and objection. Requests can be sent to info@gsitssolutions.com. No process or timeline is described here until confirmed.",
     todos: [
       "TODO: how a person asks for access, correction, or deletion of their data",
       "TODO: response timelines for such requests",
@@ -87,6 +95,8 @@ const checklist = [
   "Complete list of personal data collected",
   "Every purpose data is used for, and every third party it is shared with",
   "Whether any data leaves India, and under what safeguards",
+  "EU/UK representative decision (lawyer question)",
+  "Transfer safeguards (lawyer confirmation)",
   "Retention periods and deletion process",
   "Rights-request process and timelines",
   "Grievance officer name and email",

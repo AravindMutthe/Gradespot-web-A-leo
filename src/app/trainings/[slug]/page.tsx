@@ -35,6 +35,24 @@ function questionHeading(heading: string, short: string): string {
   return heading;
 }
 
+// Indicative FX line for pricing cards (international build). Reference
+// rates 2026-10-25, reused from the replica work (Converterhub mid-market
+// via web search, Finnhub cross-check): 1 INR = 0.010534 USD, 0.007876
+// GBP, 0.009403 EUR, rounded to whole units. Render-time, so it applies
+// to Supabase rows too; data strings and schema offers are untouched.
+// Returns null when the price string has no parseable ₹ amount.
+function indicativeFx(price: string | undefined): string | null {
+  if (!price) return null;
+  const m = price.replace(/,/g, "").match(/₹\s*(\d+)/);
+  if (!m) return null;
+  const inr = Number(m[1]);
+  if (!Number.isFinite(inr) || inr <= 0) return null;
+  const usd = Math.round(inr * 0.010534);
+  const gbp = Math.round(inr * 0.007876);
+  const eur = Math.round(inr * 0.009403);
+  return `≈ $${usd} · £${gbp} · €${eur} (indicative)`;
+}
+
 function SectionBody({ section }: { section: CourseSection }) {
   if (section.style === "cards") {
     return (
@@ -55,6 +73,7 @@ function SectionBody({ section }: { section: CourseSection }) {
       <div className="mt-4 grid gap-4 md:grid-cols-3">
         {section.paragraphs.map((p, j) => {
           const [name, price] = p.split(" — ");
+          const fx = indicativeFx(price);
           return (
             <div
               key={j}
@@ -62,6 +81,7 @@ function SectionBody({ section }: { section: CourseSection }) {
             >
               <p className="text-sm font-semibold uppercase tracking-wide text-body">{name}</p>
               <p className="mt-2 text-3xl font-extrabold text-heading">{price ?? p}</p>
+              {fx && <p className="mt-2 text-sm font-semibold text-body">{fx}</p>}
             </div>
           );
         })}

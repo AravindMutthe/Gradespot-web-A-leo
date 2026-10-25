@@ -72,32 +72,28 @@
      `paper` keeps its dual role (page-adjacent pale + text on ink);
      `canvas` (§25) is the page background proper, so dark mode can
      darken the page without touching text-on-ink. */
-  --color-paper: #faf6ee;
-  --color-canvas: #faf6ee;
+  /* NEXUS Release 1 — tokens repointed to the sampled logo colours
+     (docs/frontend-v2/BRAND-TOKENS.md). Sampled primary #E57439 is
+     3.05:1 on white, so it is NOT the text/button colour: text and
+     buttons use the same-hue AA derivatives #C24E1F / #9C3E18.
+     #E57439 itself is brand-bright, for graphics, large text and
+     accents on dark. Legacy token names are kept so every existing
+     component restyles in place; their values are now Nexus values. */
+  --color-paper: #fffbf5;
+  --color-canvas: #fffbf5;
   --color-parchment: #fffdf8;
-  --color-cream: #f2eada;
-  --color-ink: #201913;
-  --color-ink-deep: #171208;
-  --color-line: #e0d4be;
+  --color-cream: #f4eae6;
+  --color-ink: #2a2726;
+  --color-ink-deep: #1e1c1b;
+  --color-line: #e7ded2;
 
-  /* Signal vermilion — the logo orange's family, deepened for AA.
-     brand       = working signal (links, buttons, accents-as-text)
-     brand-bright= the true logo orange, for display/graphic moments
-                   and accents on ink (6.0:1 there)
-     brand-dark  = hover/pressed + small text on tinted chips      */
-  --color-brand: #b23a0a;
-  --color-brand-bright: #f7631b;
-  --color-brand-dark: #9a3412;
-  --color-brand-soft: #fbeada;
+  --color-brand: #c24e1f;
+  --color-brand-bright: #e57439;
+  --color-brand-dark: #9c3e18;
+  --color-brand-soft: #fdf1ea;
 
-  /* §25 — the brand AS TEXT gets its own tokens: `#b23a0a` measures
-     ~3:1 on dark surfaces, so in dark mode `signal`/`signal-strong`
-     lift to the bright end of the same vermilion family while every
-     background/border use of brand stays the deep vermilion. Light
-     values are exactly the current brand/brand-dark hexes, so the
-     light theme is unchanged. */
-  --color-signal: #b23a0a;
-  --color-signal-strong: #9a3412;
+  --color-signal: #c24e1f;
+  --color-signal-strong: #9c3e18;
 
   /* §25 — form status colours as tokens (were hardcoded Tailwind
      green/red/amber utilities). Light values are those exact hexes. */
@@ -110,16 +106,60 @@
   --color-warning-surface: #fffbeb;
   --color-warning-text: #92400e;
 
-  /* Legacy token names, remapped so every existing component picks
-     up the new system: navy panels are now warm ink, the pale blue
-     section tint is now cream, headings are ink. */
-  --color-navy: #241b11;
-  --color-navy-deep: #171208;
-  --color-heading: #201913;
-  --color-body: #5a4b38;
-  --color-nav: #3e362b;
-  --color-surface-light: #f2eada;
-  --color-footer-text: #cdbfa8;
+  /* Legacy token names, remapped to Nexus: "navy" is a legacy name
+     only — its value is now charcoal ink, NOT blue navy. The repo
+     logo contains 0 navy pixels (BRAND-TOKENS.md), so no blue navy
+     is introduced as a Nexus brand colour. */
+  --color-navy: #2a2726;
+  --color-navy-deep: #1e1c1b;
+  --color-heading: #2a2726;
+  --color-body: #5a5654;
+  --color-nav: #434140;
+  --color-surface-light: #f4eae6;
+  --color-footer-text: #d8d2cd;
+
+  /* NEXUS 40-token system (BRAND-TOKENS.md) — Tailwind utilities
+     bg-nexus-brand-400, text-nexus-text-secondary, etc. */
+  --color-nexus-brand-50: #fdf1ea;
+  --color-nexus-brand-100: #fbe3d3;
+  --color-nexus-brand-200: #f6c5a6;
+  --color-nexus-brand-300: #ee9a6e;
+  --color-nexus-brand-400: #e57439;
+  --color-nexus-brand-500: #d45f24;
+  --color-nexus-brand-600: #c24e1f;
+  --color-nexus-brand-700: #9c3e18;
+  --color-nexus-brand-800: #7e3214;
+  --color-nexus-brand-900: #5f2610;
+  --color-nexus-ink-950: #1e1c1b;
+  --color-nexus-ink-900: #2a2726;
+  --color-nexus-ink-800: #434140;
+  --color-nexus-ink-700: #5a5654;
+  --color-nexus-ink-600: #7a7572;
+  --color-nexus-ink-500: #9a9490;
+  --color-nexus-ink-400: #b8b1ad;
+  --color-nexus-ink-300: #d8d2cd;
+  --color-nexus-canvas: #fffbf5;
+  --color-nexus-surface: #fffdf8;
+  --color-nexus-surface-raised: #ffffff;
+  --color-nexus-surface-sunken: #f4eae6;
+  --color-nexus-line: #e7ded2;
+  --color-nexus-line-strong: #cfc2b2;
+  --color-nexus-text-primary: #2a2726;
+  --color-nexus-text-secondary: #5a5654;
+  --color-nexus-text-muted: #7a7572;
+  --color-nexus-text-inverse: #fffbf5;
+  --color-nexus-success: #166534;
+  --color-nexus-success-surface: #f0fdf4;
+  --color-nexus-error: #b91c1c;
+  --color-nexus-error-surface: #fef2f2;
+  --color-nexus-warning: #92400e;
+  --color-nexus-warning-surface: #fffbeb;
+  --color-nexus-info: #0f4c5c;
+  --color-nexus-info-surface: #eaf4f6;
+  --color-nexus-data-teal: #0f766e;
+  --color-nexus-data-amber: #b45309;
+  --color-nexus-focus: #c24e1f;
+  --color-nexus-overlay: #1e1c1bcc;
 
   /* WhatsApp, deepened so white text/icons meet AA (5.41:1);
      wa-bright is the on-ink variant (10.7:1). */
@@ -160,20 +200,28 @@
      on ink panels as well as a light surface colour. */
   .dark {
     color-scheme: dark;
-    --hero-dot: rgba(250, 246, 238, 0.09);
-    --color-canvas: #110d05;
-    --color-parchment: #251b10;
-    --color-cream: #2e2113;
-    --color-surface-light: #1e150b;
-    --color-line: #41351f;
-    --color-heading: #faf6ee;
-    --color-body: #c7b8a5;
-    --color-nav: #eee1c8;
+    --hero-dot: rgba(255, 251, 245, 0.09);
+    --color-canvas: #171412;
+    --color-parchment: #221e1c;
+    --color-cream: #2e2620;
+    --color-surface-light: #2e2620;
+    --color-line: #413832;
+    --color-heading: #fffbf5;
+    --color-body: #d8d2cd;
+    --color-nav: #f4eae6;
     --color-brand-soft: #3d2110;
-    --color-navy: #2e2113;
-    --color-ink-deep: #0b0803;
+    --color-navy: #221e1c;
+    --color-ink-deep: #171412;
     --color-signal: #ff8a4c;
     --color-signal-strong: #ffb287;
+    --color-nexus-canvas: #171412;
+    --color-nexus-surface: #221e1c;
+    --color-nexus-surface-raised: #2a2623;
+    --color-nexus-surface-sunken: #2e2620;
+    --color-nexus-line: #413832;
+    --color-nexus-text-primary: #fffbf5;
+    --color-nexus-text-secondary: #d8d2cd;
+    --color-nexus-text-muted: #9a9490;
     --color-success-surface: #14301f;
     --color-success-text: #bbf7d0;
     --color-success-heading: #dcfce7;
@@ -569,4 +617,62 @@
       stroke 0.35s ease,
       box-shadow 0.35s ease !important;
   }
+}
+
+/* ——— NEXUS Release 1 — custom public design system ———
+   Carbon-inspired rigor only: 8px spacing grid, visible focus,
+   dense application surfaces where a workspace is shown, editorial
+   surfaces where a story is told. No Carbon React on public pages
+   in this release, and never two full UI libraries on one screen.
+   Typography presets: display = Fraunces (editorial), sans =
+   Instrument Sans (UI/body), mono = IBM Plex Mono (labels, data,
+   diagrams). All self-hosted, all local. */
+
+/* Editorial: large serif headline, tight tracking, generous lead. */
+@utility nexus-editorial {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+/* Technical workspace: dense, bordered, mono-labelled, Carbon-
+   inspired application surface — for labs, diagrams, dashboards. */
+@utility nexus-app {
+  border: 1px solid var(--color-nexus-line);
+  border-radius: 12px;
+  background: var(--color-nexus-surface);
+  font-size: 14px;
+  line-height: 1.55;
+}
+/* Diagram grid: faint ruled background for skill graphs / flows. */
+@utility nexus-diagram {
+  background-color: var(--color-nexus-surface);
+  background-image:
+    linear-gradient(var(--color-nexus-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-nexus-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+/* Application table row: dense, 44px minimum touch target. */
+@utility nexus-row {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--color-nexus-line);
+  padding: 10px 12px;
+}
+/* Status chip: Planned / Waitlist / Available — never a claim. */
+@utility nexus-status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--color-nexus-line-strong);
+  padding: 3px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nexus-editorial, .nexus-app, .nexus-diagram { transition: none; }
 }

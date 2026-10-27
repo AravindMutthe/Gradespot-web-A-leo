@@ -43,7 +43,7 @@ const popularTrainings = [
   { label: "CompTIA Security+: Sy0-701", href: "/trainings/comptia-security-plus" },
 ];
 
-const linkCls = "inline-block py-1 transition-colors hover:text-brand-bright";
+const linkCls = "inline-block py-2 transition-colors hover:text-brand-bright"; // py-2 lifts footer links above the 24px WCAG 2.2 AA target-size floor; still below the 44px AAA target, recorded as open, not claimed as 44px.
 const headCls = "mb-4 font-display text-[19px] font-semibold text-paper";
 
 export default function Footer() {

@@ -447,3 +447,43 @@ full coverage: no component, E2E, axe, or Lighthouse coverage yet.
 - Lighthouse, CWV, axe, keyboard/screen-reader and phone tests are
   still NOT measured — the re-rating below says so, it does not
   claim them.
+
+## Menu / design / Atlas-readiness pass (2026-10-27, branch-only)
+
+Owner-rule corrections applied in this pass (read first): the
+first brief's "no paid services in Leo" was WRONG. Corrected
+18:33 IST: "no paid services" means no paid HOSTING AND INFRA
+services — free-tier only, zero budget. Refined 18:35 IST: free
+hosting/infra UNTIL MANDATORY (e.g. domain renewal) — a future
+category exception only, authorising no paid tier, upgrade, or
+payment now, decided with the owner's word when a mandatory cost
+actually arises. Business services being paid is NOT excluded:
+deferred/gated (pricing Set A vs Set B undecided, Razorpay stage
+not opened, no published price added, no payment path built).
+Full review: docs/frontend-v2/MENU-DESIGN-ATLAS-READINESS.md.
+
+Changes: nexus-nav labels — "Other Existing Programs" →
+"Medical Coding", added "Design & CAD" and "Digital Marketing"
+(real catalogue categories, previously unreachable from the mega
+menu), "Planned Pathways" → "Planned Vendor Training", pathways
+featured title → "Role routes, starting with real courses",
+"Roles — Release 2 roadmaps" → "Roles — courses today, roadmaps
+in Release 2", labs planned links → "Ask about …" action labels
+(hrefs unchanged). Student-certifications hero "100+
+Certifications" → "Our Students' Certifications" (gallery shows
+30 images; no 100+ count verified in repo). Footer links py-1 →
+py-2 (above the 24px WCAG 2.2 AA target floor; 44px AAA remains
+open). Atlas seam: src/data/atlas-integration.ts (enabled false,
+deepLinkBase "", both-conditions-required, deep link null while
+off) + site-settings features.atlasIntegrationEnabled false; no
+component renders anything Atlas-related while off (grep-proof).
+Ratings: menu/naming 8.0→8.5, design/layout 8.0→8.0, images 7.5→
+8.0, Atlas-readiness 3.0→7.0, overall Web A unchanged 8.1/10
+(gains too small to move it; measurement evidence still missing).
+Not done: no business price/tier removed, no paid hosting/infra
+added or proposed, no Atlas content copied, no new UI library,
+no PWA, no payments/pricing path, no URL deleted. Open tension:
+Vercel Hobby's commercial-use prohibition vs free-only hosting
+for a commercial business — flagged, not solved, not by a paid
+tier. Not measured: Lighthouse, CWV, axe, keyboard/screen-reader,
+real-device/phone-tap.

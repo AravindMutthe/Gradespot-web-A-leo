@@ -71,3 +71,19 @@ describe("honesty config seam", () => {
     expect(siteSettings.employerNote.length).toBeGreaterThan(20);
   });
 });
+
+describe("atlas integration seam (future-only, disabled by default)", () => {
+  it("is disabled by default and builds no deep link", async () => {
+    const m = await import("@/data/atlas-integration");
+    expect(m.atlasIntegrationEnabled()).toBe(false);
+    expect(m.atlasDeepLink("example-chapter")).toBeNull();
+  });
+  it("requires both the flag and a base URL, and builds a chapter link when both are set", async () => {
+    const m = await import("@/data/atlas-integration");
+    expect(m.atlasIntegrationEnabled({ enabled: true, deepLinkBase: "" })).toBe(false);
+    expect(m.atlasIntegrationEnabled({ enabled: false, deepLinkBase: "https://example.invalid" })).toBe(false);
+    expect(
+      m.atlasDeepLink("example-chapter", { enabled: true, deepLinkBase: "https://example.invalid/" }),
+    ).toBe("https://example.invalid/chapters/example-chapter");
+  });
+});

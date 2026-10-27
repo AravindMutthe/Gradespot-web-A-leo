@@ -70,7 +70,9 @@ export const nexusMenus: NavMenu[] = [
           { label: "Networking — Cisco", href: "/trainings#category-cisco" },
           { label: "Networking & Infrastructure", href: "/trainings#category-networking" },
           { label: "Software Engineering", href: "/trainings#category-programming-data" },
-          { label: "Other Existing Programs", href: "/trainings#category-medical-coding" },
+          { label: "Medical Coding", href: "/trainings#category-medical-coding" },
+          { label: "Design & CAD", href: "/trainings#category-design-cad" },
+          { label: "Digital Marketing", href: "/trainings#category-digital-marketing" },
         ],
       },
       {
@@ -116,7 +118,7 @@ export const nexusMenus: NavMenu[] = [
         ],
       },
       {
-        title: "Planned Pathways",
+        title: "Planned Vendor Training",
         links: [
           { label: "Red Hat", href: "/trainings", note: "Planned — no Red Hat courses published" },
           { label: "Kubernetes", href: "/trainings", note: "Planned — no Kubernetes course published" },
@@ -147,7 +149,7 @@ export const nexusMenus: NavMenu[] = [
     href: "/career-support",
     columns: [
       {
-        title: "Roles — Release 2 roadmaps",
+        title: "Roles — courses today, roadmaps in Release 2",
         links: [
           { label: "SOC Analyst", href: "/trainings/soc-analyst" },
           { label: "Security Engineer", href: "/trainings#category-cybersecurity" },
@@ -177,7 +179,7 @@ export const nexusMenus: NavMenu[] = [
     ],
     featured: {
       eyebrow: "Career Pathways",
-      title: "Role roadmaps, not blog articles",
+      title: "Role routes, starting with real courses",
       body: "Interactive roadmaps with skills, tools, certifications and projects arrive in Release 2. Today, role links go to real course pages and to Career Support — no roadmap is presented as built.",
       ctaLabel: "Career Support",
       ctaHref: "/career-support",
@@ -209,9 +211,9 @@ export const nexusMenus: NavMenu[] = [
       {
         title: "Planned — Not Available",
         links: [
-          { label: "Standalone Labs Portal", href: "/contact-us", note: "Planned — ask on enquiry" },
-          { label: "Capstones & Portfolios", href: "/contact-us", note: "Planned — delivered inside programs today" },
-          { label: "Quizzes & Challenges", href: "/contact-us", note: "Planned — Release 2/4" },
+          { label: "Ask about a standalone labs portal", href: "/contact-us", note: "Planned — ask on enquiry" },
+          { label: "Ask about capstones & portfolios", href: "/contact-us", note: "Planned — delivered inside programs today" },
+          { label: "Ask about quizzes & challenges", href: "/contact-us", note: "Planned — Release 2/4" },
         ],
       },
     ],

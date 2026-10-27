@@ -7,7 +7,7 @@ import { CtaBand, LogoWall, PageHero } from "@/components/ui";
 
 export const metadata = staticPageMetadata({
   title: "Student Certifications",
-  description: "Certifications achieved by GradeSpot students, as showcased on our live site — 100+ certifications from the Dilsukhnagar, Hyderabad institute.",
+  description: "Certifications achieved by GradeSpot students, as showcased on our live site, from the Dilsukhnagar, Hyderabad institute.",
   path: "/student-certifications",
   image: "/images/certifications/cert-1.jpg",
 });
@@ -16,7 +16,7 @@ export default function CertificationsPage() {
   return (
     <>
       <PageHero
-        title="Our Students 100+ Certifications"
+        title="Our Students' Certifications"
         subtitle="Certifications achieved by GradeSpot students, as showcased on our live site."
       />
       <section className="section-pad">

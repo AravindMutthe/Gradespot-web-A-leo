@@ -90,6 +90,10 @@ export interface SiteSettings {
     rateLimiting: boolean;
     /** Honeypot + timing checks on lead forms and the API. */
     botChecks: boolean;
+    /** Atlas integration — FUTURE ONLY, disabled by default. See
+     *  src/data/atlas-integration.ts for the contract this flag gates.
+     *  No Atlas content renders anywhere while this is false. */
+    atlasIntegrationEnabled: boolean;
   };
 }
 
@@ -138,6 +142,7 @@ export const siteSettings: SiteSettings = {
   features: {
     rateLimiting: true,
     botChecks: true,
+    atlasIntegrationEnabled: false,
   },
 };
 

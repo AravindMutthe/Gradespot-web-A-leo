@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
 import { business } from "@/data/site";
+import BotFields from "@/components/BotFields";
 
 // Course / demo registration form (Aravind's decision, 2026-10-23;
 // DECISIONS.md §20). This is LEAD registration — it posts to the same
@@ -50,6 +51,10 @@ export default function RegisterForm({
       message: "",
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/register"}`,
+      // Bot-check signals (BotFields): read by /api/leads BEFORE
+      // validation/storage; validateLead ignores them on purpose.
+      website: String(fd.get("website") ?? ""),
+      formStartedAt: Number(fd.get("formStartedAt") ?? "") || undefined,
     };
     // Same validators as /api/leads (§25.18) — this also closes the
     // old empty-course hole: an unchosen course now fails here AND
@@ -187,6 +192,7 @@ export default function RegisterForm({
           registration and are never sold.
         </span>
       </label>
+      <BotFields />
       <button type="submit" disabled={state === "sending"} className="btn-primary mt-5 w-full disabled:opacity-60">
         {state === "sending" ? "Registering…" : "Register"}
       </button>

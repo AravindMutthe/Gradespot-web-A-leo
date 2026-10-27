@@ -313,3 +313,137 @@ not deployed. `main` and live are untouched. No preview deployment exists yet.
 8. **Phone check still owed:** mega-menu hover/click, mobile accordion
    and header search were verified by build + local HTML only, not on a
    phone. The user (phone reviewer) is the final check for tap behaviour.
+
+## Nexus v2 fix pass (2026-10-27, branch-only, local commit after c1cb3fc)
+
+Goal: fix the issues the first rating found, with every fix
+CONFIGURABLE FROM ADMIN/BACKEND — not new hardcoded values. No push,
+no merge, no preview, no deploy in this pass.
+
+### 1. Admin-ready config seam — `src/data/site-settings.ts`
+Single typed object, following the promotions seam pattern
+(`src/data/promotions.ts` → future Supabase table, components
+unchanged when the read path swaps). When Axon exists, this swaps to
+a public, non-secret settings row served by Axon; the route must
+serve exactly this shape and never echo env vars or secrets. Display
+toggles are NOT env-overridable at runtime, so a deploy cannot
+silently re-publish an unverified claim by flipping an env var;
+only the numeric rate-limit values have env overrides
+(`LEADS_RATE_LIMIT_MAX`, `LEADS_RATE_LIMIT_WINDOW_SECONDS`,
+`VERIFY_RATE_LIMIT_MAX`, `VERIFY_RATE_LIMIT_WINDOW_SECONDS`).
+Controlled from the seam: header CTA trio (label/href/enabled/style),
+counters, experience badge, ISO/AICTE cards (independently), employer
+wall, rate limits, bot-check threshold/honeypot field, feature flags.
+
+### 2. Honesty defaults — all unverified claims OFF
+`showCounters`, `showExperienceBadge`, `showCredentialIso`,
+`showCredentialAicte`, `showEmployerWall` all default to `false`.
+Reasoning, per item: a source-note ("as published on our previous
+site") does not verify the underlying fact, it only moves the claim
+one step back, so a note alone was judged insufficient.
+- Counters (`StatsRibbon`, `EnquiryRail` line): published on the
+  live site, "Certified Learners" set by the owner to 1250 between
+  two conflicting published figures (1200/1500) — UNVERIFIED.
+- "9 Years": live Home/About pages, no founding date in repo to
+  derive it from — UNVERIFIED.
+- ISO 9001:2015 / AICTE cards: on the owner's confirm-or-remove
+  list, no proof in repo, emblems are registered official artwork
+  — UNVERIFIED, highest risk, OFF per seal.
+- Employer wall: harvested from the live "Our Students works with"
+  wall; its claim is EMPLOYMENT by those companies, and no
+  per-student placement evidence is in repo — UNVERIFIED as a
+  placement claim. When an admin flips it ON, the heading no longer
+  claims employment and the qualification note renders with it.
+When any toggle is ON, its qualification note always renders with
+the claim. Components return `null` when OFF, so no empty gap
+remains. Verified in local HTML: homepage and /trainings contain
+0 occurrences of "1,500+", "9 Years", "An ISO Certified Company",
+"AICTE Internships Approved", "Our Students works with".
+
+### 3. Rate limiting — `src/lib/rate-limit.ts`, wired into both APIs
+Per-IP sliding window, in-memory, zero paid service, zero new
+dependency. Defaults from the seam: leads 30 per 600s, verify 60 per
+600s, 429 with `Retry-After` and a plain message, no IP or payload
+ever logged, fail-open on internal error. HONEST LIMITATION: on
+Vercel serverless each function instance keeps its own counters,
+so a limit is per-instance, not global, and resets on cold start /
+redeploy. It cuts concentrated abuse but is NOT a distributed
+limiter; the real fix is a shared store (Upstash Redis free tier,
+or Axon-owned counting), recorded as open, not papered over.
+Verified locally: 30 invalid lead POSTs → 400, 31st → 429.
+
+### 4. Bot checks — `src/lib/bot-check.ts`, `src/components/BotFields.tsx`
+Honeypot ("website", off-screen CSS position, aria-hidden,
+tabindex -1, autocomplete off) + timing (formStartedAt on mount,
+3s minimum — deliberately low so autofill users are not punished),
+server-side only, on all three lead forms and `/api/leads`, before
+validation and storage. Tripped payloads are dropped with a generic
+"Validation failed" message and are NEVER stored or logged. Missing
+timestamp fails open (direct API clients are not blocked by it);
+headless bots that leave the honeypot empty and respect timing are
+NOT stopped by this layer — documented, not hidden. No CAPTCHA
+vendor was added, per the zero-budget / no-lock-in rule.
+Verified locally: honeypot-filled valid payload → 400; instant
+submission → 400; slow valid payload with Supabase unreachable →
+202 log path (201/202 contract unchanged).
+
+### 5. CCNA editorial clean-up — `src/data/courses.ts` (local data only)
+- Duration conflict resolved toward the repo's own canonical data:
+  "Our 90-day CCNA 200-301 Training" in Program-Features → 45-day,
+  matching the `courseDurations` map ("45 days") and the Key
+  Learning section ("45-day"). Nothing invented.
+- 19 harvested ethical-hacking / SOC list items removed from the
+  CCNA "Our Curriculum" section (from "GPT-Powered AI Tools for
+  Ethical Hackers" through "Responding to Application Security
+  Incidents", incl. CVSS, CVE, EDR/XDR, DoS/DDoS, SIEM, SOC Analyst
+  items). Kept: the curriculum intro paragraph and the first five
+  list items (VM lab setup, CIA Triad, defense-in-depth, AAA).
+- CRITICAL LIMITATION FOUND IN TESTING: course pages are SSG and
+  `src/lib/data.ts` prefers Supabase rows over local data at build
+  time, so a normal local build still renders the OLD CCNA content
+  from the live Supabase `courses` row. Proof: a rebuild with an
+  unreachable Supabase URL (local fallback) renders 0 bad topics,
+  0× 90-day, 4× 45-day; a normal build renders the old row. The
+  local fix is correct but NOT live-effective until the Supabase
+  `courses` row for `ccna-200-301` is updated through an approved
+  channel — that live write was NOT done in this pass (branch-only
+  task, no live writes). Same pattern may affect any other course
+  whose DB row diverges from local data; DB-vs-local reconciliation
+  is now an open pre-merge gate.
+- Related defect found, NOT fixed here: the CCNP course's
+  Program-Features paragraph is a copy-pasted CCNA paragraph
+  ("Our 90-day CCNA 200-301 Training…"). Changing its duration
+  would not fix the misattribution; it needs real CCNP text from
+  GradeSpot. Recorded as open.
+
+### 6. Real test suite — Vitest 3.2.7 (devDependency only)
+`vitest.config.ts` (only maps the `@/` alias), `tests/nexus-v2.test.ts`
+(8 tests: rate-limit allow/block/retry-after, honeypot reject,
+too-fast reject, clean/slow pass, missing-timestamp fail-open,
+bot fields ignored by lead validation, honesty defaults all OFF,
+header CTA trio, qualification notes present), `npm test` script.
+Result: 8/8 pass. This is a real, minimal suite — not a claim of
+full coverage: no component, E2E, axe, or Lighthouse coverage yet.
+
+### 7. What was deliberately NOT done in this pass
+- No React Hook Form migration (forms already share one validator;
+  migration risk outweighs gain for three working forms).
+- No Carbon, Recharts, React Flow, Meilisearch/Typesense (SPEC
+  targets for admin/portal/charts/roadmaps/search-at-scale; none
+  is needed by a public page today, and each would add a full
+  library — Carbon is explicitly for future admin surfaces only).
+- No PWA manifest: the logo is 1600×498, not a square app icon,
+  and the logo must never be cropped — installability needs a
+  dedicated square icon approved by the owner. CSP already allows
+  `manifest-src 'self'`, so a manifest can be added later without
+  a CSP change; a service worker would need `worker-src 'self'`
+  (currently 'none') and a cache-invalidation plan.
+- No `/api/site-settings` route yet (seam is admin-READY, not an
+  admin UI; the route must serve only public values when built).
+- No `/api/deal-briefs`, no payments, no pricing, no AdSense, no
+  published price/stat, no logo/token/nav/project-wall changes.
+- No test for the 201/202 contract against live Supabase (forbidden);
+  the 202 path was verified only with unreachable/empty keys.
+- Lighthouse, CWV, axe, keyboard/screen-reader and phone tests are
+  still NOT measured — the re-rating below says so, it does not
+  claim them.

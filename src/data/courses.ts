@@ -332,7 +332,7 @@ export const courses: Course[] = [
       {
         "heading": "Program - Features",
         "paragraphs": [
-          "Our 90-day CCNA 200-301 Training is designed to offer a comprehensive, hands-on learning experience that prepares you for real-world networking challenges. From mastering routing and switching to securing network infrastructures, this program equips you with the essential skills needed to excel as a certified network professional. Comprehensive Curriculum: Our program offers a robust curriculum covering all essential topics required for CCNA 200-301 certification, ensuring a thorough understanding of computer networking principles and practices. Expert Instruction: Learn from industry experts with extensive experience in network administration and certification training, providing valuable insights and guidance throughout the course. Hands-On Labs: Gain practical experience through hands-on lab exercises designed to reinforce theoretical concepts and enhance technical skills in configuring and troubleshooting network devices. Flexibility: Access course materials and lab resources online, allowing you to study at your own pace and schedule, fitting seamlessly into your busy lifestyle. Exam Preparation: Receive dedicated support and resources to prepare for the CCNA 200-301 certification exam, including practice tests, exam tips, and study guides, maximizing your chances of success. Real-World Applications: Explore real-world case studies and scenarios that reflect common networking challenges and solutions, helping you develop practical skills applicable to professional environments. Career Guidance: Receive career guidance and advice on advancing your career in network administration, including resume building, job search strategies, and interview preparation tips. Community Engagement: Connect with a vibrant community of learners, alumni, and industry professionals through networking events, forums, and online communities, expanding your professional network and fostering lifelong connections.",
+          "Our 45-day CCNA 200-301 Training is designed to offer a comprehensive, hands-on learning experience that prepares you for real-world networking challenges. From mastering routing and switching to securing network infrastructures, this program equips you with the essential skills needed to excel as a certified network professional. Comprehensive Curriculum: Our program offers a robust curriculum covering all essential topics required for CCNA 200-301 certification, ensuring a thorough understanding of computer networking principles and practices. Expert Instruction: Learn from industry experts with extensive experience in network administration and certification training, providing valuable insights and guidance throughout the course. Hands-On Labs: Gain practical experience through hands-on lab exercises designed to reinforce theoretical concepts and enhance technical skills in configuring and troubleshooting network devices. Flexibility: Access course materials and lab resources online, allowing you to study at your own pace and schedule, fitting seamlessly into your busy lifestyle. Exam Preparation: Receive dedicated support and resources to prepare for the CCNA 200-301 certification exam, including practice tests, exam tips, and study guides, maximizing your chances of success. Real-World Applications: Explore real-world case studies and scenarios that reflect common networking challenges and solutions, helping you develop practical skills applicable to professional environments. Career Guidance: Receive career guidance and advice on advancing your career in network administration, including resume building, job search strategies, and interview preparation tips. Community Engagement: Connect with a vibrant community of learners, alumni, and industry professionals through networking events, forums, and online communities, expanding your professional network and fostering lifelong connections.",
           "By the conclusion of our CCNA 200-301 course, students will emerge equipped with a comprehensive understanding of computer networking principles and practices. They will possess the skills and knowledge necessary to confidently configure, troubleshoot, and manage network devices, laying a strong foundation for a successful career in network administration.",
           "Additionally, students will be well-prepared to tackle the CCNA 200-301 certification exam, opening doors to exciting opportunities in the rapidly evolving field of IT. With hands-on experience, expert instruction, and ongoing support, our course empowers students to embark on a journey of professional growth and advancement in the dynamic world of computer networking."
         ]
@@ -383,25 +383,6 @@ export const courses: Course[] = [
           "Principles of confidentiality, integrity, and availability (CIA Triad)",
           "Defense-in-depth and layered security strategies",
           "Authentication, authorization, and accounting (AAA) principles",
-          "GPT-Powered AI Tools for Ethical Hackers",
-          "Footprinting through Social Networking Sites",
-          "Common Vulnerability Scoring System (CVSS)",
-          "Common Vulnerabilities and Exposures (CVE)",
-          "Potentially Unwanted Application or Applications (PUAs)",
-          "AI-Powered Malware Detection and Analysis Tools",
-          "Endpoint Detection and Response (EDR/XDR) Tools",
-          "Network-based Denial-of-Service Attack (DoS)",
-          "Distributed Denial-of-Service Attack (DDoS)",
-          "Monitoring and Analysis of Firewall Logs",
-          "Monitoring and Analysis of Windows Firewall Logs",
-          "Security Information and Event Management",
-          "Benefits of Threat Intelligence to SOC Analyst",
-          "Threat Intelligence Use Cases for SOC Analyst",
-          "Integration of Threat Intelligence into SIEM",
-          "Threat Intelligence Use Cases for Enhanced Incidence Responder",
-          "Enhancing Incident Response by establishing SOPs",
-          "Responding to the Network Security Incidents",
-          "Responding to Application Security Incidents"
         ]
       },
       {

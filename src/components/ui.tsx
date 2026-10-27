@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import type { Course } from "@/data/courses";
 import type { Service } from "@/data/services";
 import { business, stats, telHref } from "@/data/site";
+import { siteSettings } from "@/data/site-settings";
 import { testimonials } from "@/data/testimonials";
 import { servicesFaqAnswers } from "@/data/pages";
 import { employers } from "@/data/employers";
@@ -59,6 +60,14 @@ export function SectionTitle({
 }
 
 export function StatsRibbon() {
+  // Config seam (siteSettings.showCounters, OFF by default): the
+  // counters are UNVERIFIED — published on the previous site, with
+  // "Certified Learners" set by the owner to 1250 between two
+  // conflicting published figures. They render ONLY when an admin
+  // has verified them and flipped the toggle; the qualification
+  // note renders with them, always. Returning null removes the
+  // section entirely (no empty gap) until then.
+  if (!siteSettings.showCounters) return null;
   return (
     <section className="panel-ink py-14">
       <div className="wrap grid grid-cols-2 gap-8 text-center sm:grid-cols-3 lg:grid-cols-5">
@@ -71,6 +80,7 @@ export function StatsRibbon() {
           </div>
         ))}
       </div>
+      <p className="wrap mt-8 text-center text-xs text-paper/60">{siteSettings.counterNote}</p>
     </section>
   );
 }
@@ -436,13 +446,18 @@ export function ForInstitutesBand() {
 // site (Trainings, Services, About, Why Choose Us, Testimonials, Student
 // Certifications, Certificate Verification and every course page).
 export function LogoWall() {
+  // Config seam (siteSettings.showEmployerWall, OFF by default): the
+  // wall's claim is that students were EMPLOYED by these companies,
+  // and no per-student placement evidence is in the repo —
+  // UNVERIFIED as a placement claim. When an admin flips it ON, the
+  // qualification note renders with it, and the heading no longer
+  // claims employment. Returning null removes the section entirely.
+  if (!siteSettings.showEmployerWall) return null;
   return (
     <section className="bg-surface-light section-pad">
       <div className="wrap">
-        <SectionTitle title="Our Students works with" center />
-        <p className="mx-auto mt-3 max-w-2xl text-center">
-          Our students have been employed by some of the top companies in the industry.
-        </p>
+        <SectionTitle title="Companies in our students' career paths" center />
+        <p className="mx-auto mt-3 max-w-2xl text-center">{siteSettings.employerNote}</p>
         <div className="mt-10 grid grid-cols-2 items-center gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {employers.map((e) => (
             <div
@@ -551,7 +566,11 @@ export function FeatureTrio() {
 }
 
 // "9 years of experience" badge from the live Home/About/Why Choose Us.
+// Config seam (siteSettings.showExperienceBadge, OFF by default):
+// UNVERIFIED — no founding date in the repo to derive it from.
+// Renders only when an admin has verified it and flipped the toggle.
 export function ExperienceBadge() {
+  if (!siteSettings.showExperienceBadge) return null;
   return (
     <div className="inline-flex items-center gap-3 rounded-2xl border border-brand-bright/40 bg-ink px-5 py-4 text-paper shadow-lg">
       <span className="font-display text-4xl font-semibold text-brand-bright">9 Years</span>
@@ -645,11 +664,19 @@ export function CredentialCard({
   body: string;
   seal: "iso" | "aicte";
 }) {
+  // Config seam (OFF by default, per seal): ISO 9001:2015 and AICTE
+  // claims are on the owner's confirm-or-remove list with no proof
+  // in the repo, and both emblems are registered official artwork.
+  // A card renders ONLY when its toggle is ON, with the qualification
+  // note — never as an unqualified certification claim.
+  const enabled = seal === "iso" ? siteSettings.showCredentialIso : siteSettings.showCredentialAicte;
+  if (!enabled) return null;
   return (
     <article className="flex items-center gap-5 rounded-2xl border-2 border-heading/25 bg-parchment p-5 shadow-[0_18px_36px_rgba(31,24,16,0.10)] sm:gap-6 sm:p-6">
       <div className="min-w-0 flex-1">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="mt-2 text-sm leading-6">{body}</p>
+        <p className="mt-2 text-xs leading-5 text-body">{siteSettings.credentialNote}</p>
       </div>
       <CredentialEmblem kind={seal} />
     </article>

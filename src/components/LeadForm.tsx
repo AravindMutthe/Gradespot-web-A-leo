@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
 import { business } from "@/data/site";
+import BotFields from "@/components/BotFields";
 
 // Lead form per the researched conversion rules:
 // - few fields (name, phone, email, one qualifier, optional message)
@@ -77,6 +78,10 @@ export default function LeadForm({
       // (max 100 chars); it persists only once the leads.country column
       // exists — see the showCountry note.
       country: String(fd.get("country") ?? ""),
+      // Bot-check signals (BotFields): read by /api/leads BEFORE
+      // validation/storage; validateLead ignores them on purpose.
+      website: String(fd.get("website") ?? ""),
+      formStartedAt: Number(fd.get("formStartedAt") ?? "") || undefined,
     };
     // Client runs the SAME validators as /api/leads (§25.18) — bad
     // input is caught here with inline per-field errors and never sent.
@@ -297,6 +302,7 @@ export default function LeadForm({
         />
         <span>Yes, send me course details and updates on WhatsApp.</span>
       </label>
+      <BotFields />
       <button
         type="submit"
         disabled={state === "sending"}

@@ -1,5 +1,6 @@
 import LeadForm from "@/components/LeadForm";
 import { business, stats } from "@/data/site";
+import { siteSettings } from "@/data/site-settings";
 import { syllabusWaLink } from "@/lib/wa";
 
 // Sticky enquiry rail for course pages (research: the form lives ON the
@@ -47,9 +48,10 @@ export default function EnquiryRail({ courseTitle }: { courseTitle: string }) {
       >
         Book a Free Demo Class
       </a>
-      {happy && certified && (
+      {siteSettings.showCounters && happy && certified && (
         <p className="mt-4 text-center text-[13px] font-medium text-body">
           Joined by {happy.value} Happy Learners · {certified.value} Certified Learners
+          <span className="mt-1 block text-[11px] font-normal">{siteSettings.counterNote}</span>
         </p>
       )}
     </aside>

@@ -8,6 +8,7 @@ import { SocialLinks } from "@/components/ui";
 import { navCourses } from "@/data/catalogue-nav";
 import { services } from "@/data/services";
 import { nexusMenus, type NavMenu } from "@/data/nexus-nav";
+import { enabledHeaderCtas, type HeaderCta } from "@/data/site-settings";
 
 // Header — GradeSpot Nexus Release 1 (docs/frontend-v2/SPEC.md §2).
 // Six primary menus only: Academy, Certifications, Career Pathways,
@@ -136,6 +137,14 @@ function MenuLinkItem({ label, href, external, note, onNavigate }: { label: stri
 }
 
 export default function Header() {
+  // Header CTAs come from the config seam (siteSettings.headerCtas),
+  // not from hardcoded Links: an admin may reorder, relabel or
+  // disable one, and the styles below follow the CTA's style field,
+  // preserving the existing breakpoint behaviour (full trio at xl
+  // and on mobile; only the "primary" CTA at the compact nav
+  // breakpoint, so the bar cannot overflow).
+  const headerCtas = enabledHeaderCtas();
+  const ctaByStyle = (style: HeaderCta["style"]) => headerCtas.find((c) => c.style === style);
   const [open, setOpen] = useState(false);
   const [panel, setPanel] = useState<PanelKey | null>(null);
   const [mobilePanel, setMobilePanel] = useState<PanelKey | null>(null);
@@ -284,24 +293,30 @@ export default function Header() {
               <div className="ml-2 hidden xl:block">
                 <HeaderSearch />
               </div>
-              <Link
-                href="/register"
-                className="btn-outline-navy ml-3 hidden whitespace-nowrap xl:ml-2 xl:flex xl:min-h-[50px] xl:items-center xl:px-5 xl:text-[14px]"
-              >
-                Book Free Demo
-              </Link>
-              <Link
-                href="/trainings"
-                className="hidden whitespace-nowrap text-[14px] font-bold text-heading hover:text-signal xl:ml-2 xl:block"
-              >
-                Explore Programs
-              </Link>
-              <Link
-                href="/contact-us"
-                className="btn-primary ml-3 whitespace-nowrap nav:ml-1.5 nav:min-h-[44px] nav:px-2.5 nav:text-[12.5px] xl:ml-3 xl:min-h-[50px] xl:px-7 xl:text-[15px]"
-              >
-                Talk to an Advisor
-              </Link>
+              {ctaByStyle("outline") && (
+                <Link
+                  href={ctaByStyle("outline")!.href}
+                  className="btn-outline-navy ml-3 hidden whitespace-nowrap xl:ml-2 xl:flex xl:min-h-[50px] xl:items-center xl:px-5 xl:text-[14px]"
+                >
+                  {ctaByStyle("outline")!.label}
+                </Link>
+              )}
+              {ctaByStyle("text") && (
+                <Link
+                  href={ctaByStyle("text")!.href}
+                  className="hidden whitespace-nowrap text-[14px] font-bold text-heading hover:text-signal xl:ml-2 xl:block"
+                >
+                  {ctaByStyle("text")!.label}
+                </Link>
+              )}
+              {ctaByStyle("primary") && (
+                <Link
+                  href={ctaByStyle("primary")!.href}
+                  className="btn-primary ml-3 whitespace-nowrap nav:ml-1.5 nav:min-h-[44px] nav:px-2.5 nav:text-[12.5px] xl:ml-3 xl:min-h-[50px] xl:px-7 xl:text-[15px]"
+                >
+                  {ctaByStyle("primary")!.label}
+                </Link>
+              )}
             </nav>
 
             <div className="flex items-center gap-2 nav:hidden">
@@ -391,20 +406,26 @@ export default function Header() {
                 <HeaderSearch compact onNavigate={() => setOpen(false)} />
               </div>
               <div className="grid grid-cols-2 gap-3 pb-2">
-                <Link href="/contact-us" className="btn-primary" onClick={() => setOpen(false)}>
-                  Talk to an Advisor
-                </Link>
-                <Link
-                  href="/trainings"
-                  className="flex min-h-[48px] items-center justify-center rounded-xl border-[1.5px] border-heading/60 px-4 text-[14px] font-bold text-heading"
-                  onClick={() => setOpen(false)}
-                >
-                  Explore Programs
-                </Link>
+                {ctaByStyle("primary") && (
+                  <Link href={ctaByStyle("primary")!.href} className="btn-primary" onClick={() => setOpen(false)}>
+                    {ctaByStyle("primary")!.label}
+                  </Link>
+                )}
+                {ctaByStyle("text") && (
+                  <Link
+                    href={ctaByStyle("text")!.href}
+                    className="flex min-h-[48px] items-center justify-center rounded-xl border-[1.5px] border-heading/60 px-4 text-[14px] font-bold text-heading"
+                    onClick={() => setOpen(false)}
+                  >
+                    {ctaByStyle("text")!.label}
+                  </Link>
+                )}
               </div>
-              <Link href="/register" className="btn-outline-navy mb-2 w-full" onClick={() => setOpen(false)}>
-                Book Free Demo
-              </Link>
+              {ctaByStyle("outline") && (
+                <Link href={ctaByStyle("outline")!.href} className="btn-outline-navy mb-2 w-full" onClick={() => setOpen(false)}>
+                  {ctaByStyle("outline")!.label}
+                </Link>
+              )}
 
               {nexusMenus.map((menu) => (
                 <div key={menu.key}>

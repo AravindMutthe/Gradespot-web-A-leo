@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
+import BotFields from "@/components/BotFields";
 
 // Landing-page lead form (ppc report §1.4: size the form to the offer —
 // a free counselling call asks for name, phone and ONE qualifying
@@ -36,6 +37,10 @@ export default function LpLeadForm({
       message: `Wants to start: ${String(fd.get("start") ?? "Immediately")}`,
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/"}`,
+      // Bot-check signals (BotFields): read by /api/leads BEFORE
+      // validation/storage; validateLead ignores them on purpose.
+      website: String(fd.get("website") ?? ""),
+      formStartedAt: Number(fd.get("formStartedAt") ?? "") || undefined,
     };
     // Same validators as /api/leads (§25.18) — caught here, never sent.
     const checked = validateLead(payload);
@@ -185,6 +190,7 @@ export default function LpLeadForm({
         />
         <span>Yes, send me course details and updates on WhatsApp.</span>
       </label>
+      <BotFields />
       <button
         type="submit"
         disabled={state === "sending"}

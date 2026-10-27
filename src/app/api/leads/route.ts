@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { validateLead } from "@/lib/lead-validation";
 import { createLead } from "@/lib/data";
+import { siteSettings } from "@/data/site-settings";
+import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { checkBotSignals } from "@/lib/bot-check";
 
 // Leads API — validation lives in @/lib/lead-validation, the SAME
 // module the client forms run before sending (v1 hardening §25.18).
@@ -22,11 +25,42 @@ import { createLead } from "@/lib/data";
 //   Clients must check `stored` on every ok response and show the
 //   distinct "received" state for the log path, never the "sent" state.
 export async function POST(request: Request) {
+  // Abuse layer 1 — rate limit, before any body work (config seam:
+  // siteSettings.rateLimit, env-overridable for the numbers only).
+  // Per-instance in-memory store: see lib/rate-limit.ts for the honest
+  // limitation. Never logs the IP or the payload.
+  if (siteSettings.features.rateLimiting) {
+    const limited = checkRateLimit(
+      `leads:${clientIp(request)}`,
+      siteSettings.rateLimit.leadsMax,
+      siteSettings.rateLimit.leadsWindowSeconds,
+    );
+    if (!limited.allowed) {
+      console.error("[leads] Rate limit hit");
+      return NextResponse.json(
+        { error: "Too many requests. Please wait a little and try again." },
+        { status: 429, headers: { "Retry-After": String(limited.retryAfterSeconds) } },
+      );
+    }
+  }
+
   let body: unknown;
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Validation failed", errors: { form: "Invalid request body" } }, { status: 400 });
+  }
+
+  // Abuse layer 2 — honeypot + timing (lib/bot-check.ts). Tripped
+  // payloads are dropped here, before validation and storage, with a
+  // generic message that does not name the check or keep the payload.
+  const bot = checkBotSignals(body);
+  if (!bot.ok) {
+    console.error("[leads] Bot check tripped:", bot.reason ?? "unknown");
+    return NextResponse.json(
+      { error: "Validation failed", errors: { form: "Please check the fields and try again." } },
+      { status: 400 },
+    );
   }
 
   const { data, errors } = validateLead(body);

@@ -45,13 +45,13 @@ const popularTrainings = [
   { label: "CompTIA Security+: Sy0-701", href: "/trainings/comptia-security-plus" },
 ];
 
-const linkCls = "inline-flex min-h-[44px] items-center py-2 transition-colors hover:text-brand-bright"; // 2026-10-27 audit fix: footer links are now 44px tall (R1 target), above both the 24px AA floor and the 44px AAA target.
-const headCls = "mb-4 font-display text-[19px] font-semibold text-paper";
+const linkCls = "inline-flex min-h-[44px] items-center rounded-lg px-2 -mx-2 transition-colors hover:bg-white/5 hover:text-brand-bright"; // 44px rows kept (R1 target, above the 24px AA floor and the 44px AAA target); R2+R3 adds only a soft hover surface.
+const headCls = "mb-3 font-sans text-[13px] font-bold uppercase tracking-[0.16em] text-paper";
 
 export default function Footer() {
   return (
     <footer className="border-t-[3px] border-brand bg-ink-deep text-footer-text">
-      <div className="wrap grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1.25fr_0.7fr_0.8fr_1.05fr_1fr]">
+      <div className="wrap grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.3fr_0.7fr_0.8fr_1.05fr_1fr]">
         <div>
           {/* Logo brightening (§22): luminous plate + halo on the
               ink footer behind the unmodified light artwork. */}
@@ -69,7 +69,7 @@ export default function Footer() {
             redefine industry standards — training, services and cybersecurity from
             Dilsukhnagar, Hyderabad.
           </p>
-          <p className="eyebrow mt-6 text-paper">Connect With Us</p>
+          <p className="mt-6 text-[12px] font-bold uppercase tracking-[0.18em] text-paper">Connect With Us</p>
           <p className="mt-3 flex items-center gap-4">
             <SocialLinks className="h-5 w-5" />
           </p>
@@ -88,8 +88,8 @@ export default function Footer() {
           </ul>
         </nav>
 
-        <nav aria-label="Quick links">
-          <h3 className={headCls}>Quick Links</h3>
+        <nav aria-label="Get started">
+          <h3 className={headCls}>Get Started</h3>
           <ul className="space-y-1.5 text-sm">
             {quickLinks.map((l) => (
               <li key={l.href}>
@@ -115,7 +115,7 @@ export default function Footer() {
         </nav>
 
         <div>
-          <h3 className={headCls}>Contact Info</h3>
+          <h3 className={headCls}>Visit Us</h3>
           <address className="space-y-3 text-sm not-italic leading-6">
             <p>{business.address}</p>
             <p>
@@ -151,12 +151,12 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="wrap flex flex-wrap items-center justify-between gap-2 py-5 font-mono text-[11.5px] uppercase tracking-[0.08em] text-footer-text">
+        <div className="wrap flex flex-wrap items-center justify-between gap-2 py-5 text-[13px] text-footer-text">
           <p>© Copyright {new Date().getFullYear()}. {business.legalName}</p>
           {/* §22 dedupe: this strip used to repeat Home / Testimonials /
               Services / Terms, which already live in the columns above.
               It now carries only the links the columns don't. */}
-          <p className="normal-case tracking-normal">
+          <p>
             <Link className="hover:text-brand-bright" href="/pricing">
               Pricing
             </Link>

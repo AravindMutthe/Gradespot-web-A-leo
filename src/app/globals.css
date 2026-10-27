@@ -276,13 +276,19 @@
   .panel-ink :is(h1, h2, h3, h4) {
     color: inherit;
   }
+  /* R2+R3 modern heading system (2026-10-27): headings are now
+     clean sans (Instrument Sans) with tight tracking and a
+     tighter scale — the old oversized serif-boilerplate look is
+     gone. PageHero / SectionTitle set their own sizes; this base
+     rule covers every other h1–h4 (course pages, section heads).
+     Contrast is unchanged in kind: heading/body tokens are the
+     same values, measured in the R2+R3 report. */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display text-heading;
-    font-optical-sizing: auto;
-    letter-spacing: -0.01em;
+    @apply font-sans font-bold text-heading;
+    letter-spacing: -0.02em;
   }
   ::selection {
     background: var(--color-brand);
@@ -801,4 +807,57 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .nexus-editorial, .nexus-app, .nexus-diagram { transition: none; }
+}
+
+/* ——— R2+R3 modern surfaces (2026-10-27) ———
+   Modern card: clean white/raised surface, soft border, small
+   radius lift on hover, no parchment shadow stack, no sepia.
+   Used by CourseCard, BlogCards, showcase/design-led cards.
+   Design-led card: a photo-free card (gradient from the logo
+   anchor orange into the supporting deep, or deep into teal)
+   used wherever a photo would otherwise repeat a course card
+   photo — home hero blocks and the trainings showcase. The
+   gradient is decorative only; all text sits on a solid chip
+   or on the deep end, never on a mid-gradient blend. */
+@utility modern-card {
+  border-radius: 20px;
+  border: 1px solid var(--color-nexus-line);
+  background: var(--color-nexus-surface-raised);
+  box-shadow: 0 1px 2px rgba(30, 28, 27, 0.05);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(30, 28, 27, 0.12);
+  }
+}
+@utility design-led-card {
+  border-radius: 20px;
+  border: 1px solid var(--color-nexus-line);
+  background:
+    linear-gradient(135deg, var(--color-nexus-support-deep) 0%, var(--color-nexus-support-teal) 130%);
+  color: #fffbf5;
+}
+@utility modern-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* R2+R3 design-led card, dark theme: keep the gradient at the
+   dark end of the supporting palette so white text stays AA
+   (white on #0a3d38 is ~10:1; the light-theme teal end is not
+   reused in dark). */
+.dark .design-led-card {
+  background:
+    linear-gradient(135deg, #1d3a5c 0%, #0a3d38 130%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .modern-card, .modern-card:hover { transform: none; }
 }

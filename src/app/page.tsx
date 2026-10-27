@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { getCourses, getServices } from "@/lib/data";
 import { homeParagraphs } from "@/data/pages";
@@ -45,11 +44,18 @@ import { faqSchema, webPageSchema } from "@/lib/schema";
 // computed from the real catalogue at render time. Programs marked
 // Planned are never presented as available.
 
+// R2+R3: hero blocks are DESIGN-LED (no photo). The old blocks
+// reused course photos (cybersecurity-technologies,
+// aws-solutions-architect-associate, soc-analyst, ccna) that also
+// appear as course cards on /trainings — the repeat the owner
+// flagged. Labels, bodies, hrefs and order are unchanged; only
+// the photo is removed, replaced by a logo-palette design surface
+// with the block's initial as its mark.
 const heroBlocks = [
-  { label: "Cybersecurity Academy", body: "Role-based training and authorized labs.", href: "/trainings#category-cybersecurity", img: "/images/courses/cybersecurity-technologies.jpg" },
-  { label: "Cloud & Infrastructure", body: "Cloud platforms, Linux, networking and DevOps.", href: "/trainings#category-aws", img: "/images/courses/aws-solutions-architect-associate.jpg" },
-  { label: "Career Pathways", body: "Skills, tools, certifications and projects.", href: "/career-support", img: "/images/courses/soc-analyst.jpg" },
-  { label: "Enterprise Solutions", body: "Consulting, engineering and technical services.", href: "/services", img: "/images/courses/ccna.jpg" },
+  { label: "Cybersecurity Academy", body: "Role-based training and authorized labs.", href: "/trainings#category-cybersecurity" },
+  { label: "Cloud & Infrastructure", body: "Cloud platforms, Linux, networking and DevOps.", href: "/trainings#category-aws" },
+  { label: "Career Pathways", body: "Skills, tools, certifications and projects.", href: "/career-support" },
+  { label: "Enterprise Solutions", body: "Consulting, engineering and technical services.", href: "/services" },
 ];
 
 export default async function HomePage() {
@@ -91,7 +97,7 @@ export default async function HomePage() {
         <div className="wrap grid items-start gap-10 py-10 md:py-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div data-reveal className="hero-no-reveal">
             <p className="eyebrow text-nexus-brand-600">GradeSpot IT Solutions · Technology Academy · Certifications · Applied Labs · Enterprise IT Solutions</p>
-            <h1 className="nexus-editorial mt-5 max-w-xl text-[44px] font-semibold text-heading md:text-[68px]">
+            <h1 className="mt-5 max-w-xl font-sans text-[40px] font-bold leading-[1.05] tracking-tight text-heading md:text-[56px]">
               Engineering Skills. Real-World Solutions.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-body">
@@ -119,7 +125,7 @@ export default async function HomePage() {
                 ["Enterprise Solutions", "Consulting · Engineering · Services →", "/services"],
               ].map(([label, detail, href]) => (
                 <li key={label} className="nexus-row">
-                  <span className="w-40 shrink-0 font-display text-[15px] font-semibold text-heading">{label}</span>
+                  <span className="w-40 shrink-0 font-sans text-[15px] font-bold text-heading">{label}</span>
                   <span className="grow text-[13px] text-body">{detail}</span>
                   <Link href={href} className="shrink-0 text-[13px] font-bold text-nexus-brand-600 hover:underline">Open →</Link>
                 </li>
@@ -134,11 +140,16 @@ export default async function HomePage() {
         <div className="wrap pb-8">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {heroBlocks.map((b) => (
-              <Link key={b.label} href={b.href} className="group relative block overflow-hidden rounded-[18px]">
-                <Image src={b.img} alt={b.label} width={400} height={300} sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw" className="h-36 w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
-                <span className="absolute inset-x-0 bottom-0 bg-nexus-ink-950/85 px-4 py-3">
-                  <span className="block text-[13px] font-bold text-nexus-text-inverse">{b.label}</span>
-                  <span className="block text-[12px] text-nexus-text-inverse/80">{b.body}</span>
+              <Link key={b.label} href={b.href} className="group relative block overflow-hidden modern-card">
+                <span className="flex aspect-[4/3] w-full flex-col justify-between p-5 design-led-card">
+                  <span aria-hidden className="font-sans text-[44px] font-bold leading-none text-paper/90">
+                    {b.label.charAt(0)}
+                  </span>
+                  <span>
+                    <span className="block text-[15px] font-bold text-paper">{b.label}</span>
+                    <span className="mt-1 block text-[13px] leading-5 text-paper/85">{b.body}</span>
+                    <span className="mt-3 inline-block text-[13px] font-bold text-paper underline underline-offset-4">Open →</span>
+                  </span>
                 </span>
               </Link>
             ))}
@@ -175,7 +186,7 @@ export default async function HomePage() {
             </div>
             {academyRows.map((r) => (
               <div key={r.domain} className="nexus-row">
-                <Link href={r.href} className="grow font-display text-[16px] font-semibold text-heading hover:text-nexus-brand-600 hover:underline">{r.domain} →</Link>
+                <Link href={r.href} className="grow font-sans text-[16px] font-bold text-heading hover:text-nexus-brand-600 hover:underline">{r.domain} →</Link>
                 <span className="hidden w-32 font-mono text-[12px] text-body sm:block">{r.n > 0 ? `${r.n} training${r.n === 1 ? "" : "s"}` : "—"}</span>
                 <span className="w-36 text-right"><span className="nexus-status">{r.status}</span></span>
               </div>
@@ -217,7 +228,7 @@ export default async function HomePage() {
                 ["4 · Proof", "SOC Analyst training page, certificate verification"],
               ].map(([step, detail]) => (
                 <li key={step} className="nexus-row">
-                  <span className="w-36 shrink-0 font-display text-[14px] font-semibold text-heading">{step}</span>
+                  <span className="w-36 shrink-0 font-sans text-[14px] font-bold text-heading">{step}</span>
                   <span className="text-[13px] text-body">{detail}</span>
                 </li>
               ))}
@@ -280,7 +291,7 @@ export default async function HomePage() {
           </div>
           <div className="rounded-2xl bg-nexus-ink-950 p-7 text-nexus-text-inverse">
             <p className="eyebrow text-nexus-brand-300">For Business</p>
-            <h3 className="mt-3 font-display text-[26px] font-semibold leading-snug text-nexus-text-inverse">Request a service consultation</h3>
+            <h3 className="mt-3 font-sans text-[24px] font-bold leading-snug tracking-tight text-nexus-text-inverse">Request a service consultation</h3>
             <p className="mt-3 text-sm leading-6 text-nexus-text-inverse/85">
               Tell us the problem and the scope; the team replies with the next step.
               Services are quoted to scope; no prices are published here.
@@ -360,7 +371,7 @@ export default async function HomePage() {
               ["Deliver", "Training, labs, service projects →"],
             ].map(([step, detail]) => (
               <div key={step} className="nexus-row">
-                <span className="w-32 shrink-0 font-display text-[16px] font-semibold text-heading">{step}</span>
+                <span className="w-32 shrink-0 font-sans text-[16px] font-bold text-heading">{step}</span>
                 <span className="text-[13.5px] text-body">{detail}</span>
               </div>
             ))}

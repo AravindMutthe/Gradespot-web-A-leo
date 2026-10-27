@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { getCourses } from "@/lib/data";
 import { courseCategories } from "@/data/courses";
@@ -15,11 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return trainingsIndexMetadata(courses);
 }
 
+// R2+R3: showcase cards are DESIGN-LED (no photo). The old
+// showcase reused course/blog photos that also appear as course
+// cards (microsoft-sentinel, aws-solutions-architect-associate,
+// hardware-networking, Information_warfare) — the repeat the
+// owner flagged. Titles and order are unchanged; only the
+// photo is removed, replaced by a logo-palette design surface.
 const showcaseItems = [
-  { t: "IT Consultancy", img: "/images/courses/microsoft-sentinel.jpg" },
-  { t: "Cyber Security", img: "/images/blog/Information_warfare.jpg" },
-  { t: "Cloud Computing", img: "/images/courses/aws-solutions-architect-associate.jpg" },
-  { t: "Backup & Recovery", img: "/images/courses/hardware-networking.jpg" },
+  { t: "IT Consultancy" },
+  { t: "Cyber Security" },
+  { t: "Cloud Computing" },
+  { t: "Backup & Recovery" },
 ];
 
 export default async function TrainingsPage() {
@@ -63,6 +68,7 @@ export default async function TrainingsPage() {
               summary: c.summary,
               image: c.image,
               duration: c.duration,
+              catalogOnly: c.catalogOnly,
             }))}
             categories={categories}
           />
@@ -92,22 +98,14 @@ export default async function TrainingsPage() {
               <article
                 key={x.t}
                 data-reveal
-                className="group overflow-hidden rounded-2xl border border-line bg-parchment text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
+                className="group overflow-hidden modern-card text-center"
               >
-                <div className="relative overflow-hidden">
-                  <Image
-                    src={x.img}
-                    alt={x.t}
-                    width={600}
-                    height={340}
-                    sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
-                    className="h-32 w-full object-cover sepia-[0.12] transition duration-500 group-hover:scale-[1.04]"
-                  />
-                  <span className="eyebrow absolute left-3 top-3 rounded-md bg-ink/85 px-2.5 py-1.5 text-white">
+                <div className="flex aspect-video w-full flex-col items-start justify-end p-5 text-left design-led-card">
+                  <span className="modern-chip bg-white/15 text-paper">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h3 className="px-6 py-6 text-xl font-bold text-heading">{x.t}</h3>
+                <h3 className="px-6 py-5 font-sans text-xl font-bold tracking-tight text-heading">{x.t}</h3>
               </article>
             ))}
           </div>

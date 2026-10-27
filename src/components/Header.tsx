@@ -366,8 +366,8 @@ export default function Header() {
   // bar itself is sticky. (Pre-R1 it was rendered twice, once per
   // breakpoint, with different sticky behaviour.)
   const strip = (
-    <div className="bg-ink-deep text-footer-text">
-      <div className="wrap flex flex-nowrap items-center justify-between gap-x-6 overflow-hidden py-2 font-mono text-[11px] uppercase tracking-[0.14em]">
+    <div className="bg-ink text-footer-text">
+      <div className="wrap flex flex-nowrap items-center justify-between gap-x-6 overflow-hidden py-2 text-[12px]">
         <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-x-5">
           <span className="min-w-0 truncate">Hyderabad, India · Online &amp; Classroom Training</span>
           <span className="hidden shrink-0 truncate md:inline">{business.locationLabel}</span>
@@ -443,8 +443,8 @@ export default function Header() {
             Logo plate UNTOUCHED from Leo v1: luminous parchment
             plate + warm halo behind the unmodified artwork, per-theme
             swap via CSS (both files render, CSS picks one). */}
-        <div className="glass-panel relative border-b border-line shadow-[0_1px_0_rgba(32,25,19,0.04)]">
-          <div className="wrap flex items-center justify-between gap-3 py-2.5">
+        <div className="relative border-b border-line bg-canvas/95 shadow-sm backdrop-blur-md">
+          <div className="wrap flex items-center justify-between gap-3 py-2">
             <Link
               href="/"
               aria-label="GradeSpot IT Solutions — Home"
@@ -456,7 +456,7 @@ export default function Header() {
                   alt="GradeSpot IT Solutions"
                   width={193}
                   height={60}
-                  className="h-10 w-auto xl:h-12"
+                  className="h-9 w-auto xl:h-11"
                   priority
                 />
               </span>
@@ -496,7 +496,7 @@ export default function Header() {
                       onKeyDown={(e) => {
                         if (e.key === "Escape") closePanel(menu.key);
                       }}
-                      className={`flex min-h-[44px] min-w-[44px] items-center gap-0.5 whitespace-nowrap rounded-lg px-1 py-2.5 text-[11px] font-semibold transition-colors 2xl:gap-1 2xl:px-2.5 2xl:text-[13px] ${
+                      className={`flex min-h-[44px] min-w-[44px] items-center gap-0.5 whitespace-nowrap rounded-full px-1.5 py-2.5 text-[11px] font-bold tracking-[-0.01em] transition-colors 2xl:gap-1 2xl:px-2.5 2xl:text-[13px] ${
                         isOpen
                           ? "bg-nexus-support-deep-soft text-heading ring-2 ring-brand"
                           : "text-nav hover:bg-nexus-support-deep-soft"
@@ -531,7 +531,7 @@ export default function Header() {
               <SearchPopover idPrefix="header-search-mobile" />
               <button
                 ref={menuButtonRef}
-                className="flex min-h-[48px] items-center rounded-xl border border-heading/25 px-3 text-sm font-semibold text-heading"
+                className="flex min-h-[48px] items-center rounded-full border border-heading/25 px-4 text-sm font-bold text-heading"
                 onClick={() => setOpen(!open)}
                 aria-expanded={open}
                 aria-label="Toggle menu"
@@ -558,16 +558,16 @@ export default function Header() {
               }}
             >
               <div className="mx-auto w-full max-w-[1240px] px-3 pb-4">
-                <div className="glass-panel overflow-hidden rounded-2xl border border-line border-t-2 border-t-brand shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
+                <div className="overflow-hidden rounded-[20px] border border-line border-t-2 border-t-brand bg-canvas shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
                   <div className="max-h-[calc(100dvh-120px)] overflow-y-auto">
                     <div className={`grid ${showFeatured(activeMenu) ? "lg:grid-cols-[1fr_280px]" : ""}`}>
                       <div
-                        className="nexus-menu-cols p-6"
+                        className="nexus-menu-cols p-7"
                         style={{ "--menu-cols": Math.min(activeMenu.columns.length, 3) } as React.CSSProperties}
                       >
                         {activeMenu.columns.map((col) => (
                           <div key={col.title}>
-                            <p className="eyebrow border-b-2 border-heading/70 pb-1.5 text-[10.5px] text-heading">
+                            <p className="border-b-2 border-brand/60 pb-2 text-[12px] font-bold uppercase tracking-[0.14em] text-heading">
                               {col.title}
                             </p>
                             <ul className="mt-2 space-y-0.5">
@@ -581,9 +581,9 @@ export default function Header() {
                         ))}
                       </div>
                       {showFeatured(activeMenu) && (
-                        <div className="bg-nexus-support-deep p-5">
+                        <div className="bg-nexus-support-deep p-6">
                           <p className="eyebrow text-paper/70">{activeMenu.featured.eyebrow}</p>
-                          <p className="mt-2 font-display text-[17px] font-semibold leading-snug text-paper">
+                          <p className="mt-2 font-sans text-[17px] font-bold leading-snug tracking-tight text-paper">
                             {activeMenu.featured.title}
                           </p>
                           <p className="mt-1.5 text-[12.5px] leading-5 text-paper/80">{activeMenu.featured.body}</p>
@@ -632,10 +632,10 @@ export default function Header() {
               role="dialog"
               aria-modal="true"
               aria-label="Menu"
-              className="absolute left-0 top-0 flex h-full w-[min(420px,92vw)] flex-col bg-canvas shadow-2xl"
+              className="absolute left-0 top-0 flex h-full w-[min(420px,92vw)] flex-col rounded-r-[24px] bg-canvas shadow-2xl"
             >
               <div className="flex items-center justify-between border-b border-line px-3 py-2">
-                <span className="px-2 text-[15px] font-bold text-heading">Menu</span>
+                <span className="px-2 text-[16px] font-bold tracking-tight text-heading">Menu</span>
                 <button
                   ref={drawerCloseRef}
                   type="button"
@@ -683,7 +683,7 @@ export default function Header() {
                         type="button"
                         onClick={() => setMobileGroup(menu.key)}
                         aria-expanded={false}
-                        className="flex min-h-[56px] w-full items-center justify-between px-5 text-left text-[15px] font-semibold text-heading transition-colors hover:bg-nexus-support-deep-soft"
+                        className="flex min-h-[56px] w-full items-center justify-between border-b border-line/60 px-5 text-left text-[15px] font-bold text-heading transition-colors hover:bg-nexus-support-deep-soft"
                       >
                         {menu.label}
                         <span aria-hidden>›</span>

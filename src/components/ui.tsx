@@ -18,13 +18,13 @@ import { services as allServices } from "@/data/services";
 
 export function PageHero({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
-    <section className="hero-paper border-b border-line py-6 md:py-8">
+    <section className="border-b border-line bg-nexus-support-canvas py-8 md:py-10">
       <div className="wrap" data-reveal>
-        <span className="block h-[3px] w-14 rounded-full bg-gradient-to-r from-brand-dark via-brand to-brand-bright" aria-hidden />
-        <h1 className="mt-6 max-w-4xl text-[40px] font-semibold leading-[1.08] text-heading md:text-[56px]">
+        <span className="block h-1 w-10 rounded-full bg-brand" aria-hidden />
+        <h1 className="mt-5 max-w-4xl font-sans text-[34px] font-bold leading-[1.1] tracking-tight text-heading md:text-[48px]">
           {title}
         </h1>
-        {subtitle && <p className="mt-5 max-w-3xl text-lg leading-8 text-body">{subtitle}</p>}
+        {subtitle && <p className="mt-4 max-w-3xl text-[17px] leading-7 text-body">{subtitle}</p>}
       </div>
     </section>
   );
@@ -43,16 +43,14 @@ export function SectionTitle({
     <div className={center ? "text-center" : ""} data-reveal>
       {label && (
         <p
-          className={`eyebrow flex items-center gap-3 text-signal-strong ${
-            center ? "justify-center" : ""
+          className={`text-[12px] font-bold uppercase tracking-[0.18em] text-signal-strong ${
+            center ? "text-center" : ""
           }`}
         >
-          <span className="inline-block h-[2px] w-9 bg-brand" aria-hidden />
           {label}
-          {center && <span className="inline-block h-[2px] w-9 bg-brand" aria-hidden />}
         </p>
       )}
-      <h2 className="mt-3.5 text-[32px] font-semibold leading-[1.15] text-heading md:text-[38px]">
+      <h2 className="mt-2.5 font-sans text-[26px] font-bold leading-[1.2] tracking-tight text-heading md:text-[32px]">
         {title}
       </h2>
     </div>
@@ -94,6 +92,7 @@ export function CourseCardBody({
   summary,
   image,
   duration,
+  catalogOnly,
 }: {
   slug: string;
   title: string;
@@ -101,11 +100,16 @@ export function CourseCardBody({
   summary?: string;
   image?: string | null;
   duration?: string;
+  // Honest status: catalog-only courses have no published detail
+  // page, so they are never labelled Available. They get only the
+  // neutral "Coming soon — ask us" chip (R2+R3). Full courses get
+  // no status chip at all — no status is claimed for them here.
+  catalogOnly?: boolean;
 }) {
   return (
     <article
       data-reveal
-      className="group flex h-full flex-col overflow-hidden rounded-[18px] border border-line bg-parchment shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_rgba(31,24,16,0.13)]"
+      className="group flex h-full flex-col overflow-hidden modern-card"
     >
       {image ? (
         <Link href={`/trainings/${slug}`} className="relative block overflow-hidden" aria-label={title}>
@@ -115,47 +119,48 @@ export function CourseCardBody({
             width={600}
             height={340}
             sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-            className="h-44 w-full object-cover sepia-[0.14] transition duration-500 group-hover:scale-[1.04]"
+            className="aspect-video w-full object-cover transition duration-500 group-hover:scale-[1.04]"
           />
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/0 to-ink/10"
-          />
-          <span className="eyebrow absolute right-3 top-3 rounded-md bg-brand px-2.5 py-1.5 text-white shadow-lg">
+          <span className="absolute right-3 top-3 rounded-full bg-brand px-3 py-1.5 text-[11px] font-bold text-white shadow-lg">
             Free Demo
           </span>
           {duration && (
-            <span className="absolute bottom-3 left-3 rounded-md bg-ink/85 px-2.5 py-1.5 font-mono text-[11.5px] font-medium text-paper">
+            <span className="absolute bottom-3 left-3 rounded-full bg-ink/85 px-3 py-1.5 text-[12px] font-medium text-paper">
               {duration}
             </span>
           )}
         </Link>
       ) : (
-        <div className="flex h-44 w-full items-center justify-center bg-navy px-6 text-center">
-          <span className="font-display text-lg font-semibold text-paper">{category}</span>
+        <div className="flex aspect-video w-full items-center justify-center design-led-card px-6 text-center">
+          <span className="text-lg font-bold text-paper">{category}</span>
         </div>
       )}
-      <div className="flex grow flex-col p-6">
-        <p>
-          <span className="eyebrow inline-block rounded-md bg-brand-soft px-2.5 py-1.5 text-signal-strong">
+      <div className="flex grow flex-col p-5">
+        <p className="flex flex-wrap items-center gap-2">
+          <span className="modern-chip bg-brand-soft text-signal-strong">
             {category}
           </span>
+          {catalogOnly && (
+            <span className="modern-chip border border-line-strong text-body">
+              Coming soon — ask us
+            </span>
+          )}
         </p>
-        <h3 className="mt-3.5 text-[19px] font-semibold leading-snug text-heading">
+        <h3 className="mt-3 font-sans text-[17px] font-bold leading-snug tracking-tight text-heading">
           <Link href={`/trainings/${slug}`} className="transition-colors hover:text-signal">
             {title}
           </Link>
         </h3>
         {duration && !image && (
-          <p className="mt-2 font-mono text-[12.5px] font-medium text-signal-strong">
+          <p className="mt-2 text-[12.5px] font-medium text-signal-strong">
             Duration — {duration}
           </p>
         )}
         {summary && <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{summary}</p>}
-        <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+        <div className="mt-auto flex items-center justify-between gap-3 pt-5">
           <Link
             href={`/trainings/${slug}`}
-            className="inline-block text-sm font-bold text-signal transition-colors hover:text-signal-strong"
+            className="inline-flex min-h-[44px] items-center text-sm font-bold text-signal transition-colors hover:text-signal-strong"
           >
             Read More{" "}
             <span aria-hidden className="inline-block transition-transform group-hover:translate-x-0.5">
@@ -164,7 +169,7 @@ export function CourseCardBody({
           </Link>
           <Link
             href={`/trainings/${slug}#demo`}
-            className="inline-block rounded-lg bg-ink px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.08em] text-paper transition-colors hover:bg-brand"
+            className="inline-flex min-h-[44px] items-center rounded-full bg-ink px-4 text-[12px] font-bold text-paper transition-colors hover:bg-brand"
           >
             Free Demo
           </Link>
@@ -183,6 +188,7 @@ export function CourseCard({ course }: { course: Course }) {
       summary={course.summary}
       image={course.image}
       duration={course.duration}
+      catalogOnly={course.catalogOnly}
     />
   );
 }
@@ -192,21 +198,21 @@ export function ServiceCard({ service }: { service: Service }) {
   return (
     <article
       data-reveal
-      className="group relative flex flex-col overflow-hidden rounded-[18px] border border-line bg-parchment px-7 py-8 shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_rgba(31,24,16,0.12)]"
+      className="group relative flex flex-col overflow-hidden modern-card px-7 py-8"
     >
       {idx >= 0 && (
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-1 -top-4 font-display text-[72px] font-semibold leading-none text-heading/[0.05]"
+          className="pointer-events-none absolute -right-1 -top-4 font-sans text-[72px] font-bold leading-none text-heading/[0.05]"
         >
           {String(idx + 1).padStart(2, "0")}
         </span>
       )}
-      <span className="block h-[3px] w-10 rounded-full bg-brand transition-all duration-300 group-hover:w-16" aria-hidden />
-      <p className="eyebrow mt-4 text-[10.5px] text-signal-strong">
+      <span className="block h-1 w-10 rounded-full bg-brand transition-all duration-300 group-hover:w-16" aria-hidden />
+      <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.18em] text-signal-strong">
         Service {idx >= 0 ? String(idx + 1).padStart(2, "0") : ""}
       </p>
-      <h3 className="mt-2 text-[21px] font-semibold text-heading">
+      <h3 className="mt-2 font-sans text-[20px] font-bold leading-snug tracking-tight text-heading">
         <Link href={`/services/${service.slug}`} className="transition-colors hover:text-signal">
           {service.title}
         </Link>
@@ -279,7 +285,7 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
             key={f.q}
             className="faq-item rounded-2xl border border-line bg-parchment px-6 py-5 transition-shadow duration-300 hover:shadow-[0_14px_28px_rgba(31,24,16,0.08)]"
           >
-            <summary className="flex cursor-pointer items-center justify-between gap-4 font-display text-[17px] font-semibold text-heading">
+            <summary className="flex cursor-pointer items-center justify-between gap-4 font-sans text-[16px] font-bold tracking-tight text-heading">
               {f.q}
               <span aria-hidden className="faq-plus shrink-0 text-xl font-normal leading-none text-signal">
                 +
@@ -489,7 +495,7 @@ export function BlogCards() {
         <article
           key={p.title}
           data-reveal
-          className="group flex flex-col overflow-hidden rounded-[18px] border border-line bg-parchment shadow-[0_1px_2px_rgba(31,24,16,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_rgba(31,24,16,0.13)]"
+          className="group flex flex-col overflow-hidden modern-card"
         >
           <a href={p.url} target="_blank" rel="noreferrer" className="block overflow-hidden">
             <Image
@@ -498,11 +504,11 @@ export function BlogCards() {
               width={600}
               height={340}
               sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-              className="h-44 w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+              className="aspect-video w-full object-cover transition duration-500 group-hover:scale-[1.04]"
             />
           </a>
-          <div className="flex grow flex-col p-6">
-            <h3 className="font-display text-[17px] font-semibold leading-snug text-heading">
+          <div className="flex grow flex-col p-5">
+            <h3 className="font-sans text-[17px] font-bold leading-snug tracking-tight text-heading">
               <a
                 href={p.url}
                 target="_blank"
@@ -553,7 +559,7 @@ export function FeatureTrio() {
               <p className="font-mono text-[12px] font-semibold text-brand-bright">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mt-1.5 font-display text-[21px] font-semibold text-paper">{t}</h3>
+              <h3 className="mt-1.5 font-sans text-[20px] font-bold tracking-tight text-paper">{t}</h3>
             </div>
           ))}
           <Link href="/contact-us" className="btn-primary whitespace-nowrap">

@@ -181,3 +181,83 @@ introduced as a brand colour in either theme.
   the Nexus brand system unless the user explicitly reinstates it.
 - Any future brand refresh: if the logo files change, this document and
   the token system must be re-sampled, not hand-edited to a new hue.
+
+---
+
+## v2 — R1 supporting tokens (2026-10-27, NOT a rewrite of the v1 sampling)
+
+Status: R1 only. The v1 sampling above is unchanged. These tokens
+were added because the owner directed that logo colours are the
+anchor, not the only colours, and Das (UI review, 2026-10-27)
+agreed that interpretation while requiring that any pairing be
+contrast-checked individually. Deep blue and teal below are
+SUPPORTING colours only: never a primary CTA, never outranking
+logo orange #E57439 / charcoal #434140, never a second brand.
+Logo files are untouched.
+
+Tailwind names (globals.css `@theme` + `.dark` overrides):
+`nexus-support-deep`, `nexus-support-deep-soft`,
+`nexus-support-teal`, `nexus-support-teal-strong`,
+`nexus-support-canvas`.
+
+### Light theme values and computed WCAG ratios
+
+| Token | Value | Approved pairings (computed) | Ratio |
+|---|---|---|---|
+| nexus-support-deep | #17324D | White #FFFFFF on it | 13.13:1 AA normal |
+| nexus-support-deep | #17324D | Paper #FFFBF5 on it | 12.73:1 AA normal |
+| nexus-support-deep | #17324D | On canvas-alt #F7F5F0 (as text) | 12.05:1 AA normal |
+| nexus-support-deep | #17324D | On deep-soft #EAF0F5 (as text) | 11.43:1 AA normal |
+| nexus-support-deep-soft | #EAF0F5 | Ink #2A2726 on it | 12.90:1 AA normal |
+| nexus-support-deep-soft | #EAF0F5 | Brand-700 #9C3E18 on it | 5.87:1 AA normal |
+| nexus-support-deep-soft | #EAF0F5 | Teal #0D766E on it | 4.77:1 AA normal |
+| nexus-support-teal | #0D766E | On white #FFFFFF (as text) | 5.48:1 AA normal |
+| nexus-support-teal | #0D766E | On canvas #FFFBF5 (as text) | 5.31:1 AA normal |
+| nexus-support-teal | #0D766E | White #FFFFFF on it | 5.48:1 AA normal |
+| nexus-support-teal-strong | #0A5C55 | On white #FFFFFF (as text) | 7.85:1 AA normal |
+| nexus-support-teal-strong | #0A5C55 | On canvas-alt #F7F5F0 (as text) | 7.21:1 AA normal |
+| nexus-support-teal-strong | #0A5C55 | White #FFFFFF on it | 7.85:1 AA normal |
+| nexus-support-canvas | #F7F5F0 | Ink #2A2726 on it | 13.61:1 AA normal |
+| nexus-support-canvas | #F7F5F0 | Brand-700 #9C3E18 on it | 6.19:1 AA normal |
+| nexus-support-canvas | #F7F5F0 | Deep #17324D on it | 12.05:1 AA normal |
+
+### Dark theme values and computed WCAG ratios
+
+Dark values: deep #1D3A5C, deep-soft #16283C, teal #2AB3A3,
+teal-strong #5EEAD4, canvas #201C19. Page canvas in dark is #171412.
+
+| Pairing | Ratio |
+|---|---|
+| Paper #FFFBF5 on deep #1D3A5C | 11.24:1 AA normal |
+| White #FFFFFF on deep #1D3A5C | 11.59:1 AA normal |
+| Paper #FFFBF5 on deep-soft #16283C | 14.52:1 AA normal |
+| Muted #D8D2CD on deep #1D3A5C | 7.74:1 AA normal |
+| Teal-bright #5EEAD4 on canvas #171412 | 12.40:1 AA normal |
+| Teal #2AB3A3 on canvas #171412 | 7.05:1 AA normal |
+| Paper #FFFBF5 on canvas #201C19 | 16.41:1 AA normal |
+| Brand-bright #FF8A4C on canvas #171412 | 7.85:1 AA normal |
+| Brand-bright #FF8A4C on deep #1D3A5C | 4.96:1 AA normal |
+
+### FORBIDDEN pairings (computed, do not use)
+
+| Pairing | Ratio | Verdict |
+|---|---|---|
+| Brand-600 #C24E1F on canvas-alt #F7F5F0 | 4.38:1 | FAILS AA normal (large text only) — use brand-700 #9C3E18 (6.19:1) instead |
+| Brand-600 #C24E1F on deep-soft #EAF0F5 | 4.15:1 | FAILS AA normal (large text only) — use brand-700 #9C3E18 (5.87:1) instead |
+| Sampled orange #E57439 as normal text on white | 3.05:1 | FAILS AA normal (already recorded in v1) — graphics / large text / on-dark only |
+
+### Where R1 uses the supporting tokens
+
+- Featured mega-panel / mobile featured card: `nexus-support-deep`
+  background with paper text (12.73:1 light, 11.24:1 dark).
+- Menu / search hover backgrounds: `nexus-support-deep-soft`
+  with heading text (12.90:1 light, 14.52:1 dark for paper on
+  deep-soft in dark).
+- Search kind labels and mobile column titles:
+  `nexus-support-teal-strong` (7.85:1 light on white, 12.40:1
+  dark on canvas).
+- No R1 component uses a supporting colour for a primary CTA.
+  Primary CTA remains the logo-orange gradient (`btn-primary`).
+- `nexus-support-canvas` is defined for R2/R3 section bands;
+  R1 header code does not yet apply it to page sections, so no
+  page claims a new section treatment from R1 alone.

@@ -161,6 +161,19 @@
   --color-nexus-focus: #c24e1f;
   --color-nexus-overlay: #1e1c1bcc;
 
+  /* NEXUS R1 supporting tokens (BRAND-TOKENS.md §v2, 2026-10-27).
+     Logo anchor unchanged: #E57439 / #434140 remain brand.
+     Deep blue + teal are SUPPORTING colours only — never primary
+     CTA, never outranking logo orange/charcoal. Every pairing in
+     the v2 table was contrast-computed before use; the forbidden
+     pairings there (e.g. brand-600 on canvas-alt, 4.38:1) are not
+     used anywhere in R1. */
+  --color-nexus-support-deep: #17324d;
+  --color-nexus-support-deep-soft: #eaf0f5;
+  --color-nexus-support-teal: #0d766e;
+  --color-nexus-support-teal-strong: #0a5c55;
+  --color-nexus-support-canvas: #f7f5f0;
+
   /* WhatsApp, deepened so white text/icons meet AA (5.41:1);
      wa-bright is the on-ink variant (10.7:1). */
   --color-wa: #0b7a43;
@@ -222,6 +235,15 @@
     --color-nexus-text-primary: #fffbf5;
     --color-nexus-text-secondary: #d8d2cd;
     --color-nexus-text-muted: #9a9490;
+    /* R1 supporting tokens, dark theme. Values are lighter than
+       the light theme where a surface must stay visible on
+       #171412, and text colours are brighter for the same reason.
+       Pairings are in BRAND-TOKENS.md §v2 (dark table). */
+    --color-nexus-support-deep: #1d3a5c;
+    --color-nexus-support-deep-soft: #16283c;
+    --color-nexus-support-teal: #2ab3a3;
+    --color-nexus-support-teal-strong: #5eead4;
+    --color-nexus-support-canvas: #201c19;
     --color-success-surface: #14301f;
     --color-success-text: #bbf7d0;
     --color-success-heading: #dcfce7;
@@ -269,6 +291,31 @@
     body {
       padding-bottom: 57px;
     }
+  }
+  /* R1 responsiveness safeguards (2026-10-27, owner 100%-responsive
+     requirement). These are in @layer base, so Tailwind utilities
+     (logo heights, explicit widths) still win where a component
+     sets them deliberately. They prevent the common overflow
+     causes in content the header touches: images wider than their
+     container, and long words / URLs forcing a page sideways.
+     They do NOT use overflow-x: hidden/clip on html/body — that
+     would hide overflow instead of fixing it, and would mask the
+     per-width check in the R1 report. */
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+  p,
+  li,
+  a,
+  td,
+  th,
+  h1,
+  h2,
+  h3,
+  h4 {
+    overflow-wrap: break-word;
   }
 }
 
@@ -659,6 +706,41 @@
   gap: 12px;
   border-bottom: 1px solid var(--color-nexus-line);
   padding: 10px 12px;
+}
+/* R1 responsiveness: nexus-row is a label + detail row used on
+   the homepage and elsewhere. Below 640px it stacks instead of
+   squeezing a fixed-width label (w-40 / w-36 / w-32) beside a
+   detail into a 320px viewport. At sm+ it keeps its row layout. */
+@media (max-width: 639px) {
+  .nexus-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}
+/* R1 mega-panel columns: driven by the menu data, not by a
+   hard-coded column count in Header.tsx. --menu-cols is set from
+   activeMenu.columns.length (capped at 3 per row for readability;
+   a 4th+ column wraps to a second row, it does not overflow).
+   Single column below 640px, data-driven columns at sm+. */
+.nexus-menu-cols {
+  display: grid;
+  gap: 1.75rem;
+}
+@media (min-width: 640px) {
+  .nexus-menu-cols {
+    grid-template-columns: repeat(var(--menu-cols, 3), minmax(0, 1fr));
+  }
+}
+/* R1 reduced motion: header/menu/search/drawer transitions in R1
+   are colour changes and chevron rotations only (no animation
+   library, no entrance motion). Under prefers-reduced-motion they
+   are disabled, so state changes are instant. */
+@media (prefers-reduced-motion: reduce) {
+  header .transition-colors,
+  header .transition-transform {
+    transition: none;
+  }
 }
 /* Status chip: Planned / Waitlist / Available — never a claim. */
 @utility nexus-status {

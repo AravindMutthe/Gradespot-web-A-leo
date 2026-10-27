@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { business, telHref } from "@/data/site";
 import { SocialLinks } from "@/components/ui";
 import { navCourses } from "@/data/catalogue-nav";
@@ -10,111 +11,254 @@ import { services } from "@/data/services";
 import { nexusMenus, type NavMenu } from "@/data/nexus-nav";
 import { enabledHeaderCtas, type HeaderCta } from "@/data/site-settings";
 
-// Header — GradeSpot Nexus Release 1 (docs/frontend-v2/SPEC.md §2).
+// Header — GradeSpot Nexus, R1 redesign (2026-10-27, audit
+// docs/frontend-v2/UI-REDESIGN-AUDIT-2026-10-27.md, Pass R1 only).
 // Six primary menus only: Academy, Certifications, Career Pathways,
-// Labs & Projects, IT Solutions, Company & Resources. Desktop mega panels are
-// three structured columns plus a featured panel; mobile is a
-// one-level accordion (each top menu expands once; groups inside are
-// headings, not nested accordions). Panels open on hover AND click,
-// are keyboard-operable (chevron buttons, Escape closes, focus
-// opens), and the header search filters the real catalogue + services
-// — it never invents a destination. Primary CTA is "Talk to an
-// Advisor" → /contact-us (the existing advisory flow). Registration
-// is contextual only: a small link inside the Training panel /
-// accordion, never a prominent button on every page.
-// Logo plate: UNTOUCHED — official artwork only, per-theme swap.
-// Do not recolor, filter, crop or replace the logo files. Nexus
-// brand colours come from BRAND-TOKENS.md, not from the plate.
-// CTA harmonization (Nexus revenue application): the primary actions
-// are Book Free Demo → /register (the existing demo/registration lead
-// flow, no payment taken there), Explore Programs → /trainings, and
-// Talk to an Advisor → /contact-us (kept, never removed). The full trio
-// shows at xl and on mobile; at the compact 960–1280px nav breakpoint
-// only Talk to an Advisor shows, so the bar cannot overflow — the trio
-// is also complete on the homepage hero at every size.
+// Labs & Projects, IT Solutions, Company & Resources. Labels, group
+// hrefs, and every link in src/data/nexus-nav.ts are unchanged in R1:
+// R1 changes presentation and interaction only (tokens, header
+// hierarchy, mega-panel layout, mobile drawer, search index), never
+// a destination. Logo plate: UNTOUCHED — official artwork only,
+// per-theme swap. Do not recolor, filter, crop or replace the logo
+// files. Brand anchor remains sampled logo orange #E57439 /
+// charcoal #434140; supporting deep blue #17324D and teal #0D766E
+// (dark-theme values in globals.css) are supporting colours only —
+// never a primary CTA, never outranking logo orange/charcoal.
+// CTA hierarchy (one hierarchy at every size): primary
+// "Talk to an Advisor" → /contact-us is always present in the bar
+// on desktop and at the top of the mobile drawer; secondary
+// "Explore Programs" → /trainings is always present alongside it
+// on desktop and in the drawer; "Book Free Demo" → /register
+// (outline) shows only where it fits without a second header row
+// (xl bar; full-width in the drawer). No permanent second header
+// row, no sticky two-row header. Search is an icon-triggered
+// popover on compact sizes, inline at xl.
+// Menu activation: CLICK is primary. Hover is an enhancement only
+// (opens, never hover-only, with a 400ms gap-tolerant close delay
+// and a panel that keeps itself open on hover). Keyboard: Enter /
+// Space on a trigger opens, Escape closes and returns focus to
+// that trigger. Every opener is at least 44×44px, with a visible
+// open state (background + ring + rotated chevron), not only a glyph.
 
 type PanelKey = NavMenu["key"];
 
-const navLink =
-  "block whitespace-nowrap px-2 py-3 text-[14px] font-semibold text-nav underline-offset-4 transition-colors hover:text-signal hover:underline hover:decoration-2 nav:px-1.5 nav:py-2.5 nav:text-[12px] xl:px-2.5 xl:py-3 xl:text-[13px]";
-const chevronBtn =
-  "-ml-1 flex h-11 w-6 items-center justify-center text-[12px] text-nav transition-colors hover:text-signal nav:-ml-0.5 nav:w-4 xl:-ml-1 xl:w-6";
-const mobileLink =
-  "flex min-h-[48px] items-center px-3 text-[15px] font-semibold text-heading transition-colors hover:text-signal";
+interface SearchHit {
+  label: string;
+  href: string;
+  kind: string;
+  search: string;
+}
 
-function HeaderSearch({ onNavigate, compact }: { onNavigate?: () => void; compact?: boolean }) {
+function buildSearchIndex(): SearchHit[] {
+  const hits: SearchHit[] = [];
+  const seen = new Set<string>();
+  const push = (label: string, href: string, kind: string, search: string) => {
+    const key = `${href}|${label.toLowerCase()}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    hits.push({ label, href, kind, search: `${label} ${search}`.toLowerCase() });
+  };
+  // Courses first, then services, then menu destinations. No hit is
+  // invented: every href below comes from catalogue-nav.ts,
+  // services data, or nexus-nav.ts as it exists in this repo.
+  for (const c of navCourses) {
+    push(c.label, `/trainings/${c.slug}`, "Training", `${c.title} ${c.category} ${c.code ?? ""}`);
+  }
+  for (const s of services) {
+    push(s.title, `/services/${s.slug}`, "Service", s.title);
+  }
+  for (const menu of nexusMenus) {
+    push(menu.label, menu.href, "Menu", menu.label);
+    for (const col of menu.columns) {
+      for (const link of col.links) {
+        push(link.label, link.href, `Menu · ${menu.label}`, `${col.title} ${menu.label} ${link.note ?? ""}`);
+      }
+    }
+    push(menu.featured.ctaLabel, menu.featured.ctaHref, `Menu · ${menu.label}`, `${menu.featured.title} ${menu.label}`);
+  }
+  return hits;
+}
+
+const SEARCH_INDEX = buildSearchIndex();
+
+function HeaderSearchInner({
+  idPrefix,
+  onNavigate,
+  autoFocus,
+}: {
+  idPrefix: string;
+  onNavigate?: () => void;
+  autoFocus?: boolean;
+}) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
-  const [focused, setFocused] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
   const q = query.trim().toLowerCase();
   const results = useMemo(() => {
     if (q.length < 2) return [];
-    const courseHits = navCourses
-      .filter((c) => c.label.toLowerCase().includes(q) || c.title.toLowerCase().includes(q) || c.category.toLowerCase().includes(q))
-      .slice(0, 5)
-      .map((c) => ({ label: c.label, href: `/trainings/${c.slug}`, kind: "Training" }));
-    const serviceHits = services
-      .filter((s) => s.title.toLowerCase().includes(q))
-      .slice(0, 3)
-      .map((s) => ({ label: s.title, href: `/services/${s.slug}`, kind: "Service" }));
-    return [...courseHits, ...serviceHits].slice(0, 8);
+    const scored = SEARCH_INDEX.filter((h) => h.search.includes(q)).map((h) => ({
+      ...h,
+      starts: h.label.toLowerCase().startsWith(q) ? 0 : 1,
+    }));
+    scored.sort((a, b) => a.starts - b.starts || a.label.length - b.label.length);
+    return scored.slice(0, 10);
   }, [q]);
-  const showResults = focused && q.length >= 2;
+  const showResults = open && q.length >= 2;
+  const close = () => {
+    setOpen(false);
+    setActive(-1);
+  };
+  const choose = (hit: SearchHit) => {
+    setQuery("");
+    close();
+    onNavigate?.();
+    router.push(hit.href);
+  };
   return (
-    <div className="relative">
-      <label htmlFor={compact ? "header-search-mobile" : "header-search"} className="sr-only">
-        Search courses, services, certifications
+    <div
+      className="relative"
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) close();
+      }}
+    >
+      <label htmlFor={`${idPrefix}-input`} className="sr-only">
+        Search courses, services, and menu pages
       </label>
       <input
-        id={compact ? "header-search-mobile" : "header-search"}
+        ref={inputRef}
+        id={`${idPrefix}-input`}
         type="search"
-        role="searchbox"
+        role="combobox"
+        aria-expanded={showResults}
+        aria-controls={`${idPrefix}-listbox`}
+        aria-activedescendant={active >= 0 ? `${idPrefix}-option-${active}` : undefined}
+        autoFocus={autoFocus}
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => window.setTimeout(() => setFocused(false), 150)}
-        onKeyDown={(e) => {
-          if (e.key === "Escape") setQuery("");
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setOpen(true);
+          setActive(-1);
         }}
-        placeholder="Search courses, services, certifications…"
-        className="w-full rounded-full border border-line bg-parchment px-4 py-2.5 text-[13px] text-heading outline-none transition-colors placeholder:text-body/70 focus:border-brand nav:w-[150px] nav:focus:w-[210px] xl:w-[180px] xl:focus:w-[240px]"
+        onFocus={() => setOpen(true)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            setQuery("");
+            close();
+            inputRef.current?.blur();
+          } else if (e.key === "ArrowDown" && results.length > 0) {
+            e.preventDefault();
+            setActive((a) => (a + 1) % results.length);
+          } else if (e.key === "ArrowUp" && results.length > 0) {
+            e.preventDefault();
+            setActive((a) => (a <= 0 ? results.length - 1 : a - 1));
+          } else if (e.key === "Enter" && active >= 0 && results[active]) {
+            e.preventDefault();
+            choose(results[active]);
+          }
+        }}
+        placeholder="Search courses, services, pages…"
+        className="w-full rounded-full border border-line bg-parchment px-4 py-2.5 text-[13px] text-heading outline-none transition-colors placeholder:text-body/70 focus:border-brand"
       />
       {showResults && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-line bg-parchment shadow-[0_28px_56px_rgba(31,24,16,0.18)] nav:w-[300px]">
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-line bg-parchment shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
           {results.length === 0 ? (
             <p className="px-4 py-3 text-[13px] text-body" role="status">
-              No courses or services match. Try “CCNA”, “Azure” or “SOC”.
+              No matching course, service, or menu page. Try “CCNA”, “Azure”, “Career”, or “Labs”.
             </p>
           ) : (
-            <ul>
-              {results.map((r) => (
-                <li key={r.href}>
-                  <Link
-                    href={r.href}
-                    onClick={() => {
-                      setQuery("");
-                      onNavigate?.();
-                    }}
-                    className="flex items-center justify-between gap-3 px-4 py-2.5 text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-signal"
+            <ul id={`${idPrefix}-listbox`} role="listbox">
+              {results.map((r, i) => (
+                <li
+                  key={`${r.href}|${r.label}`}
+                  id={`${idPrefix}-option-${i}`}
+                  role="option"
+                  aria-selected={i === active}
+                  className={i === active ? "bg-nexus-support-deep-soft" : undefined}
+                >
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    onMouseEnter={() => setActive(i)}
+                    onClick={() => choose(r)}
+                    className="flex min-h-[44px] w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-[13.5px] font-semibold text-heading transition-colors hover:bg-nexus-support-deep-soft"
                   >
                     <span>{r.label}</span>
-                    <span className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.06em] text-signal-strong">
+                    <span className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.06em] text-nexus-support-teal-strong">
                       {r.kind}
                     </span>
-                  </Link>
+                  </button>
                 </li>
               ))}
             </ul>
           )}
-          <Link
-            href="/trainings#course-search"
-            onClick={() => {
-              setQuery("");
-              onNavigate?.();
+          <div className="flex items-center justify-between border-t border-line">
+            <Link
+              href="/trainings#course-search"
+              onClick={() => {
+                setQuery("");
+                close();
+                onNavigate?.();
+              }}
+              className="block px-4 py-2.5 text-[13px] font-bold text-signal hover:text-signal-strong"
+            >
+              Search all trainings →
+            </Link>
+            <button
+              type="button"
+              onClick={close}
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center px-3 text-[13px] font-semibold text-heading"
+              aria-label="Close search results"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SearchPopover({ idPrefix }: { idPrefix: string }) {
+  const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  return (
+    <div className="relative">
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={`${idPrefix}-panel`}
+        aria-label={open ? "Close search" : "Open search"}
+        className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-line bg-parchment text-[16px] text-heading transition-colors hover:text-signal"
+      >
+        <span aria-hidden>⌕</span>
+      </button>
+      {open && (
+        <div
+          id={`${idPrefix}-panel`}
+          className="absolute right-0 top-full z-50 mt-2 w-[320px] max-w-[92vw] rounded-2xl border border-line bg-parchment p-3 shadow-[0_28px_56px_rgba(31,24,16,0.18)]"
+        >
+          <HeaderSearchInner
+            idPrefix={idPrefix}
+            autoFocus
+            onNavigate={() => {
+              setOpen(false);
+              buttonRef.current?.focus();
             }}
-            className="block border-t border-line px-4 py-2.5 text-[13px] font-bold text-signal hover:text-signal-strong"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              buttonRef.current?.focus();
+            }}
+            className="mt-2 flex min-h-[44px] w-full items-center justify-center rounded-lg text-[13px] font-semibold text-heading"
           >
-            Search all trainings →
-          </Link>
+            Close search
+          </button>
         </div>
       )}
     </div>
@@ -123,85 +267,103 @@ function HeaderSearch({ onNavigate, compact }: { onNavigate?: () => void; compac
 
 function MenuLinkItem({ label, href, external, note, onNavigate }: { label: string; href: string; external?: boolean; note?: string; onNavigate?: () => void }) {
   const cls =
-    "block rounded-lg px-2 py-[7px] text-[13.5px] font-semibold text-heading transition-colors hover:bg-cream hover:text-signal";
+    "flex min-h-[44px] items-center rounded-lg px-2 py-2 text-[13.5px] font-semibold text-heading transition-colors hover:bg-nexus-support-deep-soft";
   return external ? (
     <a href={href} target="_blank" rel="noreferrer" className={cls}>
-      {label} ↗{note ? <span className="block text-[11.5px] font-normal text-body">{note}</span> : null}
+      <span>
+        {label} ↗{note ? <span className="block text-[11.5px] font-normal text-body">{note}</span> : null}
+      </span>
     </a>
   ) : (
     <Link href={href} onClick={onNavigate} className={cls}>
-      {label}
-      {note ? <span className="block text-[11.5px] font-normal text-body">{note}</span> : null}
+      <span>
+        {label}
+        {note ? <span className="block text-[11.5px] font-normal text-body">{note}</span> : null}
+      </span>
     </Link>
   );
 }
 
+// Featured panel rule (R1, objective, same on desktop and mobile):
+// show the featured panel only where its CTA goes somewhere the
+// group link itself does not go. Where ctaHref === menu.href, the
+// destination is already reachable as "View {group}", so repeating
+// it as a featured panel adds decoration, not a destination.
+function showFeatured(menu: NavMenu): boolean {
+  return menu.featured.ctaHref !== menu.href;
+}
+
 export default function Header() {
-  // Header CTAs come from the config seam (siteSettings.headerCtas),
-  // not from hardcoded Links: an admin may reorder, relabel or
-  // disable one, and the styles below follow the CTA's style field,
-  // preserving the existing breakpoint behaviour (full trio at xl
-  // and on mobile; only the "primary" CTA at the compact nav
-  // breakpoint, so the bar cannot overflow).
   const headerCtas = enabledHeaderCtas();
   const ctaByStyle = (style: HeaderCta["style"]) => headerCtas.find((c) => c.style === style);
+  const primaryCta = ctaByStyle("primary");
+  const secondaryCta = ctaByStyle("text");
+  const outlineCta = ctaByStyle("outline");
+
   const [open, setOpen] = useState(false);
   const [panel, setPanel] = useState<PanelKey | null>(null);
-  const [mobilePanel, setMobilePanel] = useState<PanelKey | null>(null);
+  const [mobileGroup, setMobileGroup] = useState<PanelKey | null>(null);
+  const [openColumns, setOpenColumns] = useState<Record<string, boolean>>({});
   const closeTimer = useRef<number | null>(null);
+  const triggerRefs = useRef(new Map<string, HTMLButtonElement>());
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const drawerCloseRef = useRef<HTMLButtonElement>(null);
 
-  const openNow = (key: PanelKey) => {
+  const clearTimer = () => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    closeTimer.current = null;
+  };
+  const openPanel = (key: PanelKey) => {
+    clearTimer();
     setPanel(key);
   };
+  // Gap-tolerant close: 400ms, cancelled by re-entering the trigger
+  // or the panel itself, so a small pointer gap never drops the menu.
   const scheduleClose = () => {
-    if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => setPanel(null), 240);
+    clearTimer();
+    closeTimer.current = window.setTimeout(() => setPanel(null), 400);
+  };
+  const closePanel = (returnFocusKey?: PanelKey) => {
+    clearTimer();
+    setPanel(null);
+    if (returnFocusKey) triggerRefs.current.get(returnFocusKey)?.focus();
   };
   const togglePanel = (key: PanelKey) => {
-    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    clearTimer();
     setPanel((p) => (p === key ? null : key));
   };
-  const closeOnBlur = (e: React.FocusEvent) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) scheduleClose();
-  };
-  const onPanelKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") setPanel(null);
+
+  const closeDrawer = () => {
+    setOpen(false);
+    menuButtonRef.current?.focus();
   };
 
-  const megaTrigger = (menu: NavMenu) => (
-    <div
-      key={menu.key}
-      className="relative flex items-center"
-      onMouseEnter={() => openNow(menu.key)}
-      onMouseLeave={scheduleClose}
-      onFocus={() => openNow(menu.key)}
-      onBlur={closeOnBlur}
-    >
-      <Link className={navLink} href={menu.href} onClick={() => setPanel(null)}>
-        {menu.label}
-      </Link>
-      <button
-        type="button"
-        className={chevronBtn}
-        aria-expanded={panel === menu.key}
-        aria-controls={`mega-${menu.key}`}
-        aria-label={`${menu.label} menu`}
-        onClick={() => togglePanel(menu.key)}
-      >
-        <span aria-hidden>{panel === menu.key ? "▴" : "▾"}</span>
-      </button>
-    </div>
-  );
+  // Drawer: Escape closes, body scroll locked while open, focus to
+  // the drawer Close button on open. Group / column state is kept
+  // across taps and across drawer close — it is not reset on
+  // every tap.
+  useEffect(() => {
+    if (!open) return;
+    drawerCloseRef.current?.focus();
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeDrawer();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open ]);
 
   const activeMenu = nexusMenus.find((m) => m.key === panel) ?? null;
+  const activeMobileMenu = nexusMenus.find((m) => m.key === mobileGroup) ?? null;
 
-  // Utility strip — spec §2 top bar: Hyderabad, India · Online &
-  // Classroom Training, plus Contact and Student Support links.
-  // Rendered twice, one instance per breakpoint (display:none hides
-  // the other, so assistive tech sees only one), exactly as in v1:
-  // below the 960px nav breakpoint it scrolls away; at/above nav it
-  // sticks with the header.
+  // Utility strip — SINGLE instance, single behaviour in R1:
+  // it scrolls away with the page on every size; only the header
+  // bar itself is sticky. (Pre-R1 it was rendered twice, once per
+  // breakpoint, with different sticky behaviour.)
   const strip = (
     <div className="bg-ink-deep text-footer-text">
       <div className="wrap flex flex-nowrap items-center justify-between gap-x-6 overflow-hidden py-2 font-mono text-[11px] uppercase tracking-[0.14em]">
@@ -241,10 +403,33 @@ export default function Header() {
     </div>
   );
 
+  const ctaButtons = (
+    <>
+      {primaryCta && (
+        <Link href={primaryCta.href} className="btn-primary" onClick={() => setOpen(false)}>
+          {primaryCta.label}
+        </Link>
+      )}
+      {secondaryCta && (
+        <Link
+          href={secondaryCta.href}
+          className="flex min-h-[48px] items-center justify-center rounded-xl border-[1.5px] border-heading/60 px-4 text-[14px] font-bold text-heading"
+          onClick={() => setOpen(false)}
+        >
+          {secondaryCta.label}
+        </Link>
+      )}
+      {outlineCta && (
+        <Link href={outlineCta.href} className="btn-outline-navy w-full" onClick={() => setOpen(false)}>
+          {outlineCta.label}
+        </Link>
+      )}
+    </>
+  );
+
   return (
     <>
-      <div className="nav:hidden">{strip}</div>
-
+      {strip}
       <header className="sticky top-0 z-50">
         <a
           href="#main"
@@ -252,8 +437,6 @@ export default function Header() {
         >
           Skip to content
         </a>
-
-        <div className="hidden nav:block">{strip}</div>
 
         {/* Main navigation — paper bar, ink type, official logo.
             Logo plate UNTOUCHED from Leo v1: luminous parchment
@@ -272,7 +455,7 @@ export default function Header() {
                   alt="GradeSpot IT Solutions"
                   width={193}
                   height={60}
-                  className="h-12 w-auto nav:h-10 xl:h-12"
+                  className="h-10 w-auto xl:h-12"
                   priority
                 />
               </span>
@@ -282,102 +465,152 @@ export default function Header() {
                   alt="GradeSpot IT Solutions"
                   width={193}
                   height={60}
-                  className="h-12 w-auto nav:h-10 xl:h-12"
+                  className="h-10 w-auto xl:h-12"
                   priority
                 />
               </span>
             </Link>
 
             <nav className="hidden items-center nav:flex" aria-label="Primary">
-              {nexusMenus.map(megaTrigger)}
+              {nexusMenus.map((menu) => {
+                const isOpen = panel === menu.key;
+                return (
+                  <div
+                    key={menu.key}
+                    className="relative"
+                    onMouseEnter={() => openPanel(menu.key)}
+                    onMouseLeave={scheduleClose}
+                  >
+                    <button
+                      ref={(el) => {
+                        if (el) triggerRefs.current.set(menu.key, el);
+                        else triggerRefs.current.delete(menu.key);
+                      }}
+                      type="button"
+                      aria-expanded={isOpen}
+                      aria-haspopup="true"
+                      aria-controls={`mega-${menu.key}`}
+                      aria-label={`${menu.label} menu, ${isOpen ? "open" : "closed"}`}
+                      onClick={() => togglePanel(menu.key)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") closePanel(menu.key);
+                      }}
+                      className={`flex min-h-[44px] min-w-[44px] items-center gap-0.5 whitespace-nowrap rounded-lg px-1 py-2.5 text-[11px] font-semibold transition-colors xl:gap-1 xl:px-2.5 xl:text-[13px] ${
+                        isOpen
+                          ? "bg-nexus-support-deep-soft text-heading ring-2 ring-brand"
+                          : "text-nav hover:bg-nexus-support-deep-soft"
+                      }`}
+                    >
+                      {menu.label}
+                      <span aria-hidden className={`inline-block transition-transform ${isOpen ? "rotate-180" : ""}`}>
+                        ▾
+                      </span>
+                      <span className="sr-only">{isOpen ? "Open" : "Closed"}</span>
+                    </button>
+                  </div>
+                );
+              })}
               <div className="ml-2 hidden xl:block">
-                <HeaderSearch />
+                <HeaderSearchInner idPrefix="header-search-desktop" />
               </div>
-              {ctaByStyle("outline") && (
+              <div className="ml-2 hidden nav:block xl:hidden">
+                <SearchPopover idPrefix="header-search-compact" />
+              </div>
+              {secondaryCta && (
                 <Link
-                  href={ctaByStyle("outline")!.href}
-                  className="btn-outline-navy ml-3 hidden whitespace-nowrap xl:ml-2 xl:flex xl:min-h-[50px] xl:items-center xl:px-5 xl:text-[14px]"
+                  href={secondaryCta.href}
+                  className="ml-2 hidden whitespace-nowrap text-[13px] font-bold text-heading hover:text-signal nav:block xl:ml-3 xl:text-[14px]"
                 >
-                  {ctaByStyle("outline")!.label}
+                  {secondaryCta.label}
                 </Link>
               )}
-              {ctaByStyle("text") && (
+              {outlineCta && (
                 <Link
-                  href={ctaByStyle("text")!.href}
-                  className="hidden whitespace-nowrap text-[14px] font-bold text-heading hover:text-signal xl:ml-2 xl:block"
+                  href={outlineCta.href}
+                  className="btn-outline-navy ml-3 hidden whitespace-nowrap xl:flex xl:min-h-[50px] xl:items-center xl:px-5 xl:text-[14px]"
                 >
-                  {ctaByStyle("text")!.label}
+                  {outlineCta.label}
                 </Link>
               )}
-              {ctaByStyle("primary") && (
+              {primaryCta && (
                 <Link
-                  href={ctaByStyle("primary")!.href}
-                  className="btn-primary ml-3 whitespace-nowrap nav:ml-1.5 nav:min-h-[44px] nav:px-2.5 nav:text-[12.5px] xl:ml-3 xl:min-h-[50px] xl:px-7 xl:text-[15px]"
+                  href={primaryCta.href}
+                  className="btn-primary ml-2 whitespace-nowrap nav:min-h-[44px] nav:px-3 nav:text-[12px] xl:ml-3 xl:min-h-[50px] xl:px-7 xl:text-[15px]"
                 >
-                  {ctaByStyle("primary")!.label}
+                  {primaryCta.label}
                 </Link>
               )}
             </nav>
 
             <div className="flex items-center gap-2 nav:hidden">
+              <SearchPopover idPrefix="header-search-mobile" />
               <button
-                className="flex min-h-[48px] items-center rounded-xl border border-heading/25 px-5 text-sm font-semibold text-heading"
+                ref={menuButtonRef}
+                className="flex min-h-[48px] items-center rounded-xl border border-heading/25 px-3 text-sm font-semibold text-heading"
                 onClick={() => setOpen(!open)}
                 aria-expanded={open}
                 aria-label="Toggle menu"
               >
-                ☰ Menu
+                <span aria-hidden>☰</span>
+                <span className="hidden min-[360px]:inline">&nbsp;Menu</span>
               </button>
             </div>
           </div>
 
-          {/* Search row below the bar at the compact nav breakpoint,
-              where the inline search field does not fit. */}
-          <div className="hidden border-t border-line px-3 py-2 nav:block xl:hidden">
-            <HeaderSearch />
-          </div>
-
-          {/* ——— GENERIC MEGA PANEL: three columns + featured panel ——— */}
+          {/* ——— MEGA PANEL (R1): content-responsive columns, featured
+              only where its CTA is a distinct destination, click as
+              primary activation, hover as enhancement with a
+              gap-tolerant close. Internal scrolling only as a
+              fallback when the panel is taller than the viewport. ——— */}
           {activeMenu && (
             <div
               id={`mega-${activeMenu.key}`}
               className="absolute inset-x-0 top-full z-40 hidden nav:block"
-              onMouseEnter={() => openNow(activeMenu.key)}
+              onMouseEnter={() => openPanel(activeMenu.key)}
               onMouseLeave={scheduleClose}
-              onKeyDown={onPanelKeyDown}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") closePanel(activeMenu.key);
+              }}
             >
               <div className="mx-auto w-full max-w-[1240px] px-3 pb-4">
                 <div className="glass-panel overflow-hidden rounded-2xl border border-line border-t-2 border-t-brand shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
-                  <div className="grid max-h-[calc(100vh-170px)] grid-cols-[1fr_300px]">
-                    <div className="grid gap-7 overflow-y-auto p-6 sm:grid-cols-3">
-                      {activeMenu.columns.map((col) => (
-                        <div key={col.title}>
-                          <p className="eyebrow border-b-2 border-heading/70 pb-1.5 text-[10.5px] text-heading">
-                            {col.title}
-                          </p>
-                          <ul className="mt-2 space-y-0.5">
-                            {col.links.map((l) => (
-                              <li key={`${col.title}-${l.label}`}>
-                                <MenuLinkItem {...l} onNavigate={() => setPanel(null)} />
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="panel-ink overflow-y-auto p-5">
-                      <p className="eyebrow text-brand-bright">{activeMenu.featured.eyebrow}</p>
-                      <p className="mt-2 font-display text-[17px] font-semibold leading-snug text-paper">
-                        {activeMenu.featured.title}
-                      </p>
-                      <p className="mt-1.5 text-[12.5px] leading-5 text-paper/75">{activeMenu.featured.body}</p>
-                      <Link
-                        href={activeMenu.featured.ctaHref}
-                        onClick={() => setPanel(null)}
-                        className="mt-3 inline-block text-[13px] font-bold text-brand-bright hover:text-paper"
+                  <div className="max-h-[calc(100dvh-120px)] overflow-y-auto">
+                    <div className={`grid ${showFeatured(activeMenu) ? "lg:grid-cols-[1fr_280px]" : ""}`}>
+                      <div
+                        className="nexus-menu-cols p-6"
+                        style={{ "--menu-cols": Math.min(activeMenu.columns.length, 3) } as React.CSSProperties}
                       >
-                        {activeMenu.featured.ctaLabel} →
-                      </Link>
+                        {activeMenu.columns.map((col) => (
+                          <div key={col.title}>
+                            <p className="eyebrow border-b-2 border-heading/70 pb-1.5 text-[10.5px] text-heading">
+                              {col.title}
+                            </p>
+                            <ul className="mt-2 space-y-0.5">
+                              {col.links.map((l) => (
+                                <li key={`${col.title}-${l.label}`}>
+                                  <MenuLinkItem {...l} onNavigate={() => closePanel()} />
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                      {showFeatured(activeMenu) && (
+                        <div className="bg-nexus-support-deep p-5">
+                          <p className="eyebrow text-paper/70">{activeMenu.featured.eyebrow}</p>
+                          <p className="mt-2 font-display text-[17px] font-semibold leading-snug text-paper">
+                            {activeMenu.featured.title}
+                          </p>
+                          <p className="mt-1.5 text-[12.5px] leading-5 text-paper/80">{activeMenu.featured.body}</p>
+                          <Link
+                            href={activeMenu.featured.ctaHref}
+                            onClick={() => closePanel()}
+                            className="mt-3 inline-block min-h-[44px] text-[13px] font-bold text-paper underline underline-offset-4"
+                          >
+                            {activeMenu.featured.ctaLabel} →
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 bg-ink px-6 py-3">
@@ -386,8 +619,8 @@ export default function Header() {
                     </span>
                     <Link
                       href={activeMenu.href}
-                      onClick={() => setPanel(null)}
-                      className="text-[13px] font-bold text-brand-bright hover:text-paper"
+                      onClick={() => closePanel()}
+                      className="flex min-h-[44px] items-center text-[13px] font-bold text-brand-bright hover:text-paper"
                     >
                       View {activeMenu.label} →
                     </Link>
@@ -398,94 +631,137 @@ export default function Header() {
           )}
         </div>
 
-        {/* Mobile menu — one-level accordion, same six menus */}
+        {/* Mobile drawer (R1): fixed dialog, not a full-page scroll
+            dump. Group list → group view with collapsible columns,
+            sticky View-group action, search and CTAs at the top.
+            All six menus and all links from nexus-nav.ts are kept. */}
         {open && (
-          <nav className="border-b border-line bg-canvas nav:hidden" aria-label="Mobile">
-            <div className="wrap py-3">
-              <div className="pb-3">
-                <HeaderSearch compact onNavigate={() => setOpen(false)} />
+          <div className="fixed inset-0 z-[70] nav:hidden" role="presentation">
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={closeDrawer}
+              className="absolute inset-0 bg-black/50"
+            />
+            <aside
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu"
+              className="absolute left-0 top-0 flex h-full w-[min(420px,92vw)] flex-col bg-canvas shadow-2xl"
+            >
+              <div className="flex items-center justify-between border-b border-line px-3 py-2">
+                <span className="px-2 text-[15px] font-bold text-heading">Menu</span>
+                <button
+                  ref={drawerCloseRef}
+                  type="button"
+                  onClick={closeDrawer}
+                  aria-label="Close menu"
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-[16px] font-bold text-heading"
+                >
+                  <span aria-hidden>✕</span>
+                </button>
               </div>
-              <div className="grid grid-cols-2 gap-3 pb-2">
-                {ctaByStyle("primary") && (
-                  <Link href={ctaByStyle("primary")!.href} className="btn-primary" onClick={() => setOpen(false)}>
-                    {ctaByStyle("primary")!.label}
-                  </Link>
-                )}
-                {ctaByStyle("text") && (
-                  <Link
-                    href={ctaByStyle("text")!.href}
-                    className="flex min-h-[48px] items-center justify-center rounded-xl border-[1.5px] border-heading/60 px-4 text-[14px] font-bold text-heading"
-                    onClick={() => setOpen(false)}
-                  >
-                    {ctaByStyle("text")!.label}
-                  </Link>
-                )}
+              <div className="border-b border-line px-3 py-3">
+                <HeaderSearchInner idPrefix="header-search-drawer" />
+                <div className="mt-3 grid gap-2">{ctaButtons}</div>
               </div>
-              {ctaByStyle("outline") && (
-                <Link href={ctaByStyle("outline")!.href} className="btn-outline-navy mb-2 w-full" onClick={() => setOpen(false)}>
-                  {ctaByStyle("outline")!.label}
-                </Link>
-              )}
-
-              {nexusMenus.map((menu) => (
-                <div key={menu.key}>
-                  <button
-                    className={`${mobileLink} w-full justify-between text-left`}
-                    onClick={() => setMobilePanel(mobilePanel === menu.key ? null : menu.key)}
-                    aria-expanded={mobilePanel === menu.key}
-                    aria-controls={`mobile-${menu.key}`}
-                  >
-                    {menu.label} <span aria-hidden>{mobilePanel === menu.key ? "▴" : "▾"}</span>
-                  </button>
-                  {mobilePanel === menu.key && (
-                    <div id={`mobile-${menu.key}`} className="max-h-[62vh] overflow-y-auto pb-2 pl-3">
-                      <Link
-                        href={menu.href}
-                        className="flex min-h-[44px] items-center py-2 pr-3 text-[13.5px] font-bold text-signal"
-                        onClick={() => setOpen(false)}
+              <div className="flex-1 overflow-y-auto">
+                {!activeMobileMenu && (
+                  <nav aria-label="Mobile groups">
+                    {nexusMenus.map((menu) => (
+                      <button
+                        key={menu.key}
+                        type="button"
+                        onClick={() => setMobileGroup(menu.key)}
+                        aria-expanded={false}
+                        className="flex min-h-[56px] w-full items-center justify-between px-5 text-left text-[15px] font-semibold text-heading transition-colors hover:bg-nexus-support-deep-soft"
                       >
-                        View {menu.label} →
+                        {menu.label}
+                        <span aria-hidden>›</span>
+                      </button>
+                    ))}
+                    <Link
+                      href="/contact-us"
+                      onClick={() => setOpen(false)}
+                      className="flex min-h-[48px] items-center px-5 text-[15px] font-semibold text-heading"
+                    >
+                      Contact Us
+                    </Link>
+                  </nav>
+                )}
+                {activeMobileMenu && (
+                  <div>
+                    <div className="sticky top-0 z-10 flex items-center justify-between gap-2 border-b border-line bg-canvas px-3 py-2">
+                      <button
+                        type="button"
+                        onClick={() => setMobileGroup(null)}
+                        className="flex min-h-[44px] items-center px-2 text-[13.5px] font-bold text-signal"
+                      >
+                        ← All menus
+                      </button>
+                      <Link
+                        href={activeMobileMenu.href}
+                        onClick={() => setOpen(false)}
+                        className="flex min-h-[44px] items-center px-2 text-[13.5px] font-bold text-signal"
+                      >
+                        View {activeMobileMenu.label} →
                       </Link>
-                      {menu.columns.map((col) => (
-                        <div key={col.title} className="mt-2">
-                          <p className="eyebrow px-2 py-1.5 text-[10.5px] text-signal-strong">{col.title}</p>
-                          {col.links.map((l) => (
-                            <div key={l.label} className="pl-2">
-                              <MenuLinkItem {...l} onNavigate={() => setOpen(false)} />
+                    </div>
+                    {activeMobileMenu.columns.map((col) => {
+                      const key = `${activeMobileMenu.key}:${col.title}`;
+                      const isColOpen = openColumns[key] ?? false;
+                      return (
+                        <div key={col.title} className="border-b border-line/60">
+                          <button
+                            type="button"
+                            onClick={() => setOpenColumns((s) => ({ ...s, [key]: !s[key] }))}
+                            aria-expanded={isColOpen}
+                            className="flex min-h-[48px] w-full items-center justify-between px-5 text-left"
+                          >
+                            <span className="eyebrow text-[10.5px] text-nexus-support-teal-strong">{col.title}</span>
+                            <span aria-hidden className={`inline-block transition-transform ${isColOpen ? "rotate-180" : ""}`}>
+                              ▾
+                            </span>
+                          </button>
+                          {isColOpen && (
+                            <div className="px-3 pb-2">
+                              {col.links.map((l) => (
+                                <div key={l.label} className="pl-2">
+                                  <MenuLinkItem {...l} onNavigate={() => setOpen(false)} />
+                                </div>
+                              ))}
                             </div>
-                          ))}
+                          )}
                         </div>
-                      ))}
-                      <div className="mt-3 rounded-xl bg-cream px-4 py-3">
-                        <p className="eyebrow text-[10.5px] text-signal-strong">{menu.featured.eyebrow}</p>
-                        <p className="mt-1 text-[13.5px] font-bold text-heading">{menu.featured.title}</p>
+                      );
+                    })}
+                    {showFeatured(activeMobileMenu) && (
+                      <div className="m-3 rounded-xl bg-nexus-support-deep px-4 py-3">
+                        <p className="eyebrow text-[10.5px] text-paper/70">{activeMobileMenu.featured.eyebrow}</p>
+                        <p className="mt-1 text-[13.5px] font-bold text-paper">{activeMobileMenu.featured.title}</p>
                         <Link
-                          href={menu.featured.ctaHref}
-                          className="mt-1 inline-block text-[13px] font-bold text-signal"
+                          href={activeMobileMenu.featured.ctaHref}
+                          className="mt-1 inline-block min-h-[44px] text-[13px] font-bold text-paper underline underline-offset-4"
                           onClick={() => setOpen(false)}
                         >
-                          {menu.featured.ctaLabel} →
+                          {activeMobileMenu.featured.ctaLabel} →
                         </Link>
                       </div>
-                      {menu.key === "academy" && (
-                        <Link
-                          href="/register"
-                          className="mt-2 block px-2 py-2 text-[13px] font-semibold text-body hover:text-signal"
-                          onClick={() => setOpen(false)}
-                        >
-                          Register / Book a Demo (contextual)
-                        </Link>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              <Link className={mobileLink} href="/contact-us" onClick={() => setOpen(false)}>
-                Contact Us
-              </Link>
-            </div>
-          </nav>
+                    )}
+                    {activeMobileMenu.key === "academy" && (
+                      <Link
+                        href="/register"
+                        className="block px-5 py-2 text-[13px] font-semibold text-body hover:text-signal"
+                        onClick={() => setOpen(false)}
+                      >
+                        Register / Book a Demo (contextual)
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </div>
+            </aside>
+          </div>
         )}
       </header>
     </>

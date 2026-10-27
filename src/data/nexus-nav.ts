@@ -277,6 +277,10 @@ export const nexusMenus: NavMenu[] = [
           { label: "About Us", href: "/about-us" },
           { label: "Why Choose Us", href: "/why-choose-us" },
           { label: "Team Members", href: "/team-members" },
+          // 2026-10-28: Careers (working AT GradeSpot) joins the modern
+          // menu. It is a different page from learner Career Support
+          // (/career-support), which stays listed under Resources.
+          { label: "Careers", href: "/careers" },
           { label: "Local Institute Page", href: "/training-institute-in-dilsukhnagar-hyderabad" },
         ],
       },

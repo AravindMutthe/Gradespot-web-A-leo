@@ -14,6 +14,9 @@ const companyLinks = [
   { label: "Why Choose Us", href: "/why-choose-us" },
   { label: "Testimonials", href: "/testimonials" },
   { label: "Career Support", href: "/career-support" },
+  // 2026-10-28: Careers (working AT GradeSpot) — distinct from learner
+  // Career Support above; the page itself carries the disambiguation.
+  { label: "Careers", href: "/careers" },
   { label: "For Colleges", href: "/for-colleges" },
   { label: "Partner With Us", href: "/partner-with-us" },
   { label: "Corporate & International", href: "/corporate-and-international" },

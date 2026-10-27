@@ -25,6 +25,8 @@ const LASTMOD: Record<string, string> = {
   "/blog/how-to-start-a-cybersecurity-career": "2026-10-23",
   "/blog/what-does-a-soc-analyst-do": "2026-10-23",
   "/career-support": "2026-10-24",
+  // New in this batch: creation date of the route (no prior history).
+  "/careers": "2026-10-28",
   "/certificate-verification": "2026-10-24",
   "/compare": "2026-10-24",
   "/compare/ccna-vs-network-plus": "2026-10-23",
@@ -128,6 +130,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/for-institutes",
     "/for-colleges",
     "/career-support",
+    "/careers",
     "/compare",
     "/blog",
     "/training-institute-in-dilsukhnagar-hyderabad",

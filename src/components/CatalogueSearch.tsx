@@ -27,27 +27,46 @@ export default function CatalogueSearch({
   categories: string[];
 }) {
   const [query, setQuery] = useState("");
+  // P2 status lens (research pattern): "Available now" = a course with
+  // published full detail you can enquire about; "Coming soon — ask us"
+  // = a catalog-only course (catalogOnly). This lens reflects published
+  // detail only — it is NOT a B1 program_status, whose fields are still
+  // unfilled and must never be defaulted.
+  const [lens, setLens] = useState<"all" | "available" | "coming">("all");
   const q = query.trim().toLowerCase();
+
+  const lensFiltered = useMemo(() => {
+    if (lens === "available") return courses.filter((c) => !c.catalogOnly);
+    if (lens === "coming") return courses.filter((c) => c.catalogOnly);
+    return courses;
+  }, [lens, courses]);
 
   const results = useMemo(() => {
     if (!q) return null;
-    return courses.filter(
+    return lensFiltered.filter(
       (c) =>
         c.title.toLowerCase().includes(q) ||
         c.category.toLowerCase().includes(q) ||
         c.summary.toLowerCase().includes(q),
     );
-  }, [q, courses]);
+  }, [q, lensFiltered]);
 
   const byCategory = useMemo(() => {
     const map = new Map<string, CatalogueCourse[]>();
-    for (const c of courses) {
+    for (const c of lensFiltered) {
       const list = map.get(c.category) ?? [];
       list.push(c);
       map.set(c.category, list);
     }
     return map;
-  }, [courses]);
+  }, [lensFiltered]);
+
+  const visibleCategories = categories.filter((cat) => (byCategory.get(cat)?.length ?? 0) > 0);
+  const lensOptions: { key: "all" | "available" | "coming"; label: string; count: number }[] = [
+    { key: "all", label: "All trainings", count: courses.length },
+    { key: "available", label: "Available now", count: courses.filter((c) => !c.catalogOnly).length },
+    { key: "coming", label: "Coming soon — ask us", count: courses.filter((c) => c.catalogOnly).length },
+  ];
 
   return (
     <div id="course-search" className="scroll-mt-36">
@@ -83,11 +102,35 @@ export default function CatalogueSearch({
             ))}
           </nav>
         )}
+        {/* P2 status lens: filters both the grouped view and search
+            results. Counts are live catalogue counts. */}
+        <div className="mt-5 flex flex-wrap justify-center gap-2" role="group" aria-label="Filter trainings by availability">
+          {lensOptions.map((o) => (
+            <button
+              key={o.key}
+              type="button"
+              aria-pressed={lens === o.key}
+              onClick={() => setLens(o.key)}
+              className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+                lens === o.key
+                  ? "border-brand bg-brand text-paper"
+                  : "border-line bg-parchment text-heading hover:border-brand hover:text-signal"
+              }`}
+            >
+              {o.label} · {o.count}
+            </button>
+          ))}
+        </div>
+        <p className="mt-3 text-center text-xs text-body">
+          “Available now” means the course has published full detail you can
+          enquire about. “Coming soon — ask us” courses have a title and
+          category only — ask us for their syllabus, duration, and fee.
+        </p>
       </div>
 
       {results === null ? (
         <div className="mt-14 space-y-16">
-          {categories.map((cat) => (
+          {visibleCategories.map((cat) => (
             <div key={cat} id={categoryAnchor(cat)} className="scroll-mt-36">
               <h2 className="text-2xl font-semibold text-heading">{cat}</h2>
               <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

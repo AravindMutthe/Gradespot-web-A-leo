@@ -24,15 +24,16 @@ import { enabledHeaderCtas, type HeaderCta } from "@/data/site-settings";
 // charcoal #434140; supporting deep blue #17324D and teal #0D766E
 // (dark-theme values in globals.css) are supporting colours only —
 // never a primary CTA, never outranking logo orange/charcoal.
-// CTA hierarchy (one hierarchy at every size): primary
-// "Talk to an Advisor" → /contact-us is always present in the bar
-// on desktop and at the top of the mobile drawer; secondary
-// "Explore Programs" → /trainings is always present alongside it
-// on desktop and in the drawer; "Book Free Demo" → /register
-// (outline) shows only where it fits without a second header row
-// (xl bar; full-width in the drawer). No permanent second header
-// row, no sticky two-row header. Search is an icon-triggered
-// popover on compact sizes, inline at xl.
+// CTA hierarchy (2026-10-27 audit fix): the desktop bar carries
+// ONE primary CTA only — "Book Free Demo" → /register. The other
+// two CTAs are NOT deleted as destinations: "Explore Programs" →
+// /trainings is in the Academy mega-menu, the hero, and the drawer;
+// "Talk to an Advisor" → /contact-us is in the IT Solutions mega
+// menu, the hero, the drawer, and the footer. The drawer still
+// shows all three CTAs. No permanent second header row, no sticky
+// two-row header. The nav breakpoint is 80rem (1280px): below it
+// visitors get the drawer, so the bar can never be cut off at
+// 1280/1440px as it was in the R1-preview audit.
 // Menu activation: CLICK is primary. Hover is an enhancement only
 // (opens, never hover-only, with a 400ms gap-tolerant close delay
 // and a panel that keeps itself open on hover). Keyboard: Enter /
@@ -371,17 +372,17 @@ export default function Header() {
           <span className="min-w-0 truncate">Hyderabad, India · Online &amp; Classroom Training</span>
           <span className="hidden shrink-0 truncate md:inline">{business.locationLabel}</span>
           <a
-            className="hidden min-w-0 truncate normal-case tracking-normal transition-colors hover:text-brand-bright lg:inline"
+            className="hidden min-h-[24px] min-w-0 items-center truncate normal-case tracking-normal transition-colors hover:text-brand-bright lg:inline-flex"
             href={`mailto:${business.emails[0]}`}
           >
             {business.emails[0]}
           </a>
         </div>
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
-          <Link href="/contact-us" className="transition-colors hover:text-brand-bright">
+          <Link href="/contact-us" className="inline-flex min-h-[24px] items-center transition-colors hover:text-brand-bright">
             Contact
           </Link>
-          <Link href="/career-support" className="hidden transition-colors hover:text-brand-bright sm:inline">
+          <Link href="/career-support" className="hidden min-h-[24px] items-center transition-colors hover:text-brand-bright sm:inline-flex">
             Student Support
           </Link>
           <span className="hidden items-center gap-3 sm:flex sm:gap-4">
@@ -391,7 +392,7 @@ export default function Header() {
             {business.phones.map((p) => (
               <a
                 key={p}
-                className="font-semibold normal-case tracking-normal text-brand-bright hover:text-paper"
+                className="inline-flex min-h-[24px] items-center font-semibold normal-case tracking-normal text-brand-bright hover:text-paper"
                 href={telHref(p)}
               >
                 {p}
@@ -490,12 +491,12 @@ export default function Header() {
                       aria-expanded={isOpen}
                       aria-haspopup="true"
                       aria-controls={`mega-${menu.key}`}
-                      aria-label={`${menu.label} menu, ${isOpen ? "open" : "closed"}`}
+                      aria-label={`${menu.label} menu`}
                       onClick={() => togglePanel(menu.key)}
                       onKeyDown={(e) => {
                         if (e.key === "Escape") closePanel(menu.key);
                       }}
-                      className={`flex min-h-[44px] min-w-[44px] items-center gap-0.5 whitespace-nowrap rounded-lg px-1 py-2.5 text-[11px] font-semibold transition-colors xl:gap-1 xl:px-2.5 xl:text-[13px] ${
+                      className={`flex min-h-[44px] min-w-[44px] items-center gap-0.5 whitespace-nowrap rounded-lg px-1 py-2.5 text-[11px] font-semibold transition-colors 2xl:gap-1 2xl:px-2.5 2xl:text-[13px] ${
                         isOpen
                           ? "bg-nexus-support-deep-soft text-heading ring-2 ring-brand"
                           : "text-nav hover:bg-nexus-support-deep-soft"
@@ -505,39 +506,23 @@ export default function Header() {
                       <span aria-hidden className={`inline-block transition-transform ${isOpen ? "rotate-180" : ""}`}>
                         ▾
                       </span>
-                      <span className="sr-only">{isOpen ? "Open" : "Closed"}</span>
                     </button>
                   </div>
                 );
               })}
-              <div className="ml-2 hidden xl:block">
+              <div className="ml-2 hidden w-[220px] shrink-0 nav:block">
                 <HeaderSearchInner idPrefix="header-search-desktop" />
               </div>
-              <div className="ml-2 hidden nav:block xl:hidden">
-                <SearchPopover idPrefix="header-search-compact" />
-              </div>
-              {secondaryCta && (
-                <Link
-                  href={secondaryCta.href}
-                  className="ml-2 hidden whitespace-nowrap text-[13px] font-bold text-heading hover:text-signal nav:block xl:ml-3 xl:text-[14px]"
-                >
-                  {secondaryCta.label}
-                </Link>
-              )}
+              {/* Desktop bar: ONE primary CTA only (audit fix). The
+                  other two CTAs live in the drawer, mega-menus,
+                  hero, and footer — their destinations are not
+                  removed. outlineCta is "Book Free Demo" → /register. */}
               {outlineCta && (
                 <Link
                   href={outlineCta.href}
-                  className="btn-outline-navy ml-3 hidden whitespace-nowrap xl:flex xl:min-h-[50px] xl:items-center xl:px-5 xl:text-[14px]"
+                  className="btn-primary ml-3 whitespace-nowrap"
                 >
                   {outlineCta.label}
-                </Link>
-              )}
-              {primaryCta && (
-                <Link
-                  href={primaryCta.href}
-                  className="btn-primary ml-2 whitespace-nowrap nav:min-h-[44px] nav:px-3 nav:text-[12px] xl:ml-3 xl:min-h-[50px] xl:px-7 xl:text-[15px]"
-                >
-                  {primaryCta.label}
                 </Link>
               )}
             </nav>
@@ -664,6 +649,30 @@ export default function Header() {
               <div className="border-b border-line px-3 py-3">
                 <HeaderSearchInner idPrefix="header-search-drawer" />
                 <div className="mt-3 grid gap-2">{ctaButtons}</div>
+                {/* Mobile theme toggle (2026-10-27 audit fix): the
+                    floating toggle is hidden below the nav breakpoint
+                    so it cannot overlap content or the sticky bar;
+                    the drawer carries the toggle instead. Same
+                    localStorage key as ThemeToggle ("gradespot-theme"). */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const root = document.documentElement;
+                    const next = !root.classList.contains("dark");
+                    root.classList.toggle("dark", next);
+                    root.dataset.theme = next ? "dark" : "light";
+                    root.style.colorScheme = next ? "dark" : "light";
+                    try {
+                      localStorage.setItem("gradespot-theme", next ? "dark" : "light");
+                    } catch {
+                      /* private mode — theme still applies this visit */
+                    }
+                  }}
+                  className="mt-3 flex min-h-[44px] w-full items-center justify-between rounded-lg px-3 text-[13.5px] font-semibold text-heading"
+                >
+                  Theme
+                  <span className="text-[13px] font-normal text-body">Tap to switch light / dark</span>
+                </button>
               </div>
               <div className="flex-1 overflow-y-auto">
                 {!activeMobileMenu && (

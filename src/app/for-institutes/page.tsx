@@ -217,11 +217,11 @@ export default function ForInstitutesPage() {
               </p>
             </article>
             <article className="rounded-2xl border border-line bg-surface-light p-7">
-              <h3 className="text-lg font-semibold text-heading">No invented numbers</h3>
+              <h3 className="text-lg font-semibold text-heading">Only figures we can stand behind</h3>
               <p className="mt-2 text-sm leading-6 text-body">
-                We don&apos;t publish case-study figures we can&apos;t stand behind. As real
-                institutes complete their pilots, their results will appear here — with their
-                names attached.
+                We publish institute results only once a pilot is complete and the
+                institute has agreed to be named. Until then, no case-study figure
+                appears here.
               </p>
             </article>
           </div>

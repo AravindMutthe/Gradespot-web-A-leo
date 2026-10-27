@@ -76,19 +76,19 @@ export const nexusMenus: NavMenu[] = [
         ],
       },
       {
-        title: "By Level — Release 2 tagging",
+        title: "By Level",
         links: [
-          { label: "Foundation", href: "/trainings", note: "Level tags not yet in catalogue" },
-          { label: "Professional", href: "/trainings", note: "Level tags not yet in catalogue" },
-          { label: "Advanced / Specialist", href: "/trainings", note: "Level tags not yet in catalogue" },
+          { label: "Foundation", href: "/trainings", note: "Ask us about level and prerequisites" },
+          { label: "Professional", href: "/trainings", note: "Ask us about level and prerequisites" },
+          { label: "Advanced / Specialist", href: "/trainings", note: "Ask us about level and prerequisites" },
         ],
       },
       {
-        title: "Planned Domains",
+        title: "More domains — ask us",
         links: [
-          { label: "Linux & Infrastructure", href: "/trainings", note: "Planned — no Linux catalogue yet" },
-          { label: "DevOps & SRE", href: "/trainings#category-microsoft-azure", note: "AZ-400 under Azure; standalone DevOps domain Planned" },
-          { label: "AI & Data", href: "/trainings#category-programming-data", note: "Data courses exist; AI pathway Planned" },
+          { label: "Linux & Infrastructure", href: "/trainings", note: "Coming soon — ask us" },
+          { label: "DevOps & SRE", href: "/trainings#category-microsoft-azure", note: "Azure courses listed here; ask us about DevOps & SRE" },
+          { label: "AI & Data", href: "/trainings#category-programming-data", note: "Data courses listed here; ask us about AI" },
           { label: "Course Comparisons", href: "/compare" },
           { label: "Search Programs", href: "/trainings#course-search" },
         ],
@@ -97,7 +97,7 @@ export const nexusMenus: NavMenu[] = [
     featured: {
       eyebrow: "Academy",
       title: "Learning programs, cohorts and curricula",
-      body: "Browse the real catalogue. Levels, curriculum previews and demo eligibility arrive with Release 2 tagging — nothing here is marked available that is not published.",
+      body: "Browse the training catalogue. Course pages show the published curriculum and demo information where available — ask us about anything not listed.",
       ctaLabel: "Browse Programs",
       ctaHref: "/trainings",
     },
@@ -118,10 +118,10 @@ export const nexusMenus: NavMenu[] = [
         ],
       },
       {
-        title: "Planned Vendor Training",
+        title: "More vendor training — ask us",
         links: [
-          { label: "Red Hat", href: "/trainings", note: "Planned — no Red Hat courses published" },
-          { label: "Kubernetes", href: "/trainings", note: "Planned — no Kubernetes course published" },
+          { label: "Red Hat", href: "/trainings", note: "Coming soon — ask us" },
+          { label: "Kubernetes", href: "/trainings", note: "Coming soon — ask us" },
           { label: "CompTIA Security+", href: "/trainings/comptia-security-plus", note: "Training toward Security+, not the exam itself" },
           { label: "Azure AZ-900", href: "/trainings/azure-fundamentals-az-900", note: "Training toward AZ-900" },
           { label: "AWS Cloud Practitioner", href: "/trainings/aws-cloud-practitioner", note: "Training toward CLF-C02" },
@@ -138,7 +138,7 @@ export const nexusMenus: NavMenu[] = [
     featured: {
       eyebrow: "Certification Preparation",
       title: "Training toward certification — never a guarantee",
-      body: "Certification itself is awarded by the vendor or exam body, not by this site. No exam date, fee or eligibility is claimed here.",
+      body: "Certification itself is awarded by the vendor or exam body. Ask us about exam dates, fees and eligibility.",
       ctaLabel: "Verify a Certificate",
       ctaHref: "/certificate-verification",
     },
@@ -149,7 +149,7 @@ export const nexusMenus: NavMenu[] = [
     href: "/career-support",
     columns: [
       {
-        title: "Roles — courses today, roadmaps in Release 2",
+        title: "Roles — explore courses",
         links: [
           { label: "SOC Analyst", href: "/trainings/soc-analyst" },
           { label: "Security Engineer", href: "/trainings#category-cybersecurity" },
@@ -160,27 +160,27 @@ export const nexusMenus: NavMenu[] = [
         ],
       },
       {
-        title: "More Roles — Planned Roadmaps",
+        title: "More roles — ask us",
         links: [
-          { label: "Frontend / Backend / Full-Stack Engineer", href: "/career-support", note: "Interactive roadmap Planned — Release 2" },
-          { label: "SRE / Infrastructure Engineer", href: "/career-support", note: "Interactive roadmap Planned — Release 2" },
-          { label: "AI / LLM Engineer", href: "/career-support", note: "Interactive roadmap Planned — Release 2" },
+          { label: "Frontend / Backend / Full-Stack Engineer", href: "/career-support", note: "Coming soon — ask us" },
+          { label: "SRE / Infrastructure Engineer", href: "/career-support", note: "Coming soon — ask us" },
+          { label: "AI / LLM Engineer", href: "/career-support", note: "Coming soon — ask us" },
           { label: "Career Support", href: "/career-support" },
         ],
       },
       {
         title: "How Pathways Work",
         links: [
-          { label: "Skill Matrices & Prerequisites", href: "/career-support", note: "Release 2 interactive roadmaps" },
-          { label: "Readiness Assessments", href: "/career-support", note: "Release 2" },
+          { label: "Skill Matrices & Prerequisites", href: "/career-support", note: "Coming soon — ask us" },
+          { label: "Readiness Assessments", href: "/career-support", note: "Coming soon — ask us" },
           { label: "Talk to an Advisor", href: "/contact-us" },
         ],
       },
     ],
     featured: {
       eyebrow: "Career Pathways",
-      title: "Role routes, starting with real courses",
-      body: "Interactive roadmaps with skills, tools, certifications and projects arrive in Release 2. Today, role links go to real course pages and to Career Support — no roadmap is presented as built.",
+      title: "Role routes, starting with courses",
+      body: "Explore role routes and the courses behind them, then talk to an advisor about skills, tools and certifications for that role.",
       ctaLabel: "Career Support",
       ctaHref: "/career-support",
     },
@@ -209,18 +209,18 @@ export const nexusMenus: NavMenu[] = [
         ],
       },
       {
-        title: "Planned — Not Available",
+        title: "Coming soon — ask us",
         links: [
-          { label: "Ask about a standalone labs portal", href: "/contact-us", note: "Planned — ask on enquiry" },
-          { label: "Ask about capstones & portfolios", href: "/contact-us", note: "Planned — delivered inside programs today" },
-          { label: "Ask about quizzes & challenges", href: "/contact-us", note: "Planned — Release 2/4" },
+          { label: "Ask about a standalone labs portal", href: "/contact-us", note: "Coming soon — ask us" },
+          { label: "Ask about capstones & portfolios", href: "/contact-us", note: "Delivered inside programs today — ask us" },
+          { label: "Ask about quizzes & challenges", href: "/contact-us", note: "Coming soon — ask us" },
         ],
       },
     ],
     featured: {
-      eyebrow: "Honest Note",
-      title: "No Standalone Labs Portal Yet",
-      body: "Labs and projects are delivered inside training programs, not as a separate portal. The links here go to real course pages whose published content describes their labs.",
+      eyebrow: "Labs & Projects",
+      title: "Labs inside courses",
+      body: "Labs and projects are delivered inside training programs. Follow a course page to see the labs it includes.",
       ctaLabel: "Browse Trainings",
       ctaHref: "/trainings",
     },
@@ -259,9 +259,9 @@ export const nexusMenus: NavMenu[] = [
       },
     ],
     featured: {
-      eyebrow: "For Business — Prominent",
+      eyebrow: "For Business",
       title: "Request a Service Consultation",
-      body: "For Business lives here, in IT Solutions — not buried in the Academy. Tell us the problem and the scope; the team replies with the next step. No prices are published here; services are quoted to scope.",
+      body: "Tell us the problem and the scope; the team replies with the next step. No prices are published here; services are quoted to scope.",
       ctaLabel: "Talk to an Advisor",
       ctaHref: "/contact-us",
     },

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 // Theme toggle (DECISIONS §25, placement corrected §25.9) — ONE
 // floating on-screen button at the bottom of the viewport, on every
@@ -68,6 +69,12 @@ function SunIcon() {
 
 export default function ThemeToggle() {
   const [dark, setDark] = useState(false);
+  // LP pages are nav-free (no drawer), so they keep the floating
+  // toggle on mobile too — otherwise LP visitors would have no
+  // theme control at all. LP chrome has no sticky bar, so there
+  // is no overlap to avoid there.
+  const pathname = usePathname();
+  const isLp = pathname?.startsWith("/lp/") ?? false;
 
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"));
@@ -102,7 +109,7 @@ export default function ThemeToggle() {
       aria-label={label}
       aria-pressed={dark}
       title={label}
-      className="fixed bottom-[calc(68px+env(safe-area-inset-bottom))] right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-ink text-paper shadow-[0_10px_30px_rgba(31,24,16,0.35)] ring-1 ring-black/10 transition-transform hover:scale-[1.05] dark:bg-paper dark:text-ink dark:ring-white/25 nav:bottom-[calc(96px+env(safe-area-inset-bottom))] nav:right-6"
+      className={`fixed bottom-[calc(68px+env(safe-area-inset-bottom))] right-4 z-50 h-12 w-12 items-center justify-center rounded-full bg-ink text-paper shadow-[0_10px_30px_rgba(31,24,16,0.35)] ring-1 ring-black/10 transition-transform hover:scale-[1.05] dark:bg-paper dark:text-ink dark:ring-white/25 nav:bottom-[calc(96px+env(safe-area-inset-bottom))] nav:flex nav:right-6 ${isLp ? "flex" : "hidden"}`}
     >
       <span className="dark:hidden">
         <MoonIcon />

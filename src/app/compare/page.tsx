@@ -27,7 +27,7 @@ export default function CompareIndexPage() {
       />
       <PageHero
         title="Course Comparisons"
-        subtitle="Two similar courses, one clear decision. Every comparison below is built from the courses' own published topics, durations, certifications and job roles — no invented differences."
+        subtitle="Two similar courses, one clear decision. Every comparison below is built from the courses' own published topics, durations, certifications and job roles."
       />
       <section className="section-pad">
         <div className="wrap">

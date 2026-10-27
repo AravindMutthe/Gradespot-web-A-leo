@@ -45,6 +45,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        {/* Explicit icon link (2026-10-27 audit fix): /favicon.ico
+            already existed and worked, but no <link rel="icon">
+            was emitted. No new logo file is introduced here. */}
+        <link rel="icon" href="/favicon.ico" />
         <link
           rel="preload"
           href="/fonts/fraunces-normal-100_900.woff2"

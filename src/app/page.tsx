@@ -67,9 +67,9 @@ export default async function HomePage() {
     { domain: "Cloud — AWS / Microsoft Azure", href: "/trainings", n: countIn("AWS", "Microsoft Azure"), status: "Available" },
     { domain: "Networking — Cisco / Networking", href: "/trainings#category-cisco", n: countIn("Cisco", "Networking"), status: "Available" },
     { domain: "Software Engineering", href: "/trainings#category-programming-data", n: countIn("Programming & Data"), status: "Available" },
-    { domain: "Linux & Infrastructure", href: "/trainings", n: 0, status: "Planned" },
-    { domain: "DevOps & SRE", href: "/trainings#category-microsoft-azure", n: countIn("Microsoft Azure"), status: "Planned — AZ-400 under Azure" },
-    { domain: "AI & Data", href: "/trainings#category-programming-data", n: countIn("Programming & Data"), status: "Planned — data courses exist" },
+    { domain: "Linux & Infrastructure", href: "/trainings", n: 0, status: "Coming soon — ask us" },
+    { domain: "DevOps & SRE", href: "/trainings#category-microsoft-azure", n: 0, status: "Coming soon — ask us" },
+    { domain: "AI & Data", href: "/trainings#category-programming-data", n: 0, status: "Coming soon — ask us" },
     { domain: "Other Existing Programs", href: "/trainings#category-medical-coding", n: countIn("Medical Coding", "Digital Marketing", "Design & CAD"), status: "Available" },
   ];
 
@@ -89,7 +89,7 @@ export default async function HomePage() {
       {/* EDITORIAL HERO — Nexus §3. No single-course hero. */}
       <section className="hero-paper relative overflow-hidden border-b border-line" aria-label="Hero">
         <div className="wrap grid items-start gap-10 py-10 md:py-14 lg:grid-cols-[1.05fr_0.95fr]">
-          <div data-reveal>
+          <div data-reveal className="hero-no-reveal">
             <p className="eyebrow text-nexus-brand-600">GradeSpot IT Solutions · Technology Academy · Certifications · Applied Labs · Enterprise IT Solutions</p>
             <h1 className="nexus-editorial mt-5 max-w-xl text-[44px] font-semibold text-heading md:text-[68px]">
               Engineering Skills. Real-World Solutions.
@@ -110,7 +110,7 @@ export default async function HomePage() {
             </p>
           </div>
           <div className="nexus-diagram rounded-2xl p-5" data-reveal>
-            <p className="eyebrow text-nexus-brand-600">Skill graph — real catalogue, no invented pathways</p>
+            <p className="eyebrow text-nexus-brand-600">Skill graph — training areas</p>
             <ul className="mt-4 space-y-0">
               {[
                 ["Cybersecurity", "SOC Analyst · CEH · VAPT →", "/trainings#category-cybersecurity"],
@@ -126,8 +126,8 @@ export default async function HomePage() {
               ))}
             </ul>
             <p className="mt-4 text-[12.5px] leading-5 text-body">
-              Interactive career roadmaps arrive in Release 2. Today, role links go to
-              real course pages and to Career Support.
+              Explore career paths: follow a role to its course pages, or talk to
+              an advisor about skills, tools and certifications.
             </p>
           </div>
         </div>
@@ -135,7 +135,7 @@ export default async function HomePage() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {heroBlocks.map((b) => (
               <Link key={b.label} href={b.href} className="group relative block overflow-hidden rounded-[18px]">
-                <Image src={b.img} alt={b.label} width={400} height={300} className="h-36 w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
+                <Image src={b.img} alt={b.label} width={400} height={300} sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw" className="h-36 w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
                 <span className="absolute inset-x-0 bottom-0 bg-nexus-ink-950/85 px-4 py-3">
                   <span className="block text-[13px] font-bold text-nexus-text-inverse">{b.label}</span>
                   <span className="block text-[12px] text-nexus-text-inverse/80">{b.body}</span>
@@ -161,11 +161,11 @@ export default async function HomePage() {
       {/* STRUCTURED DISCOVERY — Academy table, not a card grid. */}
       <section className="section-pad" aria-label="Academy discovery">
         <div className="wrap">
-          <SectionTitle label="Academy · Structured Discovery" title="Find a program by domain — and see what is actually available" />
+          <SectionTitle label="Academy · Structured Discovery" title="Find a program by domain" />
           <p className="mt-4 max-w-3xl text-sm leading-6 text-body">
-            Counts are computed from the real catalogue. Planned domains are labelled
-            Planned and are not promoted as enrollable. Levels, curriculum previews and
-            demo eligibility arrive with Release 2 tagging.
+            Program counts come from the training catalogue. Domains marked
+            “Coming soon — ask us” are not yet open for enrolment — ask us
+            about them.
           </p>
           <div className="nexus-app mt-8 overflow-hidden">
             <div className="nexus-row bg-nexus-surface-sunken font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-nexus-text-secondary">
@@ -194,10 +194,9 @@ export default async function HomePage() {
           <div>
             <SectionTitle label="Labs & Projects · Technical Workspace" title="Learn by doing, inside the course" />
             <p className="mt-4 text-sm leading-6 text-body">
-              There is no separate labs portal yet. Hands-on labs, simulations and
-              projects are delivered inside these training programs, as described on
-              their course pages. Standalone capstones, quizzes and portfolios are
-              Planned, not available.
+              Hands-on labs, simulations and projects are delivered inside these
+              training programs, as described on their course pages. Ask us about
+              standalone capstones, quizzes and portfolios.
             </p>
             <div className="nexus-app mt-6 overflow-hidden">
               {labCourses.map((c) => (
@@ -209,7 +208,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="nexus-diagram rounded-2xl p-5">
-            <p className="eyebrow text-nexus-brand-600">Career pathway — SOC Analyst (real course)</p>
+            <p className="eyebrow text-nexus-brand-600">Career pathway — SOC Analyst</p>
             <ol className="mt-4 space-y-0">
               {[
                 ["1 · Foundations", "Networking, Linux, security fundamentals"],
@@ -224,8 +223,8 @@ export default async function HomePage() {
               ))}
             </ol>
             <p className="mt-4 text-[12.5px] leading-5 text-body">
-              Full interactive roadmaps for all twelve spec pathways arrive in
-              Release 2. This graph uses only published SOC Analyst content.
+              This is an overview of the SOC Analyst learning topics. Talk to an
+              advisor for a full learning plan.
             </p>
             <Link href="/trainings/soc-analyst" className="mt-3 inline-block text-[13px] font-bold text-nexus-brand-600 hover:underline">SOC Analyst Training →</Link>
           </div>
@@ -239,9 +238,8 @@ export default async function HomePage() {
             <SectionTitle label="Certifications · Editorial Feature" title="Training toward industry certifications" />
             <p className="mt-4 text-sm leading-6 text-body">
               These are training programs in each vendor area. Certification itself is
-              awarded by the vendor or exam body, not by this page. No exam date, fee
-              or eligibility is claimed here. Red Hat and Kubernetes pathways are
-              Planned — no such courses are published.
+              awarded by the vendor or exam body. Ask us about exam dates, fees and
+              eligibility, and about Red Hat and Kubernetes training.
             </p>
             <ul className="mt-6 space-y-2">
               {vendors.map((v) => (
@@ -260,7 +258,6 @@ export default async function HomePage() {
             <div>
               <p className="eyebrow text-nexus-brand-600">Featured Cybersecurity Program</p>
               <div className="mt-4"><CourseCard course={ceh} /></div>
-              <p className="mt-3 text-[12.5px] leading-5 text-body">CEH is one featured program, not the visual for the whole business.</p>
             </div>
           )}
         </div>
@@ -282,10 +279,9 @@ export default async function HomePage() {
             <Link href="/services" className="btn-primary mt-6">All Services</Link>
           </div>
           <div className="rounded-2xl bg-nexus-ink-950 p-7 text-nexus-text-inverse">
-            <p className="eyebrow text-nexus-brand-300">For Business — Prominent</p>
-            <h3 className="mt-3 font-display text-[26px] font-semibold leading-snug">Request a service consultation</h3>
+            <p className="eyebrow text-nexus-brand-300">For Business</p>
+            <h3 className="mt-3 font-display text-[26px] font-semibold leading-snug text-nexus-text-inverse">Request a service consultation</h3>
             <p className="mt-3 text-sm leading-6 text-nexus-text-inverse/85">
-              For Business lives here, in IT Solutions — not buried in the Academy.
               Tell us the problem and the scope; the team replies with the next step.
               Services are quoted to scope; no prices are published here.
             </p>
@@ -316,7 +312,7 @@ export default async function HomePage() {
           </div>
         </div>
         <div className="wrap mt-14">
-          <h3 className="text-center text-2xl font-semibold text-heading">Learner voices — published testimonials only</h3>
+          <h3 className="text-center text-2xl font-semibold text-heading">Learner voices</h3>
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {proofTestimonials.map((t) => (
               <figure key={t.name} className="flex flex-col rounded-[18px] border border-line bg-parchment p-7">
@@ -342,9 +338,9 @@ export default async function HomePage() {
           <div>
             <SectionTitle label="Insights & Resources" title="Articles, guides, comparisons and FAQs" />
             <div className="mt-6 flex flex-wrap gap-4">
-              <Link href="/blog" className="text-sm font-bold text-nexus-brand-600 hover:underline">Learning Articles →</Link>
-              <Link href="/resources" className="text-sm font-bold text-nexus-brand-600 hover:underline">Resources →</Link>
-              <Link href="/compare" className="text-sm font-bold text-nexus-brand-600 hover:underline">Course Comparisons →</Link>
+              <Link href="/blog" className="text-sm font-bold text-nexus-brand-700 hover:underline">Learning Articles →</Link>
+              <Link href="/resources" className="text-sm font-bold text-nexus-brand-700 hover:underline">Resources →</Link>
+              <Link href="/compare" className="text-sm font-bold text-nexus-brand-700 hover:underline">Course Comparisons →</Link>
             </div>
           </div>
           <FaqList items={siteFaqs} />

@@ -69,8 +69,6 @@ const LASTMOD: Record<string, string> = {
   "/team-members": "2026-10-24",
   "/team-members/nikhil-duth-d": "2026-10-24",
   "/terms-and-conditions": "2026-10-24",
-  "/privacy-policy": "2026-10-25",
-  "/refund-policy": "2026-10-25",
   "/testimonials": "2026-10-24",
   "/training-institute-in-dilsukhnagar-hyderabad": "2026-10-24",
   "/trainings": "2026-10-24",
@@ -136,8 +134,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact-us",
     "/faq",
     "/terms-and-conditions",
-    "/privacy-policy",
-    "/refund-policy",
+    // 2026-10-27 audit fix: draft legal pages are NOT in the sitemap
+    // until real policies are published (routes still exist, unlinked).
     "/register",
     "/accessibility",
     "/partner-with-us",

@@ -13,9 +13,15 @@ import { NextResponse } from "next/server";
 // workers and ships no web app manifest.
 export default function proxy() {
   const res = NextResponse.next();
+  // 2026-10-27 audit fix: Vercel's preview feedback script
+  // (vercel.live/feedback.js) was blocked by the CSP on previews,
+  // logging a console error. Allow it ONLY on preview deployments;
+  // production CSP is unchanged, and no new 'unsafe-inline' is added.
+  const isPreview = process.env.VERCEL_ENV === "preview";
+  const scriptSrc = `'self' 'unsafe-inline'${isPreview ? " https://vercel.live" : ""}`;
   res.headers.set(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'none'; manifest-src 'self'",
+    `default-src 'self'; script-src ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'none'; manifest-src 'self'`,
   );
   res.headers.set("Cross-Origin-Resource-Policy", "same-origin");
   return res;

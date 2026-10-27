@@ -37,8 +37,9 @@ export default async function ServicesPage() {
           />
           <p className="mt-3 max-w-3xl text-[15px] leading-7 text-body">
             Services are grouped by the business division they belong to.
-            Divisions marked Planned have no published offering yet — ask
-            about them on consultation rather than buying anything here.
+            Divisions marked “Coming soon — ask us” have no published offering
+            yet — ask about them on consultation rather than buying anything
+            here.
           </p>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {revenueDivisions.map((d) => {
@@ -51,7 +52,7 @@ export default async function ServicesPage() {
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <h2 className="text-xl font-semibold">{d.title}</h2>
                     <span className="rounded-full border border-line bg-parchment px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-heading">
-                      {d.status}
+                      {d.status === "Planned" ? "Coming soon — ask us" : d.status}
                     </span>
                   </div>
                   <p className="mt-2 text-sm leading-6 text-body">{d.blurb}</p>

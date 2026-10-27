@@ -57,7 +57,7 @@ export const revenueDivisions: RevenueDivision[] = [
       "Infrastructure work today, and ongoing support and maintenance arrangements agreed on consultation — scope and terms are quoted, never sold at a published price here.",
     status: "Partial",
     statusNote:
-      "Partial — network infrastructure building is available; a standalone cloud/DevOps implementation offering is Planned.",
+      "Partial — network infrastructure building is available; ask us about a standalone cloud/DevOps implementation offering.",
     serviceSlugs: ["network-infrastructure-building"],
     exploreHref: "/contact-us",
     exploreLabel: "Book a consultation",
@@ -68,7 +68,7 @@ export const revenueDivisions: RevenueDivision[] = [
     blurb:
       "AI chatbots, automation and workflow integration — a strategy division with no published GradeSpot offering yet.",
     status: "Planned",
-    statusNote: "Planned — no such service is published; ask on consultation, do not buy here.",
+    statusNote: "Coming soon — ask us: no such service is published yet; ask on consultation, do not buy here.",
     serviceSlugs: [],
     exploreHref: "/contact-us",
     exploreLabel: "Ask about this",
@@ -90,7 +90,7 @@ export const revenueDivisions: RevenueDivision[] = [
     blurb:
       "Paid course libraries, practice exams, certificates and institute tools — a future division, not a product sold here.",
     status: "Planned",
-    statusNote: "Planned — no digital product or subscription is sold on this site.",
+    statusNote: "Coming soon — ask us: no digital product or subscription is sold on this site.",
     serviceSlugs: [],
     exploreHref: "/trainings",
     exploreLabel: "Browse trainings",

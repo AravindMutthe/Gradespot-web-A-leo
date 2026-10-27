@@ -147,29 +147,20 @@ export default function CorporateAndInternationalPage() {
         </div>
       </section>
 
-      {/* Case studies — TODO until real material exists */}
+      {/* Case studies: none published. No client, outcome, or result is
+          claimed here until real material exists and the client has
+          agreed to be named. */}
       <section className="bg-surface-light section-pad">
         <div className="wrap mx-auto max-w-4xl">
-          <div
-            data-reveal
-            className="rounded-[20px] border-2 border-dashed border-brand bg-brand-soft p-7 md:p-9"
-          >
+          <div className="rounded-[20px] border border-line bg-parchment p-7 md:p-9">
             <h2 className="font-display text-[26px] font-semibold leading-[32px] text-heading">
-              Case studies — TODO
+              Case studies
             </h2>
             <p className="mt-3 text-[15px] leading-7 text-body">
-              This section will carry two or three real case studies once the material
-              exists. Nothing is published here until then — no client, outcome, or
-              result is claimed in advance.
+              No case study is published here yet. When a client engagement is
+              complete and the client has agreed to be named, its story will
+              appear here. Until then, ask us about recent work on consultation.
             </p>
-            <ul className="mt-4 space-y-2">
-              <li className="rounded-lg bg-cream px-4 py-2 font-mono text-[13px] font-semibold text-signal-strong">
-                TODO: 2–3 real client engagements with outcomes
-              </li>
-              <li className="rounded-lg bg-cream px-4 py-2 font-mono text-[13px] font-semibold text-signal-strong">
-                TODO: permission to name each client
-              </li>
-            </ul>
           </div>
         </div>
       </section>

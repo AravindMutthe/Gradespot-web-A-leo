@@ -20,7 +20,7 @@ export const testimonials: Testimonial[] = [
     source: "Posted on Google",
   },
   {
-    name: "naresh chepuri",
+    name: "Naresh Chepuri",
     text: "A hygienic and quiet atmosphere to learn. Trainers are well-knowledgeable, friendly and cooperative. The teaching style will be engaging and interesting. Study materials are helpful. A spacious lab with dedicated computers and other equipment is available for practicing. Mock interviews and quizzes will be conducted every week by experienced staff members. Great support and guidance will be provided for the students to choose the best path to build their career. One of the best places to learn.",
     source: "Posted on Google",
   },

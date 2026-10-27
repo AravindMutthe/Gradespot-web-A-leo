@@ -27,8 +27,10 @@ const quickLinks = [
   { label: "Student Certifications", href: "/student-certifications" },
   { label: "Certificate Verification", href: "/certificate-verification" },
   { label: "Terms and Conditions", href: "/terms-and-conditions" },
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Refund Policy", href: "/refund-policy" },
+  // 2026-10-27 audit fix: Privacy Policy and Refund Policy are DRAFTS
+  // (TODO fact slots, no verified facts) and are deliberately NOT
+  // linked from the footer until the owner + lawyer publish real
+  // policies. The routes still exist in the repo, unlinked.
   { label: "Accessibility", href: "/accessibility" },
 ];
 
@@ -43,7 +45,7 @@ const popularTrainings = [
   { label: "CompTIA Security+: Sy0-701", href: "/trainings/comptia-security-plus" },
 ];
 
-const linkCls = "inline-block py-2 transition-colors hover:text-brand-bright"; // py-2 lifts footer links above the 24px WCAG 2.2 AA target-size floor; still below the 44px AAA target, recorded as open, not claimed as 44px.
+const linkCls = "inline-flex min-h-[44px] items-center py-2 transition-colors hover:text-brand-bright"; // 2026-10-27 audit fix: footer links are now 44px tall (R1 target), above both the 24px AA floor and the 44px AAA target.
 const headCls = "mb-4 font-display text-[19px] font-semibold text-paper";
 
 export default function Footer() {

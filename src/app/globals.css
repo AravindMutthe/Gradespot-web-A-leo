@@ -185,11 +185,14 @@
 
   /* §24 — THE single chrome breakpoint. Every piece of site chrome
      (header bar/mega panels/hamburger/sheet, FloatingActions, LP
-     sticky bar, body padding) switches at `nav` (960px) and nowhere
-     else. 960px because a phone browser's "desktop view" (Edge/
-     Copilot) reports ~980 CSS px — below Tailwind's lg (1024px),
-     which left desktop-mode testers with the mobile hamburger. */
-  --breakpoint-nav: 60rem;
+     sticky bar, body padding) switches at `nav` and nowhere else.
+     Raised 2026-10-27 from 60rem (960px) to 80rem (1280px): the R1
+     desktop bar (6 menus + search + CTAs) overflowed at 1280/1440px
+     in the R1-preview audit, so below 1280px visitors get the
+     drawer instead of a cut-off bar. The old 960px rationale (phone
+     desktop-view reporting ~980px) is superseded: those visitors
+     now get the drawer, which is the usable chrome at that width. */
+  --breakpoint-nav: 80rem;
 }
 
 @layer base {
@@ -227,6 +230,14 @@
     --color-ink-deep: #171412;
     --color-signal: #ff8a4c;
     --color-signal-strong: #ffb287;
+    /* 2026-10-27 audit fix: nexus-brand-600 (#c24e1f) was 3.11:1 on
+       dark sunken (#2e2620) and brand-700 (#9c3e18) was 2.2:1 there.
+       Dark values below are the signal pair, computed: brand-600
+       #ff8a4c = 6.36:1 on sunken, brand-700 #ffb287 = 8.46:1. These
+       tokens are text-only in this repo (no bg-nexus-brand-600 use),
+       so the override affects text contrast only. */
+    --color-nexus-brand-600: #ff8a4c;
+    --color-nexus-brand-700: #ffb287;
     --color-nexus-canvas: #171412;
     --color-nexus-surface: #221e1c;
     --color-nexus-surface-raised: #2a2623;
@@ -255,6 +266,15 @@
   }
   body {
     @apply bg-canvas font-sans text-base leading-[1.7] text-body antialiased;
+  }
+  /* Dark-surface heading guard (2026-10-27 audit fix): the base
+     h1–h4 rule above sets text-heading, which made the "Request a
+     service consultation" heading (#2a2726) invisible on its
+     #1e1c1b card. Inside a dark surface, headings inherit the
+     surface's light text colour instead. */
+  .bg-nexus-ink-950 :is(h1, h2, h3, h4),
+  .panel-ink :is(h1, h2, h3, h4) {
+    color: inherit;
   }
   h1,
   h2,
@@ -286,8 +306,8 @@
     }
   }
   /* Room for the mobile sticky CTA bar — below the §24 chrome
-     breakpoint (960px) only, so it switches with everything else. */
-  @media (max-width: 959px) {
+     breakpoint (1280px) only, so it switches with everything else. */
+  @media (max-width: 1279px) {
     body {
       padding-bottom: 57px;
     }
@@ -306,6 +326,15 @@
     max-width: 100%;
     height: auto;
   }
+  /* Safety net ONLY (2026-10-27 audit fix): clip any residual
+     horizontal overflow so a single wide element can never push
+     the whole page sideways again. This is NOT the overflow fix —
+     the fix is the 1280px nav breakpoint + one-CTA bar in Header.
+     `clip` (not `hidden`) so no scrolling content is masked. */
+  html,
+  body {
+    overflow-x: clip;
+  }
   p,
   li,
   a,
@@ -323,6 +352,21 @@
    Elements carry data-reveal; the RevealFX component adds .reveal-on
    to <html> and .is-in as elements enter the viewport. Without JS,
    or with reduced motion, everything is simply visible. */
+/* Above-the-fold hero exemption (2026-10-27 audit fix): the hero
+   column must never start hidden waiting for JS — that was 2.5s
+   of mobile LCP render delay. It renders visible immediately. */
+.reveal-on .hero-no-reveal,
+.reveal-on .hero-no-reveal [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   .reveal-on [data-reveal] {
     opacity: 0;

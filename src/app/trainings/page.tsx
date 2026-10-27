@@ -5,6 +5,7 @@ import { courseCategories } from "@/data/courses";
 import CatalogueSearch from "@/components/CatalogueSearch";
 import Ticker from "@/components/Ticker";
 import { BlogCards, FeatureTrio, LogoWall, PageHero, SectionTitle, StatsRibbon, AnswerLead } from "@/components/ui";
+import { showcaseIcon } from "@/components/Artwork";
 import JsonLd from "@/components/JsonLd";
 import { trainingsIndexSchema } from "@/lib/schema";
 import { trainingsIndexMetadata } from "@/lib/metadata";
@@ -100,7 +101,10 @@ export default async function TrainingsPage() {
                 data-reveal
                 className="group overflow-hidden modern-card text-center"
               >
-                <div className="flex aspect-video w-full flex-col items-start justify-end p-5 text-left design-led-card">
+                <div className="flex aspect-video w-full flex-col items-start justify-end gap-3 p-5 text-left design-led-card">
+                  <span aria-hidden className="text-4xl">
+                    {showcaseIcon(x.t)}
+                  </span>
                   <span className="modern-chip bg-white/15 text-paper">
                     {String(i + 1).padStart(2, "0")}
                   </span>

@@ -5,6 +5,7 @@ import { divisionServices, revenueDivisions } from "@/data/revenue-divisions";
 import { servicesFaqAnswers } from "@/data/pages";
 import { business, telHref } from "@/data/site";
 import { FaqList, LogoWall, PageHero, SectionTitle, ServiceCard, siteFaqs } from "@/components/ui";
+import { divisionIcon } from "@/components/Artwork";
 import JsonLd from "@/components/JsonLd";
 import { faqSchema } from "@/lib/schema";
 
@@ -50,7 +51,12 @@ export default async function ServicesPage() {
                   className="rounded-2xl border border-line bg-surface-light p-7"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <h2 className="text-xl font-semibold">{d.title}</h2>
+                    <h2 className="flex items-center gap-3 text-xl font-semibold">
+                      <span aria-hidden className="text-2xl">
+                        {divisionIcon(d.key)}
+                      </span>
+                      {d.title}
+                    </h2>
                     <span className="rounded-full border border-line bg-parchment px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-heading">
                       {d.status === "Planned" ? "Coming soon — ask us" : d.status}
                     </span>

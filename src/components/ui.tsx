@@ -10,6 +10,7 @@ import { servicesFaqAnswers } from "@/data/pages";
 import { employers } from "@/data/employers";
 import { blogPosts } from "@/data/blog";
 import { services as allServices } from "@/data/services";
+import { categoryIcon, serviceIcon } from "@/components/Artwork";
 
 // Shared components in the Leo redesign v1 language ("Prospectus",
 // DECISIONS.md §19): paper heroes with serif display type, mono index
@@ -131,13 +132,19 @@ export function CourseCardBody({
           )}
         </Link>
       ) : (
-        <div className="flex aspect-video w-full items-center justify-center design-led-card px-6 text-center">
+        <div className="flex aspect-video w-full flex-col items-center justify-center gap-2 design-led-card px-6 text-center">
+          <span aria-hidden className="text-4xl">
+            {categoryIcon(category)}
+          </span>
           <span className="text-lg font-bold text-paper">{category}</span>
         </div>
       )}
       <div className="flex grow flex-col p-5">
         <p className="flex flex-wrap items-center gap-2">
           <span className="modern-chip bg-brand-soft text-signal-strong">
+            <span aria-hidden className="mr-1">
+              {categoryIcon(category)}
+            </span>
             {category}
           </span>
           {catalogOnly && (
@@ -209,6 +216,9 @@ export function ServiceCard({ service }: { service: Service }) {
         </span>
       )}
       <span className="block h-1 w-10 rounded-full bg-brand transition-all duration-300 group-hover:w-16" aria-hidden />
+      <span aria-hidden className="mt-4 text-3xl">
+        {serviceIcon(service.title)}
+      </span>
       <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.18em] text-signal-strong">
         Service {idx >= 0 ? String(idx + 1).padStart(2, "0") : ""}
       </p>

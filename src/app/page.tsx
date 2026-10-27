@@ -4,6 +4,7 @@ import { getCourses, getServices } from "@/lib/data";
 import { homeParagraphs } from "@/data/pages";
 import { testimonials } from "@/data/testimonials";
 import { BlogCards, CourseCard, CredentialCard, ExperienceBadge, FaqList, SectionTitle, SignatureBlock, siteFaqs, AnswerLead } from "@/components/ui";
+import { ArtworkMotif, heroBlockIcon } from "@/components/Artwork";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
@@ -141,11 +142,12 @@ export default async function HomePage() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {heroBlocks.map((b) => (
               <Link key={b.label} href={b.href} className="group relative block overflow-hidden modern-card">
-                <span className="flex aspect-[4/3] w-full flex-col justify-between p-5 design-led-card">
-                  <span aria-hidden className="font-sans text-[44px] font-bold leading-none text-paper/90">
-                    {b.label.charAt(0)}
+                <span className="relative flex aspect-[4/3] w-full flex-col justify-between p-5 design-led-card">
+                  <ArtworkMotif variant="network" className="pointer-events-none absolute inset-0 h-full w-full opacity-25" />
+                  <span aria-hidden className="relative font-sans text-[44px] leading-none">
+                    {heroBlockIcon(b.label)}
                   </span>
-                  <span>
+                  <span className="relative">
                     <span className="block text-[15px] font-bold text-paper">{b.label}</span>
                     <span className="mt-1 block text-[13px] leading-5 text-paper/85">{b.body}</span>
                     <span className="mt-3 inline-block text-[13px] font-bold text-paper underline underline-offset-4">Open →</span>

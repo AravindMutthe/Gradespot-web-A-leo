@@ -18,12 +18,13 @@ export default function LpLeadForm({
   idPrefix?: string;
 }) {
   const pathname = usePathname();
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "received" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [receivedNotice, setReceivedNotice] = useState<string>("");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (state === "sending") return; // double-submit guard
+    if (state === "sending" || state === "sent" || state === "received") return; // double-submit guard
     setErrors({});
     const form = e.currentTarget;
     const fd = new FormData(form);
@@ -50,7 +51,20 @@ export default function LpLeadForm({
         body: JSON.stringify(payload),
       });
       if (res.ok) {
-        setState("sent");
+        // Saved-vs-received honesty: a 202/log response means the
+        // request was received and logged, NOT saved to the database.
+        // It must never show the "sent" (in) state as if it were stored.
+        const body = await res.json().catch(() => ({}));
+        if (body && typeof body === "object" && body.stored === "log") {
+          setReceivedNotice(
+            typeof body.notice === "string" && body.notice
+              ? body.notice
+              : "Your request was received but could not be saved to our database right now. It has been logged on our server for follow-up — if you do not hear back, please contact us directly.",
+          );
+          setState("received");
+        } else {
+          setState("sent");
+        }
         form.reset();
       } else {
         const body = await res.json().catch(() => ({}));
@@ -77,6 +91,19 @@ export default function LpLeadForm({
           Your free counselling call request for {courseTitle} is in. Our counsellor will call
           you shortly — keep your phone nearby.
         </p>
+      </div>
+    );
+  }
+
+  if (state === "received") {
+    return (
+      <div className="rounded-2xl border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]">
+        <h3 className="font-display text-xl font-bold text-heading">Request received — not saved yet</h3>
+        <p className="mt-2 text-sm leading-6 text-body">
+          Your free counselling call request for {courseTitle} was received, but it could not
+          be saved to our database right now.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-body">{receivedNotice}</p>
       </div>
     );
   }

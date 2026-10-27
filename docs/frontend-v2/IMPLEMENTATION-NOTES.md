@@ -1,3 +1,37 @@
+## Lead endpoint honesty — 201 saved vs 202 received (branch-only, 2026-10-27)
+
+- **Bug:** `src/app/api/leads/route.ts` returned 201 with
+  `{ ok: true, stored, id }` for both Supabase-stored leads and
+  log-only leads, and all three forms (`LeadForm`, `RegisterForm`,
+  `LpLeadForm`) treated any `res.ok` as success and showed a
+  "sent / saved / in" message without checking `stored`. A lead that
+  was only logged on the server was therefore presented as saved.
+- **Contract now:** `stored === "supabase"` → 201,
+  `{ ok: true, stored: "supabase", id }` (the lead IS in the database).
+  `stored === "log"` → 202,
+  `{ ok: true, stored: "log", id: null, notice }` (the lead was
+  received and logged on the server for follow-up, but was NOT saved
+  to the database; the notice says so and gives a contact fallback).
+  Validation failures stay 400 with per-field errors, unchanged.
+  The log fallback itself is kept — it prevents silent loss during
+  development/outages — but it is now honest instead of silent.
+  Migration 0004 is applied and the Supabase path is primary when the
+  service key is present; this fix covers the exceptional log-only
+  path, it is not a claim that no leads are ever saved.
+- **Frontend:** each form parses the response body on every ok
+  response and checks `stored`. Supabase → the existing "sent"
+  success state, wording unchanged. Log → a NEW distinct "received"
+  state (not "sent"): it states the enquiry/registration was received
+  but could not be saved to the database right now, shows the server's
+  notice, does NOT claim the lead is "in" or saved, and does NOT show
+  the WhatsApp continuation as if the lead were stored. The received
+  state blocks double-submission like "sent". Non-ok responses and
+  network errors stay "error", unchanged.
+- **Other callers checked:** the only `fetch("/api/leads")` callers in
+  `src/` are those three forms; `DemoBand` references the endpoint in
+  a comment only and needed no change. The deal-brief form does not
+  post to `/api/leads` at all (draft-only).
+
 ## Nexus revenue application — Release 3 prep (branch-only, 2026-10-25)
 
 Source: GradeSpot revenue strategy (Axon `docs/REVENUE-STRATEGY.md`,

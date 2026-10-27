@@ -9,6 +9,18 @@ import { createLead } from "@/lib/data";
 // Email is optional (phone-first leads) but strictly format-checked
 // whenever present; the `course` field is a client-side selection guard
 // and is stripped before storage.
+//
+// Saved-vs-received contract (lead-endpoint honesty fix):
+// - stored === "supabase" → 201, { ok: true, stored: "supabase", id }.
+//   The lead IS in the database.
+// - stored === "log" → 202, { ok: true, stored: "log", id: null, notice }.
+//   The lead was RECEIVED and logged on the server for follow-up, but
+//   was NOT saved to the database (Supabase unavailable / service key
+//   absent). 202 is deliberately NOT 201: 201 would claim a database
+//   record that does not exist. The log fallback is kept so an enquiry
+//   is never silently dropped, but it must never be presented as saved.
+//   Clients must check `stored` on every ok response and show the
+//   distinct "received" state for the log path, never the "sent" state.
 export async function POST(request: Request) {
   let body: unknown;
   try {
@@ -24,5 +36,17 @@ export async function POST(request: Request) {
 
   const { course: _course, ...lead } = data;
   const result = await createLead(lead);
-  return NextResponse.json({ ok: true, stored: result.stored, id: result.id ?? null }, { status: 201 });
+  if (result.stored === "log") {
+    return NextResponse.json(
+      {
+        ok: true,
+        stored: "log",
+        id: null,
+        notice:
+          "Your enquiry was received but could not be saved to our database right now. It has been logged on our server for follow-up — if you do not hear back, please contact us directly.",
+      },
+      { status: 202 },
+    );
+  }
+  return NextResponse.json({ ok: true, stored: "supabase", id: result.id ?? null }, { status: 201 });
 }

@@ -40,9 +40,10 @@ export default function LeadForm({
   showCountry?: boolean;
 }) {
   const pathname = usePathname();
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "received" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sentInterest, setSentInterest] = useState<string>(interest ?? "");
+  const [receivedNotice, setReceivedNotice] = useState<string>("");
 
   const waNumber = business.phones[0].replace(/[^+\d]/g, "").replace(/^\+/, "");
   const waText = encodeURIComponent(
@@ -53,7 +54,7 @@ export default function LeadForm({
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (state === "sending") return; // double-submit guard
+    if (state === "sending" || state === "sent" || state === "received") return; // double-submit guard
     setErrors({});
     const form = e.currentTarget;
     const fd = new FormData(form);
@@ -93,7 +94,21 @@ export default function LeadForm({
         body: JSON.stringify(payload),
       });
       if (res.ok) {
-        setState("sent");
+        // Saved-vs-received honesty: a 202/log response means the
+        // enquiry was received and logged, NOT saved to the database.
+        // It must never show the "sent" (saved) state or the WhatsApp
+        // continuation as if the lead were stored.
+        const body = await res.json().catch(() => ({}));
+        if (body && typeof body === "object" && body.stored === "log") {
+          setReceivedNotice(
+            typeof body.notice === "string" && body.notice
+              ? body.notice
+              : "Your enquiry was received but could not be saved to our database right now. It has been logged on our server for follow-up — if you do not hear back, please contact us directly.",
+          );
+          setState("received");
+        } else {
+          setState("sent");
+        }
         form.reset();
       } else {
         const body = await res.json().catch(() => ({}));
@@ -303,6 +318,15 @@ export default function LeadForm({
           >
             Continue on WhatsApp →
           </a>
+        </div>
+      )}
+      {state === "received" && (
+        <div className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
+          <p>
+            Thank you — your enquiry was received, but it could not be saved to our database
+            right now.
+          </p>
+          <p className="mt-2">{receivedNotice}</p>
         </div>
       )}
       {state === "error" && (

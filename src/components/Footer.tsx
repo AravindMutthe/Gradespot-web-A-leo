@@ -1,174 +1,117 @@
 import Image from "next/image";
 import Link from "next/link";
 import { business, telHref } from "@/data/site";
-import { SocialLinks } from "@/components/ui";
 
-// Footer — Leo redesign v1 ("Prospectus", DECISIONS.md §19): deep ink
-// stock, serif column heads, mono index labels. Link set is the v1 set
-// plus "Contact Us" in Quick Links (it left the top bar in §19 because
-// the Callback CTA duplicates it there; the footer keeps a plain path).
+// Frontend 3.0 global footer (Stage 1, feat/frontend-v3).
+// Architecture by visitor job/task, NOT the v1 column set: Learn,
+// Get IT help, Explore, Get support, Legal. Every link is an existing
+// route slug; nothing is added, removed, or renamed here.
+// Deliberately absent, per the honesty gates: no counters, no "years",
+// no employer logos (wall OFF, R10), no ISO/AICTE emblems (proof not
+// found), no stats, no invented claims. Brand block carries only the
+// business name, its published location label, and its published phone.
 
-const companyLinks = [
-  { label: "About Us", href: "/about-us" },
-  { label: "Team Members", href: "/team-members" },
-  { label: "Why Choose Us", href: "/why-choose-us" },
-  { label: "Testimonials", href: "/testimonials" },
-  { label: "Career Support", href: "/career-support" },
-  { label: "For Colleges", href: "/for-colleges" },
-  { label: "Partner With Us", href: "/partner-with-us" },
-  { label: "Corporate & International", href: "/corporate-and-international" },
-  { label: "Help & FAQs", href: "/faq" },
+const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
+  {
+    heading: "Learn",
+    links: [
+      { label: "Trainings", href: "/trainings" },
+      { label: "Compare courses", href: "/compare" },
+      { label: "Career support", href: "/career-support" },
+      { label: "Student certifications", href: "/student-certifications" },
+      { label: "Certificate verification", href: "/certificate-verification" },
+    ],
+  },
+  {
+    heading: "Get IT help",
+    links: [
+      { label: "Services", href: "/services" },
+      { label: "For institutes", href: "/for-institutes" },
+      { label: "For colleges", href: "/for-colleges" },
+      { label: "Corporate & international", href: "/corporate-and-international" },
+      { label: "Partner with us", href: "/partner-with-us" },
+    ],
+  },
+  {
+    heading: "Explore",
+    links: [
+      { label: "About us", href: "/about-us" },
+      { label: "Team members", href: "/team-members" },
+      { label: "Why choose us", href: "/why-choose-us" },
+      { label: "Testimonials", href: "/testimonials" },
+      { label: "Blog", href: "/blog" },
+      { label: "Learning resources", href: "/resources" },
+      { label: "Training institute in Dilsukhnagar", href: "/training-institute-in-dilsukhnagar-hyderabad" },
+    ],
+  },
+  {
+    heading: "Get support",
+    links: [
+      { label: "Contact us", href: "/contact-us" },
+      { label: "Register", href: "/register" },
+      { label: "FAQs", href: "/faq" },
+      { label: "Accessibility", href: "/accessibility" },
+    ],
+  },
+  {
+    heading: "Legal",
+    links: [
+      { label: "Privacy policy", href: "/privacy-policy" },
+      { label: "Refund policy", href: "/refund-policy" },
+      { label: "Terms & conditions", href: "/terms-and-conditions" },
+    ],
+  },
 ];
-
-const quickLinks = [
-  { label: "Trainings", href: "/trainings" },
-  { label: "Services", href: "/services" },
-  { label: "Contact Us", href: "/contact-us" },
-  { label: "Student Certifications", href: "/student-certifications" },
-  { label: "Certificate Verification", href: "/certificate-verification" },
-  { label: "Terms and Conditions", href: "/terms-and-conditions" },
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Refund Policy", href: "/refund-policy" },
-  { label: "Accessibility", href: "/accessibility" },
-];
-
-// Footer keyword cluster (local-SEO pattern): the headline trainings,
-// linked by their real published titles to their real pages.
-const popularTrainings = [
-  { label: "Certified Ethical Hacker [CEH v13]", href: "/trainings/certified-ethical-hacker-ceh" },
-  { label: "SOC Analyst Training in Hyderabad", href: "/trainings/soc-analyst" },
-  { label: "CCNA 200-301", href: "/trainings/ccna-200-301" },
-  { label: "Azure Fundamentals | AZ-900", href: "/trainings/azure-fundamentals-az-900" },
-  { label: "Azure Administrator | AZ-104", href: "/trainings/azure-administrator-az-104" },
-  { label: "CompTIA Security+: Sy0-701", href: "/trainings/comptia-security-plus" },
-];
-
-const linkCls = "inline-block py-1 transition-colors hover:text-brand-bright";
-const headCls = "mb-4 font-display text-[19px] font-semibold text-paper";
 
 export default function Footer() {
+  const year = new Date().getFullYear();
+  const phone = business.phones[0];
   return (
-    <footer className="border-t-[3px] border-brand bg-ink-deep text-footer-text">
-      <div className="wrap grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1.25fr_0.7fr_0.8fr_1.05fr_1fr]">
+    <footer className="border-t-4 border-brand-accent bg-ink text-paper">
+      <div className="wrap grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[1.2fr_repeat(5,1fr)] md:py-14">
         <div>
-          {/* Logo brightening (§22): luminous plate + halo on the
-              ink footer behind the unmodified light artwork. */}
-          <span className="inline-block rounded-2xl bg-white/[0.07] px-3 py-2 shadow-[0_0_30px_rgba(247,99,27,0.28)] ring-1 ring-white/15">
+          <Link href="/" aria-label="GradeSpot IT Solutions — home">
             <Image
               src="/images/logo-light.png"
               alt="GradeSpot IT Solutions"
-              width={193}
-              height={60}
-              className="h-[52px] w-auto"
+              width={180}
+              height={56}
+              className="h-auto w-[180px]"
             />
-          </span>
-          <p className="mt-5 text-sm leading-6">
-            At GradeSpot IT Solutions, our commitment is to craft superior IT solutions that
-            redefine industry standards — training, services and cybersecurity from
-            Dilsukhnagar, Hyderabad.
+          </Link>
+          <p className="mt-4 max-w-xs text-[15px] leading-relaxed text-footer-text">
+            IT training and IT services in Hyderabad.
           </p>
-          <p className="eyebrow mt-6 text-paper">Connect With Us</p>
-          <p className="mt-3 flex items-center gap-4">
-            <SocialLinks className="h-5 w-5" />
-          </p>
+          <p className="mt-4 text-[15px] text-footer-text">{business.locationLabel}</p>
+          <a
+            href={telHref(phone)}
+            className="mt-1 inline-flex min-h-11 items-center text-[15px] font-semibold text-paper hover:text-brand-accent"
+          >
+            {phone}
+          </a>
         </div>
-
-        <nav aria-label="Company">
-          <h3 className={headCls}>Company</h3>
-          <ul className="space-y-1.5 text-sm">
-            {companyLinks.map((l) => (
-              <li key={l.href}>
-                <Link className={linkCls} href={l.href}>
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label="Quick links">
-          <h3 className={headCls}>Quick Links</h3>
-          <ul className="space-y-1.5 text-sm">
-            {quickLinks.map((l) => (
-              <li key={l.href}>
-                <Link className={linkCls} href={l.href}>
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label="Popular trainings">
-          <h3 className={headCls}>Popular Trainings</h3>
-          <ul className="space-y-1.5 text-sm">
-            {popularTrainings.map((l) => (
-              <li key={l.href}>
-                <Link className={linkCls} href={l.href}>
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div>
-          <h3 className={headCls}>Contact Info</h3>
-          <address className="space-y-3 text-sm not-italic leading-6">
-            <p>{business.address}</p>
-            <p>
-              <a
-                className="font-semibold text-brand-bright hover:text-paper"
-                href={`https://www.google.com/maps?q=${encodeURIComponent(business.address)}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View on Google Maps →
-              </a>
-            </p>
-            <p>
-              {business.emails.map((e) => (
-                <span key={e} className="block">
-                  <a className={linkCls} href={`mailto:${e}`}>
-                    {e}
-                  </a>
-                </span>
+        {COLUMNS.map((col) => (
+          <nav key={col.heading} aria-label={`Footer — ${col.heading}`}>
+            <h2 className="font-display text-[17px] font-semibold text-paper">{col.heading}</h2>
+            <ul className="mt-4 space-y-1">
+              {col.links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="inline-flex min-h-11 items-center text-[15px] text-footer-text hover:text-paper"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
               ))}
-            </p>
-            <p>
-              {business.phones.map((p) => (
-                <span key={p} className="block">
-                  <a className={linkCls} href={telHref(p)}>
-                    {p}
-                  </a>
-                </span>
-              ))}
-            </p>
-          </address>
-        </div>
+            </ul>
+          </nav>
+        ))}
       </div>
-
-      <div className="border-t border-white/10">
-        <div className="wrap flex flex-wrap items-center justify-between gap-2 py-5 font-mono text-[11.5px] uppercase tracking-[0.08em] text-footer-text">
-          <p>© Copyright {new Date().getFullYear()}. {business.legalName}</p>
-          {/* §22 dedupe: this strip used to repeat Home / Testimonials /
-              Services / Terms, which already live in the columns above.
-              It now carries only the links the columns don't. */}
-          <p className="normal-case tracking-normal">
-            <Link className="hover:text-brand-bright" href="/pricing">
-              Pricing
-            </Link>
-            {" · "}
-            <Link className="hover:text-brand-bright" href="/for-institutes">
-              For Institutes
-            </Link>
-            {" · "}
-            <Link
-              className="hover:text-brand-bright"
-              href="/training-institute-in-dilsukhnagar-hyderabad"
-            >
-              Institute in Dilsukhnagar
-            </Link>
+      <div className="border-t border-white/15">
+        <div className="wrap flex flex-col gap-2 py-5 text-sm text-footer-text">
+          <p>
+            © {year} {business.name}. All rights reserved.
           </p>
         </div>
       </div>

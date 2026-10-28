@@ -1,11 +1,8 @@
 import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { getServices } from "@/lib/data";
-import { servicesFaqAnswers } from "@/data/pages";
-import { business, telHref } from "@/data/site";
-import { FaqList, LogoWall, PageHero, SectionTitle, ServiceCard, siteFaqs } from "@/components/ui";
-import JsonLd from "@/components/JsonLd";
-import { faqSchema } from "@/lib/schema";
+import { PageHero, AnswerLead } from "@/components/ui";
+import { buildServiceRow } from "@/lib/services-rows";
 
 export const metadata = staticPageMetadata({
   title: "Services",
@@ -13,84 +10,76 @@ export const metadata = staticPageMetadata({
   path: "/services",
 });
 
+// Frontend 3.0 — Stage 4 services index (Option A, compact rows).
+// What this template contains, and nothing else:
+// - the compact service rows and an enquiry/help section with
+//   truthful wording only.
+// Every service is held back to title-only: per src/data/services.ts,
+// all summaries are pending Aravind's accuracy confirmation and the
+// live detail pages carry only template filler, so no summary and
+// no offerings list is rendered for any service.
+// The promotional sections of the old template are removed from this
+// template outright, not hidden: no service-card grid, no round-the-
+// clock support claim card, no filler "smart" card, no FAQ section
+// (its shared answers carry unverified quality and free-demo claims),
+// no employer logo wall, no duplicated contact cards (the contact
+// page remains the contact surface).
+// Slugs, service order and routes are unchanged.
+
 export default async function ServicesPage() {
   const services = await getServices();
+  const rows = services.map((s) => buildServiceRow({ slug: s.slug, title: s.title }));
+
   return (
     <>
-      {/* FAQPage for the siteFaqs rendered below via FaqList (§25.21). */}
-      <JsonLd data={faqSchema(siteFaqs)} />
       <PageHero
-        title="Our Services"
-        subtitle="Comprehensive IT Training & Career Solutions — professional IT services tailored to your business needs."
+        title="IT Services"
+        subtitle="Services from GradeSpot IT Solutions in Dilsukhnagar, Hyderabad. Service details, scope and availability are confirmed on enquiry."
       />
+      <div className="wrap pt-8">
+        <AnswerLead id="answer-summary">
+          Browse {services.length} services from GradeSpot IT Solutions in Dilsukhnagar,
+          Hyderabad, listed below. Service details, scope and availability are confirmed on
+          enquiry.
+        </AnswerLead>
+      </div>
       <section className="section-pad">
         <div className="wrap">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {services.map((s) => (
-              <ServiceCard key={s.slug} service={s} />
+          <ul className="border-t border-line">
+            {rows.map((row) => (
+              <li key={row.slug} className="border-b border-line">
+                <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
+                  <div className="min-w-0">
+                    <h2 className="text-lg font-semibold">
+                      <Link href={row.titleHref} className="hover:text-signal">
+                        {row.displayTitle}
+                      </Link>
+                    </h2>
+                    <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
+                  </div>
+                  <Link
+                    href={row.actionHref}
+                    className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
+                  >
+                    {row.actionLabel}
+                  </Link>
+                </article>
+              </li>
             ))}
-          </div>
+          </ul>
 
-          <div className="mt-16 grid gap-6 md:grid-cols-2">
-            <article className="rounded-2xl border border-line bg-surface-light p-7">
-              <h2 className="text-2xl font-semibold">24/7 Customer Support</h2>
-              <p className="mt-2 text-sm leading-6">{servicesFaqAnswers.support}</p>
-            </article>
-            <article className="rounded-2xl border border-line bg-surface-light p-7">
-              <h2 className="text-2xl font-semibold">Smart Solutions</h2>
-              <p className="mt-2 text-sm leading-6">{servicesFaqAnswers.smart}</p>
-            </article>
-          </div>
-
-          <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.4fr]">
-            <SectionTitle label="FAQ" title="Most common question about our services" />
-            <FaqList items={siteFaqs} />
-          </div>
-
-          <div className="mt-16 rounded-[20px] panel-ink p-8 text-center">
-            <h2 className="font-display text-2xl font-semibold text-paper">Need a service for your business?</h2>
-            <p className="mx-auto mt-2 max-w-xl text-paper/80">
-              Tell us what you are building or training for — we will respond with the right
-              service plan.
+          <div className="mt-16 rounded-2xl border border-line bg-surface-light p-8 text-center">
+            <h2 className="text-2xl font-semibold">Need a service for your business?</h2>
+            <p className="mx-auto mt-2 max-w-xl">
+              Tell us what you need — send an enquiry and our team will discuss your
+              requirement.
             </p>
             <Link href="/contact-us" className="btn-primary mt-5">
-              Contact Us Now
+              Enquire About Our Services
             </Link>
-          </div>
-
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
-            <article className="rounded-2xl border border-line bg-surface-light p-7">
-              <h2 className="text-xl font-semibold">Address</h2>
-              <p className="mt-2 text-sm leading-6">{business.address}</p>
-            </article>
-            <article className="rounded-2xl border border-line bg-surface-light p-7">
-              <h2 className="text-xl font-semibold">Send Us Mail</h2>
-              <p className="mt-2 text-sm leading-6">
-                {business.emails.map((e) => (
-                  <span key={e} className="block">
-                    <a className="hover:text-signal" href={`mailto:${e}`}>
-                      {e}
-                    </a>
-                  </span>
-                ))}
-              </p>
-            </article>
-            <article className="rounded-2xl border border-line bg-surface-light p-7">
-              <h2 className="text-xl font-semibold">Call Us</h2>
-              <p className="mt-2 text-sm leading-6">
-                {business.phones.map((p) => (
-                  <span key={p} className="block">
-                    <a className="hover:text-signal" href={telHref(p)}>
-                      {p}
-                    </a>
-                  </span>
-                ))}
-              </p>
-            </article>
           </div>
         </div>
       </section>
-      <LogoWall />
     </>
   );
 }

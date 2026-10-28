@@ -126,8 +126,13 @@ export function lpPageMetadata(
 }
 
 export function servicePageMetadata(service: Service, canonicalPath: string): Metadata {
+  // Stage 4: every service is held back (all summaries pending
+  // Aravind's accuracy confirmation per src/data/services.ts), so the
+  // meta/OG description must NOT carry the unconfirmed summary. When
+  // the owner/content approver confirms a service's scope, its
+  // description returns here for that service only.
   const description = withPlace(
-    service.summary ?? `${service.title} — a GradeSpot IT Solutions service, Hyderabad.`,
+    `${service.title} — a GradeSpot IT Solutions service in Dilsukhnagar, Hyderabad. Service details are confirmed on enquiry.`,
   );
   return {
     title: service.title,

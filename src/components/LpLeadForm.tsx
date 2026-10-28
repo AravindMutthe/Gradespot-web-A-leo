@@ -5,6 +5,16 @@ import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
 import { newIdempotencyKey } from "@/lib/lead-contract";
 import { waLink } from "@/lib/wa";
+import {
+  leadFormCard,
+  leadFormErrorPanel,
+  leadFormErrorText,
+  leadFormField,
+  leadFormHelper,
+  leadFormHoneypot,
+  leadFormLabel,
+  leadFormWaButton,
+} from "@/components/lead-form-styles";
 
 // Landing-page lead form (size the form to the offer —
 // a free counselling call asks for name, phone and ONE qualifying
@@ -32,6 +42,9 @@ export default function LpLeadForm({
   const [state, setState] = useState<"idle" | "sending" | "recorded" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverMessage, setServerMessage] = useState<string>("");
+  // Anti-spam mount timestamp (see LeadForm / lead-validation.ts):
+  // the server rejects submissions faster than 3s after load.
+  const [formLoadedAt] = useState(() => Date.now());
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,11 +60,21 @@ export default function LpLeadForm({
       message: `Wants to start: ${String(fd.get("start") ?? "Immediately")}`,
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/"}`,
+      // Anti-spam fields: honeypot (must stay empty) + mount
+      // timestamp. validateLead checks both but never copies them
+      // into the stored payload.
+      website: String(fd.get("website") ?? ""),
+      formLoadedAt,
     };
     // Same validators as /api/leads (§25.18) — caught here, never sent.
     const checked = validateLead(payload);
     if (!checked.data) {
       setErrors(checked.errors);
+      // Anti-spam failures surface ONLY the generic message.
+      if (checked.errors.form) {
+        setServerMessage(checked.errors.form);
+        setState("error");
+      }
       return;
     }
     setState("sending");
@@ -90,14 +113,13 @@ export default function LpLeadForm({
     }
   }
 
-  const field =
-    "w-full rounded-xl border border-line bg-parchment px-4 py-3 text-[15px] text-heading outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/20";
-  const label = "block text-sm font-semibold text-heading";
+  const field = leadFormField;
+  const label = leadFormLabel;
   const id = (n: string) => `${idPrefix}-${n}`;
 
   if (state === "recorded") {
     return (
-      <div className="rounded-2xl border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]">
+      <div role="status" className={leadFormCard}>
         <h3 className="font-display text-xl font-bold text-heading">Thank you!</h3>
         <p className="mt-2 text-sm leading-6 text-body">
           Your enquiry has been received and recorded. Our team will get back to you.
@@ -108,7 +130,7 @@ export default function LpLeadForm({
           )}
           target="_blank"
           rel="noreferrer"
-          className="mt-4 inline-block rounded-xl bg-wa px-5 py-2.5 font-semibold text-white transition-transform hover:scale-[1.03]"
+          className={leadFormWaButton}
         >
           Continue on WhatsApp →
         </a>
@@ -119,7 +141,7 @@ export default function LpLeadForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
+      className={leadFormCard}
       noValidate
     >
       <h3 className="font-display text-xl font-bold text-heading">Get My Free Counselling Call</h3>
@@ -134,10 +156,12 @@ export default function LpLeadForm({
             name="name"
             required
             autoComplete="name"
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? id("name-error") : undefined}
             className={field}
             placeholder="Your name"
           />
-          {errors.name && <p className="mt-1 text-xs text-field-error">{errors.name}</p>}
+          {errors.name && <p id={id("name-error")} className={leadFormErrorText}>{errors.name}</p>}
         </div>
         <div>
           <label htmlFor={id("phone")} className={label}>
@@ -149,11 +173,13 @@ export default function LpLeadForm({
             type="tel"
             required
             autoComplete="tel"
+            aria-invalid={!!errors.phone}
+            aria-describedby={errors.phone ? id("phone-error") : undefined}
             className={field}
             placeholder="+91 …"
             inputMode="tel"
           />
-          {errors.phone && <p className="mt-1 text-xs text-field-error">{errors.phone}</p>}
+          {errors.phone && <p id={id("phone-error")} className={leadFormErrorText}>{errors.phone}</p>}
         </div>
         <div>
           <label htmlFor={id("start")} className={label}>
@@ -174,10 +200,12 @@ export default function LpLeadForm({
             name="email"
             type="email"
             autoComplete="email"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? id("email-error") : undefined}
             className={field}
             placeholder="you@example.com"
           />
-          {errors.email && <p className="mt-1 text-xs text-field-error">{errors.email}</p>}
+          {errors.email && <p id={id("email-error")} className={leadFormErrorText}>{errors.email}</p>}
         </div>
       </div>
       <label
@@ -193,6 +221,18 @@ export default function LpLeadForm({
         />
         <span>Yes, send me course details and updates on WhatsApp.</span>
       </label>
+      {/* Honeypot: visually hidden, never focusable, never autofilled.
+          Filled honeypots are rejected server-side with a generic
+          error that never names this field. Real users never see it. */}
+      <div aria-hidden="true" className={leadFormHoneypot}>
+        <input
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+        />
+      </div>
       <button
         type="submit"
         disabled={state === "sending"}
@@ -200,11 +240,11 @@ export default function LpLeadForm({
       >
         {state === "sending" ? "Sending…" : "Get My Free Counselling Call"}
       </button>
-      <p className="mt-3 text-center text-xs leading-5 text-body">
+      <p className={leadFormHelper}>
         No spam — one counsellor call. Your details are used only to respond to this enquiry.
       </p>
       {state === "error" && (
-        <p className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
+        <p role="alert" className={leadFormErrorPanel}>
           {serverMessage ||
             "We could not submit your request. Please check the fields and try again, or call us directly."}
         </p>

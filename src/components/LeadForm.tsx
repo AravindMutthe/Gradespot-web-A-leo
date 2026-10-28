@@ -5,6 +5,18 @@ import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
 import { newIdempotencyKey } from "@/lib/lead-contract";
 import { business } from "@/data/site";
+import {
+  leadFormCard,
+  leadFormEyebrow,
+  leadFormErrorPanel,
+  leadFormErrorText,
+  leadFormField,
+  leadFormHelper,
+  leadFormHoneypot,
+  leadFormLabel,
+  leadFormSuccess,
+  leadFormWaButton,
+} from "@/components/lead-form-styles";
 
 // Lead form per the researched conversion rules:
 // - few fields (name, phone, email, one qualifier, optional message)
@@ -55,6 +67,11 @@ export default function LeadForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverMessage, setServerMessage] = useState<string>("");
   const [recordedInterest, setRecordedInterest] = useState<string>(interest ?? "");
+  // Anti-spam: stamped once at mount, sent with the payload. The
+  // server rejects submissions faster than 3s after load as bot-like
+  // (soft signal — see lead-validation.ts). Never reset on success:
+  // a second submission from the same mount is always older than 3s.
+  const [formLoadedAt] = useState(() => Date.now());
 
   const waNumber = business.phones[0].replace(/[^+\d]/g, "").replace(/^\+/, "");
   const waText = encodeURIComponent(
@@ -88,12 +105,23 @@ export default function LeadForm({
       // (max 100 chars); it persists only once the leads.country column
       // exists — see the showCountry note.
       country: String(fd.get("country") ?? ""),
+      // Anti-spam fields: the honeypot (must stay empty) and the mount
+      // timestamp. validateLead checks both but never copies them into
+      // the stored payload, so neither can ever reach storage.
+      website: String(fd.get("website") ?? ""),
+      formLoadedAt,
     };
     // Client runs the SAME validators as /api/leads (§25.18) — bad
     // input is caught here with inline per-field errors and never sent.
     const checked = validateLead(payload);
     if (!checked.data) {
       setErrors(checked.errors);
+      // Anti-spam failures surface ONLY the generic message — never a
+      // hint about which check tripped.
+      if (checked.errors.form) {
+        setServerMessage(checked.errors.form);
+        setState("error");
+      }
       return;
     }
     setState("sending");
@@ -119,7 +147,13 @@ export default function LeadForm({
         if (body && typeof body === "object" && "errors" in body) {
           setErrors(body.errors as Record<string, string>);
         }
-        if (body && typeof body === "object" && typeof body.error === "string") {
+        // 503-ready (known follow-up, fixed here): the 503 log-only
+        // body carries `message`, not `error` — read message first so
+        // the honest not-confirmed copy surfaces, exactly like
+        // LpLeadForm already does.
+        if (body && typeof body === "object" && typeof body.message === "string") {
+          setServerMessage(body.message);
+        } else if (body && typeof body === "object" && typeof body.error === "string") {
           setServerMessage(body.error);
         }
         setState("error");
@@ -129,18 +163,17 @@ export default function LeadForm({
     }
   }
 
-  const field =
-    "w-full rounded-xl border border-line bg-parchment px-4 py-3 text-[15px] text-heading outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/20";
-  const label = "block text-sm font-semibold text-heading";
+  const field = leadFormField;
+  const label = leadFormLabel;
   const id = (n: string) => `${idPrefix}-${n}`;
 
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
+      className={leadFormCard}
       noValidate
     >
-      <p className="mb-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-signal-strong">
+      <p className={leadFormEyebrow}>
         <span>Phone-first</span>
         <span aria-hidden>·</span>
         <span>Email optional</span>
@@ -160,10 +193,12 @@ export default function LeadForm({
             name="name"
             required
             autoComplete="name"
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? id("name-error") : undefined}
             className={field}
             placeholder="Your name"
           />
-          {errors.name && <p className="mt-1 text-xs text-field-error">{errors.name}</p>}
+          {errors.name && <p id={id("name-error")} className={leadFormErrorText}>{errors.name}</p>}
         </div>
         <div>
           <label htmlFor={id("phone")} className={label}>
@@ -175,11 +210,13 @@ export default function LeadForm({
             type="tel"
             required
             autoComplete="tel"
+            aria-invalid={!!errors.phone}
+            aria-describedby={errors.phone ? id("phone-error") : undefined}
             className={field}
             placeholder="+91 …"
             inputMode="tel"
           />
-          {errors.phone && <p className="mt-1 text-xs text-field-error">{errors.phone}</p>}
+          {errors.phone && <p id={id("phone-error")} className={leadFormErrorText}>{errors.phone}</p>}
         </div>
       </div>
       <div className="mt-4">
@@ -191,10 +228,12 @@ export default function LeadForm({
           name="email"
           type="email"
           autoComplete="email"
+          aria-invalid={!!errors.email}
+          aria-describedby={errors.email ? id("email-error") : undefined}
           className={field}
           placeholder="you@example.com"
         />
-        {errors.email && <p className="mt-1 text-xs text-field-error">{errors.email}</p>}
+        {errors.email && <p id={id("email-error")} className={leadFormErrorText}>{errors.email}</p>}
       </div>
       {showPartnership && (
         <div className="mt-4">
@@ -206,10 +245,12 @@ export default function LeadForm({
             name="organisation"
             required
             autoComplete="organization"
+            aria-invalid={!!errors.organisation}
+            aria-describedby={errors.organisation ? id("organisation-error") : undefined}
             className={field}
             placeholder="Your organisation"
           />
-          {errors.organisation && <p className="mt-1 text-xs text-field-error">{errors.organisation}</p>}
+          {errors.organisation && <p id={id("organisation-error")} className={leadFormErrorText}>{errors.organisation}</p>}
         </div>
       )}
       <div className="mt-4">
@@ -223,6 +264,8 @@ export default function LeadForm({
               name="partnershipType"
               required
               defaultValue="training"
+              aria-invalid={!!errors.partnershipType}
+              aria-describedby={errors.partnershipType ? id("partnershipType-error") : undefined}
               className={field}
             >
               {["training", "university MoU", "reseller", "white-label"].map((o) => (
@@ -232,7 +275,7 @@ export default function LeadForm({
               ))}
             </select>
             {errors.partnershipType && (
-              <p className="mt-1 text-xs text-field-error">{errors.partnershipType}</p>
+              <p id={id("partnershipType-error")} className={leadFormErrorText}>{errors.partnershipType}</p>
             )}
           </>
         ) : (
@@ -246,6 +289,8 @@ export default function LeadForm({
                 name="interest"
                 required
                 defaultValue={interestOptions[0]}
+                aria-invalid={!!errors.interest}
+                aria-describedby={errors.interest ? id("interest-error") : undefined}
                 className={field}
               >
                 {interestOptions.map((o) => (
@@ -260,11 +305,13 @@ export default function LeadForm({
                 name="interest"
                 required
                 defaultValue={interest ?? ""}
+                aria-invalid={!!errors.interest}
+                aria-describedby={errors.interest ? id("interest-error") : undefined}
                 className={field}
                 placeholder="Course Training, Certification Voucher, a Service…"
               />
             )}
-            {errors.interest && <p className="mt-1 text-xs text-field-error">{errors.interest}</p>}
+            {errors.interest && <p id={id("interest-error")} className={leadFormErrorText}>{errors.interest}</p>}
           </>
         )}
       </div>
@@ -291,10 +338,12 @@ export default function LeadForm({
             id={id("message")}
             name="message"
             rows={4}
+            aria-invalid={!!errors.message}
+            aria-describedby={errors.message ? id("message-error") : undefined}
             className={field}
             placeholder="Anything we should know?"
           />
-          {errors.message && <p className="mt-1 text-xs text-field-error">{errors.message}</p>}
+          {errors.message && <p id={id("message-error")} className={leadFormErrorText}>{errors.message}</p>}
         </div>
       )}
       <label htmlFor={id("wa")} className="mt-4 flex cursor-pointer items-start gap-2.5 text-sm text-body">
@@ -307,6 +356,18 @@ export default function LeadForm({
         />
         <span>Yes, send me course details and updates on WhatsApp.</span>
       </label>
+      {/* Honeypot: visually hidden, never focusable, never autofilled.
+          Bots that fill it are rejected server-side with a generic
+          error that never names this field. Real users never see it. */}
+      <div aria-hidden="true" className={leadFormHoneypot}>
+        <input
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+        />
+      </div>
       <button
         type="submit"
         disabled={state === "sending"}
@@ -314,24 +375,24 @@ export default function LeadForm({
       >
         {state === "sending" ? "Sending…" : submitLabel}
       </button>
-      <p className="mt-3 text-center text-xs leading-5 text-body">
+      <p className={leadFormHelper}>
         Your details are used only to respond to this enquiry — no spam, ever.
       </p>
       {state === "recorded" && (
-        <div className="mt-4 rounded-lg bg-success-surface p-4 text-sm text-success-text">
+        <div role="status" className={leadFormSuccess}>
           <p>Thank you — your enquiry has been received and recorded. Our team will get back to you shortly.</p>
           <a
             href={`https://wa.me/${waNumber}?text=${waText}`}
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-block rounded-xl bg-wa px-5 py-2.5 font-semibold text-white transition-transform hover:scale-[1.03]"
+            className={leadFormWaButton}
           >
             Continue on WhatsApp →
           </a>
         </div>
       )}
       {state === "error" && (
-        <p className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
+        <p role="alert" className={leadFormErrorPanel}>
           {serverMessage ||
             "We could not submit your enquiry. Please check the fields and try again, or call us directly."}
         </p>

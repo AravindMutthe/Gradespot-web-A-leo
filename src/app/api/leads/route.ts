@@ -74,7 +74,13 @@ export async function POST(request: Request) {
 
   const { data, errors } = validateLead(body);
   if (!data) {
-    return NextResponse.json({ error: "Validation failed", errors }, { status: 400 });
+    // Anti-spam failures carry errors.form (the generic message, never
+    // naming the honeypot or timing rule); every other validation
+    // failure keeps the existing "Validation failed" string.
+    return NextResponse.json(
+      { error: errors.form ?? "Validation failed", errors },
+      { status: 400 },
+    );
   }
 
   const { course: _course, ...lead } = data;

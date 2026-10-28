@@ -123,7 +123,7 @@ export default function LpLeadForm({
       noValidate
     >
       <h3 className="font-display text-xl font-bold text-heading">Get My Free Counselling Call</h3>
-      <p className="mt-1 text-sm text-body">3 fields — name, phone, and when you can start.</p>
+      <p className="mt-1 text-sm text-body">3 required fields — name, phone, and when you can start. Email is optional.</p>
       <div className="mt-5 space-y-4">
         <div>
           <label htmlFor={id("name")} className={label}>

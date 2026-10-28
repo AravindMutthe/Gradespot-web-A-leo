@@ -86,11 +86,11 @@ export default async function CategoryPage({
           <ul className="border-t border-line">
             {rows.map((row) => (
               <li key={row.slug} className="border-b border-line">
-                <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
+                <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
                   <div className="min-w-0">
                     <h2 className="flex flex-wrap items-center gap-3 text-lg font-semibold">
                       {row.titleHref ? (
-                        <Link href={row.titleHref} className="hover:text-signal">
+                        <Link href={row.titleHref} className="hover:text-signal focus-visible:underline">
                           {row.displayTitle}
                         </Link>
                       ) : (

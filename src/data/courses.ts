@@ -54,7 +54,7 @@ export const courses: Course[] = [
       {
         "heading": "Course Overview:",
         "paragraphs": [
-          "Embark on your journey into the world of cloud computing with our Microsoft Azure Fundamentals training. Dive deep into the core concepts of Azure, covering key topics such as virtual machines, storage, networking, and security. Whether you’re new to Azure or looking to solidify your understanding, our course provides hands-on experience and expert guidance to help you succeed. Get ready to unlock the power of Azure and advance your career in cloud technology. Enroll now and gain the essential skills needed to thrive in today’s digital landscape!"
+          "Embark on your journey into the world of cloud computing with our Microsoft Azure Fundamentals training. Dive deep into the core concepts of Azure, covering key topics such as virtual machines, storage, networking, and security. Whether you’re new to Azure or looking to solidify your understanding, our course provides hands-on experience and expert guidance to help you succeed. Get ready to unlock the power of Azure and advance your career in cloud technology. Enquire now and gain the essential skills needed to thrive in today’s digital landscape!"
         ]
       },
       {
@@ -90,7 +90,7 @@ export const courses: Course[] = [
       {
         "heading": "Skills To Measure In Microsoft Azure Fundamentals",
         "paragraphs": [
-          "Master cloud computing with our Microsoft Azure Fundamentals course. Explore Windows Azure Fundamentals to unlock the power of Azure's services. Perfect for aspiring cloud professionals or seasoned IT experts, our expert-led course offers hands-on learning. Gain essential skills in Azure's core concepts, architecture, and functionalities. Enroll now to become a proficient Azure Cloud.",
+          "Master cloud computing with our Microsoft Azure Fundamentals course. Explore Windows Azure Fundamentals to unlock the power of Azure's services. Perfect for aspiring cloud professionals or seasoned IT experts, our expert-led course offers hands-on learning. Gain essential skills in Azure's core concepts, architecture, and functionalities. Enquire now to build proficiency in Azure Cloud.",
           "Describe Azure architecture and services",
           "Describe Azure management and governance"
         ]
@@ -162,7 +162,7 @@ export const courses: Course[] = [
       {
         "heading": "Azure Administrator",
         "paragraphs": [
-          "Unlock the full potential of Microsoft Azure with our Azure Administrator Training! Gain hands-on expertise in cloud administration, optimize infrastructure efficiency, and elevate your skills to expertly manage and deploy Azure solutions for enhanced business performance. Enroll now to become a certified Azure Administrator and lead your organization towards digital transformation.",
+          "Unlock the full potential of Microsoft Azure with our Azure Administrator Training! Gain hands-on expertise in cloud administration, optimize infrastructure efficiency, and elevate your skills to expertly manage and deploy Azure solutions for enhanced business performance. Enquire now about training to become a certified Azure Administrator and lead your organization towards digital transformation.",
           "Empower your learning journey with our engaging live classes.",
           "Unlock a wealth of knowledge with our extensive collection of recorded videos.",
           "Get a complimentary certification voucher and elevate your skills for success.",
@@ -574,7 +574,7 @@ export const courses: Course[] = [
       {
         "heading": "CompTIA Network+",
         "paragraphs": [
-          "Ready to master the intricacies of computer networking? Enroll in our comprehensive CompTIA Network+ Training and unlock the key techniques to excel in this dynamic field. Our expert-led program equips you with essential skills to navigate networks, troubleshoot issues, and optimize performance. Whether you're a seasoned IT professional or just starting your journey, our hands-on approach ensures you're prepared to ace the CompTIA Network+ certification exam. Join us today and elevate your networking expertise to new heights!",
+          "Ready to master the intricacies of computer networking? Enquire about our comprehensive CompTIA Network+ Training and unlock the key techniques to excel in this dynamic field. Our expert-led program equips you with essential skills to navigate networks, troubleshoot issues, and optimize performance. Whether you're a seasoned IT professional or just starting your journey, our hands-on approach ensures you're prepared to ace the CompTIA Network+ certification exam. Join us today and elevate your networking expertise to new heights!",
           "Empower your learning journey with our engaging live classes.",
           "Unlock a wealth of knowledge with our extensive collection of recorded videos.",
           "Get a course completion certification and elevate your skills for success.",
@@ -614,7 +614,7 @@ export const courses: Course[] = [
           "Community Support: Connect with peers and instructors through online forums and discussion groups for additional support and collaboration.",
           "Career Guidance: Receive career guidance and job placement assistance to help you leverage your certification and advance in your networking career.",
           "By completing our CompTIA Network+ Training, you’ll acquire essential knowledge and hands-on skills vital for a thriving career in the expanding field of computer networking.",
-          "Enroll in our CompTIA Network+ Training Program and initiate an enriching exploration into the realm of network administration. Whether you aim to safeguard networks against digital threats, advance professionally, or contribute to the digital landscape, our program equips you with the requisite resources, expertise, and assistance to excel."
+          "Enquire about our CompTIA Network+ Training Program and initiate an enriching exploration into the realm of network administration. Whether you aim to safeguard networks against digital threats, advance professionally, or contribute to the digital landscape, our program equips you with the requisite resources, expertise, and assistance to excel."
         ]
       },
       {
@@ -721,7 +721,7 @@ export const courses: Course[] = [
         "paragraphs": [
           "Anyone interested in a career in cybersecurity",
           "By the end of this course, you’ll be equipped with the knowledge and skills to take on advanced roles in cybersecurity teams and be well-prepared for the CompTIA PenTest+ (PT0-002) certification exam.",
-          "Enroll in our CompTIA Pentest+ Training Program and set forth on a transformative voyage into the realm of cybersecurity. Whether your aim is to fortify defenses against cyber threats, propel your career forward, or enact change in the digital sphere, our program equips you with the essential tools, expertise, and guidance required to thrive."
+          "Enquire about our CompTIA Pentest+ Training Program and set forth on a transformative voyage into the realm of cybersecurity. Whether your aim is to fortify defenses against cyber threats, propel your career forward, or enact change in the digital sphere, our program equips you with the essential tools, expertise, and guidance required to thrive."
         ]
       },
       {
@@ -783,12 +783,12 @@ export const courses: Course[] = [
     "title": "CompTIA Security+: Sy0-701",
     "category": "CompTIA",
     "image": "/images/courses/security-plus.jpg",
-    "summary": "Elevate your cybersecurity expertise with CompTIA Security+ Training. Gain essential skills through hands-on learning and real-world scenarios. Enroll now!",
+    "summary": "Elevate your cybersecurity expertise with CompTIA Security+ Training. Gain essential skills through hands-on learning and real-world scenarios. Enquire now!",
     "sections": [
       {
         "heading": "CompTIA Security+",
         "paragraphs": [
-          "Elevate your cybersecurity expertise with CompTIA Security+ Training. Gain essential skills through hands-on learning and real-world scenarios. Enroll now!",
+          "Elevate your cybersecurity expertise with CompTIA Security+ Training. Gain essential skills through hands-on learning and real-world scenarios. Enquire now!",
           "Complete your registration by filling out the form.",
           "Select an OptionCourse TrainingCertification VoucherOther Queries"
         ]
@@ -838,7 +838,7 @@ export const courses: Course[] = [
         "heading": "Who this course is for",
         "paragraphs": [
           "Upon completing our CompTIA Security+ Training, you’ll acquire invaluable expertise and hands-on experience in the field of cybersecurity, specifically in ethical hacking. This comprehensive program equips you with the essential skills required for a thriving career in this rapidly expanding industry.",
-          "Enroll in our CompTIA Security+ Training Program today and immerse yourself in a dynamic journey toward cybersecurity excellence. Whether your goal is to fortify defenses against cyber threats, elevate your professional trajectory, or enact positive change in the digital landscape, our program offers the necessary resources, insights, and mentorship to guide you to success."
+          "Enquire about our CompTIA Security+ Training Program today and immerse yourself in a dynamic journey toward cybersecurity excellence. Whether your goal is to fortify defenses against cyber threats, elevate your professional trajectory, or enact positive change in the digital landscape, our program offers the necessary resources, insights, and mentorship to guide you to success."
         ]
       },
       {
@@ -1028,7 +1028,7 @@ export const courses: Course[] = [
       {
         "heading": "Digital Marketing",
         "paragraphs": [
-          "Unlock the full potential of Digital Marketing with our comprehensive Digital Marketing Course! Gain hands-on expertise in online advertising, social media management, search engine optimization, and more. Learn how to optimize digital marketing strategies, enhance brand visibility, and drive business growth in the digital landscape. Enroll now to become a certified Digital Marketing professional and lead your organization towards digital transformation.",
+          "Unlock the full potential of Digital Marketing with our comprehensive Digital Marketing Course! Gain hands-on expertise in online advertising, social media management, search engine optimization, and more. Learn how to optimize digital marketing strategies, enhance brand visibility, and drive business growth in the digital landscape. Enquire now about the path to becoming a certified Digital Marketing professional and lead your organization towards digital transformation.",
           "Empower your learning journey with our engaging live classes.",
           "Unlock a wealth of knowledge with our extensive collection of recorded videos.",
           "Get a course completion certification and elevate your skills for success.",
@@ -1060,7 +1060,7 @@ export const courses: Course[] = [
           "Comprehensive Curriculum: Our Digital Marketing Training Program consists of a complete curriculum designed to equip you with all of the important capabilities and expertise you need to excel in digital advertising and marketing. You will delve into important elements of virtual marketing, which includes SEO, SEM, SMM, content material advertising and marketing, e mail advertising, analytics, and greater. Through palms-on revel in and sensible initiatives, you’ll discover ways to create powerful digital advertising techniques, optimize campaigns, analyze enterprise metrics, and get right of entry to the cutting-edge advancements and equipment in the industry.",
           "Expert Instructors: Our training program is led by industry professionals with extensive experience in Digital Marketing. They bring their real-world expertise into the classroom, providing valuable insights, practical tips, and best practices. You’ll have the opportunity to learn from the best and interact with instructors who are passionate about helping you succeed in your Digital Marketing journey.",
           "Hands-on Labs and Projects: To ensure a well-rounded learning experience, our course includes hands-on labs and projects that allow you to apply your knowledge in real-world scenarios. You’ll gain confidence in your abilities by working on practical exercises and projects that simulate the challenges you may encounter as a Digital Marketing Executive. This hands-on approach ensures that you’re well-prepared to tackle any Digital Marketing tasks with ease.",
-          "Enroll in Our Digital Marketing Training Today!"
+          "Enquire about Our Digital Marketing Training Today!"
         ]
       },
       {
@@ -1162,12 +1162,12 @@ export const courses: Course[] = [
     "title": "SOC Analyst Training in Hyderabad | Job-Ready in 90 Days",
     "category": "Cybersecurity",
     "image": "/images/courses/soc-analyst.jpg",
-    "summary": "Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Become a certified SOC Analyst with our hands-on training. Learn threat detection, incident response, SIEM tools, and more. Enroll today!",
+    "summary": "Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Become a certified SOC Analyst with our hands-on training. Learn threat detection, incident response, SIEM tools, and more. Enquire today!",
     "sections": [
       {
         "heading": "Practical SOC Analyst Training",
         "paragraphs": [
-          "Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Become a certified SOC Analyst with our hands-on training. Learn threat detection, incident response, SIEM tools, and more. Enroll today!",
+          "Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Become a certified SOC Analyst with our hands-on training. Learn threat detection, incident response, SIEM tools, and more. Enquire today!",
           "Complete your registration by filling out the form.",
           "Select an OptionCourse TrainingCertification VoucherOther Queries"
         ]
@@ -1198,7 +1198,7 @@ export const courses: Course[] = [
         "heading": "Program - Features",
         "paragraphs": [
           "Our 90-day SOC Analyst Training is designed to provide a comprehensive, hands-on learning experience that prepares you for real-world cybersecurity challenges. From SIEM mastery to incident response, this program equips you with the essential skills needed to succeed as a SOC Analyst. Expert-Led Training Learn from industry professionals and SOC practitioners with real-world experience. Get insights into the latest cyber threats, attack tactics, and defense strategies. Hands-On Labs & Real-World Scenarios Work on live cybersecurity incidents and develop threat detection skills. Perform log analysis, SIEM correlation, malware analysis, and forensic investigations. Flexible Online Learning with Mentorship Self-paced learning modules with live Q&A sessions and mentorship.Access course materials, cybersecurity tools, and practice labs anytime. Career Support & Resume Building Receive resume guidance, mock interviews, and career coaching. Get guidance on connecting with employers, plus job placement assistance. Career Guidance Receive career guidance and support from our team of experts, including resume building, interview preparation, and job placement assistance, to help you pursue rewarding opportunities in cybersecurity. Networking Opportunities Connect with fellow cybersecurity enthusiasts, industry professionals, and potential employers through networking events, workshops, and online forums, expanding your professional network and enhancing your career prospects.",
-          "Enroll in Our Practical SOC Analysis Training Today!"
+          "Enquire about Our Practical SOC Analysis Training Today!"
         ]
       },
       {
@@ -1227,7 +1227,7 @@ export const courses: Course[] = [
       {
         "heading": "Get a Free EC-Council C|SA Certification Exam!",
         "paragraphs": [
-          "Enroll in our training program and take advantage of an exclusive opportunity to receive a complimentary EC-Council Certified SOC Analyst (C|SA) exam at no additional cost. Elevate your cybersecurity career with industry-recognized certification and gain the skills needed to excel as a SOC Analyst. Don’t miss this chance to validate your expertise for free!"
+          "Enquire about our training program and take advantage of an exclusive opportunity to receive a complimentary EC-Council Certified SOC Analyst (C|SA) exam at no additional cost. Elevate your cybersecurity career with industry-recognized certification and gain the skills needed to excel as a SOC Analyst. Don’t miss this chance to validate your expertise for free!"
         ]
       },
       {
@@ -1338,7 +1338,7 @@ export const courses: Course[] = [
         "heading": "Program - Features",
         "paragraphs": [
           "Our 45-day Ethical Hacking Training is designed to provide a comprehensive, hands-on learning experience that prepares you for real-world cybersecurity challenges. From Attack Methodologies mastery to sophisticated attacks, this program equips you with the essential skills needed to succeed as an Ethical Hacker. Expert-Led Training Learn from experienced cybersecurity professionals who bring real-world insights and expertise to the classroom, guiding you through the complexities of ethical hacking. Certification Preparation Prepare for industry-recognized certifications, such as Certified Ethical Hacker (CEH), CompTIA Security+, or Offensive Security Certified Professional (OSCP), validating your skills and enhancing your credibility in the cybersecurity field. Flexible Learning Options Choose from a variety of learning formats, including in-person classes, online modules, and blended learning approaches, to accommodate your schedule and learning preferences. Career Guidance Receive career guidance and support from our team of experts, including resume building, interview preparation, and job placement assistance, to help you pursue rewarding opportunities in cybersecurity. Networking Opportunities Connect with fellow cybersecurity enthusiasts, industry professionals, and potential employers through networking events, workshops, and online forums, expanding your professional network and enhancing your career prospects.",
-          "Enrol in Our Practical Ethical Hacking Training Today!"
+          "Enquire about Our Practical Ethical Hacking Training Today!"
         ]
       },
       {
@@ -1391,7 +1391,7 @@ export const courses: Course[] = [
       {
         "heading": "Get a Free EC-Council C|SA Certification Exam!",
         "paragraphs": [
-          "Enroll in our training program and take advantage of an exclusive opportunity to receive a complimentary EC-Council Certified Ethical Hacker (C|EH) exam at no additional cost. Elevate your cybersecurity career with industry-recognized certification and gain the skills needed to excel as an Ethical Hacker. Don’t miss this chance to validate your expertise for free!"
+          "Enquire about our training program and take advantage of an exclusive opportunity to receive a complimentary EC-Council Certified Ethical Hacker (C|EH) exam at no additional cost. Elevate your cybersecurity career with industry-recognized certification and gain the skills needed to excel as an Ethical Hacker. Don’t miss this chance to validate your expertise for free!"
         ]
       },
       {

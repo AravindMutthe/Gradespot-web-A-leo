@@ -69,10 +69,10 @@ export default async function ServicesPage() {
                   const row = rowBySlug.get(slug)!;
                   return (
                     <li key={row.slug} className="border-b border-line">
-                      <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
+                      <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
                         <div className="min-w-0">
                           <h3 className="flex flex-wrap items-center gap-3 text-lg font-semibold">
-                            <Link href={row.titleHref} className="hover:text-signal">
+                            <Link href={row.titleHref} className="hover:text-signal focus-visible:underline">
                               {row.displayTitle}
                             </Link>
                             {row.sample && <SampleTag />}
@@ -106,10 +106,10 @@ export default async function ServicesPage() {
             <ul className="mt-4 border-t border-line">
               {BUSINESS_PATHWAYS.map((pathway) => (
                 <li key={pathway.href} className="border-b border-line">
-                  <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
+                  <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
                     <div className="min-w-0">
                       <h3 className="text-lg font-semibold">
-                        <Link href={pathway.href} className="hover:text-signal">
+                        <Link href={pathway.href} className="hover:text-signal focus-visible:underline">
                           {pathway.title}
                         </Link>
                       </h3>

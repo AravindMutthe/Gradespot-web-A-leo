@@ -66,7 +66,7 @@ const GROUPS: NavGroup[] = [
     label: "Support",
     links: [
       { label: "Contact us", href: "/contact-us" },
-      { label: "Register", href: "/register" },
+      { label: "Course enquiry", href: "/register" },
       { label: "Certificate verification", href: "/certificate-verification" },
       { label: "FAQs", href: "/faq" },
     ],
@@ -176,7 +176,7 @@ export default function Header() {
           </div>
           <a
             href={telHref(phone)}
-            className="hidden min-h-11 items-center rounded-lg border border-line px-4 text-[15px] font-semibold text-body hover:border-brand-dark hover:text-brand-dark lg:flex"
+            className="hidden min-h-11 shrink-0 items-center rounded-lg border border-line px-4 text-[15px] font-semibold whitespace-nowrap text-body hover:border-brand-dark hover:text-brand-dark lg:flex"
           >
             Call {phone}
           </a>

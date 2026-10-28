@@ -90,7 +90,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-5 py-3 md:px-6">
           <Link href="/" className="flex items-center" aria-label="GradeSpot IT Solutions — home">
             <Image
-              src="/images/logo-light.png"
+              src="/images/logo.png"
               alt="GradeSpot IT Solutions"
               width={180}
               height={44}
@@ -100,7 +100,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
           </Link>
           <a
             href={telHref(phone)}
-            className="flex min-h-[44px] items-center rounded-full border border-line bg-surface px-4 py-2 text-sm font-semibold text-heading"
+            className="flex min-h-[44px] shrink-0 items-center rounded-full border border-line bg-surface px-4 py-2 text-sm font-semibold text-heading"
           >
             Call: {phone}
           </a>
@@ -372,7 +372,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
       </section>
 
       {/* Neutral footer (no legal-entity claim). */}
-      <footer className="bg-ink-deep pb-24 nav:pb-8">
+      <footer className="bg-ink-deep pb-24 nav:pb-20">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-5 py-4 text-[13px] text-footer-text md:px-6">
           <span>GradeSpot IT Solutions — {business.locationLabel}</span>
           <a href={telHref(phone)} className="font-semibold">

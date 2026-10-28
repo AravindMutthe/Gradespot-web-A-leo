@@ -243,7 +243,7 @@ export default function HomePage() {
               Contact Us
             </Link>
             <Link href="/register" className="btn-outline-navy">
-              Register for a Free Demo Class
+              Ask about a demo class
             </Link>
           </div>
         </div>

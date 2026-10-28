@@ -187,13 +187,15 @@ describe("Stage 3 trainings index — claims and vocabulary", () => {
     }
   });
 
-  it("documents the two source summaries that still use retired wording", () => {
-    // The row model does not rewrite source copy; these two verbatim
-    // summaries end with an "Enroll" invitation and are flagged for
-    // the owner/content approver. The template's own actions do not
-    // use that wording (see the actions test above).
+  it("no source summary uses retired enrol wording anymore", () => {
+    // FINAL DESIGN PHASE 1 closed this flag: the two verbatim
+    // summaries that ended with an "Enroll" invitation (Security+,
+    // SOC) were reworded to Enquire language, and the row model
+    // never rewrites source copy — so zero flagged summaries means
+    // the source itself is clean. The template's own actions do not
+    // use that wording either (see the actions test above).
     const flagged = courses.filter((c) => /enroll/i.test(c.summary)).map((c) => c.slug);
-    expect(flagged.sort()).toEqual(["comptia-security-plus", "soc-analyst"]);
+    expect(flagged.sort()).toEqual([]);
   });
 
   it("uses the agreed directory wording in the template", async () => {

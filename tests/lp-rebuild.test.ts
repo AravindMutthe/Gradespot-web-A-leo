@@ -471,7 +471,10 @@ describe("LP nav-free chrome", () => {
     expect(LP_PAGE).not.toContain("<Footer");
     expect(LP_PAGE).not.toContain("<SearchBox");
     expect(LP_PAGE).not.toContain("site-nav");
-    expect(LP_PAGE).toContain("logo-light.png");
+    // FINAL DESIGN PHASE 1: the LP header loads the DARK logo on its
+    // light bar — the light logo washed out ("Spot" near-invisible)
+    // on owner-phone evidence. The file itself is unedited.
+    expect(LP_PAGE).toContain('src="/images/logo.png"');
     expect(LP_PAGE).toContain("Call:");
   });
 });

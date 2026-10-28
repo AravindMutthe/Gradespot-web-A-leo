@@ -290,7 +290,7 @@ export function buildLpModel(courseSlug: string): LpModel | null {
     outcomeLine: model.sample
       ? "Builds the foundations covered in this course — full outcomes confirmed on enquiry."
       : model.facts.certification.includes("aligned")
-        ? `Aligned with ${model.facts.certification} — aligned, not certified. Attendance does not award a vendor credential.`
+        ? `Aligned with ${model.facts.certification.replace(/\s+aligned$/i, "")} — aligned, not certified. Attendance does not award a vendor credential.`
         : model.facts.certification.toLowerCase().includes("completion")
           ? "Leads to a course completion certificate from GradeSpot IT Solutions."
           : `Prepares for ${model.facts.certification} — preparation for an examination, not the award of a certification.`,

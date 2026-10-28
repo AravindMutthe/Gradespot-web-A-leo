@@ -385,6 +385,24 @@
   }
 }
 
+/* Row hover — FINAL DESIGN PHASE 1, flat text-first rows only.
+   Subtle lift cue (surface tint + soft shadow), deliberately flat:
+   NO gradient, NO border gradient, NO large image cards. Focus
+   stays visible for keyboard users. */
+@utility row-hover {
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+  &:hover {
+    background-color: var(--color-surface-light);
+    box-shadow: 0 4px 12px -6px rgb(16 35 63 / 0.18);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--color-brand-dark);
+    outline-offset: 2px;
+  }
+}
+
 /* Ink panel — dark sections (heroes, CTA bands, demo band):
    deep ink with a whisper of accent glow at the top edge. */
 @utility panel-ink {

@@ -49,7 +49,7 @@ export default function CoursesDirectoryPage() {
               <li key={cat.slug} className="border-b border-line">
                 <Link
                   href={`/trainings/category/${cat.slug}`}
-                  className="flex min-h-[56px] items-center justify-between gap-4 py-3"
+                  className="row-hover flex min-h-[56px] items-center justify-between gap-4 py-3"
                 >
                   <span className="text-lg font-semibold text-ink">{cat.name}</span>
                   <span className="shrink-0 text-sm text-muted">
@@ -59,6 +59,19 @@ export default function CoursesDirectoryPage() {
               </li>
             ))}
           </ul>
+
+          <div className="mt-10 rounded-2xl border border-line bg-surface p-6">
+            <h2 className="text-xl font-semibold">Not sure which track fits your background?</h2>
+            <p className="mt-2 max-w-2xl text-body">
+              Compare courses side by side by their published coverage areas.
+            </p>
+            <Link
+              href="/compare"
+              className="mt-4 inline-block min-h-[44px] text-[15px] font-bold text-signal hover:text-signal-strong"
+            >
+              Compare courses →
+            </Link>
+          </div>
 
           <div className="mt-16 rounded-2xl border border-line bg-surface-light p-8 text-center">
             <h2 className="text-2xl font-semibold">Not sure which course fits you?</h2>

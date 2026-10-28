@@ -49,7 +49,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     heading: "Get support",
     links: [
       { label: "Contact us", href: "/contact-us" },
-      { label: "Register", href: "/register" },
+      { label: "Course enquiry", href: "/register" },
       { label: "FAQs", href: "/faq" },
       { label: "Accessibility", href: "/accessibility" },
     ],
@@ -93,7 +93,7 @@ export default function Footer() {
         </div>
         {COLUMNS.map((col) => (
           <nav key={col.heading} aria-label={`Footer — ${col.heading}`}>
-            <h2 className="font-display text-[17px] font-semibold text-paper">{col.heading}</h2>
+            <h2 className="text-[17px] font-semibold text-paper">{col.heading}</h2>
             <ul className="mt-4 space-y-1">
               {col.links.map((link) => (
                 <li key={link.href}>

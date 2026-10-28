@@ -7,21 +7,23 @@
 // Contract notes this suite pins:
 // - Boards stay: every directory surface still renders DirectoryBoard
 //   with its flat rows. Cards are ADDITIVE, never a replacement.
-// - Cards carry an image slot, not an image: no artwork files exist
-//   in the repo yet, so pages omit imageSrc and the cards render
-//   their token-tint panels. Remote URLs are refused by design.
+// - Cards carry an image slot: topics render real art ONLY through
+//   the topicArt map, and only after Leo file-inspected the actual
+//   file (AWS, 2026-10-29). Every other topic renders its designed
+//   token-tint panel. Remote URLs are refused by design.
 // - The facts band shows ONLY verified facts, with counts wired from
 //   the catalogue data (never typed-in numbers).
 // - Every color in the new/changed styles comes from @theme tokens:
 //   no hardcoded hex in the new components or the edited pages.
 // - The large hero scale is a PROPOSAL for Gate 1, not an approval.
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { courses } from "../src/data/courses";
 import { services } from "../src/data/services";
 
 const read = (rel: string) => readFileSync(new URL(rel, import.meta.url), "utf8");
+const TOPIC_ART = read("../src/lib/topic-art.ts");
 
 const CARD = read("../src/components/VisualTopicCard.tsx");
 const BAND = read("../src/components/FactsBand.tsx");
@@ -61,11 +63,25 @@ describe("modern + stylish — image-slot card contract", () => {
     expect(CARD).toContain("WebP");
   });
 
-  it("pages omit imageSrc until real files exist — no broken or invented artwork", () => {
-    for (const page of [HOME, HUB, COURSES_PAGE, CATEGORY_PAGE]) {
+  it("pages pass imageSrc ONLY via the topicArt map — no hardcoded, remote, or invented artwork", () => {
+    for (const page of [HOME, COURSES_PAGE]) {
+      expect(page).toContain("VisualTopicCard");
+      expect(page).toContain("topicArt(");
+      expect(page).not.toContain('imageSrc="');
+      expect(page).not.toContain("imageSrc='");
+    }
+    for (const page of [HUB, CATEGORY_PAGE]) {
       expect(page).toContain("VisualTopicCard");
       expect(page).not.toContain("imageSrc");
     }
+  });
+
+  it("topicArt map: AWS resolves to the verified file, unverified topics to null", () => {
+    expect(TOPIC_ART).toContain('aws: "/images/topics/aws.jpg"');
+    expect(TOPIC_ART).toContain("?? null");
+    expect(TOPIC_ART).not.toContain("http://");
+    expect(TOPIC_ART).not.toContain("https://");
+    expect(existsSync(new URL("../public/images/topics/aws.jpg", import.meta.url))).toBe(true);
   });
 
   it("sample rows keep their SampleTag on the card, not just on the board row", () => {

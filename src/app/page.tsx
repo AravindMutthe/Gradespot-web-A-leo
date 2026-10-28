@@ -37,6 +37,7 @@ import { topicSlug } from "@/lib/two-door";
 import { services } from "@/data/services";
 import FactsBand from "@/components/FactsBand";
 import VisualTopicCard from "@/components/VisualTopicCard";
+import { topicArt } from "@/lib/topic-art";
 
 export const metadata: Metadata = {
   title: {
@@ -169,9 +170,9 @@ export default function HomePage() {
           </p>
           {/* Modern + stylish pass: image-led cards sit ALONGSIDE the
               index rows below — the rows stay, the cards add the
-              visual layer. No artwork files exist yet, so the cards
-              render their tint panels; real files drop into the
-              slots later with no component change. */}
+              visual layer. Topics with a verified file (AWS, via the
+              topicArt map) render real art; every other topic renders
+              its designed tint panel until its file is verified. */}
           <ul
             aria-label="Training categories"
             className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
@@ -181,6 +182,7 @@ export default function HomePage() {
                 <VisualTopicCard
                   href={`/trainings/category/${topicSlug(cat.name)}`}
                   title={cat.name}
+                  imageSrc={topicArt(topicSlug(cat.name))}
                   eyebrow="Training"
                   countLabel={`${cat.count} ${cat.count === 1 ? "training" : "trainings"}`}
                   aspect="square"

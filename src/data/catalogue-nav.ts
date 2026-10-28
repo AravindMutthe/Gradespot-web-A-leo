@@ -24,7 +24,7 @@ export const navCourses: NavCourse[] = [
   { slug: "comptia-security-plus", title: "CompTIA Security+: Sy0-701", label: "CompTIA Security+", category: "CompTIA", image: "/images/courses/security-plus.jpg", code: "Sy0-701", duration: "30 days" },
   { slug: "computer-hardware-and-networking", title: "Computer Hardware and Networking Training", label: "Hardware & Networking", category: "Networking", image: "/images/courses/hardware-networking.jpg" },
   { slug: "digital-marketing", title: "Complete Digital Marketing", label: "Digital Marketing", category: "Digital Marketing", image: "/images/courses/digital-marketing.jpg", duration: "45 days" },
-  { slug: "soc-analyst", title: "SOC Analyst Training in Hyderabad | Job-Ready in 90 Days", label: "SOC Analyst", category: "Cybersecurity", image: "/images/courses/soc-analyst.jpg", duration: "90 days" },
+  { slug: "soc-analyst", title: "SOC Analyst Training in Hyderabad", label: "SOC Analyst", category: "Cybersecurity", image: "/images/courses/soc-analyst.jpg" },
   { slug: "certified-ethical-hacker-ceh", title: "Certified Ethical Hacker [CEH v13]", label: "CEH v13", category: "Cybersecurity", image: "/images/courses/ceh.jpg", code: "CEH v13", duration: "45 days" },
   { slug: "azure-security-engineer-az-500", title: "Microsoft Certified: Azure Security Engineer Associate | AZ-500", label: "Azure Security Engineer", category: "Microsoft Azure", image: "/images/courses/azure-security-engineer-az-500.jpg", code: "AZ-500" },
   { slug: "microsoft-devops-az-400", title: "Designing and Implementing Microsoft DevOps Solutions | AZ-400", label: "Azure DevOps Solutions", category: "Microsoft Azure", image: "/images/courses/microsoft-devops-az-400.jpg", code: "AZ-400" },

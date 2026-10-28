@@ -301,7 +301,7 @@ export default async function CoursePage({
                     </div>
                     <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                       <dt className="w-32 shrink-0 font-semibold text-ink">Certification</dt>
-                      <dd className={model.sample ? "text-sample" : undefined}>{model.facts.certification}</dd>
+                      <dd className={model.sample ? "text-sample" : undefined}>{model.slug === "azure-fundamentals-az-900" ? "Preparation for Microsoft AZ-900" : model.facts.certification}</dd>
                     </div>
                   </dl>
                 </div>

@@ -159,6 +159,16 @@
      before any production deploy). */
   --color-sample: #6d28d9;
 
+  /* FINAL DESIGN P2 — CANDIDATE door accents, NOT finalized.
+     Gate 1 owner review of tokens + typography is still pending:
+     these two values are candidates for the DirectoryBoard accent
+     rule only (training reuses the brand orange; business uses the
+     existing teal already present as --color-success-text). Do not
+     cite them as approved tokens, and do not extend them to other
+     surfaces without a Gate 1 decision. */
+  --color-door-training: #c24e1f;
+  --color-door-business: #0f766e;
+
   /* Typography — restrained two-level hierarchy, self-hosted only:
      Fraunces for display headings, Instrument Sans for body/UI,
      IBM Plex Mono for codes/labels. No Google Fonts, no CDN. */

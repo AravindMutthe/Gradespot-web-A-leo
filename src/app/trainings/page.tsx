@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
+import DirectoryBoard from "@/components/DirectoryBoard";
 import SearchBox from "@/components/SearchBox";
 import { TRAINING_DIRECTORY_ENTRIES } from "@/lib/two-door";
 
@@ -46,10 +47,11 @@ export default function TrainingsDirectoryPage() {
       </div>
       <section className="section-pad">
         <div className="wrap">
+          <DirectoryBoard door="training" title="Browse training">
           <ul className="border-t border-line">
             {TRAINING_DIRECTORY_ENTRIES.map((entry) => (
               <li key={entry.href} className="border-b border-line">
-                <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
+                <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
                   <div className="min-w-0">
                     <h2 className="text-lg font-semibold">
                       <Link href={entry.href} className="hover:text-signal">
@@ -69,6 +71,7 @@ export default function TrainingsDirectoryPage() {
               </li>
             ))}
           </ul>
+          </DirectoryBoard>
 
           <div className="mt-16 rounded-2xl border border-line bg-surface-light p-8 text-center">
             <h2 className="text-2xl font-semibold">Not sure which course fits you?</h2>

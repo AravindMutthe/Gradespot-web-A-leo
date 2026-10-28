@@ -2,6 +2,7 @@ import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { getServices } from "@/lib/data";
 import { PageHero, AnswerLead } from "@/components/ui";
+import DirectoryBoard from "@/components/DirectoryBoard";
 import { buildServiceRow } from "@/lib/services-rows";
 import { DemoLegend } from "@/components/DemoLegend";
 import { SampleTag } from "@/components/SampleTag";
@@ -63,8 +64,8 @@ export default async function ServicesPage() {
         <div className="wrap">
           {SERVICE_GROUPS.map((group) => (
             <div key={group.label} className="mb-12">
-              <h2 className="text-2xl font-semibold">{group.label}</h2>
-              <ul className="mt-4 border-t border-line">
+              <DirectoryBoard door="business" title={group.label}>
+              <ul className="border-t border-line">
                 {group.slugs.map((slug) => {
                   const row = rowBySlug.get(slug)!;
                   return (
@@ -94,16 +95,17 @@ export default async function ServicesPage() {
                   );
                 })}
               </ul>
+              </DirectoryBoard>
             </div>
           ))}
 
           <div className="mb-12">
-            <h2 className="text-2xl font-semibold">Who We Work With</h2>
-            <p className="mt-2 max-w-2xl text-base leading-7 text-muted">
-              Business pathways — institutes, colleges and organisations working with
-              GradeSpot.
-            </p>
-            <ul className="mt-4 border-t border-line">
+            <DirectoryBoard
+              door="business"
+              title="Who We Work With"
+              description="Business pathways — institutes, colleges and organisations working with GradeSpot."
+            >
+            <ul className="border-t border-line">
               {BUSINESS_PATHWAYS.map((pathway) => (
                 <li key={pathway.href} className="border-b border-line">
                   <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
@@ -125,6 +127,7 @@ export default async function ServicesPage() {
                 </li>
               ))}
             </ul>
+            </DirectoryBoard>
           </div>
 
           <div className="mt-16 rounded-2xl border border-line bg-surface-light p-8 text-center">

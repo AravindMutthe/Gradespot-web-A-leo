@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
+import DirectoryBoard from "@/components/DirectoryBoard";
 import { DemoLegend } from "@/components/DemoLegend";
 import { SampleTag } from "@/components/SampleTag";
 import { courses, courseDurations } from "@/data/courses";
@@ -83,6 +84,12 @@ export default async function CategoryPage({
               ← All Training
             </Link>
           </p>
+          <DirectoryBoard
+            door="training"
+            eyebrow={`Training · ${cat.name}`}
+            title={`${cat.name} courses`}
+            countLine={`${rows.length} ${rows.length === 1 ? "course" : "courses"} listed below.`}
+          >
           <ul className="border-t border-line">
             {rows.map((row) => (
               <li key={row.slug} className="border-b border-line">
@@ -121,6 +128,7 @@ export default async function CategoryPage({
               </li>
             ))}
           </ul>
+          </DirectoryBoard>
 
           <div className="mt-16 rounded-2xl border border-line bg-surface-light p-8 text-center">
             <h2 className="text-2xl font-semibold">Not sure which course fits you?</h2>

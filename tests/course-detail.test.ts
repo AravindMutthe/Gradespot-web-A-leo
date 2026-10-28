@@ -91,7 +91,7 @@ describe("Stage 5 detail — inventory and dispositions", () => {
       "comptia-network-plus": "Duration: 30 days",
       "comptia-pentest-plus": "Duration: 60 hours",
       "comptia-security-plus": "Duration: 30 days",
-      "soc-analyst": "Duration: 90 days",
+      "soc-analyst": "Duration confirmed on enquiry", // Stage 5 neutralisation 2026-10-28: unverified 90 days removed
       "certified-ethical-hacker-ceh": "Duration: 45 days",
     };
     for (const slug of VERIFIED) {

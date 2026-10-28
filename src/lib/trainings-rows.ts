@@ -64,6 +64,7 @@ const DURATION_ON_ENQUIRY_SLUGS = new Set([
   "azure-fundamentals-az-900",
   "azure-administrator-az-104",
   "computer-hardware-and-networking",
+  "soc-analyst",
 ]);
 
 const PENDING_LABEL = "Course details to be confirmed";

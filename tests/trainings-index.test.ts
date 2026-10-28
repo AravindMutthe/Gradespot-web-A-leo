@@ -49,6 +49,7 @@ const ENQUIRY_DURATION_SLUGS = [
   "azure-fundamentals-az-900",
   "azure-administrator-az-104",
   "computer-hardware-and-networking",
+  "soc-analyst", // Stage 5 neutralisation 2026-10-28
 ];
 
 describe("Stage 3 trainings index — inventory and category order", () => {
@@ -136,7 +137,7 @@ describe("Stage 3 trainings index — durations and actions", () => {
     expect(bySlug.get("comptia-security-plus")?.durationLabel).toBe("Duration: 30 days");
     expect(bySlug.get("comptia-pentest-plus")?.durationLabel).toBe("Duration: 60 hours");
     expect(bySlug.get("certified-ethical-hacker-ceh")?.durationLabel).toBe("Duration: 45 days");
-    expect(bySlug.get("soc-analyst")?.durationLabel).toBe("Duration: 90 days");
+    expect(bySlug.get("soc-analyst")?.durationLabel).toBe("Duration confirmed on enquiry"); // Stage 5 neutralisation 2026-10-28
   });
 
   it("labels the three named no-duration courses as confirmed on enquiry", () => {
@@ -176,9 +177,10 @@ describe("Stage 3 trainings index — durations and actions", () => {
 });
 
 describe("Stage 3 trainings index — claims and vocabulary", () => {
-  it("neutralises the outcome promise in the SOC display title, data untouched", () => {
+  it("carries no outcome promise in the SOC title itself (Stage 5 neutralisation 2026-10-28)", () => {
     const source = sourceBySlug.get("soc-analyst")!;
-    expect(source.title.toLowerCase()).toContain("job-ready");
+    expect(source.title).toBe("SOC Analyst Training in Hyderabad");
+    expect(source.title.toLowerCase()).not.toContain("job-ready");
     expect(displayCourseTitle(source.title)).toBe("SOC Analyst Training in Hyderabad");
     expect(bySlug.get("soc-analyst")?.displayTitle).toBe("SOC Analyst Training in Hyderabad");
     for (const row of rows) {

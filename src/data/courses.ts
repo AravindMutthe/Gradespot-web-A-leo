@@ -1159,15 +1159,15 @@ export const courses: Course[] = [
   },
   {
     "slug": "soc-analyst",
-    "title": "SOC Analyst Training in Hyderabad | Job-Ready in 90 Days",
+    "title": "SOC Analyst Training in Hyderabad",
     "category": "Cybersecurity",
     "image": "/images/courses/soc-analyst.jpg",
-    "summary": "Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Become a certified SOC Analyst with our hands-on training. Learn threat detection, incident response, SIEM tools, and more. Enquire today!",
+    "summary": "Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Prepare for SOC Analyst certification examinations with our hands-on training — preparation for an examination, not the award of a certification. Learn threat detection, incident response, SIEM tools, and more. Enquire today!",
     "sections": [
       {
         "heading": "Practical SOC Analyst Training",
         "paragraphs": [
-          "Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Become a certified SOC Analyst with our hands-on training. Learn threat detection, incident response, SIEM tools, and more. Enquire today!",
+          "Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Prepare for SOC Analyst certification examinations with our hands-on training — preparation for an examination, not the award of a certification. Learn threat detection, incident response, SIEM tools, and more. Enquire today!",
           "Complete your registration by filling out the form.",
           "Select an OptionCourse TrainingCertification VoucherOther Queries"
         ]
@@ -1185,7 +1185,7 @@ export const courses: Course[] = [
       {
         "heading": "Course Overview - SOC Analyst Training",
         "paragraphs": [
-          "Our SOC Analyst Training is designed to equip you with the essential skills needed to thrive in a Security Operations Center (SOC). Over the course of 90 days, you will gain in-depth knowledge of threat detection, SIEM tools, incident response, and cybersecurity best practices. This hands-on training program covers real-world attack scenarios, log analysis, and threat intelligence to help you become a job-ready SOC Analyst. You’ll work with industry-leading SIEM platforms like Splunk and Microsoft Sentinel, learning how to monitor security events, detect anomalies, and respond to cyber threats effectively. By the end of the program, you will have the practical experience and expertise required to protect organizations from evolving security threats. This cybersecurity analyst certification course is perfect for beginners and IT professionals looking to enter the cybersecurity field. Whether you’re transitioning from IT support, networking, or another technology role, our structured learning path ensures that you build a strong foundation in cybersecurity operations. Through interactive labs, case studies, and expert-led training, you will develop key SOC Analyst skills such as threat hunting, malware analysis, forensics, and incident response. With the increasing demand for cybersecurity professionals, this training gives you a competitive edge, helping you land roles in SOC teams, security engineering, or cybersecurity consulting. Start your journey today and become a skilled SOC Analyst in just 90 days!"
+          "Our SOC Analyst Training is designed to equip you with the essential skills needed to thrive in a Security Operations Center (SOC). Over the course of this training, you will gain in-depth knowledge of threat detection, SIEM tools, incident response, and cybersecurity best practices. This hands-on training program covers real-world attack scenarios, log analysis, and threat intelligence to help you become a skilled SOC Analyst. You’ll work with industry-leading SIEM platforms like Splunk and Microsoft Sentinel, learning how to monitor security events, detect anomalies, and respond to cyber threats effectively. By the end of the program, you will have the practical experience and expertise required to protect organizations from evolving security threats. This cybersecurity analyst training is preparation for certification examinations, not the award of a certification, and is ideal for beginners and IT professionals looking to enter the cybersecurity field. Whether you’re transitioning from IT support, networking, or another technology role, our structured learning path ensures that you build a strong foundation in cybersecurity operations. Through interactive labs, case studies, and expert-led training, you will develop key SOC Analyst skills such as threat hunting, malware analysis, forensics, and incident response. With the increasing demand for cybersecurity professionals, this training gives you a competitive edge, helping you land roles in SOC teams, security engineering, or cybersecurity consulting. Start your journey today and become a skilled SOC Analyst!"
         ]
       },
       {
@@ -1302,12 +1302,12 @@ export const courses: Course[] = [
     "title": "Certified Ethical Hacker [CEH v13]",
     "category": "Cybersecurity",
     "image": "/images/courses/ceh.jpg",
-    "summary": "Master Ethical Hacking Skills – Start Your Cybersecurity Career Today! Become a certified Ethical Hacker with our hands-on training. Learn Hacking Concepts, System Hacking, Malware Analysis, and many more.",
+    "summary": "Master Ethical Hacking Skills – Start Your Cybersecurity Career Today! Prepare for the Certified Ethical Hacker (CEH) examination with our hands-on training — preparation for an examination, not the award of a certification. Learn Hacking Concepts, System Hacking, Malware Analysis, and many more.",
     "sections": [
       {
         "heading": "Practical Ethical Hacking Training",
         "paragraphs": [
-          "Master Ethical Hacking Skills – Start Your Cybersecurity Career Today! Become a certified Ethical Hacker with our hands-on training. Learn Hacking Concepts, System Hacking, Malware Analysis, and many more.",
+          "Master Ethical Hacking Skills – Start Your Cybersecurity Career Today! Prepare for the Certified Ethical Hacker (CEH) examination with our hands-on training — preparation for an examination, not the award of a certification. Learn Hacking Concepts, System Hacking, Malware Analysis, and many more.",
           "Complete your registration by filling out the form.",
           "Select an OptionCourse TrainingCertification VoucherOther Queries"
         ]
@@ -1331,7 +1331,7 @@ export const courses: Course[] = [
       {
         "heading": "Key Learning - Objectives",
         "paragraphs": [
-          "By the end of this 45-day SOC Analyst Training, you will have mastered the essential skills required to excel in a Ethical Hacking. This program focuses on practical, hands-on learning to ensure you can confidently detect, analyze, and respond to cyber threats in real-world environments. Understanding Cybersecurity Fundamentals Gain a solid understanding of cybersecurity principles, terminology, and best practices to establish a strong foundation for your journey into ethical hacking. Exploring Ethical Hacking Techniques Dive into the methodologies and tools used by ethical hackers to identify vulnerabilities, exploit weaknesses, and assess the security posture of systems and networks. Hands-On Practice Develop practical skills through hands-on labs and real-world simulations, allowing you to apply ethical hacking techniques in a controlled environment and gain valuable experience. Risk Assessment and Management Learn how to conduct comprehensive risk assessments, prioritize security threats, and develop risk mitigation strategies to protect digital assets effectively. Ethical and Legal Considerations Understand the ethical and legal implications of ethical hacking, including adherence to industry standards, regulations, and guidelines governing cybersecurity practices. Penetration Testing Explore the intricacies of penetration testing, including planning, execution, and reporting, to uncover vulnerabilities and weaknesses in systems and networks before malicious attackers do. Defensive Strategies Learn how to implement defensive strategies and security controls to strengthen digital defences, mitigate security risks, and protect against cyber threats effectively."
+          "By the end of this 45-day Certified Ethical Hacker Training, you will have mastered the essential skills required to excel in a Ethical Hacking. This program focuses on practical, hands-on learning to ensure you can confidently detect, analyze, and respond to cyber threats in real-world environments. Understanding Cybersecurity Fundamentals Gain a solid understanding of cybersecurity principles, terminology, and best practices to establish a strong foundation for your journey into ethical hacking. Exploring Ethical Hacking Techniques Dive into the methodologies and tools used by ethical hackers to identify vulnerabilities, exploit weaknesses, and assess the security posture of systems and networks. Hands-On Practice Develop practical skills through hands-on labs and real-world simulations, allowing you to apply ethical hacking techniques in a controlled environment and gain valuable experience. Risk Assessment and Management Learn how to conduct comprehensive risk assessments, prioritize security threats, and develop risk mitigation strategies to protect digital assets effectively. Ethical and Legal Considerations Understand the ethical and legal implications of ethical hacking, including adherence to industry standards, regulations, and guidelines governing cybersecurity practices. Penetration Testing Explore the intricacies of penetration testing, including planning, execution, and reporting, to uncover vulnerabilities and weaknesses in systems and networks before malicious attackers do. Defensive Strategies Learn how to implement defensive strategies and security controls to strengthen digital defences, mitigate security risks, and protect against cyber threats effectively."
         ]
       },
       {
@@ -1708,13 +1708,16 @@ export const courseCategories: string[] = [...new Set(courses.map((c) => c.categ
 // no duration, so they stay without one here — never invented. (The
 // gsits-platform scaffold lists different hour figures for its launch
 // set; those conflict with the scrape and were NOT used.)
+// SOC Analyst removed 2026-10-28 (owner-approved Stage 5 neutralisation):
+// its harvested 90 days is unverified, so detail/category rows now say
+// "Duration confirmed on enquiry" like the LP; the harvested value
+// remains in git history and is not asserted on the live page.
 export const courseDurations: Record<string, string> = {
   "ccna-200-301": "45 days",
   "ccnp-350-401-encor": "45 days",
   "comptia-network-plus": "30 days",
   "comptia-security-plus": "30 days",
   "comptia-pentest-plus": "60 hours",
-  "soc-analyst": "90 days",
   "certified-ethical-hacker-ceh": "45 days",
   "digital-marketing": "45 days",
 };

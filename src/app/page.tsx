@@ -122,7 +122,7 @@ export default async function HomePage() {
             </p>
           </div>
           <div className="nexus-diagram rounded-2xl p-5" data-reveal>
-            <p className="eyebrow text-nexus-brand-600">Skill graph — training areas</p>
+            <p className="eyebrow text-nexus-brand-600">Training areas</p>
             <ul className="mt-4 space-y-0">
               {[
                 ["Cybersecurity", "SOC Analyst · CEH · VAPT →", "/trainings#category-cybersecurity"],

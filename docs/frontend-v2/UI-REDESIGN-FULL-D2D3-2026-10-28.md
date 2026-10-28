@@ -160,3 +160,145 @@ viewport / Lighthouse / axe measurement still unmeasured (sandbox
 Chrome limitation) — no score is claimed for this redesign; owner
 phone test owed on the new design as a whole (3-job nav, hero,
 home order, course meta strip, services strip, contact microcopy).
+
+## 9. Wider-window audit (20:04–22:25, 2026-10-27) — checked item by item
+
+Owner direction 2026-10-28: the important window is 20:04–22:25, not
+just 21:25–22:12. Every item below was checked against this build;
+fixes found necessary were made in the fix commit on top of e569219
+(Escape focus-return + graph wording), everything else was already
+satisfied or is deliberately deferred with its reason. Nothing here
+is browser-measured; all of it is code-verified, with live measurement
+still owed.
+
+- 20:04 mandate: UI/menu rejection is a UI acceptance rejection, not a
+  rejection of catalogue/drift/pilot work — none of that work was
+  touched by this redesign. Logo colours are anchor, not whole palette:
+  tokens + contrast table in §2; supporting colours never outrank logo
+  colours; primary CTAs use the brand (logo-orange) gradient, never a
+  supporting colour; logo files never edited. Six groups, destinations
+  and URLs preserved in substance under D2 (mapping doc); changes are
+  design/interaction only. No gate waived: catalogue, measurement and
+  merge/production separation all still stand.
+- Das UI reply (20:28–20:30): substantial redesign, not colours/radii —
+  header proportions (3 job triggers, larger type), typography hierarchy
+  (SectionTitle brand rule + hero scale), spacing, cards (R2R3, kept),
+  buttons (equal hero CTAs), menu presentation (job panels), mobile
+  navigation (drawer jobs → menus → columns), visual density (one
+  section rhythm), section ordering (home reorder), responsive
+  behaviour (80rem content-width breakpoint, kept). Interaction rules:
+  click-primary, keyboard-supported, 400ms gap-tolerant hover (hover
+  enhances, never sole activation); Escape closes AND returns focus —
+  fixed in this pass, because the first D2 cut returned focus to a
+  menu-key ref that no longer exists as a trigger (triggers are keyed
+  by job since D2); now Escape from a job trigger, job panel or menu
+  panel returns focus to the job trigger. Drawer: nested accordions,
+  clear back/close, visible search, primary enquiry action at top,
+  context preserved across taps. Labels: job labels favour learner /
+  customer intent (Training / IT Solutions / Company & Resources);
+  inner menu labels are retained unchanged for preservation, with the
+  job label as the intent layer. Premium from consistency/readability,
+  not new colours (0 new tokens) or new animation (hero-no-reveal,
+  colour/chevron only). Das had NOT independently inspected the Nexus
+  preview — his reply is NOT cited anywhere here as a visual
+  inspection. Acceptance checklist status: pages home/catalogue/full
+  course/catalog-only/services/contact/registration/corporate-partnership
+  all smoke-tested 200 (partner-with-us added in the fix pass);
+  viewports 360/390/768/1024/1280/1440, keyboard tab order, axe,
+  screen-reader, Lighthouse mobile/desktop and the owner old-vs-new
+  usability tasks are all UNMEASURED and owed on the exact preview
+  build — header overflow at 1280/1366/1440/1536px
+  (scrollWidth === innerWidth) is likewise UNMEASURED, not claimed.
+- R1 (9248d58), kept, not regressed: single utility strip; one CTA
+  hierarchy in the bar (single "Book Free Demo" primary); 44×44
+  openers with visible open state; click-primary + 400ms gap-tolerant
+  hover; Escape + focus return (fixed, see above); content-responsive
+  mega panel; accessible mobile drawer; whole-menu search (courses +
+  services + every menu destination + job headings, arrow-key
+  navigation, touch-safe close, no invented destination); R1
+  supporting tokens; base responsive safeguards; no overflow-x hidden
+  masking (only the pre-existing `clip` safety net).
+- 21:21 audit + Fixes document, not regressed: desktop header narrower
+  than before (3 triggers vs 6 menus) but overflow still UNMEASURED
+  until a real browser checks it; dark-surface heading contrast — the
+  home services dark panel was removed in this redesign (its wording
+  moved to a light section), and the only new dark strip (job/mega
+  panel footer bar) carries light text with no heading inside it, so
+  the 1.14:1 failure does not return; internal/spec copy stays out
+  (diff grep: 0× "Release 2", roadmap or graph-implementation
+  explanations in rendered text); Planned stays "Coming soon — ask
+  us", never hidden; draft legal pages stay unlinked (0 links in
+  footer/sitemap, no invented policy/grievance officer/address/refund
+  terms); hero LCP element keeps `hero-no-reveal`; category-card image
+  sizes unchanged (33vw/50vw/100vw on course cards); nav uses
+  aria-expanded only (0× audible "Closed"); tap targets ≥44px on
+  triggers, drawer rows and footer rows; manifest + explicit icon
+  link untouched; CSP vercel.live allowance untouched
+  (preview-only via VERCEL_ENV === "preview").
+- 21:53 owner complaint, visibly answered: menu style (3-job bar +
+  two-level panels, larger type); nav bar (3 triggers, not 6 crowded
+  ones); headings (R2+R3 sans system + new SectionTitle brand rule,
+  one system with PageHero); footer (regrouped under the 3 jobs, link
+  set verified identical); course cards (16:9 aspect-video, no sepia,
+  unique photo per course, correct sizes — object-cover crop is
+  inherent to a uniform grid and minimal at 600×340, the old fixed
+  h-44 + sepia forcing is gone); homepage category/showcase cards
+  design-led with no repeated photos (hero blocks and showcase use
+  motif/icons, not course photos).
+- 22:12 research direction: vertical cards for browsing (course
+  cards), horizontal rows for comparison/services (nexus-app rows);
+  detail order purpose → meta (filled fields only) → outcomes →
+  mode/demo → audience → prerequisites → curriculum with labs → FAQ →
+  one CTA (course page already follows it; the new meta strip adds
+  status + enquiry statements only, and published sections were NOT
+  reordered, so the CCNA/CCNP gate defects are not masked);
+  first-contact forms minimal (name, phone, course/service interest,
+  WhatsApp opt-in — unchanged); filters minimum = category tabs +
+  status lens (kept); do-not-copy enforced (0× scale/placement/salary
+  statistics, price-led cards, hidden planned items, countdown/
+  scarcity, "guaranteed" promises, partner badges in the diff; the
+  pre-existing FAQ answer explicitly says GradeSpot guarantees no
+  job); equal hybrid throughout (home engines equal weight, jobs
+  equal triggers — Training listed first only because that is the D2
+  decision order, not a lead ranking); core focus = D3 hero statement.
+- External evaluation (21:04) + Das evaluation reply (21:14): NOT R1
+  acceptance and NOT cited as such anywhere in this redesign — no
+  "evaluated 8.1" claim is made. Meta-copy cleanup before final
+  measurement: developer-facing language removed (see audit bullet);
+  truthful limitations kept (Planned labels, gap statements, "not
+  published — ask us" pattern); destinations never disappear silently
+  (mapping doc); only genuinely available actions described (browse,
+  request information, enquire, working contact options); static
+  pathway/graph material is labelled as an overview, never presented
+  as interactive — the home "Skill graph" eyebrow was renamed to
+  "Training areas" in the fix commit to remove even the graph
+  wording. Catalogue counts are program counts only, never
+  enrolment/certification/placement/revenue. Custom domain stays
+  separately gated (no purchase, DNS, canonical or hosting change).
+  Interactive roadmaps / student portal stay later-phase (not built).
+- Content spec + pilot (22:21), as adjusted for equal hybrid:
+  taxonomy followed (Dilsukhnagar Hyderabad, online + classroom;
+  Training 36 in 10 categories; IT Solutions 12 in 7 divisions;
+  certification as lens; pathways as role rows from real courses
+  only; audiences learners/institutions/businesses); vocabulary
+  P/F/N discipline kept — new copy in this redesign is published
+  fact or framing only, no F/N term presented as fact; SEO/AEO
+  patterns kept (H1 + answer-first paragraph on home and course
+  pages, H2 order per page type, schema set unchanged,
+  AggregateRating refused, HowTo not proposed, JobPosting refused,
+  Offer only from a B1-verified figure — 0× JobPosting/
+  AggregateRating in the diff); pilot fact traces kept (CCNA 45-day
+  repo text untouched, AZ-500 gap statement untouched, services
+  division pattern untouched, lead microcopy added on /contact-us
+  with saved-vs-logged states verbatim in meaning). DEFERRED, with
+  reason: the analogy/metaphor bank (2 per domain, 10 total) was NOT
+  pasted onto pages — each analogy needs a per-item tie to the exact
+  published fact it explains plus its never-become sentence checked,
+  which is a copy-verification task, not a layout change; the bank
+  stays in the spec/pilot as the record until that check is done.
+  Training-led ordering/wording from the original spec/pilot was NOT
+  reintroduced anywhere (the adjustment note governs).
+- Careers (21:31): integration stays in this build — menu option,
+  footer link, sitemap entry, header search (via nav data) — content
+  unchanged from draft, and /careers smoke-tested 200 on the fix
+  build.

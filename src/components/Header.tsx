@@ -534,7 +534,7 @@ export default function Header() {
                       aria-label={`${job.label} menu`}
                       onClick={() => toggleJobPanel(job.key)}
                       onKeyDown={(e) => {
-                        if (e.key === "Escape") closePanel();
+                        if (e.key === "Escape") closePanel(job.key);
                       }}
                       className={`flex min-h-[44px] min-w-[44px] items-center gap-1 whitespace-nowrap rounded-full px-3 py-2.5 text-[13px] font-bold tracking-[-0.01em] transition-colors 2xl:px-4 2xl:text-[14px] ${
                         isOpen
@@ -598,7 +598,7 @@ export default function Header() {
               onMouseEnter={() => openJobPanel(activeJob.key)}
               onMouseLeave={scheduleClose}
               onKeyDown={(e) => {
-                if (e.key === "Escape") closePanel();
+                if (e.key === "Escape") closePanel(activeJob.key);
               }}
             >
               <div className="mx-auto w-full max-w-[1240px] px-3 pb-4">
@@ -643,7 +643,14 @@ export default function Header() {
               onMouseEnter={() => openPanel(activeMenu.key)}
               onMouseLeave={scheduleClose}
               onKeyDown={(e) => {
-                if (e.key === "Escape") closePanel(activeMenu.key);
+                // Focus returns to the JOB trigger that opened this
+                // chain (triggers are keyed by job, not menu, since
+                // D2) — closing everything, focus back where it came
+                // from, never stranded on a removed panel.
+                if (e.key === "Escape") {
+                  const jobKey = jobForMenu(activeMenu.key)?.key;
+                  closePanel(jobKey as PanelKey | undefined);
+                }
               }}
             >
               <div className="mx-auto w-full max-w-[1240px] px-3 pb-4">

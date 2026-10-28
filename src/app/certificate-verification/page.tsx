@@ -1,13 +1,17 @@
 import { staticPageMetadata } from "@/lib/metadata";
 import VerifyForm from "@/components/VerifyForm";
-import { CtaBand, LogoWall, PageHero } from "@/components/ui";
+import { CtaBand, PageHero } from "@/components/ui";
 
 export const metadata = staticPageMetadata({
   title: "Certificate Verification",
-  description: "Verify a GradeSpot certificate by its printed code — confirm it was issued by GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.",
+  description:
+    "Verify a GradeSpot certificate by its printed code — confirm it was issued by GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.",
   path: "/certificate-verification",
 });
 
+// Stage 8: only change is the removal of the employer logo wall (R10 —
+// wall OFF). The verification form itself is untouched: its submission
+// semantics belong to Stage 7.
 export default function VerifyPage() {
   return (
     <>
@@ -20,7 +24,6 @@ export default function VerifyPage() {
           <VerifyForm />
         </div>
       </section>
-      <LogoWall />
       <CtaBand />
     </>
   );

@@ -281,7 +281,6 @@ export function personSchema() {
     name: "Nikhil Duth D",
     jobTitle: "Founder & Managing Director",
     email: "nikhil@gsitssolutions.com",
-    image: `${SITE_URL}/images/team/nikhil-duth-d.jpg`,
     url: `${SITE_URL}/team-members/nikhil-duth-d`,
     worksFor: { "@id": ORG_ID },
     knowsAbout: ["SOC Analysis", "Technical Trainer"],

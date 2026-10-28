@@ -5,7 +5,7 @@ import { PageHero } from "@/components/ui";
 
 export const metadata = staticPageMetadata({
   title: "Terms and Conditions",
-  description: "Terms and conditions for using the GradeSpot IT Solutions website and services, Dilsukhnagar, Hyderabad.",
+  description: "Draft terms and conditions for using the GradeSpot IT Solutions website and services, Dilsukhnagar, Hyderabad — pending owner + lawyer/CA review.",
   path: "/terms-and-conditions",
 });
 
@@ -18,11 +18,23 @@ export default function TermsPage() {
       <PageHero title="Terms and Conditions" />
       <section className="section-pad">
         <div className="wrap mx-auto max-w-4xl space-y-6">
+          <div className="rounded-[20px] border border-line bg-surface-light p-7 md:p-9">
+            <h2 className="font-display text-[26px] font-semibold leading-[32px] text-heading">
+              Draft — do not treat as a published policy
+            </h2>
+            <p className="mt-3 text-[15px] leading-7 text-body">
+              This page presents the terms text as drafted. It is not a finished legal
+              document: it still needs owner + lawyer/CA review before publication, and one
+              open contradiction is flagged for that review — the refund section below states
+              fees are strictly non-refundable, while the refund policy page states no refund
+              term at all until confirmed. Nothing here is legal advice.
+            </p>
+          </div>
           {termsSections.map((s, i) => (
             <article
               key={i}
               data-reveal
-              className="rounded-[20px] border border-line bg-parchment p-7 shadow-[0_1px_2px_rgba(31,24,16,0.05)] md:p-9"
+              className="rounded-[20px] border border-line bg-surface-light p-7 md:p-9"
             >
               <p className="font-mono text-[12px] font-semibold tracking-[0.1em] text-signal-strong">
                 {String(i + 1).padStart(2, "0")}
@@ -38,11 +50,11 @@ export default function TermsPage() {
             </article>
           ))}
 
-          <div className="panel-ink rounded-[20px] p-8 md:p-9">
-            <h2 className="font-display text-2xl font-semibold text-paper">
+          <div className="rounded-[20px] border border-line bg-surface-light p-8 md:p-9">
+            <h2 className="font-display text-2xl font-semibold text-heading">
               Questions about these terms?
             </h2>
-            <p className="mt-2 max-w-2xl text-[15px] leading-7 text-paper/80">
+            <p className="mt-2 max-w-2xl text-[15px] leading-7 text-body">
               Reach the team through the contact page, or read how this site is built for
               accessibility.
             </p>
@@ -50,7 +62,7 @@ export default function TermsPage() {
               <Link href="/contact-us" className="btn-primary">
                 Contact Us
               </Link>
-              <Link href="/accessibility" className="btn-outline-light">
+              <Link href="/accessibility" className="btn-outline-navy">
                 Accessibility
               </Link>
             </div>

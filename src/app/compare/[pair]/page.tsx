@@ -4,28 +4,40 @@ import { notFound } from "next/navigation";
 import { PageHero, CtaBand, AnswerLead } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema } from "@/lib/schema";
 import { comparisons } from "@/data/comparisons";
 import { courseDetails } from "@/data/course-details";
-import { getCourse } from "@/lib/data";
+import { buildCourseDetail, findLocalCourse } from "@/lib/course-detail";
 import { comparisonPageMetadata } from "@/lib/metadata";
-import { getJobRoles, getPricingPlans, type PricingPlan } from "@/lib/course-faqs";
+import { getJobRoles } from "@/lib/course-faqs";
 
-// "X vs Y" comparison pages (research expansion pack, DECISIONS.md
-// §18 — ppc report §2.2: comparison searches trigger AI answers 95.4%
-// of the time; folder-1 Q5: comparison content is cite-worthy AEO).
-// The decision table is rendered ONLY from the two courses' real
-// published fields; fees appear only where a course publishes them.
+// "X vs Y" comparison pages — Stage 8 re-template. Changes from the
+// old body, all from the Stage 3/4/5 gate rules:
+// - Data source switched from DB-first getCourse() to LOCAL repo files
+//   (the DB CCNA row carries contested 90-day content + 19 extra
+//   paragraphs; a DB-driven table could not honour the holds).
+// - No "Published fees" row: no B1-verified price figure exists, and
+//   the CCNA/CCNP fee plans are CCNA copy / unverified. Fees are
+//   "Confirmed on enquiry" for both sides.
+// - No per-course "Mode" assertion: mode is "Confirmed on enquiry".
+// - Held side (CCNA R1 in ccna-vs-network-plus): every detail cell
+//   reads "Course details to be confirmed", the "Choose …" card is a
+//   held notice + Enquire, and no LP link is offered for it.
+// - SOC renders under its neutral title; its 90-day repo-map duration
+//   is footnoted as still needing independent verification.
+// - Generated "Quick answers" + FAQPage schema removed (unapproved
+//   FAQs, one carrying a free-demo promise).
+const HELD = "Course details to be confirmed";
 
 export function generateStaticParams() {
   return comparisons.map((c) => ({ pair: c.slug }));
 }
 
-async function resolve(pair: string) {
+function resolve(pair: string) {
   const def = comparisons.find((c) => c.slug === pair);
   if (!def) return null;
-  const a = await getCourse(def.a);
-  const b = await getCourse(def.b);
+  const a = findLocalCourse(def.a);
+  const b = findLocalCourse(def.b);
   if (!a || !b) return null;
   return { def, a, b };
 }
@@ -36,56 +48,44 @@ export async function generateMetadata({
   params: Promise<{ pair: string }>;
 }): Promise<Metadata> {
   const { pair } = await params;
-  const r = await resolve(pair);
+  const r = resolve(pair);
   if (!r) return { title: "Course Comparison" };
   return comparisonPageMetadata(r.def.title, r.a.title, r.b.title, `/compare/${pair}`);
 }
 
-function feesCell(plans: PricingPlan[]): string {
-  if (plans.length === 0) return "Confirmed on enquiry";
-  return plans.map((p) => `${p.name} — ${p.price}`).join("; ");
-}
-
 export default async function ComparePairPage({ params }: { params: Promise<{ pair: string }> }) {
   const { pair } = await params;
-  const r = await resolve(pair);
+  const r = resolve(pair);
   if (!r) notFound();
   const { def, a, b } = r;
-  const da = courseDetails[a.slug];
-  const db = courseDetails[b.slug];
-  const rolesA = getJobRoles(a);
-  const rolesB = getJobRoles(b);
+  const ma = buildCourseDetail(a, courseDetails[a.slug], undefined);
+  const mb = buildCourseDetail(b, courseDetails[b.slug], undefined);
+  const rolesA = ma.heldBack ? [] : getJobRoles(a);
+  const rolesB = mb.heldBack ? [] : getJobRoles(b);
+
+  const val = (held: boolean, v: string | null | undefined) => (held ? HELD : (v ?? "Confirmed on enquiry"));
+  // SOC's published outcome opens "Job-ready …" — the job-ready claim
+  // is held everywhere (Stage 5 neutralisation), so strip that prefix
+  // rather than republishing it in the outcome row.
+  const outcome = (held: boolean, v: string | null | undefined) =>
+    held ? HELD : (v ? v.replace(/^Job-ready\s+/i, "") : "Confirmed on enquiry");
+  const dur = (held: boolean, label: string | null) =>
+    held ? HELD : label ? label.replace(/^Duration: /, "") : "Confirmed on enquiry";
 
   const rows: { label: string; va: string; vb: string }[] = [
     { label: "Focus", va: def.focusA, vb: def.focusB },
-    ...(da && db ? [{ label: "Who it's for", va: da.who, vb: db.who }] : []),
-    {
-      label: "Duration",
-      va: a.duration ?? "Confirmed on enquiry",
-      vb: b.duration ?? "Confirmed on enquiry",
-    },
-    { label: "Mode", va: "Online & Offline Classes", vb: "Online & Offline Classes" },
-    ...(da && db ? [{ label: "Level", va: da.level, vb: db.level }] : []),
-    ...(da && db ? [{ label: "Certification", va: da.certification, vb: db.certification }] : []),
-    { label: "Published fees", va: feesCell(getPricingPlans(a)), vb: feesCell(getPricingPlans(b)) },
-    ...(da && db
-      ? [{ label: "Published outcome", va: da.outcome, vb: db.outcome }]
-      : []),
+    { label: "Who it's for", va: val(ma.heldBack, ma.facts?.who), vb: val(mb.heldBack, mb.facts?.who) },
+    { label: "Duration", va: dur(ma.heldBack, ma.durationLabel), vb: dur(mb.heldBack, mb.durationLabel) },
+    { label: "Mode", va: "Confirmed on enquiry", vb: "Confirmed on enquiry" },
+    { label: "Level", va: val(ma.heldBack, ma.facts?.level), vb: val(mb.heldBack, mb.facts?.level) },
+    { label: "Certification", va: val(ma.heldBack, ma.facts?.certification), vb: val(mb.heldBack, mb.facts?.certification) },
+    { label: "Fees", va: "Confirmed on enquiry", vb: "Confirmed on enquiry" },
+    { label: "Published outcome", va: outcome(ma.heldBack, courseDetails[a.slug]?.outcome), vb: outcome(mb.heldBack, courseDetails[b.slug]?.outcome) },
   ];
 
-  const faqs = [
-    {
-      q: `What is the difference between ${da?.short ?? a.title} and ${db?.short ?? b.title}?`,
-      a: `${da?.short ?? a.title} focuses on: ${def.focusA} ${db?.short ?? b.title} focuses on: ${def.focusB}`,
-    },
-    {
-      q: `Which should I choose — ${da?.short ?? a.title} or ${db?.short ?? b.title}?`,
-      a: `${def.chooseA} ${def.chooseB} You can also book a free demo of either course on its course page before deciding.`,
-    },
-  ];
-
-  const shortA = da?.short ?? a.title;
-  const shortB = db?.short ?? b.title;
+  const shortA = ma.displayTitle;
+  const shortB = mb.displayTitle;
+  const socFootnote = a.slug === "soc-analyst" || b.slug === "soc-analyst";
 
   return (
     <>
@@ -96,18 +96,27 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
           { name: def.title, path: `/compare/${def.slug}` },
         ])}
       />
-      <JsonLd data={faqSchema(faqs)} />
       <PageHero
         title={def.title}
-        subtitle="A factual side-by-side from each course's own published page — topics, duration, certification, fees where published, and the roles each one prepares you for."
+        subtitle="A factual side-by-side from each course's own published page — topics, duration, certification, and the roles each one prepares you for. Fees are confirmed on enquiry."
       />
-      {/* AEO answer-first verdict (§25.22): focus sentences, verbatim data. */}
       <div className="wrap pt-8">
         <AnswerLead id="answer-summary">
           In short: {shortA} — {def.focusA.split(". ")[0]}. {shortB} —{" "}
           {def.focusB.split(". ")[0]}.
         </AnswerLead>
       </div>
+      {(ma.heldBack || mb.heldBack) && (
+        <div className="wrap pt-8">
+          <p className="rounded-2xl border border-line bg-surface-light p-5 text-[15px] leading-7 text-body">
+            One side of this comparison is still to be confirmed:{" "}
+            {ma.heldBack ? shortA : shortB} shows &ldquo;Course details to be
+            confirmed&rdquo; in its detail rows below, and its full details
+            will appear once its content is approved. The other side is
+            shown in full.
+          </p>
+        </div>
+      )}
       <section className="section-pad">
         <div className="wrap">
           <div className="mx-auto max-w-4xl">
@@ -120,7 +129,7 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
             />
           </div>
 
-          <div className="mx-auto mt-10 max-w-5xl overflow-x-auto rounded-2xl border border-line bg-parchment shadow-sm">
+          <div className="mx-auto mt-10 max-w-5xl overflow-x-auto rounded-2xl border border-line bg-surface-light">
             <table className="w-full min-w-[640px] text-left text-[15px]">
               <thead>
                 <tr className="bg-navy text-white">
@@ -140,77 +149,74 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
                 <tr className="bg-surface-light/60">
                   <th className="px-6 py-4 align-top font-semibold text-heading">Key topics</th>
                   <td className="px-6 py-4 align-top leading-6 text-body">
-                    {da ? da.topics.join("; ") : a.summary}
+                    {ma.heldBack ? HELD : (ma.facts?.topics ? ma.facts.topics.join("; ") : "See course page")}
                   </td>
                   <td className="px-6 py-4 align-top leading-6 text-body">
-                    {db ? db.topics.join("; ") : b.summary}
+                    {mb.heldBack ? HELD : (mb.facts?.topics ? mb.facts.topics.join("; ") : "See course page")}
                   </td>
                 </tr>
                 {(rolesA.length > 0 || rolesB.length > 0) && (
                   <tr>
                     <th className="px-6 py-4 align-top font-semibold text-heading">Job roles</th>
                     <td className="px-6 py-4 align-top leading-6 text-body">
-                      {rolesA.slice(0, 8).join(", ") || "See course page"}
+                      {ma.heldBack ? HELD : rolesA.slice(0, 8).join(", ") || "See course page"}
                     </td>
                     <td className="px-6 py-4 align-top leading-6 text-body">
-                      {rolesB.slice(0, 8).join(", ") || "See course page"}
+                      {mb.heldBack ? HELD : rolesB.slice(0, 8).join(", ") || "See course page"}
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
-
-          {/* Which is for you */}
-          <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-2">
-            <article className="rounded-2xl border border-line border-t-4 border-t-brand bg-parchment px-8 py-9 shadow-sm">
-              <h2 className="text-xl font-bold text-heading">Choose {shortA} if…</h2>
-              <p className="mt-3 text-[15px] leading-7 text-body">{def.chooseA}</p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href={`/trainings/${a.slug}`} className="btn-primary">
-                  View {shortA}
-                </Link>
-                <Link
-                  href={`/lp/${a.slug}-in-hyderabad`}
-                  className="text-[15px] font-bold leading-[48px] text-signal hover:text-signal-strong"
-                >
-                  {shortA} in Hyderabad →
-                </Link>
-              </div>
-            </article>
-            <article className="rounded-2xl border border-line border-t-4 border-t-brand bg-parchment px-8 py-9 shadow-sm">
-              <h2 className="text-xl font-bold text-heading">Choose {shortB} if…</h2>
-              <p className="mt-3 text-[15px] leading-7 text-body">{def.chooseB}</p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href={`/trainings/${b.slug}`} className="btn-primary">
-                  View {shortB}
-                </Link>
-                <Link
-                  href={`/lp/${b.slug}-in-hyderabad`}
-                  className="text-[15px] font-bold leading-[48px] text-signal hover:text-signal-strong"
-                >
-                  {shortB} in Hyderabad →
-                </Link>
-              </div>
-            </article>
-          </div>
-
-          <div className="mx-auto mt-12 max-w-3xl">
-            <h2 className="text-[26px] font-bold text-heading">Quick answers</h2>
-            <div className="mt-5 space-y-4">
-              {faqs.map((f) => (
-                <div key={f.q}>
-                  <h3 className="text-lg font-semibold text-heading">{f.q}</h3>
-                  <p className="mt-1.5 text-[15px] leading-7 text-body">{f.a}</p>
-                </div>
-              ))}
-            </div>
-            <p className="mt-8 text-center">
-              <Link href="/compare" className="text-sm font-bold text-signal hover:text-signal-strong">
-                ← All course comparisons
-              </Link>
+          {socFootnote && (
+            <p className="mx-auto mt-4 max-w-5xl text-sm leading-6 text-body">
+              SOC Analyst duration is shown from the repo duration map; independent
+              verification is still owed.
             </p>
+          )}
+
+          <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-2">
+            {[
+              { m: ma, c: a, choose: def.chooseA, short: shortA },
+              { m: mb, c: b, choose: def.chooseB, short: shortB },
+            ].map(({ m, c, choose, short }) => (
+              <article key={c.slug} className="rounded-2xl border border-line bg-surface-light px-8 py-9">
+                <h2 className="text-xl font-bold text-heading">Choose {short} if…</h2>
+                {m.heldBack ? (
+                  <>
+                    <p className="mt-3 text-[15px] leading-7 text-body">{HELD}</p>
+                    <div className="mt-6">
+                      <Link href="/contact-us" className="btn-primary">
+                        Enquire About This Course
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="mt-3 text-[15px] leading-7 text-body">{choose}</p>
+                    <div className="mt-6 flex flex-wrap gap-3">
+                      <Link href={`/trainings/${c.slug}`} className="btn-primary">
+                        View {short}
+                      </Link>
+                      <Link
+                        href={`/lp/${c.slug}-in-hyderabad`}
+                        className="text-[15px] font-bold leading-[48px] text-signal hover:text-signal-strong"
+                      >
+                        {short} in Hyderabad →
+                      </Link>
+                    </div>
+                  </>
+                )}
+              </article>
+            ))}
           </div>
+
+          <p className="mx-auto mt-12 max-w-3xl text-center">
+            <Link href="/compare" className="text-sm font-bold text-signal hover:text-signal-strong">
+              ← All course comparisons
+            </Link>
+          </p>
         </div>
       </section>
       <CtaBand />

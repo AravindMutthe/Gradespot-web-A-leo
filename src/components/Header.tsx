@@ -58,6 +58,7 @@ const GROUPS: NavGroup[] = [
       { label: "Team members", href: "/team-members" },
       { label: "Why choose us", href: "/why-choose-us" },
       { label: "Testimonials", href: "/testimonials" },
+      { label: "Careers", href: "/careers" },
     ],
   },
   {

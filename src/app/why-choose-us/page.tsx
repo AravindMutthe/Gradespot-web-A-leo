@@ -1,15 +1,20 @@
 import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { whyChooseParagraphs } from "@/data/pages";
-import { services } from "@/data/services";
-import { CtaBand, ExperienceBadge, LogoWall, PageHero, SectionTitle } from "@/components/ui";
+import { CtaBand, PageHero, SectionTitle } from "@/components/ui";
 
 export const metadata = staticPageMetadata({
   title: "Why Choose Us",
-  description: "Why choose GradeSpot IT Solutions — the best IT solutions and trainings for customers, with practical training, expert instructors and career support from Dilsukhnagar, Hyderabad.",
+  description:
+    "Why choose GradeSpot IT Solutions — practical training, instructors and career support from Dilsukhnagar, Hyderabad.",
   path: "/why-choose-us",
 });
 
+// Stage 8: "best … to our customers" superlative neutralised, the "9
+// years" experience badge removed, the employer logo wall removed, and
+// service summaries held (Stage 4 holds all services title-only).
+// Vision and mission below are the organisation's own statements,
+// reproduced verbatim as statements of intent.
 const highlights = [
   { title: "IT & Corporate Trainings", href: "/services/corporate-trainings" },
   { title: "Web Development", href: "/services/web-development" },
@@ -17,41 +22,32 @@ const highlights = [
 ];
 
 export default function WhyChoosePage() {
-  // whyChooseParagraphs: [intro, vision, mission, students-work-with(shared,
-  // filtered), ...] — the first three are the page's own copy as published.
-  const [intro, vision, mission] = whyChooseParagraphs;
+  const [, vision, mission] = whyChooseParagraphs;
   return (
     <>
       <PageHero title="Why Choose Us" />
       <section className="section-pad">
         <div className="wrap">
           <div className="mx-auto max-w-4xl">
-            <SectionTitle title="We Offer The Best IT Solutions & Trainings To Our Customers at GradeSpot IT Solutions" />
-            <p className="mt-4">{intro}</p>
-            <div className="mt-6">
-              <ExperienceBadge />
-            </div>
+            <SectionTitle title="IT Solutions & Trainings from GradeSpot IT Solutions" />
+            <p className="mt-4">
+              GradeSpot IT Solutions offers IT training and IT services from Dilsukhnagar,
+              Hyderabad. This page states what the institute aims to do — in its own vision
+              and mission words below — and where to read more.
+            </p>
           </div>
-          <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3">
-            {highlights.map((h) => {
-              const svc = services.find((s) => `/services/${s.slug}` === h.href);
-              return (
-              <article
-                key={h.title}
-                className="flex flex-col rounded-2xl border border-line bg-parchment p-8 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
-              >
-                <span className="block h-[3px] w-10 rounded-full bg-brand" aria-hidden />
-                <h2 className="mt-4 text-xl font-semibold text-heading">{h.title}</h2>
-                {svc?.summary && <p className="mt-2 text-sm leading-6 text-body">{svc.summary}</p>}
+          <div className="mx-auto mt-12 max-w-5xl divide-y divide-line border-y border-line">
+            {highlights.map((h) => (
+              <article key={h.title} className="flex flex-wrap items-baseline justify-between gap-3 py-5">
+                <h2 className="text-xl font-semibold text-heading">{h.title}</h2>
                 <Link
                   href={h.href}
-                  className="mt-auto inline-block pt-5 text-sm font-semibold text-signal hover:underline"
+                  className="text-sm font-semibold text-signal hover:underline"
                 >
                   Read More →
                 </Link>
               </article>
-              );
-            })}
+            ))}
           </div>
           <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-2">
             <article className="rounded-2xl border border-line bg-surface-light p-8">
@@ -63,7 +59,7 @@ export default function WhyChoosePage() {
               <p className="mt-3">{mission}</p>
             </article>
           </div>
-          <div className="mx-auto mt-14 max-w-3xl rounded-[18px] border border-line bg-parchment px-7 py-6 text-center shadow-[0_1px_2px_rgba(31,24,16,0.05)]">
+          <div className="mx-auto mt-14 max-w-3xl text-center">
             <h2 className="font-display text-[20px] font-semibold text-heading">
               Questions about trainings or services?
             </h2>
@@ -76,7 +72,6 @@ export default function WhyChoosePage() {
           </div>
         </div>
       </section>
-      <LogoWall />
       <CtaBand />
     </>
   );

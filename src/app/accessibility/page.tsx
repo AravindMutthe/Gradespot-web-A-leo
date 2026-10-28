@@ -3,36 +3,36 @@ import Link from "next/link";
 import { PageHero, SectionTitle } from "@/components/ui";
 import { business, telHref } from "@/data/site";
 
-// Accessibility statement (Leo redesign v1, DECISIONS.md §19) —
-// written ONLY from what this build actually implements and has
-// verified; no aspirational claims. If a measure is not listed here,
-// this page does not claim it.
 export const metadata = staticPageMetadata({
   title: "Accessibility",
-  description: "How the GradeSpot IT Solutions website is built for accessibility — the WCAG 2.2 AA measures implemented in this build, and how to reach us if anything does not work for you.",
+  description:
+    "How the GradeSpot IT Solutions website is built for accessibility — the measures implemented in this build, and how to reach us if anything does not work for you.",
   path: "/accessibility",
 });
 
+// Accessibility statement — Frontend 3.0 Stage 8 rewrite. The old page
+// described the v1 build: a header theme toggle (Stage 1 has none —
+// light-first, dark deferred), contrast numbers measured on v1 tokens,
+// and a scrolling board with scroll-reveal behaviour. None of those
+// describe this build, so none are claimed here. Only measures this
+// build actually implements are listed; contrast measurement on the
+// Stage 1 candidate tokens is still owed (see report).
 const measures = [
   {
     t: "Structure you can navigate by ear",
     d: "Pages use semantic HTML5 landmarks (header, nav, main, footer), one clear heading order, breadcrumb trails on detail pages, and a Skip to Content link as the first focusable element.",
   },
   {
-    t: "Contrast that meets WCAG 2.2 AA",
-    d: "Text and interactive colours are tokenised and measured in both themes: in the light theme body text sits at 7.8:1 against the page background and in the dark theme at 11.5:1; links and button text measure 4.8:1 or better, and accents on dark panels 5.6:1 or better.",
-  },
-  {
-    t: "Light or dark — your choice",
-    d: "A theme toggle in the header switches between the light and dark themes. Your choice is remembered on this device, a first visit follows your system setting, and the switch animation is disabled when your system requests reduced motion.",
-  },
-  {
     t: "Visible focus, generous targets",
-    d: "Keyboard focus is always shown with a 2px outline, anchored sections scroll clear of the sticky header, and navigation links and action-bar buttons are at least 44px tall.",
+    d: "Keyboard focus is always shown, anchored sections scroll clear of the sticky header, and navigation links and action buttons are at least 44px tall.",
+  },
+  {
+    t: "Menus that work by keyboard",
+    d: "Header menus open on click, never on hover alone; one menu is open at a time, and Escape or clicking outside closes it.",
   },
   {
     t: "Motion only if you allow it",
-    d: "Scroll-reveal effects and the scrolling board are disabled when your system requests reduced motion — the board becomes a static list and content is never hidden.",
+    d: "Content is never hidden behind a reveal effect: everything on a page is readable without scripts or animation.",
   },
   {
     t: "Images and forms with labels",
@@ -40,7 +40,7 @@ const measures = [
   },
   {
     t: "Readable without scripts",
-    d: "All page content is server-rendered and readable with JavaScript disabled; scripts only enhance (menus, reveals, form submission states).",
+    d: "All page content is server-rendered and readable with JavaScript disabled; scripts only enhance (menus, form submission states).",
   },
 ];
 
@@ -60,7 +60,7 @@ export default function AccessibilityPage() {
               {measures.map((m) => (
                 <article
                   key={m.t}
-                  className="rounded-[18px] border border-line bg-parchment p-6 shadow-[0_1px_2px_rgba(31,24,16,0.05)]"
+                  className="rounded-[18px] border border-line bg-surface-light p-6"
                 >
                   <h3 className="font-display text-[19px] font-semibold text-heading">{m.t}</h3>
                   <p className="mt-2 text-sm leading-6 text-body">{m.d}</p>
@@ -68,11 +68,11 @@ export default function AccessibilityPage() {
               ))}
             </div>
 
-            <div className="mt-12 rounded-[20px] panel-ink p-8">
-              <h2 className="font-display text-2xl font-semibold text-paper">
+            <div className="mt-12 rounded-[20px] border border-line bg-surface-light p-8">
+              <h2 className="font-display text-2xl font-semibold text-heading">
                 Something not working for you?
               </h2>
-              <p className="mt-2.5 max-w-2xl text-[15px] leading-7 text-paper/80">
+              <p className="mt-2.5 max-w-2xl text-[15px] leading-7 text-body">
                 Tell us what you were trying to do and what got in the way, and we will provide
                 the same information or service another way — by phone, WhatsApp or email — and
                 fix the barrier in the site.
@@ -81,13 +81,13 @@ export default function AccessibilityPage() {
                 <a href={telHref(phone)} className="btn-primary">
                   Call {phone}
                 </a>
-                <a href={`mailto:${business.emails[0]}`} className="btn-outline-light">
+                <a href={`mailto:${business.emails[0]}`} className="btn-outline-navy">
                   {business.emails[0]}
                 </a>
               </div>
-              <p className="mt-5 text-sm text-paper/70">
+              <p className="mt-5 text-sm text-body">
                 Prefer a form? Use the{" "}
-                <Link href="/contact-us" className="font-semibold text-brand-bright underline underline-offset-4">
+                <Link href="/contact-us" className="font-semibold text-signal underline underline-offset-4">
                   contact page
                 </Link>{" "}
                 — it reaches the same team.

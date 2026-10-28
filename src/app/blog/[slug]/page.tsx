@@ -94,7 +94,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <h2 className="text-lg font-bold text-heading">Keep exploring</h2>
               <p className="mt-2 text-sm leading-6 text-body">
                 Browse the trainings these articles draw on, compare courses side by side, or
-                book a free demo class from any course page.
+                send an enquiry about the course you want.
               </p>
               <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm font-bold">
                 <Link href="/trainings" className="text-signal hover:text-signal-strong">

@@ -39,6 +39,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
       { label: "Team members", href: "/team-members" },
       { label: "Why choose us", href: "/why-choose-us" },
       { label: "Testimonials", href: "/testimonials" },
+      { label: "Careers", href: "/careers" },
       { label: "Blog", href: "/blog" },
       { label: "Learning resources", href: "/resources" },
       { label: "Training institute in Dilsukhnagar", href: "/training-institute-in-dilsukhnagar-hyderabad" },

@@ -5,25 +5,28 @@ import { CtaBand, PageHero } from "@/components/ui";
 
 export const metadata = staticPageMetadata({
   title: "Resources",
-  description: "Everything about the people, proof and credibility behind GradeSpot IT Solutions — team, testimonials, student certifications and career support.",
+  description: "Resources from GradeSpot IT Solutions — team, testimonials, student certifications and career support.",
   path: "/resources",
 });
 
+// Stage 8: card grid → compact rows; descriptions corrected (no employer
+// wall claim on the career-support line, no "best choice" superlative,
+// no "satisfaction and success" marketing claim on testimonials).
 const items = [
   {
     title: "Team Members",
     href: "/team-members",
-    desc: "Meet the leadership and trainers behind GradeSpot IT Solutions.",
+    desc: "Meet the leadership behind GradeSpot IT Solutions.",
   },
   {
     title: "Why Choose Us",
     href: "/why-choose-us",
-    desc: "Our vision, mission and what makes GradeSpot the best choice for IT solutions and trainings.",
+    desc: "Our vision, mission and what GradeSpot offers in IT solutions and trainings.",
   },
   {
     title: "Testimonials",
     href: "/testimonials",
-    desc: "Explore the voices of satisfaction and success as our students and clients share their experiences.",
+    desc: "Testimonials from our students and clients, as published on the live site.",
   },
   {
     title: "DigiDefense Blog",
@@ -39,7 +42,7 @@ const items = [
   {
     title: "Student Certifications",
     href: "/student-certifications",
-    desc: "A glimpse into the certifications our alumni have successfully achieved.",
+    desc: "Certifications our alumni have achieved, as published on the live site.",
   },
   {
     title: "Certificate Verification",
@@ -49,7 +52,7 @@ const items = [
   {
     title: "Career Support",
     href: "/career-support",
-    desc: "The job roles each training prepares you for, the companies our students work with, and the career services we offer.",
+    desc: "The job roles each verified training prepares you for, and the career services we offer.",
   },
   {
     title: "Learning Articles",
@@ -71,9 +74,9 @@ const items = [
 export default function ResourcesPage() {
   return (
     <>
-      <PageHero title="Resources" subtitle="Everything about the people, proof and credibility behind GradeSpot." />
+      <PageHero title="Resources" subtitle="People, proof and further reading from GradeSpot." />
       <section className="section-pad">
-        <div className="wrap grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="wrap mx-auto max-w-4xl divide-y divide-line border-y border-line">
           {items.map((it) =>
             it.external ? (
               <a
@@ -81,19 +84,24 @@ export default function ResourcesPage() {
                 href={it.href}
                 target="_blank"
                 rel="noreferrer"
-                className="block rounded-2xl border border-line bg-parchment px-[30px] py-[40px] shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
+                className="flex flex-wrap items-baseline justify-between gap-3 py-5"
               >
-                <h2 className="text-xl font-bold">{it.title} ↗</h2>
-                <p className="mt-2 text-sm leading-6">{it.desc}</p>
+                <div>
+                  <h2 className="text-xl font-bold">{it.title} ↗</h2>
+                  <p className="mt-1 text-sm leading-6">{it.desc}</p>
+                </div>
               </a>
             ) : (
               <Link
                 key={it.title}
                 href={it.href}
-                className="block rounded-2xl border border-line bg-parchment px-[30px] py-[40px] shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
+                className="flex flex-wrap items-baseline justify-between gap-3 py-5"
               >
-                <h2 className="text-xl font-bold">{it.title}</h2>
-                <p className="mt-2 text-sm leading-6">{it.desc}</p>
+                <div>
+                  <h2 className="text-xl font-bold">{it.title}</h2>
+                  <p className="mt-1 text-sm leading-6">{it.desc}</p>
+                </div>
+                <span aria-hidden className="text-signal">→</span>
               </Link>
             ),
           )}

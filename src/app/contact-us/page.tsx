@@ -32,36 +32,36 @@ export default function ContactPage() {
           </div>
 
           {/* Side panel — dimensions follow the live site's contact panel */}
-          <aside className="w-full rounded-[20px] panel-ink p-8 lg:max-w-[400px] lg:p-[50px]">
-            <h2 className="font-display text-2xl font-semibold text-paper">Get in Touch</h2>
+          <aside className="w-full rounded-[20px] border border-line bg-surface-light p-8 lg:max-w-[400px] lg:p-[50px]">
+            <h2 className="font-display text-2xl font-semibold text-heading">Get in Touch</h2>
             <div className="mt-6 space-y-6 text-sm leading-6">
               <div>
-                <h3 className="font-semibold text-brand-bright">Our Location</h3>
-                <p className="mt-1 text-paper/85">{business.address}</p>
+                <h3 className="font-semibold text-signal">Our Location</h3>
+                <p className="mt-1 text-body">{business.address}</p>
               </div>
               <div>
-                <h3 className="font-semibold text-brand-bright">Send Us Mail</h3>
+                <h3 className="font-semibold text-signal">Send Us Mail</h3>
                 {business.emails.map((e) => (
                   <p key={e}>
-                    <a className="text-paper/85 hover:text-brand-bright" href={`mailto:${e}`}>
+                    <a className="text-body hover:text-signal" href={`mailto:${e}`}>
                       {e}
                     </a>
                   </p>
                 ))}
               </div>
               <div>
-                <h3 className="font-semibold text-brand-bright">Call Us</h3>
+                <h3 className="font-semibold text-signal">Call Us</h3>
                 {allPhones.map((p) => (
                   <p key={p}>
-                    <a className="text-paper/85 hover:text-brand-bright" href={telHref(p)}>
+                    <a className="text-body hover:text-signal" href={telHref(p)}>
                       {p}
                     </a>
                   </p>
                 ))}
               </div>
               <div>
-                <h3 className="font-semibold text-brand-bright">Office Hours</h3>
-                <p className="mt-1 text-paper/85">{business.officeHours}</p>
+                <h3 className="font-semibold text-signal">Office Hours</h3>
+                <p className="mt-1 text-body">{business.officeHours}</p>
               </div>
             </div>
           </aside>

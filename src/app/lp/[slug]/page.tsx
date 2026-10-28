@@ -147,7 +147,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
             <p className="eyebrow text-brand-bright">
               Hyderabad · {course.category}
             </p>
-            <h1 className="mt-3 text-4xl font-bold leading-[1.15] md:text-[46px]">
+            <h1 className="mt-3 text-4xl font-bold leading-[1.15] text-paper md:text-[46px]">
               {short} Training in Hyderabad
             </h1>
             {d && <p className="mt-4 max-w-xl text-base leading-7 text-white/85">{d.outcome}.</p>}

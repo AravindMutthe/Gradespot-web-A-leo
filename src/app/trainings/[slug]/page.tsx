@@ -148,7 +148,7 @@ export default async function CoursePage({
         <div className="wrap">
           <Breadcrumbs dark items={crumbs} />
           <p className="eyebrow mt-6 text-brand-bright">{model.category}</p>
-          <h1 className="mt-2 max-w-4xl text-4xl font-semibold md:text-5xl md:leading-tight">
+          <h1 className="mt-2 max-w-4xl text-4xl font-semibold text-white md:text-5xl md:leading-tight">
             {model.displayTitle}
           </h1>
           {/* Demo-fill: sample courses show the Sample tag in the

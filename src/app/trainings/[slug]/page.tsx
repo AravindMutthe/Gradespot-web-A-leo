@@ -241,6 +241,20 @@ export default async function CoursePage({
               Duration: {course.duration}
             </p>
           )}
+          {/* Full-redesign meta strip (2026-10-28): status only, from
+              the catalogue's own published-detail flag — never a B1
+              program status, which is still unfilled. Batch schedule
+              and fees are confirmed on enquiry (stated on the
+              trainings index and in the enquiry copy). Published
+              sections below are NOT reordered by this change. */}
+          <p className="mt-4 flex flex-wrap gap-2">
+            <span className="inline-block rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white">
+              {course.catalogOnly ? "Coming soon — ask us" : "Published detail"}
+            </span>
+            <span className="inline-block rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white">
+              Batch schedule and fees confirmed on enquiry
+            </span>
+          </p>
           <div className="mt-7 flex flex-wrap gap-4">
             <a href="#enquire" className="btn-primary">
               Enquire About This Course

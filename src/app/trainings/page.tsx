@@ -43,7 +43,7 @@ export default async function TrainingsPage() {
       <JsonLd data={trainingsIndexSchema(courses)} />
       <PageHero
         title="Trainings"
-        subtitle="Creating a better IT solutions — At GradeSpot, we empower future engineers with cutting-edge IT skills, practical training, and real-world projects. Our mission is to turn learners into tech leaders. Transform every Digital Process — intelligent automation, expert-driven solutions, and scalable technology."
+        subtitle="Browse GradeSpot's training catalogue: courses with published detail, and courses marked Coming soon — ask us where detail is not yet published. Batch schedules and fees are confirmed on enquiry."
       />
       <Ticker />
       {/* AEO answer-first summary (§25.22): counts/categories are live data. */}
@@ -61,6 +61,14 @@ export default async function TrainingsPage() {
           the search box immediately after the hero. */}
       <section className="section-pad">
         <div className="wrap">
+          <SectionTitle label="Browse · All Trainings" title="Find a program by domain, then filter by status" />
+          <p className="mt-4 max-w-3xl text-sm leading-6 text-body">
+            Use the status lens below to show every training, only trainings with
+            published detail, or only trainings marked Coming soon — ask us.
+            Duration, level, mode and demo rows appear only where the catalogue
+            actually publishes them — nothing here is filled in by guesswork.
+          </p>
+          <div className="mt-8">
           <CatalogueSearch
             courses={courses.map((c) => ({
               slug: c.slug,
@@ -73,6 +81,7 @@ export default async function TrainingsPage() {
             }))}
             categories={categories}
           />
+          </div>
           <div className="mt-16 rounded-2xl border border-line bg-surface-light p-8 text-center">
             <h2 className="text-2xl font-semibold">Not sure which course fits you?</h2>
             <p className="mx-auto mt-2 max-w-xl">

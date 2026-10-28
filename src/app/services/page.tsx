@@ -99,6 +99,27 @@ export default async function ServicesPage() {
             })}
           </div>
 
+          {/* How engagement works — framing only, from published copy
+              already on this page and the home services section: tell
+              us the problem and the scope, scope is agreed on
+              consultation, services are quoted to scope. No terms,
+              price, timeline or deliverable is promised here. */}
+          <div className="mt-12">
+            <SectionTitle label="How It Works" title="From enquiry to a scoped service" />
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
+              {[
+                ["1 · Tell us the problem", "Describe the problem and the scope, on enquiry or consultation."],
+                ["2 · Scope, agreed together", "What the service covers is agreed on consultation for your specific system."],
+                ["3 · Quoted to scope", "Services are quoted to scope; no prices are published here."],
+              ].map(([t, d]) => (
+                <article key={t} className="rounded-2xl border border-line bg-surface-light p-7">
+                  <h3 className="font-sans text-[17px] font-bold text-heading">{t}</h3>
+                  <p className="mt-2 text-sm leading-6 text-body">{d}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
           {/* Ongoing support & maintenance — a consultation concept, not a
               priced product: scope and terms are agreed on consultation,
               no recurring-billing claim is made, and nothing is sold here. */}

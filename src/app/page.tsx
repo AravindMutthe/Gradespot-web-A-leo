@@ -33,13 +33,17 @@ import Ticker from "@/components/Ticker";
 import OfferCards from "@/components/OfferCards";
 import { faqSchema, webPageSchema } from "@/lib/schema";
 
-// Homepage — GradeSpot Nexus Release 1 (docs/frontend-v2/SPEC.md §3).
-// This is NOT the v1 eleven-section card-row reorder (commit f584ee5,
-// superseded). Compositions alternate on purpose:
-//   editorial (hero, why) → structured discovery (Academy table) →
-//   technical workspace (labs + pathway graph) → editorial pathway
-//   feature (certifications) → service-delivery table (Enterprise) →
-//   editorial proof (why, insights) → application enquiry (Speak).
+// Homepage — GradeSpot Nexus full redesign (2026-10-28, D1/D2/D3).
+// D1 equal hybrid, D2 three jobs, D3 hero statement (home hero only).
+// Home order, with the two engines at EQUAL weight (same section
+// padding, same title hierarchy, same table treatment, same primary
+// CTA + text-link row — neither engine is a lead or a second band):
+//   hero (D3) → training discovery → IT services → labs & career
+//   pathways → certifications → why GradeSpot → insights → enquiry.
+// No repeated rows of identical cards. No invented fees, dates,
+// trainers, stats, ratings or placement claims. Counts below are
+// computed from the real catalogue at render time. Programs marked
+// Planned are never presented as available.
 // No repeated rows of identical cards. No invented fees, dates,
 // trainers, stats, ratings or placement claims. Counts below are
 // computed from the real catalogue at render time. Programs marked
@@ -99,19 +103,20 @@ export default async function HomePage() {
           <div data-reveal className="hero-no-reveal">
             <p className="eyebrow text-nexus-brand-600">GradeSpot IT Solutions · Technology Academy · Certifications · Applied Labs · Enterprise IT Solutions</p>
             <h1 className="mt-5 max-w-xl font-sans text-[40px] font-bold leading-[1.05] tracking-tight text-heading md:text-[56px]">
-              Engineering Skills. Real-World Solutions.
+              Practical IT training — and IT services — in Hyderabad.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-body">
-              Professional technology education, certification preparation, hands-on labs
-              and enterprise IT services — in Dilsukhnagar, Hyderabad, online and in
-              the classroom.
+              Classroom and online courses in cloud, cybersecurity, networking, software,
+              and more, plus IT services for businesses. Ask about a course or a
+              consultation — no fees or batch dates are listed here until confirmed.
             </p>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-body">{homeParagraphs[1]}</p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/trainings" className="btn-primary">Explore Academy</Link>
-              <Link href="/register" className="btn-outline-navy">Book Free Demo</Link>
-              <Link href="/services" className="btn-outline-navy">IT Solutions</Link>
+              <Link href="/trainings" className="btn-primary">Explore Training</Link>
+              <Link href="/services" className="btn-primary">Explore IT Solutions</Link>
             </div>
+            <p className="mt-4">
+              <Link href="/register" className="text-sm font-bold text-nexus-brand-600 hover:underline">Book a free demo →</Link>
+            </p>
             <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-body">
               Academy · Technology Solutions · Labs &amp; Career Pathways
             </p>
@@ -201,6 +206,32 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* SERVICE-DELIVERY TABLE — Enterprise, equal weight with Academy. */}
+      <section className="bg-nexus-surface-sunken section-pad" aria-label="IT solutions and enterprise">
+        <div className="wrap">
+          <SectionTitle label="IT Solutions · Service Delivery" title="Security, infrastructure, software, digital and consulting" />
+          <p className="mt-4 max-w-3xl text-sm leading-6 text-body">
+            Tell us the problem and the scope; the team replies with the next step.
+            Services are quoted to scope; no prices are published here. For a
+            service consultation, talk to an advisor or open the corporate and
+            international page.
+          </p>
+          <div className="nexus-app mt-8 overflow-hidden">
+            {services.slice(0, 8).map((s) => (
+              <div key={s.slug} className="nexus-row">
+                <Link href={`/services/${s.slug}`} className="grow font-semibold text-heading hover:text-nexus-brand-600 hover:underline">{s.title} →</Link>
+                <span className="hidden font-mono text-[11px] uppercase tracking-[0.06em] text-body sm:block">Service delivery</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 flex flex-wrap gap-4">
+            <Link href="/services" className="btn-primary">All Services</Link>
+            <Link href="/contact-us" className="text-sm font-bold text-nexus-brand-600 hover:underline">Talk to an Advisor →</Link>
+            <Link href="/corporate-and-international" className="text-sm font-bold text-nexus-brand-600 hover:underline">Corporate &amp; International →</Link>
+          </div>
+        </div>
+      </section>
+
       {/* TECHNICAL WORKSPACE — labs + pathway graph, Carbon-inspired. */}
       <section className="bg-nexus-surface-sunken section-pad" aria-label="Labs and career pathways">
         <div className="wrap grid items-start gap-10 lg:grid-cols-2">
@@ -273,36 +304,6 @@ export default async function HomePage() {
               <div className="mt-4"><CourseCard course={ceh} /></div>
             </div>
           )}
-        </div>
-      </section>
-
-      {/* SERVICE-DELIVERY TABLE + FOR BUSINESS PANEL — Enterprise. */}
-      <section className="bg-nexus-surface-sunken section-pad" aria-label="IT solutions and enterprise">
-        <div className="wrap grid items-start gap-10 lg:grid-cols-[1.4fr_1fr]">
-          <div>
-            <SectionTitle label="IT Solutions · Service Delivery" title="Security, infrastructure, software, digital and consulting" />
-            <div className="nexus-app mt-6 overflow-hidden">
-              {services.slice(0, 8).map((s) => (
-                <div key={s.slug} className="nexus-row">
-                  <Link href={`/services/${s.slug}`} className="grow font-semibold text-heading hover:text-nexus-brand-600 hover:underline">{s.title} →</Link>
-                  <span className="hidden font-mono text-[11px] uppercase tracking-[0.06em] text-body sm:block">Service delivery</span>
-                </div>
-              ))}
-            </div>
-            <Link href="/services" className="btn-primary mt-6">All Services</Link>
-          </div>
-          <div className="rounded-2xl bg-nexus-ink-950 p-7 text-nexus-text-inverse">
-            <p className="eyebrow text-nexus-brand-300">For Business</p>
-            <h3 className="mt-3 font-sans text-[24px] font-bold leading-snug tracking-tight text-nexus-text-inverse">Request a service consultation</h3>
-            <p className="mt-3 text-sm leading-6 text-nexus-text-inverse/85">
-              Tell us the problem and the scope; the team replies with the next step.
-              Services are quoted to scope; no prices are published here.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/contact-us" className="btn-primary">Talk to an Advisor</Link>
-              <Link href="/corporate-and-international" className="text-sm font-bold text-nexus-text-inverse underline">Corporate &amp; International →</Link>
-            </div>
-          </div>
         </div>
       </section>
 

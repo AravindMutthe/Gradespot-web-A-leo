@@ -9,16 +9,22 @@ import { SocialLinks } from "@/components/ui";
 import { navCourses } from "@/data/catalogue-nav";
 import { services } from "@/data/services";
 import { nexusMenus, type NavMenu } from "@/data/nexus-nav";
+import { navJobs, jobMenus, jobForMenu } from "@/data/nav-jobs";
 import { enabledHeaderCtas, type HeaderCta } from "@/data/site-settings";
 
-// Header — GradeSpot Nexus, R1 redesign (2026-10-27, audit
-// docs/frontend-v2/UI-REDESIGN-AUDIT-2026-10-27.md, Pass R1 only).
-// Six primary menus only: Academy, Certifications, Career Pathways,
-// Labs & Projects, IT Solutions, Company & Resources. Labels, group
-// hrefs, and every link in src/data/nexus-nav.ts are unchanged in R1:
-// R1 changes presentation and interaction only (tokens, header
-// hierarchy, mega-panel layout, mobile drawer, search index), never
-// a destination. Logo plate: UNTOUCHED — official artwork only,
+// Header — GradeSpot Nexus, full redesign (2026-10-28, D2/D3).
+// D2 PRESENTATION: the bar, drawer and footer present THREE visitor
+// jobs — Training, IT Solutions, Company & Resources — over the
+// unchanged six groups in nexus-nav.ts (see nav-jobs.ts). No group,
+// label, href or link was deleted, renamed or added by the job
+// presentation; the full old-group → job mapping is recorded in
+// docs/frontend-v2/NAV-JOB-MAPPING-2026-10-28.md. Desktop: a job
+// trigger opens a job panel listing that job's menus; choosing a
+// menu opens its existing mega panel, with a back link to the job.
+// Mobile drawer: jobs → menus → columns, same two-level pattern.
+// D3 HERO (home page only): "Practical IT training — and IT
+// services — in Hyderabad." with two equal CTAs, Training and
+// IT Solutions. Logo plate: UNTOUCHED — official artwork only,
 // per-theme swap. Do not recolor, filter, crop or replace the logo
 // files. Brand anchor remains sampled logo orange #E57439 /
 // charcoal #434140; supporting deep blue #17324D and teal #0D766E
@@ -67,6 +73,12 @@ function buildSearchIndex(): SearchHit[] {
   }
   for (const s of services) {
     push(s.title, `/services/${s.slug}`, "Service", s.title);
+  }
+  // D2: job headings are searchable entry points to their existing
+  // job hrefs (which are themselves existing group hrefs) — no new
+  // destination is introduced by indexing them.
+  for (const job of navJobs) {
+    push(job.label, job.href, "Menu", `${job.blurb} ${job.menuKeys.join(" ")}`);
   }
   for (const menu of nexusMenus) {
     push(menu.label, menu.href, "Menu", menu.label);
@@ -303,6 +315,10 @@ export default function Header() {
 
   const [open, setOpen] = useState(false);
   const [panel, setPanel] = useState<PanelKey | null>(null);
+  // D2: desktop job panel (null = closed). A menu panel (panel)
+  // always sits inside its job panel; closing the job closes both.
+  const [jobPanel, setJobPanel] = useState<string | null>(null);
+  const [mobileJob, setMobileJob] = useState<string | null>(null);
   const [mobileGroup, setMobileGroup] = useState<PanelKey | null>(null);
   const [openColumns, setOpenColumns] = useState<Record<string, boolean>>({});
   const closeTimer = useRef<number | null>(null);
@@ -318,20 +334,42 @@ export default function Header() {
     clearTimer();
     setPanel(key);
   };
+  const openJobPanel = (key: string) => {
+    clearTimer();
+    setPanel(null);
+    setJobPanel(key);
+  };
+  const toggleJobPanel = (key: string) => {
+    clearTimer();
+    setJobPanel((j) => {
+      if (j === key) {
+        setPanel(null);
+        return null;
+      }
+      setPanel(null);
+      return key;
+    });
+  };
   // Gap-tolerant close: 400ms, cancelled by re-entering the trigger
   // or the panel itself, so a small pointer gap never drops the menu.
   const scheduleClose = () => {
     clearTimer();
-    closeTimer.current = window.setTimeout(() => setPanel(null), 400);
+    closeTimer.current = window.setTimeout(() => {
+      setPanel(null);
+      setJobPanel(null);
+    }, 400);
   };
   const closePanel = (returnFocusKey?: PanelKey) => {
     clearTimer();
     setPanel(null);
+    setJobPanel(null);
     if (returnFocusKey) triggerRefs.current.get(returnFocusKey)?.focus();
   };
-  const togglePanel = (key: PanelKey) => {
+  // Back from a menu panel to its job panel (desktop): the job
+  // panel stays open, only the menu level closes.
+  const backToJobPanel = () => {
     clearTimer();
-    setPanel((p) => (p === key ? null : key));
+    setPanel(null);
   };
 
   const closeDrawer = () => {
@@ -359,7 +397,9 @@ export default function Header() {
   }, [open ]);
 
   const activeMenu = nexusMenus.find((m) => m.key === panel) ?? null;
+  const activeJob = navJobs.find((j) => j.key === jobPanel) ?? null;
   const activeMobileMenu = nexusMenus.find((m) => m.key === mobileGroup) ?? null;
+  const activeMobileJob = navJobs.find((j) => j.key === mobileJob) ?? null;
 
   // Utility strip — SINGLE instance, single behaviour in R1:
   // it scrolls away with the page on every size; only the header
@@ -473,36 +513,36 @@ export default function Header() {
             </Link>
 
             <nav className="hidden items-center nav:flex" aria-label="Primary">
-              {nexusMenus.map((menu) => {
-                const isOpen = panel === menu.key;
+              {navJobs.map((job) => {
+                const isOpen = jobPanel === job.key;
                 return (
                   <div
-                    key={menu.key}
+                    key={job.key}
                     className="relative"
-                    onMouseEnter={() => openPanel(menu.key)}
+                    onMouseEnter={() => openJobPanel(job.key)}
                     onMouseLeave={scheduleClose}
                   >
                     <button
                       ref={(el) => {
-                        if (el) triggerRefs.current.set(menu.key, el);
-                        else triggerRefs.current.delete(menu.key);
+                        if (el) triggerRefs.current.set(job.key, el);
+                        else triggerRefs.current.delete(job.key);
                       }}
                       type="button"
                       aria-expanded={isOpen}
                       aria-haspopup="true"
-                      aria-controls={`mega-${menu.key}`}
-                      aria-label={`${menu.label} menu`}
-                      onClick={() => togglePanel(menu.key)}
+                      aria-controls={`job-${job.key}`}
+                      aria-label={`${job.label} menu`}
+                      onClick={() => toggleJobPanel(job.key)}
                       onKeyDown={(e) => {
-                        if (e.key === "Escape") closePanel(menu.key);
+                        if (e.key === "Escape") closePanel();
                       }}
-                      className={`flex min-h-[44px] min-w-[44px] items-center gap-0.5 whitespace-nowrap rounded-full px-1.5 py-2.5 text-[11px] font-bold tracking-[-0.01em] transition-colors 2xl:gap-1 2xl:px-2.5 2xl:text-[13px] ${
+                      className={`flex min-h-[44px] min-w-[44px] items-center gap-1 whitespace-nowrap rounded-full px-3 py-2.5 text-[13px] font-bold tracking-[-0.01em] transition-colors 2xl:px-4 2xl:text-[14px] ${
                         isOpen
                           ? "bg-nexus-support-deep-soft text-heading ring-2 ring-brand"
                           : "text-nav hover:bg-nexus-support-deep-soft"
                       }`}
                     >
-                      {menu.label}
+                      {job.label}
                       <span aria-hidden className={`inline-block transition-transform ${isOpen ? "rotate-180" : ""}`}>
                         ▾
                       </span>
@@ -547,6 +587,55 @@ export default function Header() {
               primary activation, hover as enhancement with a
               gap-tolerant close. Internal scrolling only as a
               fallback when the panel is taller than the viewport. ——— */}
+          {/* ——— JOB PANEL (D2, 2026-10-28): a job trigger opens
+              this panel listing that job's unchanged menus; choosing
+              a menu opens its existing mega panel below, with a back
+              link to the job. No destination is added or removed. ——— */}
+          {activeJob && !activeMenu && (
+            <div
+              id={`job-${activeJob.key}`}
+              className="absolute inset-x-0 top-full z-40 hidden nav:block"
+              onMouseEnter={() => openJobPanel(activeJob.key)}
+              onMouseLeave={scheduleClose}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") closePanel();
+              }}
+            >
+              <div className="mx-auto w-full max-w-[1240px] px-3 pb-4">
+                <div className="overflow-hidden rounded-[20px] border border-line border-t-2 border-t-brand bg-canvas shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
+                  <div className="p-7">
+                    <p className="eyebrow text-nexus-brand-600">{activeJob.label}</p>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-body">{activeJob.blurb}</p>
+                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                      {jobMenus(activeJob).map((menu) => (
+                        <button
+                          key={menu.key}
+                          type="button"
+                          onClick={() => openPanel(menu.key)}
+                          className="rounded-2xl border border-line bg-surface-light p-5 text-left transition-colors hover:bg-nexus-support-deep-soft"
+                        >
+                          <span className="block font-sans text-[16px] font-bold text-heading">{menu.label} ›</span>
+                          <span className="mt-1 block text-[13px] leading-5 text-body">{menu.featured.body}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 bg-ink px-6 py-3">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-paper/75">
+                      Hyderabad, India · Online &amp; Classroom Training
+                    </span>
+                    <Link
+                      href={activeJob.href}
+                      onClick={() => closePanel()}
+                      className="flex min-h-[44px] items-center text-[13px] font-bold text-brand-bright hover:text-paper"
+                    >
+                      View {activeJob.label} →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {activeMenu && (
             <div
               id={`mega-${activeMenu.key}`}
@@ -559,6 +648,18 @@ export default function Header() {
             >
               <div className="mx-auto w-full max-w-[1240px] px-3 pb-4">
                 <div className="overflow-hidden rounded-[20px] border border-line border-t-2 border-t-brand bg-canvas shadow-[0_28px_56px_rgba(31,24,16,0.18)]">
+                  {jobForMenu(activeMenu.key) && (
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-surface-light px-6 py-2">
+                      <button
+                        type="button"
+                        onClick={backToJobPanel}
+                        className="flex min-h-[44px] items-center text-[13px] font-bold text-signal hover:text-signal-strong"
+                      >
+                        ← {jobForMenu(activeMenu.key)?.label}
+                      </button>
+                      <span className="text-[12px] font-semibold text-body">{activeMenu.label}</span>
+                    </div>
+                  )}
                   <div className="max-h-[calc(100dvh-120px)] overflow-y-auto">
                     <div className={`grid ${showFeatured(activeMenu) ? "lg:grid-cols-[1fr_280px]" : ""}`}>
                       <div
@@ -616,10 +717,10 @@ export default function Header() {
           )}
         </div>
 
-        {/* Mobile drawer (R1): fixed dialog, not a full-page scroll
-            dump. Group list → group view with collapsible columns,
-            sticky View-group action, search and CTAs at the top.
-            All six menus and all links from nexus-nav.ts are kept. */}
+        {/* Mobile drawer (D2): fixed dialog, not a full-page scroll
+            dump. Jobs → menus → columns, with a sticky View action
+            at each level, search and CTAs at the top. All three jobs,
+            all six menus and all links from nexus-nav.ts are kept. */}
         {open && (
           <div className="fixed inset-0 z-[70] nav:hidden" role="presentation">
             <button
@@ -675,17 +776,17 @@ export default function Header() {
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto">
-                {!activeMobileMenu && (
-                  <nav aria-label="Mobile groups">
-                    {nexusMenus.map((menu) => (
+                {!activeMobileJob && !activeMobileMenu && (
+                  <nav aria-label="Mobile jobs">
+                    {navJobs.map((job) => (
                       <button
-                        key={menu.key}
+                        key={job.key}
                         type="button"
-                        onClick={() => setMobileGroup(menu.key)}
+                        onClick={() => setMobileJob(job.key)}
                         aria-expanded={false}
                         className="flex min-h-[56px] w-full items-center justify-between border-b border-line/60 px-5 text-left text-[15px] font-bold text-heading transition-colors hover:bg-nexus-support-deep-soft"
                       >
-                        {menu.label}
+                        {job.label}
                         <span aria-hidden>›</span>
                       </button>
                     ))}
@@ -698,6 +799,38 @@ export default function Header() {
                     </Link>
                   </nav>
                 )}
+                {activeMobileJob && !activeMobileMenu && (
+                  <nav aria-label={`Mobile menus in ${activeMobileJob.label}`}>
+                    <div className="sticky top-0 z-10 flex items-center justify-between gap-2 border-b border-line bg-canvas px-3 py-2">
+                      <button
+                        type="button"
+                        onClick={() => setMobileJob(null)}
+                        className="flex min-h-[44px] items-center px-2 text-[13.5px] font-bold text-signal"
+                      >
+                        ← All menus
+                      </button>
+                      <Link
+                        href={activeMobileJob.href}
+                        onClick={() => setOpen(false)}
+                        className="flex min-h-[44px] items-center px-2 text-[13.5px] font-bold text-signal"
+                      >
+                        View {activeMobileJob.label} →
+                      </Link>
+                    </div>
+                    {jobMenus(activeMobileJob).map((menu) => (
+                      <button
+                        key={menu.key}
+                        type="button"
+                        onClick={() => setMobileGroup(menu.key)}
+                        aria-expanded={false}
+                        className="flex min-h-[56px] w-full items-center justify-between border-b border-line/60 px-5 text-left text-[15px] font-bold text-heading transition-colors hover:bg-nexus-support-deep-soft"
+                      >
+                        {menu.label}
+                        <span aria-hidden>›</span>
+                      </button>
+                    ))}
+                  </nav>
+                )}
                 {activeMobileMenu && (
                   <div>
                     <div className="sticky top-0 z-10 flex items-center justify-between gap-2 border-b border-line bg-canvas px-3 py-2">
@@ -706,7 +839,9 @@ export default function Header() {
                         onClick={() => setMobileGroup(null)}
                         className="flex min-h-[44px] items-center px-2 text-[13.5px] font-bold text-signal"
                       >
-                        ← All menus
+                        ← {activeMobileMenu && jobForMenu(activeMobileMenu.key)?.label
+                          ? jobForMenu(activeMobileMenu.key)?.label
+                          : "All menus"}
                       </button>
                       <Link
                         href={activeMobileMenu.href}

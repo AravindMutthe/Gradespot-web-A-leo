@@ -27,6 +27,10 @@ export default function ContactPage() {
               ))}
             </div>
             <div className="mt-8">
+              <p className="mb-4 max-w-xl text-[15px] leading-7 text-body">
+                Tell us your name, phone number, and which course or service you
+                are asking about. Mode, batch and fee details follow in our reply.
+              </p>
               <LeadForm />
             </div>
           </div>

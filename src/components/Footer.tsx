@@ -8,6 +8,33 @@ import { SocialLinks } from "@/components/ui";
 // plus "Contact Us" in Quick Links (it left the top bar in §19 because
 // the Callback CTA duplicates it there; the footer keeps a plain path).
 
+// Footer — Leo redesign v1 ("Prospectus", DECISIONS.md §19), plus
+// D2 job presentation (2026-10-28): columns are grouped under the
+// three visitor jobs — Training, IT Solutions, Company & Resources
+// — over the same link set as before. No footer link was deleted:
+// the bottom-strip links (Pricing, For Institutes, Institute in
+// Dilsukhnagar) moved into the Company & Resources column, and the
+// Get Started essentials moved under their job. Link set is the v1
+// set plus "Contact Us" (kept in its job column).
+
+const trainingLinks = [
+  { label: "Trainings", href: "/trainings" },
+  { label: "Certified Ethical Hacker [CEH v13]", href: "/trainings/certified-ethical-hacker-ceh" },
+  { label: "SOC Analyst Training in Hyderabad", href: "/trainings/soc-analyst" },
+  { label: "CCNA 200-301", href: "/trainings/ccna-200-301" },
+  { label: "Azure Fundamentals | AZ-900", href: "/trainings/azure-fundamentals-az-900" },
+  { label: "Azure Administrator | AZ-104", href: "/trainings/azure-administrator-az-104" },
+  { label: "CompTIA Security+: Sy0-701", href: "/trainings/comptia-security-plus" },
+  { label: "Student Certifications", href: "/student-certifications" },
+  { label: "Certificate Verification", href: "/certificate-verification" },
+];
+
+const solutionsLinks = [
+  { label: "Services", href: "/services" },
+  { label: "Corporate & International", href: "/corporate-and-international" },
+  { label: "Partner With Us", href: "/partner-with-us" },
+];
+
 const companyLinks = [
   { label: "About Us", href: "/about-us" },
   { label: "Team Members", href: "/team-members" },
@@ -18,34 +45,17 @@ const companyLinks = [
   // Career Support above; the page itself carries the disambiguation.
   { label: "Careers", href: "/careers" },
   { label: "For Colleges", href: "/for-colleges" },
-  { label: "Partner With Us", href: "/partner-with-us" },
-  { label: "Corporate & International", href: "/corporate-and-international" },
+  { label: "For Institutes", href: "/for-institutes" },
+  { label: "Institute in Dilsukhnagar", href: "/training-institute-in-dilsukhnagar-hyderabad" },
   { label: "Help & FAQs", href: "/faq" },
-];
-
-const quickLinks = [
-  { label: "Trainings", href: "/trainings" },
-  { label: "Services", href: "/services" },
   { label: "Contact Us", href: "/contact-us" },
-  { label: "Student Certifications", href: "/student-certifications" },
-  { label: "Certificate Verification", href: "/certificate-verification" },
+  { label: "Pricing", href: "/pricing" },
   { label: "Terms and Conditions", href: "/terms-and-conditions" },
   // 2026-10-27 audit fix: Privacy Policy and Refund Policy are DRAFTS
   // (TODO fact slots, no verified facts) and are deliberately NOT
   // linked from the footer until the owner + lawyer publish real
   // policies. The routes still exist in the repo, unlinked.
   { label: "Accessibility", href: "/accessibility" },
-];
-
-// Footer keyword cluster (local-SEO pattern): the headline trainings,
-// linked by their real published titles to their real pages.
-const popularTrainings = [
-  { label: "Certified Ethical Hacker [CEH v13]", href: "/trainings/certified-ethical-hacker-ceh" },
-  { label: "SOC Analyst Training in Hyderabad", href: "/trainings/soc-analyst" },
-  { label: "CCNA 200-301", href: "/trainings/ccna-200-301" },
-  { label: "Azure Fundamentals | AZ-900", href: "/trainings/azure-fundamentals-az-900" },
-  { label: "Azure Administrator | AZ-104", href: "/trainings/azure-administrator-az-104" },
-  { label: "CompTIA Security+: Sy0-701", href: "/trainings/comptia-security-plus" },
 ];
 
 const linkCls = "inline-flex min-h-[44px] items-center rounded-lg px-2 -mx-2 transition-colors hover:bg-white/5 hover:text-brand-bright"; // 44px rows kept (R1 target, above the 24px AA floor and the 44px AAA target); R2+R3 adds only a soft hover surface.
@@ -78,36 +88,36 @@ export default function Footer() {
           </p>
         </div>
 
-        <nav aria-label="Company">
-          <h3 className={headCls}>Company</h3>
+        <nav aria-label="Training">
+          <h3 className={headCls}>Training</h3>
+          <ul className="space-y-1.5 text-sm">
+            {trainingLinks.map((l) => (
+              <li key={l.href}>
+                <Link className={linkCls} href={l.href}>
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav aria-label="IT Solutions">
+          <h3 className={headCls}>IT Solutions</h3>
+          <ul className="space-y-1.5 text-sm">
+            {solutionsLinks.map((l) => (
+              <li key={l.href}>
+                <Link className={linkCls} href={l.href}>
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav aria-label="Company and resources">
+          <h3 className={headCls}>Company &amp; Resources</h3>
           <ul className="space-y-1.5 text-sm">
             {companyLinks.map((l) => (
-              <li key={l.href}>
-                <Link className={linkCls} href={l.href}>
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label="Get started">
-          <h3 className={headCls}>Get Started</h3>
-          <ul className="space-y-1.5 text-sm">
-            {quickLinks.map((l) => (
-              <li key={l.href}>
-                <Link className={linkCls} href={l.href}>
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label="Popular trainings">
-          <h3 className={headCls}>Popular Trainings</h3>
-          <ul className="space-y-1.5 text-sm">
-            {popularTrainings.map((l) => (
               <li key={l.href}>
                 <Link className={linkCls} href={l.href}>
                   {l.label}
@@ -156,25 +166,10 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="wrap flex flex-wrap items-center justify-between gap-2 py-5 text-[13px] text-footer-text">
           <p>© Copyright {new Date().getFullYear()}. {business.legalName}</p>
-          {/* §22 dedupe: this strip used to repeat Home / Testimonials /
-              Services / Terms, which already live in the columns above.
-              It now carries only the links the columns don't. */}
-          <p>
-            <Link className="hover:text-brand-bright" href="/pricing">
-              Pricing
-            </Link>
-            {" · "}
-            <Link className="hover:text-brand-bright" href="/for-institutes">
-              For Institutes
-            </Link>
-            {" · "}
-            <Link
-              className="hover:text-brand-bright"
-              href="/training-institute-in-dilsukhnagar-hyderabad"
-            >
-              Institute in Dilsukhnagar
-            </Link>
-          </p>
+          {/* D2: the links this strip used to carry (Pricing, For
+              Institutes, Institute in Dilsukhnagar) now live in the
+              Company & Resources column above — not deleted, moved. */}
+          <p>Hyderabad, India · Online &amp; Classroom Training</p>
         </div>
       </div>
     </footer>

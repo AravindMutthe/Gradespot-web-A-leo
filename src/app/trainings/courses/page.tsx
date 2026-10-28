@@ -3,6 +3,7 @@ import Link from "next/link";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
+import VisualTopicCard from "@/components/VisualTopicCard";
 import SearchBox from "@/components/SearchBox";
 import { topicCategories } from "@/lib/two-door";
 
@@ -25,6 +26,7 @@ export default function CoursesDirectoryPage() {
   return (
     <>
       <PageHero
+        large
         title="Courses"
         subtitle="Individual subjects and single-subject paths from GradeSpot IT Solutions in Dilsukhnagar, Hyderabad. Pick a topic to browse its courses."
       />
@@ -45,6 +47,23 @@ export default function CoursesDirectoryPage() {
               ← All Training
             </Link>
           </p>
+          {/* Modern + stylish pass: topic cards sit ALONGSIDE the
+              board below — the board stays, the cards add the visual
+              layer. No artwork files exist yet, so the cards render
+              their tint panels. */}
+          <ul aria-label="Course topics" className="mb-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {categories.map((cat) => (
+              <li key={cat.slug}>
+                <VisualTopicCard
+                  href={`/trainings/category/${cat.slug}`}
+                  title={cat.name}
+                  eyebrow="Training · Courses"
+                  countLabel={`${cat.count} ${cat.count === 1 ? "course" : "courses"}`}
+                  aspect="square"
+                />
+              </li>
+            ))}
+          </ul>
           <DirectoryBoard
             door="training"
             eyebrow="Training · Courses"

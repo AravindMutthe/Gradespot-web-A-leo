@@ -3,6 +3,7 @@ import Link from "next/link";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
+import VisualTopicCard from "@/components/VisualTopicCard";
 import SearchBox from "@/components/SearchBox";
 import { TRAINING_DIRECTORY_ENTRIES } from "@/lib/two-door";
 
@@ -33,6 +34,7 @@ export default function TrainingsDirectoryPage() {
   return (
     <>
       <PageHero
+        large
         title="Training"
         subtitle="Training from GradeSpot IT Solutions in Dilsukhnagar, Hyderabad. Pick a door below — course details, schedules and availability are confirmed on enquiry."
       />
@@ -47,6 +49,24 @@ export default function TrainingsDirectoryPage() {
       </div>
       <section className="section-pad">
         <div className="wrap">
+          {/* Modern + stylish pass: offering cards sit ALONGSIDE the
+              board below — the board stays, the cards add the visual
+              layer. No artwork files exist yet, so the cards render
+              their tint panels. */}
+          <ul aria-label="Training doors" className="mb-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {TRAINING_DIRECTORY_ENTRIES.map((entry) => (
+              <li key={entry.href}>
+                <VisualTopicCard
+                  href={entry.href}
+                  title={entry.title}
+                  eyebrow="Training"
+                  description={entry.line}
+                  countLabel={entry.status}
+                  aspect="square"
+                />
+              </li>
+            ))}
+          </ul>
           <DirectoryBoard door="training" title="Browse training">
           <ul className="border-t border-line">
             {TRAINING_DIRECTORY_ENTRIES.map((entry) => (

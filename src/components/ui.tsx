@@ -15,15 +15,47 @@ import { services as allServices } from "@/data/services";
 // labels, parchment cards with warm shadows, ink panels. Content —
 // copy, links, images — is unchanged from v1 everywhere below.
 
-export function PageHero({ title, subtitle }: { title: string; subtitle?: string }) {
+// PageHero — shared directory hero. The `large` variant is the modern +
+// stylish pass (owner-approved 2026-10-29): stronger display scale and
+// more vertical breathing room, used ONLY by the trainings hub, the
+// courses directory, and the category pages. Every other PageHero
+// caller keeps the standard scale byte-for-byte. The large scale
+// (44px → 64px) is a PROPOSAL for Gate 1 (heading size scale) — it
+// finalizes nothing; the owner approves or rejects it at preview.
+export function PageHero({
+  title,
+  subtitle,
+  large,
+}: {
+  title: string;
+  subtitle?: string;
+  large?: boolean;
+}) {
   return (
-    <section className="hero-paper border-b border-line py-6 md:py-8">
+    <section
+      className={`hero-paper border-b border-line ${large ? "py-10 md:py-14" : "py-6 md:py-8"}`}
+    >
       <div className="wrap" data-reveal>
-        <span className="block h-[3px] w-14 rounded-full bg-gradient-to-r from-brand-dark via-brand to-brand-bright" aria-hidden />
-        <h1 className="mt-6 max-w-4xl text-[40px] font-semibold leading-[1.08] text-heading md:text-[56px]">
+        <span
+          className={`block h-[3px] rounded-full bg-gradient-to-r from-brand-dark via-brand to-brand-bright ${
+            large ? "w-20" : "w-14"
+          }`}
+          aria-hidden
+        />
+        <h1
+          className={`mt-6 max-w-4xl font-semibold text-heading ${
+            large
+              ? "text-[44px] leading-[1.05] md:text-[64px]"
+              : "text-[40px] leading-[1.08] md:text-[56px]"
+          }`}
+        >
           {title}
         </h1>
-        {subtitle && <p className="mt-5 max-w-3xl text-lg leading-8 text-body">{subtitle}</p>}
+        {subtitle && (
+          <p className={`${large ? "mt-6" : "mt-5"} max-w-3xl text-lg leading-8 text-body`}>
+            {subtitle}
+          </p>
+        )}
       </div>
     </section>
   );

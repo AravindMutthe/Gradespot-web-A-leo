@@ -73,12 +73,21 @@ describe("P2 — one shared board system for both doors", () => {
     }
   });
 
-  it("no new large cards: rounded-2xl count per page is unchanged (CTA panels only)", () => {
+  // SUPERSEDED IN PART by the modern + stylish pass (owner-approved
+  // 2026-10-29): image-led cards are now AUTHORISED, sitting
+  // ALONGSIDE the boards — the boards and flat rows below are
+  // unchanged, and the cards live in their own component file, so
+  // the per-page rounded-2xl counts below still hold exactly.
+  it("cards sit alongside boards: pages render VisualTopicCard AND DirectoryBoard; page rounded-2xl counts unchanged (cards live in the component)", () => {
     const count = (src: string) => (src.match(/rounded-2xl/g) ?? []).length;
     expect(count(hub)).toBe(1); // Talk to a Trainer panel only
     expect(count(coursesPage)).toBe(2); // compare bridge + trainer panel
     expect(count(categoryPage)).toBe(1); // trainer panel only
     expect(count(servicesPage)).toBe(1); // services CTA panel only
+    for (const page of [hub, coursesPage, categoryPage]) {
+      expect(page).toContain("VisualTopicCard");
+      expect(page).toContain("DirectoryBoard");
+    }
   });
 
   it("boards carry real counts from catalogue data, never invented counts", () => {

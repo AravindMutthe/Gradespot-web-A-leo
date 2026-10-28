@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
+import VisualTopicCard from "@/components/VisualTopicCard";
 import { DemoLegend } from "@/components/DemoLegend";
 import { SampleTag } from "@/components/SampleTag";
 import { courses, courseDurations } from "@/data/courses";
@@ -62,6 +63,7 @@ export default async function CategoryPage({
   return (
     <>
       <PageHero
+        large
         title={`${cat.name} Courses`}
         subtitle={`${cat.name} training courses from GradeSpot IT Solutions in Dilsukhnagar, Hyderabad. Course details, schedules and availability are confirmed on enquiry.`}
       />
@@ -84,6 +86,29 @@ export default async function CategoryPage({
               ← All Training
             </Link>
           </p>
+          {/* Modern + stylish pass: course cards sit ALONGSIDE the
+              board below — the board stays, the cards add the visual
+              layer. Sample rows keep their SampleTag on the card.
+              No artwork files exist yet, so the cards render their
+              tint panels. */}
+          <ul
+            aria-label={`${cat.name} courses`}
+            className="mb-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {rows.map((row) => (
+              <li key={row.slug}>
+                <VisualTopicCard
+                  href={row.titleHref ?? row.actionHref}
+                  title={row.displayTitle}
+                  eyebrow={`Training · ${cat.name}`}
+                  description={row.description}
+                  countLabel={row.durationLabel ?? undefined}
+                  sample={row.sample}
+                  aspect="square"
+                />
+              </li>
+            ))}
+          </ul>
           <DirectoryBoard
             door="training"
             eyebrow={`Training · ${cat.name}`}

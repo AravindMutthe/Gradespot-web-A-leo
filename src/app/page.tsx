@@ -35,6 +35,8 @@ import Link from "next/link";
 import { courses, courseCategories } from "@/data/courses";
 import { topicSlug } from "@/lib/two-door";
 import { services } from "@/data/services";
+import FactsBand from "@/components/FactsBand";
+import VisualTopicCard from "@/components/VisualTopicCard";
 
 export const metadata: Metadata = {
   title: {
@@ -89,10 +91,10 @@ export default function HomePage() {
           equal-door CTAs. Right: the two doors as text rows, not
           cards, not a photo panel. */}
       <section aria-label="Introduction">
-        <div className="wrap grid gap-0 py-6 md:py-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="bg-ink px-6 py-10 sm:px-10 md:py-14">
+        <div className="wrap grid gap-0 py-10 md:py-16 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="panel-ink px-6 py-12 sm:px-10 md:py-16">
             <p className="eyebrow text-brand-bright">Dilsukhnagar · Hyderabad</p>
-            <h1 className="mt-5 max-w-xl text-[40px] font-semibold leading-[1.08] text-white md:text-[56px]">
+            <h1 className="mt-5 max-w-xl text-[44px] font-semibold leading-[1.05] text-white md:text-[64px]">
               Practical IT training — and IT services — in Hyderabad.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-footer-text">
@@ -110,7 +112,7 @@ export default function HomePage() {
               Two doors, one institute — training and IT services, side by side.
             </p>
           </div>
-          <div className="border border-line bg-surface px-6 py-10 sm:px-10 md:py-14">
+          <div className="border border-line bg-surface px-6 py-12 sm:px-10 md:py-16">
             <p className="eyebrow text-brand-dark">Two doors</p>
             <ul className="mt-4">
               <li className="border-b border-line">
@@ -151,6 +153,10 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Modern + stylish pass: verified facts band, home only. Counts
+          come from the catalogue data files, never typed-in numbers. */}
+      <FactsBand courseCount={courses.length} serviceCount={services.length} />
+
       {/* Stage 2 — fast discovery: compact 10-category index rows, NOT
           cards. Counts are computed from the repo data files. */}
       <section aria-label="Browse trainings by category" className="section-pad">
@@ -161,6 +167,27 @@ export default function HomePage() {
             {courses.length} trainings across {categories.length} categories. Pick a category to
             browse the catalogue.
           </p>
+          {/* Modern + stylish pass: image-led cards sit ALONGSIDE the
+              index rows below — the rows stay, the cards add the
+              visual layer. No artwork files exist yet, so the cards
+              render their tint panels; real files drop into the
+              slots later with no component change. */}
+          <ul
+            aria-label="Training categories"
+            className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {categories.map((cat) => (
+              <li key={cat.name}>
+                <VisualTopicCard
+                  href={`/trainings/category/${topicSlug(cat.name)}`}
+                  title={cat.name}
+                  eyebrow="Training"
+                  countLabel={`${cat.count} ${cat.count === 1 ? "training" : "trainings"}`}
+                  aspect="square"
+                />
+              </li>
+            ))}
+          </ul>
           <ul className="mt-8 border-t border-line">
             {categories.map((cat) => (
               <li key={cat.name} className="border-b border-line">

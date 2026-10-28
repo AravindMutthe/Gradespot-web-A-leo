@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
-import VisualTopicCard from "@/components/VisualTopicCard";
+import TopicTreatment from "@/components/TopicTreatment";
 import { DemoLegend } from "@/components/DemoLegend";
 import { SampleTag } from "@/components/SampleTag";
 import { courses, courseDurations } from "@/data/courses";
@@ -86,29 +86,18 @@ export default async function CategoryPage({
               ← All Training
             </Link>
           </p>
-          {/* Modern + stylish pass: course cards sit ALONGSIDE the
-              board below — the board stays, the cards add the visual
-              layer. Sample rows keep their SampleTag on the card.
-              No artwork files exist yet, so the cards render their
-              tint panels. */}
-          <ul
-            aria-label={`${cat.name} courses`}
-            className="mb-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {rows.map((row) => (
-              <li key={row.slug}>
-                <VisualTopicCard
-                  href={row.titleHref ?? row.actionHref}
-                  title={row.displayTitle}
-                  eyebrow={`Training · ${cat.name}`}
-                  description={row.description}
-                  countLabel={row.durationLabel ?? undefined}
-                  sample={row.sample}
-                  aspect="square"
-                />
-              </li>
-            ))}
-          </ul>
+          {/* Das verdict 2026-10-29 (owner-adopted): exactly ONE
+              category treatment above the complete course list —
+              no per-course card grid, no directory duplication.
+              Verified art when the topicArt map has a file, else
+              the finished SVG motif for the topic. */}
+          <div className="mb-12">
+            <TopicTreatment
+              slug={slug}
+              name={cat.name}
+              countLabel={`${rows.length} ${rows.length === 1 ? "course" : "courses"}`}
+            />
+          </div>
           <DirectoryBoard
             door="training"
             eyebrow={`Training · ${cat.name}`}

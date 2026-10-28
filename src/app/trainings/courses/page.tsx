@@ -5,6 +5,7 @@ import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
 import VisualTopicCard from "@/components/VisualTopicCard";
 import { topicArt } from "@/lib/topic-art";
+import { curatedTopicCategories } from "@/lib/curated-topics";
 import SearchBox from "@/components/SearchBox";
 import { topicCategories } from "@/lib/two-door";
 
@@ -48,18 +49,20 @@ export default function CoursesDirectoryPage() {
               ← All Training
             </Link>
           </p>
-          {/* Modern + stylish pass: topic cards sit ALONGSIDE the
-              board below — the board stays, the cards add the visual
-              layer. Topics with a verified file (AWS, via the
+          {/* Das verdict 2026-10-29 (owner-adopted): curated discovery
+              only — the 6 largest topics. The full board below stays
+              complete. Topics with a verified file (AWS, via the
               topicArt map) render real art; every other topic renders
-              its designed tint panel until its file is verified. */}
-          <ul aria-label="Course topics" className="mb-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {categories.map((cat) => (
+              its finished SVG motif. */}
+          <p className="eyebrow mb-4">Featured topics</p>
+          <ul aria-label="Featured course topics" className="mb-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {curatedTopicCategories().map((cat) => (
               <li key={cat.slug}>
                 <VisualTopicCard
                   href={`/trainings/category/${cat.slug}`}
                   title={cat.name}
                   imageSrc={topicArt(cat.slug)}
+                  motifKey={cat.slug}
                   eyebrow="Training · Courses"
                   countLabel={`${cat.count} ${cat.count === 1 ? "course" : "courses"}`}
                   aspect="square"

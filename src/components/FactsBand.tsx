@@ -3,7 +3,8 @@
 // Exactly three facts, all derived from repo data or published copy:
 //   - courses.length courses (repo catalogue data, never a typed-in count)
 //   - services.length services (repo catalogue data, never a typed-in count)
-//   - Dilsukhnagar, classroom + online (published location + mode)
+//   - Dilsukhnagar, Hyderabad (published location only — delivery modes
+//     are programme-specific and unverified, so no mode claim appears)
 // Nothing else is shown here: no scale claims, no third-party marks,
 // no quoted voices. The counts are props so the band can never drift
 // from the data: the home page passes courses.length and
@@ -18,7 +19,7 @@ export default function FactsBand({ courseCount, serviceCount }: FactsBandProps)
   const facts = [
     { value: String(courseCount), label: "courses" },
     { value: String(serviceCount), label: "services" },
-    { value: "Dilsukhnagar", label: "Classroom + online" },
+    { value: "Dilsukhnagar, Hyderabad", label: "location" },
   ];
   return (
     <section aria-label="GradeSpot in brief" className="panel-ink py-10 md:py-14">

@@ -17,11 +17,12 @@
 //   - Files MUST be local in the repo under public/. Remote URLs are
 //     refused by design: any imageSrc that does not start with "/"
 //     renders the tint panel instead, never a remote image.
-//   - Until a file exists, pages OMIT imageSrc and the card renders
-//     its token-tint abstract panel: tint background, token accent
-//     shapes, mono eyebrow, title and count. The panel is a designed
-//     card header, never a broken image and never a box pretending
-//     to be a photo. No artwork is faked, invented, or hotlinked.
+//   - Until a file exists, a topic card with a motifKey renders
+//     its finished SVG motif (TopicMotif): original abstract
+//     geometry per topic, token colors only, decorative. A card
+//     WITHOUT a motifKey (the hub offering cards) keeps the plain
+//     token-tint panel below, unchanged.
+//   - No artwork is faked, invented, or hotlinked.
 //
 // Sample discipline: when sample is true the card renders the same
 // SampleTag the board rows render, so sample content is marked
@@ -31,6 +32,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SampleTag } from "@/components/SampleTag";
+import TopicMotif from "@/components/TopicMotif";
 
 export interface VisualTopicCardProps {
   href: string;
@@ -40,8 +42,11 @@ export interface VisualTopicCardProps {
   countLabel?: string;
   /** Short neutral description line, when the source row carries one. */
   description?: string | null;
-  /** Local repo path only (must start with "/"). Remote URLs render the tint panel. */
+  /** Local repo path only (must start with "/"). Remote URLs render the motif/tint panel. */
   imageSrc?: string | null;
+  /** Topic slug for the finished SVG motif fallback (TopicMotif).
+      When absent, the card keeps the plain token-tint panel. */
+  motifKey?: string | null;
   /** Alt text for the artwork; defaults to the card title when art is supplied. */
   imageAlt?: string;
   /** Slot shape: "square" for category/course art, "wide" for banners. */
@@ -65,12 +70,14 @@ export default function VisualTopicCard({
   description,
   imageSrc,
   imageAlt,
+  motifKey,
   aspect = "square",
   sample = false,
   accent = "training",
 }: VisualTopicCardProps) {
   // Local-only by design: anything that is not a repo path renders
-  // the tint panel, so a remote URL can never slip onto a page.
+  // the motif (when a motifKey is supplied) or the tint panel, so
+  // a remote URL can never slip onto a page.
   const art = imageSrc && imageSrc.startsWith("/") ? imageSrc : null;
 
   return (
@@ -93,6 +100,16 @@ export default function VisualTopicCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
           />
+        ) : motifKey ? (
+          <span aria-hidden className="absolute inset-0 block">
+            <TopicMotif slug={motifKey} className="absolute inset-0 h-full w-full" />
+            <span
+              className={`absolute top-5 left-5 block h-[3px] w-14 rounded-full ${ACCENT_RULE[accent]}`}
+            />
+            <span className="absolute inset-x-5 bottom-5 block">
+              <span className="eyebrow block text-muted">{eyebrow}</span>
+            </span>
+          </span>
         ) : (
           <span aria-hidden className="absolute inset-0 block">
             <span className="absolute -top-10 -right-10 block h-40 w-40 rounded-full bg-brand/10" />

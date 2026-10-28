@@ -38,6 +38,7 @@ import { services } from "@/data/services";
 import FactsBand from "@/components/FactsBand";
 import VisualTopicCard from "@/components/VisualTopicCard";
 import { topicArt } from "@/lib/topic-art";
+import { curatedTopicCategories } from "@/lib/curated-topics";
 
 export const metadata: Metadata = {
   title: {
@@ -168,21 +169,23 @@ export default function HomePage() {
             {courses.length} trainings across {categories.length} categories. Pick a category to
             browse the catalogue.
           </p>
-          {/* Modern + stylish pass: image-led cards sit ALONGSIDE the
-              index rows below — the rows stay, the cards add the
-              visual layer. Topics with a verified file (AWS, via the
+          {/* Das verdict 2026-10-29 (owner-adopted): curated discovery
+              only — the 6 largest topics. The full index rows below
+              stay complete. Topics with a verified file (AWS, via the
               topicArt map) render real art; every other topic renders
-              its designed tint panel until its file is verified. */}
+              its finished SVG motif. */}
+          <p className="eyebrow mt-8 text-brand-dark">Featured categories</p>
           <ul
-            aria-label="Training categories"
-            className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+            aria-label="Featured training categories"
+            className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {categories.map((cat) => (
-              <li key={cat.name}>
+            {curatedTopicCategories().map((cat) => (
+              <li key={cat.slug}>
                 <VisualTopicCard
-                  href={`/trainings/category/${topicSlug(cat.name)}`}
+                  href={`/trainings/category/${cat.slug}`}
                   title={cat.name}
-                  imageSrc={topicArt(topicSlug(cat.name))}
+                  imageSrc={topicArt(cat.slug)}
+                  motifKey={cat.slug}
                   eyebrow="Training"
                   countLabel={`${cat.count} ${cat.count === 1 ? "training" : "trainings"}`}
                   aspect="square"

@@ -1,22 +1,52 @@
 @import "tailwindcss";
 
-/* Dark theme (DECISIONS §25) — a `.dark` class on <html>, set pre-paint
-   by the inline script in layout.tsx from localStorage / the system
-   setting, flipped by the header ThemeToggle. */
-@custom-variant dark (&:where(.dark, .dark *));
+/* ==========================================================================
+   FRONTEND 3.0 — TOKEN SYSTEM (Stage 1, feat/frontend-v3)
+   Restrained technical-editorial system per v1.1. Single token system:
+   the values below REPLACE the v1 values; no v1 hex value appears
+   anywhere in this file outside this comment.
+   Utility KEY names (paper, ink, brand, ...) are retained during the
+   transition so pre-template pages keep rendering; their VALUES are
+   the new candidates. The keys are not a second system.
 
-/* ————————————————————————————————————————————————————————————————
-   LEO REDESIGN v1 — "PROSPECTUS" (DECISIONS.md §19)
-   An editorial design system for a training institute, informed by
-   the market research corpus: SANS/OffSec course-code authority
-   (mono labels, index numbers), international ed-tech editorial
-   polish (serif display, paper canvas, generous rhythm), and the
-   Indian institute conversion layer (callback/WhatsApp/demo) kept
-   intact underneath. The palette no longer derives from the logo;
-   it harmonizes with it — the logo's vermilion, deepened one step
-   so every text and touch target meets WCAG 2.2 AA.
-   Fonts are self-hosted variable files — nothing hotlinked.
-   ———————————————————————————————————————————————————————————————— */
+   STATUS: every token here is a MEASURED CANDIDATE, not an approved
+   production token. Final tokens, typography, and hero wording are
+   owner-decided at design approval (Gate 1).
+
+   MEASURED CONTRAST PAIRS (relative-luminance computation, WCAG 2.2):
+     #C24E1F on #FFFFFF  4.77:1  (AA normal PASS — brand text)
+     #C24E1F on #F8FAFC  4.56:1  (AA normal PASS)
+     #9C3E18 on #FFFFFF  6.74:1  (AA normal PASS — hover / text on tint)
+     #9C3E18 on #FDF0E9  6.04:1  (AA normal PASS — text on brand tint)
+     #C24E1F on #FDF0E9  4.27:1  (AA normal FAIL — NEVER brand text
+                                  on the brand tint; use brand-dark)
+     #E57439 on #FFFFFF  3.05:1  (AA normal FAIL — accent/graphic/
+                                  large text ONLY on light surfaces)
+     #E57439 on #F8FAFC  2.91:1  (AA normal FAIL — same rule)
+     #E57439 on #10233F  5.16:1  (AA normal PASS — accent text
+                                  allowed ONLY on ink panels)
+     #1E293B on #F8FAFC 13.98:1  (AAA)
+     #475569 on #F8FAFC  7.24:1  (AAA — muted text)
+     #FFFFFF on #C24E1F  4.77:1  (AA normal PASS — white on brand)
+     #FFFFFF on #9C3E18  6.74:1  (AA normal PASS)
+     #FFFFFF on #10233F 15.74:1  (AAA)
+     #CBD5E1 on #10233F 10.60:1  (AAA — footer text on ink)
+     #2563EB on #F8FAFC  4.94:1  (AA normal PASS — links)
+     #0F766E on #FFFFFF  5.47:1  (AA normal PASS — success text)
+     #FFFFFF on #0B7A43  5.41:1  (AA normal PASS — white on WhatsApp)
+   RULES: brand-accent (#E57439) is never body/interactive text on a
+   light surface. Text on the brand tint (#FDF0E9) is brand-dark only.
+   Dark theme is DEFERRED (v1.1 light-first): there is no .dark token
+   block in this file and no theme toggle in Stage 1 chrome, so a
+   stored dark preference renders as light until dark is designed.
+
+   TRANSITION SHIMS (below, labelled): section-pad, wrap, eyebrow,
+   btn-*, panel-ink, hero-paper, glass-*, faq-item, ticker-track and
+   logo-plate are layout helpers for pre-template pages. They are
+   implemented on top of the new tokens and are REMOVED as each page
+   template is rebuilt in Stages 2+ — they are not a second design
+   system. ================================================================== */
+
 @font-face {
   font-family: "Fraunces";
   src: url("/fonts/fraunces-normal-100_900.woff2") format("woff2");
@@ -68,120 +98,71 @@
 }
 
 @theme {
-  /* Paper & ink neutrals (warm, editorial — not the old blue-grey).
-     `paper` keeps its dual role (page-adjacent pale + text on ink);
-     `canvas` (§25) is the page background proper, so dark mode can
-     darken the page without touching text-on-ink. */
-  --color-paper: #faf6ee;
-  --color-canvas: #faf6ee;
-  --color-parchment: #fffdf8;
-  --color-cream: #f2eada;
-  --color-ink: #201913;
-  --color-ink-deep: #171208;
-  --color-line: #e0d4be;
+  /* Canvas & surfaces */
+  --color-canvas: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef2f7;
+  --color-parchment: #ffffff;
+  --color-cream: #eef2f7;
+  --color-surface-light: #eef2f7;
+  --color-paper: #ffffff;
 
-  /* Signal vermilion — the logo orange's family, deepened for AA.
-     brand       = working signal (links, buttons, accents-as-text)
-     brand-bright= the true logo orange, for display/graphic moments
-                   and accents on ink (6.0:1 there)
-     brand-dark  = hover/pressed + small text on tinted chips      */
-  --color-brand: #b23a0a;
-  --color-brand-bright: #f7631b;
-  --color-brand-dark: #9a3412;
-  --color-brand-soft: #fbeada;
+  /* Ink & text */
+  --color-ink: #10233f;
+  --color-ink-deep: #0b1a2e;
+  --color-navy: #10233f;
+  --color-navy-deep: #0b1a2e;
+  --color-heading: #10233f;
+  --color-body: #1e293b;
+  --color-muted: #475569;
+  --color-nav: #1e293b;
+  --color-line: #d9e2ec;
+  --color-footer-text: #cbd5e1;
 
-  /* §25 — the brand AS TEXT gets its own tokens: `#b23a0a` measures
-     ~3:1 on dark surfaces, so in dark mode `signal`/`signal-strong`
-     lift to the bright end of the same vermilion family while every
-     background/border use of brand stays the deep vermilion. Light
-     values are exactly the current brand/brand-dark hexes, so the
-     light theme is unchanged. */
-  --color-signal: #b23a0a;
-  --color-signal-strong: #9a3412;
+  /* Brand — orange family. brand = text (AA), brand-dark = hover and
+     text-on-tint (AA), brand-accent = accents/graphics/large text
+     and text-on-ink ONLY (fails AA on light surfaces). */
+  --color-brand: #c24e1f;
+  --color-brand-dark: #9c3e18;
+  --color-brand-bright: #e57439;
+  --color-brand-accent: #e57439;
+  --color-brand-soft: #fdf0e9;
+  --color-signal: #c24e1f;
+  --color-signal-strong: #9c3e18;
+  --color-charcoal: #434140;
 
-  /* §25 — form status colours as tokens (were hardcoded Tailwind
-     green/red/amber utilities). Light values are those exact hexes. */
-  --color-success-surface: #f0fdf4;
-  --color-success-text: #166534;
-  --color-success-heading: #14532d;
+  /* Links & status */
+  --color-action: #2563eb;
+  --color-success-surface: #f0fdfa;
+  --color-success-text: #0f766e;
+  --color-success-heading: #0f766e;
   --color-error-surface: #fef2f2;
   --color-error-text: #b91c1c;
   --color-field-error: #dc2626;
   --color-warning-surface: #fffbeb;
   --color-warning-text: #92400e;
 
-  /* Legacy token names, remapped so every existing component picks
-     up the new system: navy panels are now warm ink, the pale blue
-     section tint is now cream, headings are ink. */
-  --color-navy: #241b11;
-  --color-navy-deep: #171208;
-  --color-heading: #201913;
-  --color-body: #5a4b38;
-  --color-nav: #3e362b;
-  --color-surface-light: #f2eada;
-  --color-footer-text: #cdbfa8;
-
-  /* WhatsApp, deepened so white text/icons meet AA (5.41:1);
-     wa-bright is the on-ink variant (10.7:1). */
+  /* WhatsApp — white on #0b7a43 is 5.41:1 (AA). wa-bright is
+     on-ink only. */
   --color-wa: #0b7a43;
   --color-wa-bright: #4ade80;
 
+  /* Typography — restrained two-level hierarchy, self-hosted only:
+     Fraunces for display headings, Instrument Sans for body/UI,
+     IBM Plex Mono for codes/labels. No Google Fonts, no CDN. */
   --font-sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* §24 — THE single chrome breakpoint. Every piece of site chrome
-     (header bar/mega panels/hamburger/sheet, FloatingActions, LP
-     sticky bar, body padding) switches at `nav` (960px) and nowhere
-     else. 960px because a phone browser's "desktop view" (Edge/
-     Copilot) reports ~980 CSS px — below Tailwind's lg (1024px),
-     which left desktop-mode testers with the mobile hamburger. */
+  /* THE single chrome breakpoint (kept from v1: phone browsers in
+     desktop mode report ~980 CSS px, below Tailwind lg). */
   --breakpoint-nav: 60rem;
 }
 
 @layer base {
   :root {
     color-scheme: light;
-    /* Hero dot-grid ink (§25: tokenised so dark mode can lighten it). */
-    --hero-dot: rgba(32, 25, 19, 0.07);
-  }
-  /* §25 — DARK THEME, derived by INVERTING the light palette (the
-     Royal Salon rule, Aravind 2026-10-23): light surfaces ↔ the ink
-     pole, ink text ↔ paper text, muted shades inverted likewise.
-     canvas is the exact HSL lightness-inversion of paper (#faf6ee →
-     #110d05), body of body (#5a4b38 → #c7b8a5), line of line
-     (#e0d4be → #41351f); heading is paper itself; card/band/raised
-     surfaces step up from the ink pole (ink #201913 / navy #241b11)
-     in the same elevation order the light theme uses; elements that
-     are already at the dark pole in light (ink panels, footer,
-     ticker) stay ink, deepened one step. The vermilion signal is
-     held — only its as-text tokens lift (contrast-forced, §25.3).
-     `paper` is deliberately NOT overridden: it is the text colour
-     on ink panels as well as a light surface colour. */
-  .dark {
-    color-scheme: dark;
-    --hero-dot: rgba(250, 246, 238, 0.09);
-    --color-canvas: #110d05;
-    --color-parchment: #251b10;
-    --color-cream: #2e2113;
-    --color-surface-light: #1e150b;
-    --color-line: #41351f;
-    --color-heading: #faf6ee;
-    --color-body: #c7b8a5;
-    --color-nav: #eee1c8;
-    --color-brand-soft: #3d2110;
-    --color-navy: #2e2113;
-    --color-ink-deep: #0b0803;
-    --color-signal: #ff8a4c;
-    --color-signal-strong: #ffb287;
-    --color-success-surface: #14301f;
-    --color-success-text: #bbf7d0;
-    --color-success-heading: #dcfce7;
-    --color-error-surface: #3a1512;
-    --color-error-text: #fecaca;
-    --color-field-error: #fca5a5;
-    --color-warning-surface: #38270d;
-    --color-warning-text: #fde68a;
+    --hero-dot: rgba(16, 35, 63, 0.07);
   }
   body {
     @apply bg-canvas font-sans text-base leading-[1.7] text-body antialiased;
@@ -195,13 +176,13 @@
     letter-spacing: -0.01em;
   }
   ::selection {
-    background: var(--color-brand);
+    background: var(--color-brand-dark);
     color: #fff;
   }
   /* WCAG 2.2 — a focus indicator that is always visible and never
      clipped by the sticky header's stacking context. */
   :focus-visible {
-    outline: 2px solid var(--color-brand);
+    outline: 2px solid var(--color-brand-dark);
     outline-offset: 2px;
     border-radius: 3px;
   }
@@ -215,38 +196,11 @@
       scroll-behavior: smooth;
     }
   }
-  /* Room for the mobile sticky CTA bar — below the §24 chrome
-     breakpoint (960px) only, so it switches with everything else. */
-  @media (max-width: 959px) {
-    body {
-      padding-bottom: 57px;
-    }
-  }
 }
 
-/* ——— Scroll reveal (progressive enhancement) ———
-   Elements carry data-reveal; the RevealFX component adds .reveal-on
-   to <html> and .is-in as elements enter the viewport. Without JS,
-   or with reduced motion, everything is simply visible. */
-@media (prefers-reduced-motion: no-preference) {
-  .reveal-on [data-reveal] {
-    opacity: 0;
-    transform: translateY(18px);
-    transition:
-      opacity 0.8s ease,
-      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: var(--reveal-delay, 0ms);
-  }
-  .reveal-on [data-reveal].is-in {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* ——— TRANSITION SHIMS (see header note; removed per template) ——— */
 
-/* ——— Ticker / board (salon-style scrolling board, §19) ———
-   A CSS marquee fed by the promotions data layer + catalogue titles.
-   Pauses on hover; under reduced motion it stops and wraps as a
-   static board — content is never hidden or lost. */
+/* Ticker (home page Ticker component; retained until Stage 2). */
 .ticker-track {
   animation: ticker-scroll 48s linear infinite;
 }
@@ -308,9 +262,9 @@
   text-transform: uppercase;
 }
 
-/* Buttons — one shape language: 12px "ticket" radius, ≥48px tall,
-   warm shadow, a 1px lift on hover. Names are unchanged from v1 so
-   every existing call site restyles in place. */
+/* Buttons — one shape language: 12px radius, ≥50px tall.
+   Re-based on the new tokens; white text on brand/brand-dark
+   gradients and on ink keeps AA (4.77:1 / 6.74:1 / 15.74:1). */
 @utility btn-primary {
   display: inline-flex;
   align-items: center;
@@ -319,15 +273,12 @@
   min-height: 50px;
   border: 1px solid var(--color-brand-dark);
   border-radius: 12px;
-  /* §22 glass/gradient system: the primary button carries the
-     ink→vermilion family as a brand→brand-dark gradient. Both stops
-     keep white text at AA (6.0:1 / 5.0:1+ measured in §19). */
   background: linear-gradient(155deg, var(--color-brand) 0%, var(--color-brand-dark) 100%);
   padding: 12px 28px;
   font-size: 15px;
   font-weight: 600;
   color: #fff;
-  box-shadow: 0 10px 24px rgba(178, 58, 10, 0.28);
+  box-shadow: 0 10px 24px rgba(156, 62, 24, 0.28);
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
@@ -337,7 +288,7 @@
     background: linear-gradient(155deg, var(--color-brand-dark) 0%, #7c2d12 100%);
     border-color: #7c2d12;
     transform: translateY(-1px);
-    box-shadow: 0 14px 28px rgba(178, 58, 10, 0.32);
+    box-shadow: 0 14px 28px rgba(156, 62, 24, 0.32);
   }
   &:active {
     transform: translateY(0);
@@ -361,7 +312,7 @@
     background 0.2s ease,
     transform 0.2s ease;
   &:hover {
-    background: #2e2416;
+    background: var(--color-ink-deep);
     transform: translateY(-1px);
   }
   &:active {
@@ -375,7 +326,7 @@
   justify-content: center;
   gap: 8px;
   min-height: 50px;
-  border: 1px solid rgba(250, 246, 238, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.65);
   border-radius: 12px;
   padding: 12px 28px;
   font-size: 15px;
@@ -386,7 +337,7 @@
     border-color 0.2s ease,
     transform 0.2s ease;
   &:hover {
-    background: rgba(250, 246, 238, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-color: var(--color-paper);
     transform: translateY(-1px);
   }
@@ -398,7 +349,7 @@
   justify-content: center;
   gap: 8px;
   min-height: 50px;
-  border: 1.5px solid rgba(32, 25, 19, 0.75);
+  border: 1.5px solid rgba(16, 35, 63, 0.75);
   border-radius: 12px;
   padding: 12px 28px;
   font-size: 15px;
@@ -416,13 +367,6 @@
 }
 
 @utility section-pad {
-  /* §25.16 dead-space pass: was 84/116px. Two adjacent sections
-     stacked 168px mobile / 232px desktop of pure padding — the
-     dead bands across the site. 64/88px keeps generous breathing
-     room (junctions 128/176px) while removing the empty look.
-     Interior block gaps (mt-12/14/16) and band paddings
-     (StatsRibbon py-14, CtaBand py-16, footer py-16) are
-     deliberate rhythm and were left alone. */
   padding-block: 64px;
   @media (min-width: 768px) {
     padding-block: 88px;
@@ -430,38 +374,31 @@
 }
 
 /* Ink panel — dark sections (heroes, CTA bands, demo band):
-   deep warm ink with a whisper of signal glow at the top edge. */
+   deep ink with a whisper of accent glow at the top edge. */
 @utility panel-ink {
   background:
-    radial-gradient(720px 340px at 88% -10%, rgba(247, 99, 27, 0.14), transparent 60%),
-    linear-gradient(160deg, #241b11 0%, #171208 78%);
+    radial-gradient(720px 340px at 88% -10%, rgba(229, 116, 57, 0.14), transparent 60%),
+    linear-gradient(160deg, #10233f 0%, #0b1a2e 78%);
   color: var(--color-paper);
 }
 
-/* Paper hero texture — a faint dot grid, like printed prospectus
-   stock. Pure CSS, zero asset weight. */
+/* Paper hero texture — a faint dot grid. Pure CSS, zero assets. */
 @utility hero-paper {
-  /* §25: canvas + hero-dot tokens — identical values in light,
-     warm ink stock with a pale dot grid in dark. */
   background-color: var(--color-canvas);
   background-image: radial-gradient(var(--hero-dot) 1px, transparent 1.4px);
   background-size: 22px 22px;
 }
 
-/* ——— Glass system (§22, Royal Salon treatment) ———
-   Frosted surfaces for the mega menu, sticky bars and floating
-   chips: translucent parchment/ink + backdrop blur, used sparingly
-   (three surface classes site-wide) so the performance budget
-   holds. Text always sits on ≥85%-opaque stock, keeping the §19
-   contrast measurements valid; under prefers-reduced-transparency
-   the glass resolves to fully opaque stock. */
+/* Glass system — frosted surfaces, used sparingly. Text always sits
+   on ≥85%-opaque stock; under prefers-reduced-transparency the
+   glass resolves to fully opaque stock. */
 .glass-panel {
-  background: rgba(255, 253, 248, 0.88);
+  background: rgba(255, 255, 255, 0.88);
   -webkit-backdrop-filter: blur(18px) saturate(1.25);
   backdrop-filter: blur(18px) saturate(1.25);
 }
 .glass-ink {
-  background: rgba(23, 18, 8, 0.88);
+  background: rgba(16, 35, 63, 0.88);
   -webkit-backdrop-filter: blur(14px) saturate(1.15);
   backdrop-filter: blur(14px) saturate(1.15);
 }
@@ -478,95 +415,9 @@
   }
 }
 
-/* ——— §25 DARK THEME — component adaptations ———
-   The token overrides above re-skin everything built on tokens.
-   These rules cover the pieces defined with literal values: the
-   ink panel and glass gradients deepen, and the two button styles
-   whose "dark button on light ground" logic inverts. */
-.dark .panel-ink {
-  background:
-    radial-gradient(720px 340px at 88% -10%, rgba(247, 99, 27, 0.17), transparent 60%),
-    linear-gradient(160deg, #2d2113 0%, #140f08 78%);
-}
-.dark .glass-panel {
-  background: rgba(37, 27, 16, 0.88);
-  box-shadow:
-    0 24px 48px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(250, 246, 238, 0.08);
-}
-.dark .glass-ink {
-  background: rgba(17, 13, 5, 0.92);
-}
-/* The ink button becomes a parchment button on dark grounds —
-   same 16:1 ink-on-paper pairing, inverted. */
-.dark .btn-navy {
-  background: var(--color-paper);
-  border-color: var(--color-paper);
-  color: var(--color-ink);
-}
-.dark .btn-navy:hover {
-  background: var(--color-cream);
-  border-color: var(--color-cream);
-  color: var(--color-ink);
-}
-.dark .btn-outline-navy {
-  border-color: rgba(250, 246, 238, 0.65);
-  color: var(--color-paper);
-}
-.dark .btn-outline-navy:hover {
-  background: var(--color-paper);
-  border-color: var(--color-paper);
-  color: var(--color-ink);
-}
-/* Focus ring follows the text-signal token in dark (brand measures
-   ~3:1 on dark grounds; signal is 5.9:1+ there). */
-.dark :focus-visible {
-  outline-color: var(--color-signal);
-}
-
-/* Logo plate (§22 brighter treatment, §25 per-theme) — the luminous
-   stock the official artwork sits on. Official files only, never
-   filtered or recoloured; in dark the artwork swaps to the official
-   light-text file (Header/Footer/LP render both, CSS picks one) and
-   the plate becomes a deep ink glow. */
+/* Logo plate — the luminous stock the official artwork sits on.
+   Official files only, never filtered or recoloured. */
 .logo-plate {
-  /* Exactly the §22 header/LP plate values, moved into a class. */
-  background: radial-gradient(120% 140% at 30% 20%, #ffffff 0%, #fdf6e9 55%, #f7ecd4 100%);
-  box-shadow: 0 0 26px rgba(247, 99, 27, 0.2);
-}
-.dark .logo-plate {
-  background: radial-gradient(130% 150% at 28% 12%, #3a2a16 0%, #241a0e 55%, #171208 100%);
-  box-shadow:
-    0 0 26px rgba(247, 99, 27, 0.3),
-    inset 0 0 0 1px rgba(250, 246, 238, 0.08);
-}
-/* The MD's signature artwork is dark ink on transparency — in dark
-   mode it sits on a small pale plate so it stays legible, exactly
-   as printed. No filter, no recolour. */
-.dark .signature-art {
-  background: radial-gradient(130% 150% at 28% 12%, #ffffff 0%, #fdfaf2 60%, #f6efdd 100%);
-  border-radius: 14px;
-  padding: 10px 16px;
-}
-/* Employer wordmarks ship as dark-ink art; their tiles get the
-   pale stock in dark mode so the official logos stay readable. */
-.dark .logo-tile {
-  background: #fffdf8;
-}
-
-/* Theme-change transition — applied by ThemeToggle for ~400ms on
-   switch, and only when the visitor allows motion. */
-@media (prefers-reduced-motion: no-preference) {
-  html.theme-anim,
-  html.theme-anim *,
-  html.theme-anim *::before,
-  html.theme-anim *::after {
-    transition:
-      background-color 0.35s ease,
-      border-color 0.35s ease,
-      color 0.35s ease,
-      fill 0.35s ease,
-      stroke 0.35s ease,
-      box-shadow 0.35s ease !important;
-  }
+  background: radial-gradient(120% 140% at 30% 20%, #ffffff 0%, #fdf0e9 55%, #eef2f7 100%);
+  box-shadow: 0 0 26px rgba(229, 116, 57, 0.2);
 }

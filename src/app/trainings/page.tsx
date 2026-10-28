@@ -8,6 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import { trainingsIndexSchema } from "@/lib/schema";
 import { trainingsIndexMetadata } from "@/lib/metadata";
 import { buildTrainingRow, displayCourseTitle } from "@/lib/trainings-rows";
+import { DemoLegend } from "@/components/DemoLegend";
 
 export async function generateMetadata(): Promise<Metadata> {
   const courses = await getCourses();
@@ -55,6 +56,11 @@ export default async function TrainingsPage() {
           Hyderabad, grouped by category below. Course details, schedules and availability are
           confirmed on enquiry.
         </AnswerLead>
+        {/* Demo-fill: the catalogue now carries sample summaries for
+            demo-filled courses, so the legend renders here. */}
+        <div className="mt-6">
+          <DemoLegend />
+        </div>
       </div>
       <section className="section-pad">
         <div className="wrap">

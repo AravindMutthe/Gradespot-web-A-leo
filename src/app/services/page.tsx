@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getServices } from "@/lib/data";
 import { PageHero, AnswerLead } from "@/components/ui";
 import { buildServiceRow } from "@/lib/services-rows";
+import { DemoLegend } from "@/components/DemoLegend";
+import { SampleTag } from "@/components/SampleTag";
 
 export const metadata = staticPageMetadata({
   title: "Services",
@@ -42,6 +44,11 @@ export default async function ServicesPage() {
           Hyderabad, listed below. Service details, scope and availability are confirmed on
           enquiry.
         </AnswerLead>
+        {/* Demo-fill: every service row now carries a sample scope
+            summary, so the legend renders here. */}
+        <div className="mt-6">
+          <DemoLegend />
+        </div>
       </div>
       <section className="section-pad">
         <div className="wrap">
@@ -50,12 +57,17 @@ export default async function ServicesPage() {
               <li key={row.slug} className="border-b border-line">
                 <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
                   <div className="min-w-0">
-                    <h2 className="text-lg font-semibold">
+                    <h2 className="flex flex-wrap items-center gap-3 text-lg font-semibold">
                       <Link href={row.titleHref} className="hover:text-signal">
                         {row.displayTitle}
                       </Link>
+                      {row.sample && <SampleTag />}
                     </h2>
-                    <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
+                    {row.sample && row.description ? (
+                      <p className="mt-1 text-[15px] text-sample">{row.description}</p>
+                    ) : (
+                      <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
+                    )}
                   </div>
                   <Link
                     href={row.actionHref}

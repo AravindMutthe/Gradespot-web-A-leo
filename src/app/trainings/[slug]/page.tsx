@@ -47,6 +47,8 @@ import { breadcrumbSchema, courseFaqs, courseSchema, faqSchema, webPageSchema } 
 import { courseDetails } from "@/data/course-details";
 import { comparisons } from "@/data/comparisons";
 import { courseWaLink } from "@/lib/wa";
+import { SampleTag } from "@/components/SampleTag";
+import { DemoLegend } from "@/components/DemoLegend";
 import {
   ENQUIRE_LABEL,
   PENDING_LABEL,
@@ -91,6 +93,7 @@ export async function generateMetadata({
   return coursePageMetadata(course, `/trainings/${slug}`, {
     displayTitle: model.displayTitle,
     held: model.heldBack,
+    description: model.sample ? (model.summary ?? undefined) : undefined,
   });
 }
 
@@ -143,6 +146,16 @@ export default async function CoursePage({
           <h1 className="mt-2 max-w-4xl text-4xl font-semibold md:text-5xl md:leading-tight">
             {model.displayTitle}
           </h1>
+          {/* Demo-fill: sample courses show the Sample tag in the
+              hero (white pill, sample-colored text — readable on
+              ink), but NO sample-colored body text on the dark hero:
+              the sample summary and duration live in the light body
+              below, where the sample color passes AA. */}
+          {model.sample && (
+            <p className="mt-4">
+              <SampleTag />
+            </p>
+          )}
           {model.heldBack ? (
             <>
               <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">
@@ -160,10 +173,14 @@ export default async function CoursePage({
             </>
           ) : (
             <>
-              {model.summary && (
+              {/* Verified pages show summary + duration in the hero.
+                  Sample pages do not: sample-colored text never
+                  renders on dark ink, so the sample summary and
+                  duration render in the light body below. */}
+              {!model.sample && model.summary && (
                 <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">{model.summary}</p>
               )}
-              {model.durationLabel && (
+              {!model.sample && model.durationLabel && (
                 <p className="mt-4 text-base font-semibold text-white">{model.durationLabel}</p>
               )}
               <div className="mt-7 flex flex-wrap gap-4">
@@ -183,21 +200,45 @@ export default async function CoursePage({
         <section className="section-pad">
           <div className="wrap">
             <div className="mx-auto max-w-3xl">
+              {/* Demo-fill: legend on every sample-carrying detail page. */}
+              {model.sample && (
+                <div className="mb-10">
+                  <DemoLegend />
+                </div>
+              )}
+              {/* Demo-fill: sample summary + duration on a light
+                  surface, in the sample font color, with the tag. */}
+              {model.sample && model.summary && (
+                <div className="mb-10 rounded-2xl border border-sample/40 bg-[#F5F3FF] p-7">
+                  <p className="flex flex-wrap items-center gap-3">
+                    <SampleTag />
+                  </p>
+                  <p className="mt-3 text-base leading-7 text-sample">{model.summary}</p>
+                </div>
+              )}
               {model.facts && (
                 <div className="mb-10 rounded-2xl border border-line bg-surface p-7">
-                  <h2 className="text-lg font-bold text-ink">Course facts</h2>
+                  <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
+                    Course facts {model.sample && <SampleTag />}
+                  </h2>
                   <dl className="mt-4 space-y-3 text-[15px] leading-7 text-body">
                     <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                       <dt className="w-32 shrink-0 font-semibold text-ink">Who it&apos;s for</dt>
-                      <dd>{model.facts.who}</dd>
+                      <dd className={model.sample ? "text-sample" : undefined}>{model.facts.who}</dd>
                     </div>
+                    {model.sample && model.durationLabel && (
+                      <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
+                        <dt className="w-32 shrink-0 font-semibold text-ink">Duration</dt>
+                        <dd className="text-sample">{model.durationLabel}</dd>
+                      </div>
+                    )}
                     <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                       <dt className="w-32 shrink-0 font-semibold text-ink">Level</dt>
-                      <dd>{model.facts.level}</dd>
+                      <dd className={model.sample ? "text-sample" : undefined}>{model.facts.level}</dd>
                     </div>
                     <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                       <dt className="w-32 shrink-0 font-semibold text-ink">Certification</dt>
-                      <dd>{model.facts.certification}</dd>
+                      <dd className={model.sample ? "text-sample" : undefined}>{model.facts.certification}</dd>
                     </div>
                     {model.facts.topics && model.facts.topics.length > 0 && (
                       <div>
@@ -205,7 +246,7 @@ export default async function CoursePage({
                         <dd className="mt-2">
                           <ul className="list-disc space-y-1 pl-5">
                             {model.facts.topics.map((topic) => (
-                              <li key={topic}>{topic}</li>
+                              <li key={topic} className={model.sample ? "text-sample" : undefined}>{topic}</li>
                             ))}
                           </ul>
                         </dd>
@@ -218,8 +259,8 @@ export default async function CoursePage({
               {/* Two-tier curriculum gate: areas above stay public; the
                   full syllabus is shared by the team after enquiry. */}
               <div className="mb-10 rounded-2xl border border-line bg-surface p-7">
-                <h2 className="text-lg font-bold text-ink">
-                  Full syllabus — shared after enquiry
+                <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
+                  Full syllabus — shared after enquiry {model.sample && <SampleTag />}
                 </h2>
                 <p className="mt-2 text-[15px] leading-7 text-body">
                   The full syllabus for this course is shared by the GradeSpot team

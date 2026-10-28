@@ -102,16 +102,21 @@ function withPlace(description: string): string {
 export function coursePageMetadata(
   course: Course,
   canonicalPath: string,
-  opts?: { displayTitle?: string; held?: boolean },
+  opts?: { displayTitle?: string; held?: boolean; description?: string },
 ) {
   // Stage 5: held pages must NOT carry an unconfirmed or truncated
   // summary as the meta/OG description, and SOC must NOT carry the
   // job-ready title. Callers without opts keep previous behaviour.
+  // Demo-fill: a sample description is the sample summary (the same
+  // text the search snippet carries); meta descriptions cannot carry
+  // a color or tag, so the rendered page's Sample tag + legend are
+  // the markers for it.
   const title = opts?.displayTitle ?? course.title;
   const description = withPlace(
-    opts?.held
-      ? `${title} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad. Course details are confirmed on enquiry.`
-      : course.summary || `${course.title} — training at GradeSpot IT Solutions, Hyderabad.`,
+    opts?.description ??
+      (opts?.held
+        ? `${title} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad. Course details are confirmed on enquiry.`
+        : course.summary || `${course.title} — training at GradeSpot IT Solutions, Hyderabad.`),
   );
   return {
     title,
@@ -135,14 +140,18 @@ export function lpPageMetadata(
   };
 }
 
-export function servicePageMetadata(service: Service, canonicalPath: string): Metadata {
+export function servicePageMetadata(service: Service, canonicalPath: string, opts?: { sampleSummary?: string }): Metadata {
   // Stage 4: every service is held back (all summaries pending
   // Aravind's accuracy confirmation per src/data/services.ts), so the
   // meta/OG description must NOT carry the unconfirmed summary. When
   // the owner/content approver confirms a service's scope, its
   // description returns here for that service only.
+  // Demo-fill: a sample summary is used as the description when
+  // provided (same text the search snippet carries); the rendered
+  // page's Sample tag + legend are the markers for it.
   const description = withPlace(
-    `${service.title} — a GradeSpot IT Solutions service in Dilsukhnagar, Hyderabad. Service details are confirmed on enquiry.`,
+    opts?.sampleSummary ??
+      `${service.title} — a GradeSpot IT Solutions service in Dilsukhnagar, Hyderabad. Service details are confirmed on enquiry.`,
   );
   return {
     title: service.title,

@@ -10,6 +10,8 @@ import { courseDetails } from "@/data/course-details";
 import { buildCourseDetail, findLocalCourse } from "@/lib/course-detail";
 import { comparisonPageMetadata } from "@/lib/metadata";
 import { getJobRoles } from "@/lib/course-faqs";
+import { SampleTag } from "@/components/SampleTag";
+import { DemoLegend } from "@/components/DemoLegend";
 
 // "X vs Y" comparison pages — Stage 8 re-template. Changes from the
 // old body, all from the Stage 3/4/5 gate rules:
@@ -60,8 +62,12 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
   const { def, a, b } = r;
   const ma = buildCourseDetail(a, courseDetails[a.slug], undefined);
   const mb = buildCourseDetail(b, courseDetails[b.slug], undefined);
-  const rolesA = ma.heldBack ? [] : getJobRoles(a);
-  const rolesB = mb.heldBack ? [] : getJobRoles(b);
+  // Demo-fill: sample courses contribute NO job roles here — sample
+  // data carries no roles field, and the original sections of a held
+  // full course (e.g. CCNA's contested curriculum) must not leak in
+  // as roles. Career-support applies the same exclusion.
+  const rolesA = ma.heldBack || ma.sample ? [] : getJobRoles(a);
+  const rolesB = mb.heldBack || mb.sample ? [] : getJobRoles(b);
 
   const val = (held: boolean, v: string | null | undefined) => (held ? HELD : (v ?? "Confirmed on enquiry"));
   // SOC's published outcome opens "Job-ready …" — the job-ready claim
@@ -72,15 +78,20 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
   const dur = (held: boolean, label: string | null) =>
     held ? HELD : label ? label.replace(/^Duration: /, "") : "Confirmed on enquiry";
 
-  const rows: { label: string; va: string; vb: string }[] = [
-    { label: "Focus", va: def.focusA, vb: def.focusB },
-    { label: "Who it's for", va: val(ma.heldBack, ma.facts?.who), vb: val(mb.heldBack, mb.facts?.who) },
-    { label: "Duration", va: dur(ma.heldBack, ma.durationLabel), vb: dur(mb.heldBack, mb.durationLabel) },
-    { label: "Mode", va: "Confirmed on enquiry", vb: "Confirmed on enquiry" },
-    { label: "Level", va: val(ma.heldBack, ma.facts?.level), vb: val(mb.heldBack, mb.facts?.level) },
-    { label: "Certification", va: val(ma.heldBack, ma.facts?.certification), vb: val(mb.heldBack, mb.facts?.certification) },
-    { label: "Fees", va: "Confirmed on enquiry", vb: "Confirmed on enquiry" },
-    { label: "Published outcome", va: outcome(ma.heldBack, courseDetails[a.slug]?.outcome), vb: outcome(mb.heldBack, courseDetails[b.slug]?.outcome) },
+  // Fact rows carry per-side sample flags: only Who/Duration/Level/
+  // Certification/Topics cells render model facts (sample or
+  // verified). Focus, Mode, Fees and Published outcome render
+  // pre-existing comparison copy or enquiry wording, never sample
+  // data, so they carry no flag.
+  const rows: { label: string; va: string; vb: string; sampleA: boolean; sampleB: boolean }[] = [
+    { label: "Focus", va: def.focusA, vb: def.focusB, sampleA: false, sampleB: false },
+    { label: "Who it's for", va: val(ma.heldBack, ma.facts?.who), vb: val(mb.heldBack, mb.facts?.who), sampleA: ma.sample, sampleB: mb.sample },
+    { label: "Duration", va: dur(ma.heldBack, ma.durationLabel), vb: dur(mb.heldBack, mb.durationLabel), sampleA: ma.sample, sampleB: mb.sample },
+    { label: "Mode", va: "Confirmed on enquiry", vb: "Confirmed on enquiry", sampleA: false, sampleB: false },
+    { label: "Level", va: val(ma.heldBack, ma.facts?.level), vb: val(mb.heldBack, mb.facts?.level), sampleA: ma.sample, sampleB: mb.sample },
+    { label: "Certification", va: val(ma.heldBack, ma.facts?.certification), vb: val(mb.heldBack, mb.facts?.certification), sampleA: ma.sample, sampleB: mb.sample },
+    { label: "Fees", va: "Confirmed on enquiry", vb: "Confirmed on enquiry", sampleA: false, sampleB: false },
+    { label: "Published outcome", va: outcome(ma.heldBack, courseDetails[a.slug]?.outcome), vb: outcome(mb.heldBack, courseDetails[b.slug]?.outcome), sampleA: false, sampleB: false },
   ];
 
   const shortA = ma.displayTitle;
@@ -106,6 +117,11 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
           {def.focusB.split(". ")[0]}.
         </AnswerLead>
       </div>
+      {(ma.sample || mb.sample) && (
+        <div className="wrap pt-8">
+          <DemoLegend />
+        </div>
+      )}
       {(ma.heldBack || mb.heldBack) && (
         <div className="wrap pt-8">
           <p className="rounded-2xl border border-line bg-surface-light p-5 text-[15px] leading-7 text-body">
@@ -134,24 +150,34 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
               <thead>
                 <tr className="bg-navy text-white">
                   <th className="px-6 py-4 font-display text-base font-bold">Compare</th>
-                  <th className="px-6 py-4 font-display text-base font-bold">{shortA}</th>
-                  <th className="px-6 py-4 font-display text-base font-bold">{shortB}</th>
+                  <th className="px-6 py-4 font-display text-base font-bold">
+                    <span className="flex flex-wrap items-center gap-3">{shortA} {ma.sample && <SampleTag />}</span>
+                  </th>
+                  <th className="px-6 py-4 font-display text-base font-bold">
+                    <span className="flex flex-wrap items-center gap-3">{shortB} {mb.sample && <SampleTag />}</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row, i) => (
                   <tr key={row.label} className={i % 2 ? "bg-surface-light/60" : ""}>
                     <th className="px-6 py-4 align-top font-semibold text-heading">{row.label}</th>
-                    <td className="px-6 py-4 align-top leading-6 text-body">{row.va}</td>
-                    <td className="px-6 py-4 align-top leading-6 text-body">{row.vb}</td>
+                    <td className={`px-6 py-4 align-top leading-6 ${row.sampleA ? "text-sample" : "text-body"}`}>
+                      {row.sampleA && <span className="mr-2 inline-flex align-middle"><SampleTag /></span>}{row.va}
+                    </td>
+                    <td className={`px-6 py-4 align-top leading-6 ${row.sampleB ? "text-sample" : "text-body"}`}>
+                      {row.sampleB && <span className="mr-2 inline-flex align-middle"><SampleTag /></span>}{row.vb}
+                    </td>
                   </tr>
                 ))}
                 <tr className="bg-surface-light/60">
                   <th className="px-6 py-4 align-top font-semibold text-heading">Key topics</th>
-                  <td className="px-6 py-4 align-top leading-6 text-body">
+                  <td className={`px-6 py-4 align-top leading-6 ${ma.sample ? "text-sample" : "text-body"}`}>
+                    {ma.sample && <span className="mr-2 inline-flex align-middle"><SampleTag /></span>}
                     {ma.heldBack ? HELD : (ma.facts?.topics ? ma.facts.topics.join("; ") : "See course page")}
                   </td>
-                  <td className="px-6 py-4 align-top leading-6 text-body">
+                  <td className={`px-6 py-4 align-top leading-6 ${mb.sample ? "text-sample" : "text-body"}`}>
+                    {mb.sample && <span className="mr-2 inline-flex align-middle"><SampleTag /></span>}
                     {mb.heldBack ? HELD : (mb.facts?.topics ? mb.facts.topics.join("; ") : "See course page")}
                   </td>
                 </tr>

@@ -18,6 +18,8 @@
 // - Conversion actions on the index are limited to the two labels below.
 //   No other conversion label is produced by this module.
 
+import { getSampleCourse } from "@/lib/demo-fill";
+
 export interface TrainingRowInput {
   slug: string;
   title: string;
@@ -38,6 +40,11 @@ export interface TrainingRow {
   actionHref: string;
   titleHref: string | null;
   heldBack: boolean;
+  // Demo-fill: true when the row renders owner-authorised SAMPLE
+  // data (summary + duration). Templates must render the Sample tag
+  // + sample font color whenever this is true. False for verified
+  // rows and for any row with no sample record.
+  sample: boolean;
 }
 
 // Summaries that end mid-sentence in the repo data. Rendering them
@@ -79,6 +86,28 @@ export function buildTrainingRow(course: TrainingRowInput): TrainingRow {
   const heldBack = course.catalogOnly || HELD_SUMMARY_SLUGS.has(course.slug);
   const displayTitle = displayCourseTitle(course.title);
 
+  // Demo-fill (owner-authorised, preview only): a sample record
+  // un-holds the row for demo — filled summary + duration, "View
+  // course details" action, sample flag set. Sample content closes
+  // no R-row; the flag is what lets the purge find it later. The
+  // held path below survives for any slug with no sample record.
+  const sample = getSampleCourse(course.slug);
+  if (sample) {
+    return {
+      slug: course.slug,
+      category: course.category,
+      displayTitle,
+      description: sample.summary,
+      durationLabel: `Duration: ${sample.duration}`,
+      statusLabel: null,
+      actionLabel: DETAILS_LABEL,
+      actionHref: `/trainings/${course.slug}`,
+      titleHref: `/trainings/${course.slug}`,
+      heldBack: false,
+      sample: true,
+    };
+  }
+
   let durationLabel: string | null;
   if (heldBack && HELD_SUMMARY_SLUGS.has(course.slug)) {
     // Held full-detail rows: duration facts are part of what is held.
@@ -103,6 +132,7 @@ export function buildTrainingRow(course: TrainingRowInput): TrainingRow {
       actionHref: "/contact-us",
       titleHref: null,
       heldBack: true,
+      sample: false,
     };
   }
 
@@ -117,6 +147,7 @@ export function buildTrainingRow(course: TrainingRowInput): TrainingRow {
     actionHref: `/trainings/${course.slug}`,
     titleHref: `/trainings/${course.slug}`,
     heldBack: false,
+    sample: false,
   };
 }
 

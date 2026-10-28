@@ -5,6 +5,7 @@ import Link from "next/link";
 import { categoryAnchor } from "@/data/catalogue-nav";
 import type { TrainingRow } from "@/lib/trainings-rows";
 import { groupTrainingRows } from "@/lib/trainings-rows";
+import { SampleTag } from "@/components/SampleTag";
 
 // Stage 3 trainings index: search-first catalogue rendered as compact,
 // text-first rows. No images, no image treatments, no promotional
@@ -16,7 +17,7 @@ import { groupTrainingRows } from "@/lib/trainings-rows";
 function TrainingCourseRow({ row }: { row: TrainingRow }) {
   return (
     <article className="border-b border-line py-5">
-      <h3 className="text-[19px] font-semibold leading-snug text-heading">
+      <h3 className="flex flex-wrap items-center gap-3 text-[19px] font-semibold leading-snug text-heading">
         {row.titleHref ? (
           <Link href={row.titleHref} className="transition-colors hover:text-signal">
             {row.displayTitle}
@@ -24,6 +25,7 @@ function TrainingCourseRow({ row }: { row: TrainingRow }) {
         ) : (
           row.displayTitle
         )}
+        {row.sample && <SampleTag />}
       </h3>
       {row.statusLabel && (
         <p className="mt-2">
@@ -32,9 +34,11 @@ function TrainingCourseRow({ row }: { row: TrainingRow }) {
           </span>
         </p>
       )}
-      {row.description && <p className="mt-2 leading-7 text-body">{row.description}</p>}
+      {row.description && (
+        <p className={`mt-2 leading-7 ${row.sample ? "text-sample" : "text-body"}`}>{row.description}</p>
+      )}
       {row.durationLabel && (
-        <p className="mt-2 text-[15px] font-medium text-body">{row.durationLabel}</p>
+        <p className={`mt-2 text-[15px] font-medium ${row.sample ? "text-sample" : "text-body"}`}>{row.durationLabel}</p>
       )}
       <p className="mt-3">
         <Link

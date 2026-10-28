@@ -9,6 +9,9 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, serviceSchema } from "@/lib/schema";
 import { SERVICE_ENQUIRE_LABEL, SERVICE_PENDING_LABEL } from "@/lib/services-rows";
+import { getSampleService } from "@/lib/demo-fill";
+import { DemoLegend } from "@/components/DemoLegend";
+import { SampleTag } from "@/components/SampleTag";
 
 export function generateStaticParams() {
   return localServices.map((s) => ({ slug: s.slug }));
@@ -22,7 +25,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const service = await getService(slug);
   if (!service) return { title: "Service not found" };
-  return servicePageMetadata(service, `/services/${slug}`);
+  const sample = getSampleService(slug);
+  return servicePageMetadata(service, `/services/${slug}`, {
+    sampleSummary: sample?.summary,
+  });
 }
 
 // Frontend 3.0 — Stage 4 service detail template (exact version).
@@ -46,6 +52,10 @@ export default async function ServicePage({
   const { slug } = await params;
   const service = await getService(slug);
   if (!service) notFound();
+  // Demo-fill (owner-authorised, preview only): a sample record
+  // renders sample scope + offerings, marked. No sample record
+  // keeps the Stage 4 held presentation below.
+  const sample = getSampleService(slug);
 
   return (
     <>
@@ -70,15 +80,33 @@ export default async function ServicePage({
             />
           </div>
           <div className="mx-auto mt-8 max-w-4xl space-y-10">
+            {sample && <DemoLegend />}
             <article>
-              <h2 className="text-[28px] font-semibold leading-[34px]">
-                {service.title} at GradeSpot
+              <h2 className="flex flex-wrap items-center gap-3 text-[28px] font-semibold leading-[34px]">
+                {service.title} at GradeSpot {sample && <SampleTag />}
               </h2>
-              <p className="mt-3 text-lg leading-8">{SERVICE_PENDING_LABEL}.</p>
-              <p className="mt-3 text-[15px] leading-7 text-body">
-                Scope, deliverables and availability for this service are confirmed directly
-                by the GradeSpot team.
-              </p>
+              {sample ? (
+                <>
+                  <p className="mt-3 text-lg leading-8 text-sample">{sample.summary}</p>
+                  <h3 className="mt-6 text-lg font-semibold text-ink">What this includes</h3>
+                  <ul className="mt-3 list-disc space-y-1 pl-5">
+                    {sample.offerings.map((o) => (
+                      <li key={o} className="text-[15px] leading-7 text-sample">{o}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-4 text-[15px] leading-7 text-body">
+                    Scope and availability are confirmed directly by the GradeSpot team.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="mt-3 text-lg leading-8">{SERVICE_PENDING_LABEL}.</p>
+                  <p className="mt-3 text-[15px] leading-7 text-body">
+                    Scope, deliverables and availability for this service are confirmed directly
+                    by the GradeSpot team.
+                  </p>
+                </>
+              )}
             </article>
             <div className="rounded-2xl border border-line bg-surface-light p-8 text-center">
               <h2 className="text-2xl font-semibold">Interested in {service.title}?</h2>

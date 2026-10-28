@@ -2,7 +2,7 @@ import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { aboutParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
-import { CtaBand, PageHero, SectionTitle } from "@/components/ui";
+import { CtaBand, CredentialCard, PageHero, SectionTitle } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
 import { aboutPageSchema } from "@/lib/schema";
 
@@ -13,12 +13,21 @@ export const metadata = staticPageMetadata({
   path: "/about-us",
 });
 
-// Frontend 3.0 — Stage 8 re-template. Held from the old body, outright:
-// ISO/AICTE credential cards (proof not found), the employer logo wall,
-// the stats ribbon, the feature trio, the "9 years" experience badge,
-// the signature image, team portraits, and the "1,500+ happy learners"
-// paragraph (unverified count). What remains is published company copy
-// plus the leadership list as text rows.
+// Frontend 3.0 — Stage 8 re-template, demo-fill emblem correction.
+// Held from the old body, outright: the employer logo wall, the
+// stats ribbon, the feature trio, the "9 years" experience badge,
+// the signature image, team portraits, and the "1,500+ happy
+// learners" paragraph (unverified count). What remains is published
+// company copy plus the leadership list as text rows.
+// OWNER CORRECTION 18:43 IST (supersedes the Stage 8 emblem hold):
+// AICTE + ISO ARE REAL per the owner, so the existing repo emblem
+// files render below as real certification marks with plain wording
+// ("AICTE / ISO Certified") — NO certificate numbers, issue dates,
+// scopes or standards numbers are rendered (none appear in repo
+// data). The emblem files are untouched (never recoloured or
+// redrawn). Leo has NOT independently inspected the certificate
+// documents (the earlier Drive/Gmail search found no proof), so
+// display is owner-authorised and proof remains an open item (R7).
 export default function AboutPage() {
   // aboutParagraphs order follows the live About page. Index 5 is the
   // "1,500+ happy learners" paragraph — held, not rendered.
@@ -105,6 +114,24 @@ export default function AboutPage() {
             <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-signal hover:text-signal-strong">
               Read Help &amp; FAQs →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-pad">
+        <div className="wrap">
+          <SectionTitle label="Certifications" title="AICTE / ISO Certified" center />
+          <div className="mx-auto mt-8 grid max-w-4xl gap-6 md:grid-cols-2">
+            <CredentialCard
+              title="AICTE / ISO Certified"
+              body="GradeSpot IT Solutions — AICTE / ISO Certified. Certificate details are confirmed on enquiry."
+              seal="aicte"
+            />
+            <CredentialCard
+              title="AICTE / ISO Certified"
+              body="GradeSpot IT Solutions — AICTE / ISO Certified. Certificate details are confirmed on enquiry."
+              seal="iso"
+            />
           </div>
         </div>
       </section>

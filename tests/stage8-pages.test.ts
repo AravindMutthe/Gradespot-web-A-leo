@@ -88,6 +88,11 @@ describe("Stage 8 page inventory", () => {
     for (const p of PAGES) {
       const imports = importLines(sources[p]);
       for (const name of FORBIDDEN_IMPORTS) {
+        // Demo-fill owner correction 18:43 IST: AICTE/ISO emblems are
+        // owner-authorised as real on about-us only (existing files,
+        // plain wording, no numbers). CredentialCard stays forbidden
+        // on every other in-scope page.
+        if (p === "about-us" && name === "CredentialCard") continue;
         expect(imports).not.toContain(name);
       }
     }
@@ -102,20 +107,36 @@ describe("Stage 8 page inventory", () => {
     }
   });
 
-  it("no in-scope page renders a price figure", () => {
+  it("no in-scope page renders a price figure, except pricing's marked sample ranges", () => {
     for (const p of PAGES) {
       // Strip comments: the held-notice explanations name the figures
       // they refuse to render, which must not trip this test.
+      if (p === "pricing") {
+        // Pricing carries ONLY sample ranges from the demo-fill data
+        // (never a legacy figure), each with the Sample tag.
+        expect(sources[p]).toContain("SAMPLE_COURSE_FEE_RANGES");
+        expect(sources[p]).toContain("SampleTag");
+        continue;
+      }
       expect(stripComments(sources[p])).not.toMatch(/₹/);
     }
   });
 });
 
 describe("Stage 8 held content", () => {
-  it("about page holds ISO/AICTE cards, the wall, stats and the 1,500+ paragraph", () => {
+  it("about page shows owner-authorised AICTE/ISO emblems with plain wording, and still holds the wall, stats and the 1,500+ paragraph", () => {
     const s = sources["about-us"];
     expect(s).toContain("Accreditation");
     expect(s).toContain("confirmed on enquiry");
+    expect(s).toContain("CredentialCard");
+    expect(s).toContain("AICTE / ISO Certified");
+    expect(s).toContain('seal="aicte"');
+    expect(s).toContain('seal="iso"');
+    // No certificate detail beyond the owner's words: no standards
+    // number, certificate number, issue date or scope anywhere in
+    // rendered copy (comments stripped: the header comment names
+    // the details it refuses to render).
+    expect(stripComments(s)).not.toMatch(/9001|certificate (number|no\.|id)|issued|scope:/i);
     expect(s).toContain("slice(6, 13)");
     expect(s).not.toContain("1,500+ happy learners who");
   });
@@ -124,21 +145,31 @@ describe("Stage 8 held content", () => {
     const s = sources["career-support"];
     expect(s).toContain("buildCourseDetail");
     expect(s).toContain("heldBack");
+    // Demo-fill: sample courses contribute no roles (sample data
+    // carries no roles field); the page stays verified-only.
+    expect(s).toContain(".sample");
     expect(s).toContain("Service details to be confirmed");
     expect(stripComments(s)).not.toContain("testimonials");
   });
 
-  it("compare pair holds the held side and never renders fees", () => {
+  it("compare pair holds the held side and never renders fees; sample sides carry Sample tags", () => {
     const s = sources["compare/[pair]"];
     expect(s).toContain("Course details to be confirmed");
     expect(s).toContain("Confirmed on enquiry");
+    expect(s).toContain("SampleTag");
+    expect(s).toContain("sampleA");
+    expect(s).toContain("sampleB");
     expect(stripComments(s)).not.toContain("getPricingPlans");
     expect(stripComments(s)).not.toContain("Published fees");
   });
 
-  it("pricing holds every figure and every unbuilt capability claim", () => {
+  it("pricing holds every unbuilt capability claim; its only figures are marked sample ranges", () => {
     const s = sources["pricing"];
     expect(s).toContain("confirmed on enquiry");
+    expect(s).toContain("SAMPLE_COURSE_FEE_RANGES");
+    expect(s).toContain("SAMPLE_INSTITUTE_TIER_RANGES");
+    expect(s).toContain("SampleTag");
+    expect(s).toContain("DemoLegend");
     expect(stripComments(s)).not.toContain("Instant auto-reply");
     expect(stripComments(s)).not.toContain("CRM-lite");
     expect(stripComments(s)).not.toContain("quoted after a demo");

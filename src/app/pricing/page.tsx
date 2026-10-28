@@ -5,26 +5,36 @@ import { PageHero, SectionTitle } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
+import {
+  SAMPLE_COURSE_FEE_RANGES,
+  SAMPLE_INSTITUTE_TIER_RANGES,
+} from "@/lib/demo-fill";
+import { DemoLegend } from "@/components/DemoLegend";
+import { SampleTag } from "@/components/SampleTag";
 
 export const metadata = staticPageMetadata({
   title: "Pricing",
   description:
-    "GradeSpot pricing: course fees, business quotes and institute plans are all confirmed on enquiry — no figures are published until verified.",
+    "GradeSpot pricing: sample course fee ranges are marked Sample and will be replaced with official fees; business quotes and institute plans are confirmed on enquiry.",
   path: "/pricing",
 });
 
-// Pricing page — Stage 8 hold. The old page rendered the CCNA/CCNP fee
-// plans from DB course data (the CCNP plans are CCNA copy; legacy
-// pricing sections must not be converted without per-figure
-// verification), a "Start free" offer row asserting free demo classes
-// (no course has a confirmed demo offer), and institute tier contents
-// describing unbuilt Axon products as available ("instant auto-reply",
-// "CRM-lite dashboard", "quoted after a demo"). All three are held:
-// no fee figure, no offer, no capability list appears below. Institute
-// tiers keep their names only, with contents scoped on enquiry.
-// This page is deliberately NOT added to header or footer nav — the
-// pricing-nav gap is undecided until the pricing decision (Set A vs B)
-// is made. Local service data only (titles); no DB reads.
+// Pricing page — Stage 8 hold, demo-filled. The old page rendered the
+// CCNA/CCNP fee plans from DB course data (the CCNP plans are CCNA
+// copy; legacy pricing sections must not be converted without
+// per-figure verification), a "Start free" offer row asserting free
+// demo classes (no course has a confirmed demo offer), and institute
+// tier contents describing unbuilt Axon products as available
+// ("instant auto-reply", "CRM-lite dashboard", "quoted after a
+// demo"). Those stay held: no legacy figure, no offer, no capability
+// list appears below. Demo-fill adds ONLY marked sample ranges:
+// per-category course fee ranges and per-tier institute ranges,
+// each a range (never an exact official price), each carrying the
+// Sample tag + sample font color, under the demo legend. Business
+// services stay quoted-to-scope (no sample service prices). This
+// page is deliberately NOT added to header or footer nav — the
+// pricing-nav gap is undecided until the pricing decision (Set A vs
+// B) is made. Local service data only (titles); no DB reads.
 const instituteTiers = [
   "Missed Enquiry Killer",
   "Admissions on Autopilot",
@@ -42,7 +52,7 @@ export default function PricingPage() {
       />
       <PageHero
         title="Pricing"
-        subtitle="Course fees, business quotes and institute plans are confirmed on enquiry — nothing is published here until it is verified."
+        subtitle="Course fees are confirmed on enquiry. Sample fee ranges below are marked Sample and will be replaced with official GradeSpot fees."
       />
       <section className="section-pad">
         <div className="wrap">
@@ -50,13 +60,27 @@ export default function PricingPage() {
             <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "Pricing" }]} />
           </div>
 
+          <div className="mx-auto mt-8 max-w-4xl">
+            <DemoLegend />
+          </div>
+
           <div className="mt-12">
             <SectionTitle label="For Students" title="Course fees, confirmed on enquiry" />
             <p className="mt-4 max-w-3xl">
-              No course fee is published on this page. Fees are confirmed on enquiry — ask
-              about the course you want and the team will share the current fee. Nothing is
-              charged before you confirm.
+              No official course fee is published on this page. Fees are confirmed on enquiry —
+              ask about the course you want and the team will share the current fee. Nothing is
+              charged before you confirm. The ranges below are sample figures for the demo only.
             </p>
+            <ul className="mt-8 border-t border-line">
+              {SAMPLE_COURSE_FEE_RANGES.map((r) => (
+                <li key={r.label} className="flex flex-wrap items-center justify-between gap-3 border-b border-line py-4">
+                  <span className="flex flex-wrap items-center gap-3 font-semibold text-heading">
+                    {r.label} <SampleTag />
+                  </span>
+                  <span className="text-[15px] font-semibold text-sample">{r.range}</span>
+                </li>
+              ))}
+            </ul>
             <div className="mt-8">
               <Link href="/contact-us" className="btn-primary">
                 Ask for a Fee Quote
@@ -97,20 +121,29 @@ export default function PricingPage() {
               them are in development, so no capability list is published here yet.
             </p>
             <div className="mt-8 grid gap-6 lg:grid-cols-3">
-              {instituteTiers.map((name, i) => (
-                <article
-                  key={name}
-                  className="rounded-2xl border border-line bg-surface-light px-8 py-10"
-                >
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-signal-strong">
-                    Tier {i + 1}
-                  </p>
-                  <h3 className="mt-3 text-xl font-bold text-heading">{name}</h3>
-                  <p className="mt-2 text-sm leading-6 text-body">
-                    Contents and pricing scoped per institute on enquiry.
-                  </p>
-                </article>
-              ))}
+              {instituteTiers.map((name, i) => {
+                const range = SAMPLE_INSTITUTE_TIER_RANGES.find((r) => r.label === name);
+                return (
+                  <article
+                    key={name}
+                    className="rounded-2xl border border-line bg-surface-light px-8 py-10"
+                  >
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-signal-strong">
+                      Tier {i + 1}
+                    </p>
+                    <h3 className="mt-3 text-xl font-bold text-heading">{name}</h3>
+                    <p className="mt-2 text-sm leading-6 text-body">
+                      Contents and pricing scoped per institute on enquiry.
+                    </p>
+                    {range && (
+                      <p className="mt-3 flex flex-wrap items-center gap-3 text-sm leading-6">
+                        <SampleTag />
+                        <span className="font-semibold text-sample">{range.range}</span>
+                      </p>
+                    )}
+                  </article>
+                );
+              })}
             </div>
             <div className="mt-8 text-center">
               <Link href="/for-institutes" className="btn-primary">

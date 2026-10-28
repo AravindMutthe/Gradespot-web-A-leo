@@ -27,6 +27,8 @@
 //   Register, no demo CTA, no "enrol" — no service has a confirmed
 //   defined registration process or a confirmed demo offer.
 
+import { getSampleService } from "@/lib/demo-fill";
+
 export interface ServiceRowInput {
   slug: string;
   title: string;
@@ -41,6 +43,12 @@ export interface ServiceRow {
   actionHref: string;
   titleHref: string;
   heldBack: boolean;
+  // Demo-fill: true when the row renders owner-authorised SAMPLE
+  // scope. Templates must render the Sample tag + sample font color
+  // whenever this is true.
+  sample: boolean;
+  // Sample offerings (detail use); null for held and verified rows.
+  offerings: string[] | null;
 }
 
 export const SERVICE_PENDING_LABEL = "Service details to be confirmed";
@@ -48,6 +56,25 @@ export const SERVICE_ENQUIRE_LABEL = "Enquire About This Service";
 export const SERVICE_DETAILS_LABEL = "View service details";
 
 export function buildServiceRow(service: ServiceRowInput): ServiceRow {
+  // Demo-fill (owner-authorised, preview only): a sample record
+  // un-holds the row for demo — sample scope summary, detail action,
+  // sample flag set. Sample scope closes no R-row (R9 stays open).
+  // The held path below survives for any slug with no sample record.
+  const sample = getSampleService(service.slug);
+  if (sample) {
+    return {
+      slug: service.slug,
+      displayTitle: service.title,
+      description: sample.summary,
+      statusLabel: "",
+      actionLabel: SERVICE_DETAILS_LABEL,
+      actionHref: `/services/${service.slug}`,
+      titleHref: `/services/${service.slug}`,
+      heldBack: false,
+      sample: true,
+      offerings: sample.offerings,
+    };
+  }
   return {
     slug: service.slug,
     displayTitle: service.title,
@@ -57,5 +84,7 @@ export function buildServiceRow(service: ServiceRowInput): ServiceRow {
     actionHref: `/services/${service.slug}`,
     titleHref: `/services/${service.slug}`,
     heldBack: true,
+    sample: false,
+    offerings: null,
   };
 }

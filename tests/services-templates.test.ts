@@ -1,14 +1,14 @@
 // Frontend 3.0 — Stage 4 services template tests.
 //
 // These tests pin the Stage 2→3 gate contract for the services
-// templates: Option A compact text-first rows, every service held
-// back to title-only (all summaries pending Aravind's accuracy
-// confirmation per src/data/services.ts), no rendered filler scope,
-// no offerings, no price, removed promotional sections actually
-// absent from the templates, and unchanged slugs/routes. They read
-// the row model and the template sources, so a regression that
-// reintroduces a card grid, a removed section, or an invented
-// claim fails here.
+// templates: Option A compact text-first rows, removed promotional
+// sections actually absent from the templates, and unchanged
+// slugs/routes. DEMO-FILL (owner-authorised, preview only): the 12
+// services are now sample-filled (scope + offerings, marked); the
+// title-only hold assertions below pin the demo contract. The repo
+// summaries stay unconfirmed and never render. They read the row
+// model and the template sources, so a regression that reintroduces
+// a card grid, a removed section, or an invented claim fails here.
 
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -38,20 +38,24 @@ const HELD_TEXTS = services.flatMap((s) => [
   ...(s.offerings ?? []),
 ]);
 
-describe("Stage 4 services index — inventory and held-back rows", () => {
+describe("Stage 4 services index — inventory and sample-filled rows", () => {
   it("renders 12 rows, one per service, in repo order with slugs unchanged", () => {
     expect(rows.length).toBe(12);
     expect(rows.map((r) => r.slug)).toEqual(services.map((s) => s.slug));
-    expect(rows.every((r) => r.heldBack)).toBe(true);
+    expect(rows.every((r) => r.sample)).toBe(true);
+    expect(rows.every((r) => r.heldBack)).toBe(false);
   });
 
-  it("holds every row to title-only with a details action, never an enquiry-only dead end", () => {
+  it("fills every row with a marked sample scope and a details action, never an enquiry-only dead end", () => {
     for (const row of rows) {
-      expect(row.description).toBeNull();
-      expect(row.statusLabel).toBe(SERVICE_PENDING_LABEL);
+      expect(row.description).toBeTruthy();
+      expect(row.statusLabel).toBe("");
       expect(row.actionLabel).toBe(SERVICE_DETAILS_LABEL);
       expect(row.actionHref).toBe(`/services/${row.slug}`);
       expect(row.titleHref).toBe(`/services/${row.slug}`);
+      expect(row.offerings).toBeTruthy();
+      expect(row.offerings!.length).toBeGreaterThanOrEqual(3);
+      expect(row.offerings!.length).toBeLessThanOrEqual(6);
     }
   });
 
@@ -85,11 +89,13 @@ describe("Stage 4 services templates — removed surfaces and forbidden content"
     expect(index).toContain("Enquire About Our Services");
   });
 
-  it("detail renders no summary, no offerings, no price, no timelines promise", () => {
+  it("detail renders sample scope + offerings only via the sample branch, never repo summaries, prices or timelines", () => {
     expect(detail).not.toContain("service.summary");
     expect(detail).not.toContain("service.offerings");
-    expect(detail).not.toContain("What This Includes");
     expect(detail).not.toContain("₹");
+    expect(detail).toContain("sample.summary");
+    expect(detail).toContain("sample.offerings");
+    expect(detail).toContain("SampleTag");
     expect(detail).toContain("SERVICE_PENDING_LABEL");
     expect(detail).toContain("SERVICE_ENQUIRE_LABEL");
     expect(detail).toContain("/contact-us");

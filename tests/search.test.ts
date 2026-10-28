@@ -121,37 +121,41 @@ describe("Stage 6 search — taxonomy sync with the trainings index", () => {
   });
 });
 
-describe("Stage 6 search — held-content rules", () => {
-  it("holds 28 courses: 25 catalogue-only + CCNA + CCNP + Digital Marketing", () => {
+describe("Stage 6 search — sample-filled content rules (demo-fill)", () => {
+  it("marks the 28 formerly-held courses + 12 services as samples, with zero held entries", () => {
     const held = byKind("course").filter((e) => e.statusLabel !== null);
-    expect(held.length).toBe(28);
+    expect(held.length).toBe(0);
     for (const slug of HELD_FULL_DETAIL) {
-      expect(isHeldCourseSlug(slug)).toBe(true);
+      expect(isHeldCourseSlug(slug)).toBe(false);
     }
     for (const course of courses.filter((c) => c.catalogOnly)) {
-      expect(isHeldCourseSlug(course.slug)).toBe(true);
+      expect(isHeldCourseSlug(course.slug)).toBe(false);
     }
+    const sampleCourses = byKind("course").filter((e) => e.sample);
+    expect(sampleCourses.length).toBe(28);
+    const sampleServices = byKind("service").filter((e) => e.sample);
+    expect(sampleServices.length).toBe(12);
   });
 
-  it("held entries expose title + held notice + Enquire only", () => {
-    for (const entry of byKind("course").filter((e) => e.statusLabel !== null)) {
-      expect(entry.snippet).toBeNull();
-      expect(entry.statusLabel).toBe("Course details to be confirmed");
-      expect(entry.actionLabel).toBe("Enquire About This Course");
-      expect(entry.actionHref).toBe("/contact-us");
+  it("sample entries expose a sample snippet + detail action only, never a held notice", () => {
+    for (const entry of byKind("course").filter((e) => e.sample)) {
+      expect(entry.snippet).toBeTruthy();
+      expect(entry.statusLabel).toBeNull();
+      expect(entry.actionLabel).toBe("View course details");
+      expect(entry.actionHref).toBe(entry.href);
       const blob = JSON.stringify(entry);
-      expect(blob).not.toMatch(/Duration:|₹|Free Demo|Register|Enrol|Enroll/i);
+      expect(blob).not.toMatch(/batch|seat count|trainer|guaranteed|placement %/i);
     }
-    for (const entry of byKind("service")) {
-      expect(entry.snippet).toBeNull();
-      expect(entry.statusLabel).toBe("Service details to be confirmed");
+    for (const entry of byKind("service").filter((e) => e.sample)) {
+      expect(entry.snippet).toBeTruthy();
+      expect(entry.statusLabel).toBeNull();
       expect(entry.actionLabel).toBe("View service details");
       expect(entry.actionHref).toBe(entry.href);
     }
   });
 
   it("verified entries carry their repo summary verbatim and nothing else", () => {
-    const verified = byKind("course").filter((e) => e.statusLabel === null);
+    const verified = byKind("course").filter((e) => e.statusLabel === null && !e.sample);
     expect(verified.length).toBe(8);
     for (const entry of verified) {
       const slug = entry.href.replace("/trainings/", "");
@@ -160,18 +164,21 @@ describe("Stage 6 search — held-content rules", () => {
     }
   });
 
-  it("SOC is neutral everywhere; CCNP never surfaces CCNA content", () => {
+  it("SOC is neutral everywhere; CCNP sample never surfaces CCNA content", () => {
     const soc = courseBySlug("soc-analyst");
     expect(soc?.title).toBe("SOC Analyst Training in Hyderabad");
     expect(index.some((e) => /job-ready/i.test(e.title))).toBe(false);
     expect(index.some((e) => /job-ready/i.test(e.snippet ?? ""))).toBe(false);
     const ccnp = courseBySlug("ccnp-350-401-encor");
-    expect(ccnp?.statusLabel).toBe("Course details to be confirmed");
-    expect(ccnp?.snippet).toBeNull();
+    expect(ccnp?.sample).toBe(true);
+    expect(ccnp?.statusLabel).toBeNull();
+    expect(ccnp?.snippet).toBeTruthy();
     expect(ccnp?.title).not.toMatch(/CCNA/i);
+    expect(ccnp?.snippet).not.toMatch(/200-301|CCNA/);
     const ccna = courseBySlug("ccna-200-301");
-    expect(ccna?.statusLabel).toBe("Course details to be confirmed");
-    expect(ccna?.snippet).toBeNull();
+    expect(ccna?.sample).toBe(true);
+    expect(ccna?.statusLabel).toBeNull();
+    expect(ccna?.snippet).toBeTruthy();
   });
 });
 

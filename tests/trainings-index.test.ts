@@ -1,12 +1,15 @@
 // Frontend 3.0 — Stage 3 trainings index tests.
 //
 // These tests pin the Stage 2→3 gate contract for the trainings
-// template: Option A compact text-first rows, title-only held-back
-// rows, truthful durations, distinct conversion actions, removed
-// promotional sections actually absent from the template, and
-// unchanged slugs/categories/routes. They read the row model and
-// the template sources, so a regression that reintroduces a large
-// card, a removed section, or an invented claim fails here.
+// template: Option A compact text-first rows, truthful durations,
+// distinct conversion actions, removed promotional sections actually
+// absent from the template, and unchanged slugs/categories/routes.
+// DEMO-FILL (owner-authorised, preview only): the 28 formerly
+// held-back rows are now sample-filled (flag + Sample tag + sample
+// font color in the templates); the held assertions below pin the
+// demo contract, not the old title-only hold. They read the row
+// model and the template sources, so a regression that reintroduces
+// a large card, a removed section, or an invented claim fails here.
 
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -76,38 +79,41 @@ describe("Stage 3 trainings index — inventory and category order", () => {
   });
 });
 
-describe("Stage 3 trainings index — held-back rows", () => {
-  it("holds the three truncated summaries as title-only rows", () => {
+describe("Stage 3 trainings index — held-back rows (demo-filled)", () => {
+  it("fills the three truncated summaries as marked samples, never the truncated text", () => {
     for (const slug of HELD_SLUGS) {
-      // Evidence the hold is real: the source summary ends mid-sentence.
+      // Evidence the underlying hold is real: the source summary ends mid-sentence.
       expect(sourceBySlug.get(slug)?.summary.endsWith("…")).toBe(true);
       const row = bySlug.get(slug)!;
-      expect(row.heldBack).toBe(true);
-      expect(row.description).toBeNull();
-      expect(row.titleHref).toBeNull();
-      expect(row.durationLabel).toBeNull();
-      expect(row.statusLabel).toBe("Course details to be confirmed");
-      expect(row.actionLabel).toBe("Enquire About This Course");
-      expect(row.actionHref).toBe("/contact-us");
+      expect(row.heldBack).toBe(false);
+      expect(row.sample).toBe(true);
+      expect(row.description).toBeTruthy();
+      expect(row.description?.endsWith("…")).toBe(false);
+      expect(row.titleHref).toBe(`/trainings/${slug}`);
+      expect(row.durationLabel).toBe("Duration: 60 days");
+      expect(row.statusLabel).toBeNull();
+      expect(row.actionLabel).toBe("View course details");
+      expect(row.actionHref).toBe(`/trainings/${slug}`);
     }
   });
 
-  it("renders all 25 catalogue-only courses title-only with enquiry only", () => {
+  it("fills all 25 catalogue-only courses as marked samples with enquiry-free detail actions", () => {
     const pending = rows.filter((r) => sourceBySlug.get(r.slug)?.catalogOnly);
     expect(pending.length).toBe(25);
     for (const row of pending) {
-      expect(row.heldBack).toBe(true);
-      expect(row.description).toBeNull();
-      expect(row.titleHref).toBeNull();
-      expect(row.statusLabel).toBe("Course details to be confirmed");
-      expect(row.actionLabel).toBe("Enquire About This Course");
-      expect(row.actionHref).toBe("/contact-us");
-      expect(row.durationLabel).toBe("Duration not yet published");
+      expect(row.heldBack).toBe(false);
+      expect(row.sample).toBe(true);
+      expect(row.description).toBeTruthy();
+      expect(row.titleHref).toBe(`/trainings/${row.slug}`);
+      expect(row.statusLabel).toBeNull();
+      expect(row.actionLabel).toBe("View course details");
+      expect(row.actionHref).toBe(`/trainings/${row.slug}`);
+      expect(row.durationLabel).toMatch(/^Duration: \d+ (days|hours)$/);
     }
   });
 
   it("renders the 8 verified full-detail summaries verbatim and complete", () => {
-    const verified = rows.filter((r) => !r.heldBack);
+    const verified = rows.filter((r) => !r.heldBack && !r.sample);
     expect(verified.length).toBe(8);
     for (const row of verified) {
       expect(row.description).toBe(sourceBySlug.get(row.slug)?.summary);

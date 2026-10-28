@@ -41,7 +41,7 @@ const VERIFIED = [
 ];
 
 describe("Stage 5 detail — inventory and dispositions", () => {
-  it("covers all 36 courses: 28 held, 8 verified", () => {
+  it("covers all 36 courses: 28 formerly-held (now sample-filled), 8 verified", () => {
     expect(courses.length).toBe(36);
     const held = courses.filter(
       (c) => c.catalogOnly || HELD_FULL.includes(c.slug),
@@ -52,24 +52,35 @@ describe("Stage 5 detail — inventory and dispositions", () => {
     expect(new Set([...held.map((c) => c.slug), ...VERIFIED]).size).toBe(36);
   });
 
-  it("renders held pages as title + notice + Enquire only", () => {
+  it("renders formerly-held pages as marked samples with areas, never the held notice", () => {
     for (const c of courses) {
       if (!(c.catalogOnly || HELD_FULL.includes(c.slug))) continue;
       const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
-      expect(model.heldBack).toBe(true);
-      expect(model.summary).toBeNull();
-      expect(model.durationLabel).toBeNull();
-      expect(model.facts).toBeNull();
+      expect(model.heldBack).toBe(false);
+      expect(model.sample).toBe(true);
+      expect(model.summary).toBeTruthy();
+      expect(model.summary?.endsWith("…")).toBe(false);
+      expect(model.durationLabel).toMatch(/^Duration: \d+ (days|hours)$/);
+      expect(model.facts).toBeTruthy();
+      expect(model.facts!.topics!.length).toBeGreaterThanOrEqual(5);
+      expect(model.facts!.topics!.length).toBeLessThanOrEqual(6);
       expect(model.sections).toEqual([]);
-      expect(model.related).toEqual([]);
+      // Related links are same-category catalogue titles; singleton
+      // categories (Networking, Digital Marketing, Design & CAD)
+      // legitimately have none, so no length is asserted here.
     }
   });
 
   it("never renders CCNA content as CCNP content", () => {
     const ccnp = findLocalCourse("ccnp-350-401-encor")!;
     const model = buildCourseDetail(ccnp, courseDetails[ccnp.slug], undefined);
-    expect(model.heldBack).toBe(true);
+    expect(model.sample).toBe(true);
     expect(model.sections).toEqual([]);
+    // Sample copy itself (summary + areas) must carry no CCNA trace;
+    // related-course titles are real catalogue titles and may name
+    // the sibling CCNA course, which is not CCNP content.
+    const sampleBlob = JSON.stringify({ summary: model.summary, topics: model.facts?.topics });
+    expect(sampleBlob).not.toMatch(/200-301|CCNA/);
   });
 
   it("renders verified pages with summaries and duration rules", () => {

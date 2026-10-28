@@ -11,6 +11,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { courses, courseCategories } from "../src/data/courses";
+import { categoryAnchor } from "../src/data/catalogue-nav";
 import { services } from "../src/data/services";
 
 function readSource(rel: string): string {
@@ -108,5 +109,14 @@ describe("Stage 2 homepage — dropped v1 claims stay dropped", () => {
     expect(home).not.toContain("Employer");
     expect(home).not.toContain("Enrol");
     expect(home).not.toContain("Enroll");
+  });
+});
+
+describe("Stage 2 homepage — category rows deep-link to trainings sections", () => {
+  it("links each category row to its own /trainings anchor (same anchors Stage 3 renders)", () => {
+    expect(home).toContain("`/trainings#${categoryAnchor(cat.name)}`");
+    expect(categoryAnchor("Microsoft Azure")).toBe("category-microsoft-azure");
+    expect(categoryAnchor("Programming & Data")).toBe("category-programming-data");
+    expect(categoryAnchor("Design & CAD")).toBe("category-design-cad");
   });
 });

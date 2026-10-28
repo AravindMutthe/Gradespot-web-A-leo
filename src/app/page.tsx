@@ -33,6 +33,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { courses, courseCategories } from "@/data/courses";
+import { categoryAnchor } from "@/data/catalogue-nav";
 import { services } from "@/data/services";
 
 export const metadata: Metadata = {
@@ -59,9 +60,10 @@ export const metadata: Metadata = {
 };
 
 // Interest-led entries. Every href is an existing route — no invented
-// destinations, no dead ends. Category rows link to /trainings only:
-// the trainings page has no per-category anchors, so no anchor link
-// is claimed here.
+// destinations, no dead ends. Category rows deep-link to the matching
+// section of /trainings via the same category anchors the trainings
+// template renders (Stage 3), so each row lands on its own category
+// instead of the top of the generic index.
 const INTERESTS: { label: string; href: string }[] = [
   { label: "I want to learn a new skill", href: "/trainings" },
   { label: "I want IT help for my business", href: "/services" },
@@ -161,7 +163,7 @@ export default function HomePage() {
             {categories.map((cat) => (
               <li key={cat.name} className="border-b border-line">
                 <Link
-                  href="/trainings"
+                  href={`/trainings#${categoryAnchor(cat.name)}`}
                   className="flex min-h-[56px] items-center justify-between gap-4 py-3"
                 >
                   <span className="text-lg font-semibold text-ink">{cat.name}</span>

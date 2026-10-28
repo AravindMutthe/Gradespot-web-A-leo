@@ -3,6 +3,7 @@ import { courses } from "@/data/courses";
 import { services } from "@/data/services";
 import { comparisons } from "@/data/comparisons";
 import { articles } from "@/data/articles";
+import { topicCategories } from "@/lib/two-door";
 
 // Canonical base — the LEO build itself (§25.21), not the official domain.
 const base = "https://gradespot-leo-build-app.vercel.app";
@@ -113,6 +114,22 @@ const LASTMOD: Record<string, string> = {
   "/why-choose-us": "2026-10-24",
   // New in this batch (Stage 8): creation date of the route.
   "/careers": "2026-10-28",
+  // New in this batch (two-door categorization): creation date of
+  // the routes. Planned pages (training-programmes, study-guides)
+  // are deliberately ABSENT: noindex destinations are not sitemap
+  // content.
+  "/trainings/courses": "2026-10-28",
+  "/trainings/certifications": "2026-10-28",
+  "/trainings/category/microsoft-azure": "2026-10-28",
+  "/trainings/category/cisco": "2026-10-28",
+  "/trainings/category/comptia": "2026-10-28",
+  "/trainings/category/networking": "2026-10-28",
+  "/trainings/category/digital-marketing": "2026-10-28",
+  "/trainings/category/cybersecurity": "2026-10-28",
+  "/trainings/category/aws": "2026-10-28",
+  "/trainings/category/programming-data": "2026-10-28",
+  "/trainings/category/medical-coding": "2026-10-28",
+  "/trainings/category/design-cad": "2026-10-28",
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -120,6 +137,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/about-us",
     "/trainings",
+    "/trainings/courses",
+    "/trainings/certifications",
+    // Two-door category pages, generated from catalogue data (same
+    // slugs as the dynamic route's generateStaticParams).
+    ...topicCategories().map((cat) => `/trainings/category/${cat.slug}`),
     "/services",
     "/resources",
     "/team-members",

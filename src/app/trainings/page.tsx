@@ -1,70 +1,75 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getCourses } from "@/lib/data";
-import { courseCategories } from "@/data/courses";
-import CatalogueSearch from "@/components/CatalogueSearch";
+import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
-import JsonLd from "@/components/JsonLd";
-import { trainingsIndexSchema } from "@/lib/schema";
-import { trainingsIndexMetadata } from "@/lib/metadata";
-import { buildTrainingRow, displayCourseTitle } from "@/lib/trainings-rows";
-import { DemoLegend } from "@/components/DemoLegend";
+import SearchBox from "@/components/SearchBox";
+import { TRAINING_DIRECTORY_ENTRIES } from "@/lib/two-door";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const courses = await getCourses();
-  return trainingsIndexMetadata(courses);
-}
+export const metadata: Metadata = staticPageMetadata({
+  title: "Training",
+  description:
+    "Training from GradeSpot IT Solutions in Dilsukhnagar, Hyderabad — courses, training programmes, certifications, internships and study resources. Details are confirmed on enquiry.",
+  path: "/trainings",
+});
 
-// Frontend 3.0 — Stage 3 trainings index (Option A, compact rows).
-// What this template contains, and nothing else:
-// - the search and category discovery, the compact rows, and an
-//   enquiry/help section with truthful wording only.
-// The promotional sections of the old template are removed from this
-// template outright, not hidden: no stats ribbon, no video showcase,
-// no employer logo wall, no blog card grid, no scrolling board, no
-// feature trio. The blog is represented by a single link below.
-// Slugs, categories, category order and routes are unchanged.
+// Frontend 3.0 — Two-door categorization (owner-ordered 2026-10-28,
+// Leo's final call after Das's consolidated recommendation).
+//
+// /trainings is an OFFERING-TYPE DIRECTORY, not a course list: the
+// old long page (all 36 courses in 10 sections at once, with the
+// CatalogueSearch live-filtering bar) is retired with this change.
+// The directory carries a search box that goes to /search — it is
+// navigation to search results, not a filter control: no
+// visitor-operated category filters exist anywhere (owner rejected
+// filters as extra user work).
+// Entries are in the owner's order. Only Courses carries a real
+// count (36); every other entry carries status wording, never an
+// invented count. This page carries no sample content, so no
+// DemoLegend renders here; sample content lives on the category
+// pages, detail pages and search results.
 
-export default async function TrainingsPage() {
-  const courses = await getCourses();
-  const rows = courses.map((c) =>
-    buildTrainingRow({
-      slug: c.slug,
-      title: c.title,
-      category: c.category,
-      summary: c.summary,
-      catalogOnly: c.catalogOnly,
-      duration: c.duration,
-    }),
-  );
-  const categories = courseCategories.filter((cat) => rows.some((r) => r.category === cat));
-
+export default function TrainingsDirectoryPage() {
   return (
     <>
-      <JsonLd
-        data={trainingsIndexSchema(
-          courses.map((c) => ({ ...c, title: displayCourseTitle(c.title) })),
-        )}
-      />
       <PageHero
-        title="Training Courses"
-        subtitle="Creating a better IT solutions — At GradeSpot, we empower future engineers with cutting-edge IT skills, practical training, and real-world projects. Our mission is to turn learners into tech leaders. Transform every Digital Process — intelligent automation, expert-driven solutions, and scalable technology."
+        title="Training"
+        subtitle="Training from GradeSpot IT Solutions in Dilsukhnagar, Hyderabad. Pick a door below — course details, schedules and availability are confirmed on enquiry."
       />
       <div className="wrap pt-8">
         <AnswerLead id="answer-summary">
-          Browse {courses.length} training courses from GradeSpot IT Solutions in Dilsukhnagar,
-          Hyderabad, grouped by category below. Course details, schedules and availability are
-          confirmed on enquiry.
+          Browse training from GradeSpot IT Solutions in Dilsukhnagar, Hyderabad, by what you
+          are looking for. Availability for each course is confirmed on enquiry.
         </AnswerLead>
-        {/* Demo-fill: the catalogue now carries sample summaries for
-            demo-filled courses, so the legend renders here. */}
         <div className="mt-6">
-          <DemoLegend />
+          <SearchBox />
         </div>
       </div>
       <section className="section-pad">
         <div className="wrap">
-          <CatalogueSearch rows={rows} categories={categories} />
+          <ul className="border-t border-line">
+            {TRAINING_DIRECTORY_ENTRIES.map((entry) => (
+              <li key={entry.href} className="border-b border-line">
+                <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
+                  <div className="min-w-0">
+                    <h2 className="text-lg font-semibold">
+                      <Link href={entry.href} className="hover:text-signal">
+                        {entry.title}
+                      </Link>
+                    </h2>
+                    <p className="mt-1 text-[15px] text-body">{entry.line}</p>
+                    <p className="mt-1 text-[15px] text-muted">{entry.status}</p>
+                  </div>
+                  <Link
+                    href={entry.href}
+                    className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
+                  >
+                    Browse →
+                  </Link>
+                </article>
+              </li>
+            ))}
+          </ul>
+
           <div className="mt-16 rounded-2xl border border-line bg-surface-light p-8 text-center">
             <h2 className="text-2xl font-semibold">Not sure which course fits you?</h2>
             <p className="mx-auto mt-2 max-w-xl">

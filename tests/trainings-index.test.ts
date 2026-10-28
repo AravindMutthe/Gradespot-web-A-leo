@@ -25,7 +25,11 @@ function readSource(rel: string): string {
 }
 
 const page = readSource("../src/app/trainings/page.tsx");
-const search = readSource("../src/components/CatalogueSearch.tsx");
+// Two-door categorization: the old CatalogueSearch live-filtering
+// component is retired with the long page. Row rendering now lives on
+// the dynamic category pages; the directory page renders entries
+// from the two-door model, not rows.
+const categoryPage = readSource("../src/app/trainings/category/[slug]/page.tsx");
 
 const rows = courses.map((c) =>
   buildTrainingRow({
@@ -165,9 +169,9 @@ describe("Stage 3 trainings index — durations and actions", () => {
       expect(joined).not.toContain("enrol");
     }
     expect(page.toLowerCase()).not.toContain("enrol");
-    expect(search.toLowerCase()).not.toContain("enrol");
+    expect(categoryPage.toLowerCase()).not.toContain("enrol");
     expect(page).not.toContain("Register");
-    expect(search).not.toContain("Register");
+    expect(categoryPage).not.toContain("Register");
   });
 });
 
@@ -192,10 +196,18 @@ describe("Stage 3 trainings index — claims and vocabulary", () => {
     expect(flagged.sort()).toEqual(["comptia-security-plus", "soc-analyst"]);
   });
 
-  it("uses the agreed collection wording in the template", () => {
-    expect(page).toContain("Training Courses");
-    expect(search).toContain("Search training courses");
-    expect(search).toContain("No courses match your search.");
+  it("uses the agreed directory wording in the template", async () => {
+    // Entries render from the two-door model, so the titles are
+    // pinned on the model and the template pins the model import.
+    expect(page).toContain("TRAINING_DIRECTORY_ENTRIES");
+    const { TRAINING_DIRECTORY_ENTRIES } = await import("../src/lib/two-door");
+    expect(TRAINING_DIRECTORY_ENTRIES.map((e) => e.title)).toEqual([
+      "Courses",
+      "Training Programmes",
+      "Certifications",
+      "Internships",
+      "Study Guides & Notes",
+    ]);
   });
 });
 
@@ -216,10 +228,10 @@ describe("Stage 3 trainings index — removed sections are gone, not hidden", ()
     expect(page).not.toContain("Video Showcase");
   });
 
-  it("renders rows, not cards, in the search component", () => {
-    expect(search).not.toContain("CourseCardBody");
-    expect(search).not.toContain("next/image");
-    expect(search).not.toContain("Free Demo");
-    expect(search).toContain("TrainingCourseRow");
+  it("renders rows, not cards, on category pages", () => {
+    expect(categoryPage).not.toContain("CourseCardBody");
+    expect(categoryPage).not.toContain("next/image");
+    expect(categoryPage).not.toContain("Free Demo");
+    expect(categoryPage).toContain("buildTrainingRow");
   });
 });

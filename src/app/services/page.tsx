@@ -5,6 +5,7 @@ import { PageHero, AnswerLead } from "@/components/ui";
 import { buildServiceRow } from "@/lib/services-rows";
 import { DemoLegend } from "@/components/DemoLegend";
 import { SampleTag } from "@/components/SampleTag";
+import { BUSINESS_PATHWAYS, SERVICE_GROUPS } from "@/lib/two-door";
 
 export const metadata = staticPageMetadata({
   title: "Services",
@@ -12,25 +13,33 @@ export const metadata = staticPageMetadata({
   path: "/services",
 });
 
-// Frontend 3.0 — Stage 4 services index (Option A, compact rows).
-// What this template contains, and nothing else:
-// - the compact service rows and an enquiry/help section with
-//   truthful wording only.
-// Every service is held back to title-only: per src/data/services.ts,
-// all summaries are pending Aravind's accuracy confirmation and the
-// live detail pages carry only template filler, so no summary and
-// no offerings list is rendered for any service.
-// The promotional sections of the old template are removed from this
-// template outright, not hidden: no service-card grid, no round-the-
-// clock support claim card, no filler "smart" card, no FAQ section
-// (its shared answers carry unverified quality and free-demo claims),
-// no employer logo wall, no duplicated contact cards (the contact
-// page remains the contact surface).
-// Slugs, service order and routes are unchanged.
+// Frontend 3.0 — Two-door categorization: the business door directory.
+//
+// The 12 existing services are presented in FOUR presentation-group
+// sections (labels only — they establish no new business line), in
+// the published services order within each group. Detail URLs are
+// unchanged (/services/[slug]); sample markers flow through the rows
+// exactly as demo-fill established them.
+// A distinct "Who We Work With" section lists the 4 business-facing
+// pages. Partner With Us is NOT labelled a service and carries no
+// partner list: no partners exist to list, and EC-Council/Pearson are
+// in-progress only, never listed as partners. Corporate &
+// International is never presented as proof of operating in any
+// foreign jurisdiction. Deal/agreement forms stay draft-only and are
+// untouched by this change.
+// Owner-words mapping (reported, not built as duplicate pages):
+// "Solutions" = Technology & Security + Digital & Creative groups;
+// "Collaborations" = the Who We Work With pathways; "Partnerships" =
+// the Partner With Us entry. No standalone Solutions, Collaborations
+// or Partnerships pages are created — they would duplicate the same
+// 12 services + 4 pages.
+// Pricing is deliberately NOT regrouped here: where Pricing sits in
+// the business door stays open with the pricing decision.
 
 export default async function ServicesPage() {
   const services = await getServices();
   const rows = services.map((s) => buildServiceRow({ slug: s.slug, title: s.title }));
+  const rowBySlug = new Map(rows.map((r) => [r.slug, r]));
 
   return (
     <>
@@ -41,7 +50,7 @@ export default async function ServicesPage() {
       <div className="wrap pt-8">
         <AnswerLead id="answer-summary">
           Browse {services.length} services from GradeSpot IT Solutions in Dilsukhnagar,
-          Hyderabad, listed below. Service details, scope and availability are confirmed on
+          Hyderabad, grouped below. Service details, scope and availability are confirmed on
           enquiry.
         </AnswerLead>
         {/* Demo-fill: every service row now carries a sample scope
@@ -52,33 +61,71 @@ export default async function ServicesPage() {
       </div>
       <section className="section-pad">
         <div className="wrap">
-          <ul className="border-t border-line">
-            {rows.map((row) => (
-              <li key={row.slug} className="border-b border-line">
-                <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
-                  <div className="min-w-0">
-                    <h2 className="flex flex-wrap items-center gap-3 text-lg font-semibold">
-                      <Link href={row.titleHref} className="hover:text-signal">
-                        {row.displayTitle}
-                      </Link>
-                      {row.sample && <SampleTag />}
-                    </h2>
-                    {row.sample && row.description ? (
-                      <p className="mt-1 text-[15px] text-sample">{row.description}</p>
-                    ) : (
-                      <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
-                    )}
-                  </div>
-                  <Link
-                    href={row.actionHref}
-                    className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
-                  >
-                    {row.actionLabel}
-                  </Link>
-                </article>
-              </li>
-            ))}
-          </ul>
+          {SERVICE_GROUPS.map((group) => (
+            <div key={group.label} className="mb-12">
+              <h2 className="text-2xl font-semibold">{group.label}</h2>
+              <ul className="mt-4 border-t border-line">
+                {group.slugs.map((slug) => {
+                  const row = rowBySlug.get(slug)!;
+                  return (
+                    <li key={row.slug} className="border-b border-line">
+                      <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
+                        <div className="min-w-0">
+                          <h3 className="flex flex-wrap items-center gap-3 text-lg font-semibold">
+                            <Link href={row.titleHref} className="hover:text-signal">
+                              {row.displayTitle}
+                            </Link>
+                            {row.sample && <SampleTag />}
+                          </h3>
+                          {row.sample && row.description ? (
+                            <p className="mt-1 text-[15px] text-sample">{row.description}</p>
+                          ) : (
+                            <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
+                          )}
+                        </div>
+                        <Link
+                          href={row.actionHref}
+                          className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
+                        >
+                          {row.actionLabel}
+                        </Link>
+                      </article>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold">Who We Work With</h2>
+            <p className="mt-2 max-w-2xl text-base leading-7 text-muted">
+              Business pathways — institutes, colleges and organisations working with
+              GradeSpot.
+            </p>
+            <ul className="mt-4 border-t border-line">
+              {BUSINESS_PATHWAYS.map((pathway) => (
+                <li key={pathway.href} className="border-b border-line">
+                  <article className="flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-semibold">
+                        <Link href={pathway.href} className="hover:text-signal">
+                          {pathway.title}
+                        </Link>
+                      </h3>
+                      <p className="mt-1 text-[15px] text-body">{pathway.line}</p>
+                    </div>
+                    <Link
+                      href={pathway.href}
+                      className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
+                    >
+                      Visit page
+                    </Link>
+                  </article>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <div className="mt-16 rounded-2xl border border-line bg-surface-light p-8 text-center">
             <h2 className="text-2xl font-semibold">Need a service for your business?</h2>

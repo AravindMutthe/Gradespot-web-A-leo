@@ -32,16 +32,23 @@
 //   Docker course, no Linux course and no finance / business-services
 //   / institutions course, so a query for one honestly matches nothing.
 // - Pages indexed are existing public pages only, under their
-//   published PageHero titles. /pricing is deliberately NOT indexed:
-//   the route exists but is linked from neither header nor footer,
-//   and linking it from search results before the pricing-nav gap is
-//   decided would invent a nav entry. /lp/* pages are never indexed.
+//   published PageHero titles, plus the two-door categorization
+//   pages (training directory, courses directory, 10 category pages,
+//   certifications explanatory page). /pricing is deliberately NOT
+//   indexed: the route exists but is linked from neither header nor
+//   footer, and linking it from search results before the pricing-nav
+//   gap is decided would invent a nav entry. /lp/* pages are never
+//   indexed. PLANNED pages (/trainings/training-programmes,
+//   /trainings/study-guides) are NOT indexed as available content:
+//   they are visitor destinations with noindex, excluded from the
+//   sitemap, and must not surface as searchable content.
 // - Matching is plain substring/token matching over the local index:
 //   no AI, no external search service, no analytics in search.
 
 import { courses, courseCategories } from "@/data/courses";
 import { services } from "@/data/services";
 import { categoryAnchor } from "@/data/catalogue-nav";
+import { topicCategories } from "@/lib/two-door";
 import { displayCourseTitle } from "@/lib/trainings-rows";
 import {
   HELD_DETAIL_REASONS,
@@ -96,10 +103,19 @@ export const SEARCH_CATEGORIES: string[] = [...courseCategories];
 // Existing public pages indexed under their published PageHero titles.
 // /pricing is excluded on purpose (see the header comment); /lp/*
 // pages are never indexed; /register is a form destination, not a
-// search destination, and is likewise excluded.
+// search destination, and is likewise excluded. Two-door pages: the
+// training directory, the courses directory, the 10 dynamic category
+// pages and the certifications explanatory page are indexed; the two
+// planned pages (training-programmes, study-guides) are excluded.
 export const PAGE_ENTRIES: { title: string; href: string }[] = [
   { title: "Practical IT training — and IT services — in Hyderabad.", href: "/" },
-  { title: "Training Courses", href: "/trainings" },
+  { title: "Training", href: "/trainings" },
+  { title: "Courses", href: "/trainings/courses" },
+  ...topicCategories().map((cat) => ({
+    title: `${cat.name} Courses`,
+    href: `/trainings/category/${cat.slug}`,
+  })),
+  { title: "Certifications", href: "/trainings/certifications" },
   { title: "IT Services", href: "/services" },
   { title: "Contact Us — GradeSpot IT Solutions", href: "/contact-us" },
   { title: "Course Comparisons", href: "/compare" },

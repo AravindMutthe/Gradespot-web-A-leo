@@ -58,8 +58,9 @@ const globals = readSource("../src/app/globals.css");
 const sampleTag = readSource("../src/components/SampleTag.tsx");
 const legend = readSource("../src/components/DemoLegend.tsx");
 const detailPage = readSource("../src/app/trainings/[slug]/page.tsx");
-const trainingsIndex = readSource("../src/app/trainings/page.tsx");
-const searchRow = readSource("../src/components/CatalogueSearch.tsx");
+// Two-door categorization: the old CatalogueSearch row component is
+// retired; row rendering now lives on the dynamic category pages.
+const categoryPage = readSource("../src/app/trainings/category/[slug]/page.tsx");
 const servicesIndex = readSource("../src/app/services/page.tsx");
 const serviceDetail = readSource("../src/app/services/[slug]/page.tsx");
 const searchPage = readSource("../src/app/search/page.tsx");
@@ -69,7 +70,9 @@ const lpPage = readSource("../src/app/lp/[slug]/page.tsx");
 const leadRoute = readSource("../src/app/api/leads/route.ts");
 
 const SAMPLE_PAGES: Record<string, string> = {
-  "trainings index": trainingsIndex,
+  // Two-door: the /trainings directory carries no sample content, so
+  // the legend moved with the rows to the dynamic category pages.
+  "category pages": categoryPage,
   "trainings detail": detailPage,
   "services index": servicesIndex,
   "services detail": serviceDetail,
@@ -202,7 +205,7 @@ describe("Demo-fill — marker system (color + tag + legend)", () => {
   it("every sample-carrying template pairs the Sample tag with the sample font color", () => {
     const templates: Record<string, string> = {
       "trainings detail": detailPage,
-      "trainings rows": searchRow,
+      "category rows": categoryPage,
       "services index": servicesIndex,
       "services detail": serviceDetail,
       "search results": searchPage,
@@ -319,7 +322,7 @@ describe("Demo-fill — held tracks stay held", () => {
   it("the /careers-in-index question stays OPEN: careers is still not in the search index", () => {
     const index = buildSearchIndex();
     expect(index.some((e) => e.href === "/careers")).toBe(false);
-    expect(index.length).toBe(60);
+    expect(index.length).toBe(72);
   });
 
   it("no new dependency, no hotlinked asset, no slug/route/category change from demo-fill", () => {

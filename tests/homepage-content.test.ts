@@ -11,7 +11,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { courses, courseCategories } from "../src/data/courses";
-import { categoryAnchor } from "../src/data/catalogue-nav";
+import { topicSlug } from "../src/lib/two-door";
 import { services } from "../src/data/services";
 
 function readSource(rel: string): string {
@@ -112,11 +112,13 @@ describe("Stage 2 homepage — dropped v1 claims stay dropped", () => {
   });
 });
 
-describe("Stage 2 homepage — category rows deep-link to trainings sections", () => {
-  it("links each category row to its own /trainings anchor (same anchors Stage 3 renders)", () => {
-    expect(home).toContain("`/trainings#${categoryAnchor(cat.name)}`");
-    expect(categoryAnchor("Microsoft Azure")).toBe("category-microsoft-azure");
-    expect(categoryAnchor("Programming & Data")).toBe("category-programming-data");
-    expect(categoryAnchor("Design & CAD")).toBe("category-design-cad");
+describe("Stage 2 homepage — category rows link to category pages (two-door)", () => {
+  it("links each category row to its own dynamic category page, zero old anchor links", () => {
+    expect(home).toContain("`/trainings/category/${topicSlug(cat.name)}`");
+    expect(home).not.toContain("href={`/trainings#");
+    expect(home).not.toContain('href="/trainings#');
+    expect(topicSlug("Microsoft Azure")).toBe("microsoft-azure");
+    expect(topicSlug("Programming & Data")).toBe("programming-data");
+    expect(topicSlug("Design & CAD")).toBe("design-cad");
   });
 });

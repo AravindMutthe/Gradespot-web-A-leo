@@ -38,11 +38,11 @@ const sourceBySlug = new Map(courses.map((c) => [c.slug, c]));
 const HELD_FULL_DETAIL = ["ccna-200-301", "ccnp-350-401-encor", "digital-marketing"];
 
 describe("Stage 6 search — inventory from local repo files only", () => {
-  it("indexes 36 courses + 12 services + 12 pages, no extras, no missing", () => {
+  it("indexes 36 courses + 12 services + 24 pages, no extras, no missing", () => {
     expect(byKind("course").length).toBe(36);
     expect(byKind("service").length).toBe(12);
-    expect(byKind("page").length).toBe(12);
-    expect(index.length).toBe(60);
+    expect(byKind("page").length).toBe(24);
+    expect(index.length).toBe(72);
     for (const course of courses) {
       expect(byHref.has(`/trainings/${course.slug}`)).toBe(true);
     }
@@ -56,9 +56,11 @@ describe("Stage 6 search — inventory from local repo files only", () => {
     expect(new Set(hrefs).size).toBe(hrefs.length);
   });
 
-  it("never indexes LP pages, /pricing, or any non-catalogue entry", () => {
+  it("never indexes LP pages, /pricing, planned pages, or any non-catalogue entry", () => {
     expect(index.some((e) => e.href.startsWith("/lp/"))).toBe(false);
     expect(index.some((e) => e.href === "/pricing")).toBe(false);
+    expect(index.some((e) => e.href === "/trainings/training-programmes")).toBe(false);
+    expect(index.some((e) => e.href === "/trainings/study-guides")).toBe(false);
     expect(index.some((e) => /docker|linux/i.test(e.title))).toBe(false);
     expect(PAGE_ENTRIES.some((p) => p.href === "/pricing")).toBe(false);
   });

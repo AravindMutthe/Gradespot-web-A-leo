@@ -48,6 +48,7 @@ import { courseDetails } from "@/data/course-details";
 import { comparisons } from "@/data/comparisons";
 import { courseWaLink } from "@/lib/wa";
 import { SampleTag } from "@/components/SampleTag";
+import { topicSlug } from "@/lib/two-door";
 import { DemoLegend } from "@/components/DemoLegend";
 import {
   ENQUIRE_LABEL,
@@ -117,6 +118,9 @@ export default async function CoursePage({
   const crumbs = [
     { name: "Home", path: "/" },
     { name: "Trainings", path: "/trainings" },
+    // Two-door categorization: detail pages link back to their topic
+    // category page, not only to the directory.
+    { name: model.category, path: `/trainings/category/${topicSlug(course.category)}` },
     { name: model.displayTitle },
   ];
 
@@ -134,6 +138,7 @@ export default async function CoursePage({
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Trainings", path: "/trainings" },
+          { name: model.category, path: `/trainings/category/${topicSlug(course.category)}` },
           { name: model.displayTitle, path: `/trainings/${course.slug}` },
         ])}
       />

@@ -54,11 +54,14 @@ const services = readSource("../src/app/services/[slug]/page.tsx");
 // div itself (start AT the div, not the comment — the comment names
 // all four buttons and would corrupt order checks), then to the
 // div's own closing tag (no nested divs inside it).
+// NOTE (mobile compaction stage): the container class changed from
+// the old flex-wrap stack to the mobile 2-col grid + md+ flex row;
+// the pin below tracks the current container class.
 const heroSpan = (() => {
   const commentAt = detail.indexOf("Hero buttons, owner-approved reading order");
   expect(commentAt).toBeGreaterThan(-1);
   const start = detail.indexOf(
-    '<div className="mt-7 flex flex-wrap gap-4">',
+    '<div className="detail-hero-cta mt-7 grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-4">',
     commentAt,
   );
   expect(start).toBeGreaterThan(-1);
@@ -112,8 +115,12 @@ describe("Detail 4-button hero + grouped syllabus", () => {
     expect(detail.match(/id="about"/g)?.length).toBe(1);
     expect(detail.match(/id="syllabus"/g)?.length).toBe(1);
     expect(detail.match(/id="enquire"/g)?.length).toBe(1);
-    // Buttons wrap on narrow widths (flex-wrap; never clip/overlap).
-    expect(heroSpan).toContain("flex flex-wrap gap-4");
+    // Buttons reflow on narrow widths without clipping/overlap:
+    // compact 2-column grid below md, today's flex row at md+
+    // (mobile compaction stage — replaces the old flex-wrap stack).
+    expect(heroSpan).toContain(
+      "detail-hero-cta mt-7 grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-4",
+    );
   });
 
   it("About is conditional on about sections; View Syllabus is on every full page", () => {

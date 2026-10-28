@@ -195,7 +195,11 @@ export default async function CoursePage({
                 {PENDING_LABEL}. Availability, schedule and course details are confirmed
                 directly by the GradeSpot team.
               </p>
-              <div className="mt-7 flex flex-wrap gap-4">
+              {/* Mobile compaction: compact 2-column grid below md
+                  (2 per row, equal widths), today's flex row at md+.
+                  Desktop sizes unchanged; the mobile size rule lives
+                  in globals.css (.detail-hero-cta, below md only). */}
+              <div className="detail-hero-cta mt-7 grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-4">
                 <Link href="/contact-us" className="btn-primary min-h-[44px]">
                   Enquire Now
                 </Link>
@@ -229,7 +233,12 @@ export default async function CoursePage({
                   always renders (its gated block is unconditional);
                   the areas list inside it stays topics-conditioned.
                   Held pages take the held branch above, unchanged. */}
-              <div className="mt-7 flex flex-wrap gap-4">
+              {/* Mobile compaction: compact 2-column grid below md
+                  (2 per row, equal widths, 2 rows for 4 buttons),
+                  today's flex row at md+. Desktop sizes unchanged;
+                  the mobile size rule lives in globals.css
+                  (.detail-hero-cta, below md only). */}
+              <div className="detail-hero-cta mt-7 grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-4">
                 {aboutSections.length > 0 && (
                   <a href="#about" className="btn-outline-light min-h-[44px]">
                     About the Course

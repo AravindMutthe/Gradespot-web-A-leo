@@ -365,6 +365,24 @@
   }
 }
 
+/* Course detail hero CTAs — mobile compaction ONLY (below md, 768px).
+   Owner requirement from a phone screenshot: the hero buttons
+   wrapped into a scattered uneven stack on mobile. Below md the
+   detail hero container (class detail-hero-cta, detail page only)
+   renders as a 2-column grid with these reduced sizes, so the
+   block reads as one neat unit. Desktop (md+) is untouched: this
+   rule never applies at md+, and the btn-* utilities keep their
+   12px 28px / 15px sizes there. Specificity (class + element)
+   beats the single-class btn-* utilities, so the mobile sizes win
+   below md without touching any other button on any page. */
+@media (max-width: 767px) {
+  .detail-hero-cta > a {
+    padding: 10px 12px;
+    font-size: 14px;
+    min-height: 44px;
+  }
+}
+
 @utility btn-outline-navy {
   display: inline-flex;
   align-items: center;

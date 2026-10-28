@@ -6,14 +6,16 @@
 // open at a time, Escape closes, click-outside closes, full keyboard
 // operation. Every interactive target is at least 44px tall.
 // Route slugs are unchanged existing routes; no destination is added,
-// removed, or renamed here. No search box: search arrives with the
-// Stage 6 build-time index and is not presented before it works.
+// removed, or renamed here. Search arrives with the Stage 6 build-time
+// index: a search box in the desktop bar and at the top of the mobile
+// sheet, both submitting to the local /search results page.
 // Dark theme is deferred (v1.1 light-first): no theme toggle here.
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { business, telHref } from "@/data/site";
+import SearchBox from "@/components/SearchBox";
 
 type NavLink = { label: string; href: string };
 type NavGroup = { key: string; label: string; links: NavLink[] };
@@ -168,6 +170,9 @@ export default function Header() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
+          <div className="hidden xl:block">
+            <SearchBox compact />
+          </div>
           <a
             href={telHref(phone)}
             className="hidden min-h-11 items-center rounded-lg border border-line px-4 text-[15px] font-semibold text-body hover:border-brand-dark hover:text-brand-dark lg:flex"
@@ -198,6 +203,9 @@ export default function Header() {
       {mobileOpen && (
         <nav aria-label="Mobile" className="max-h-[70vh] overflow-y-auto border-t border-line bg-surface xl:hidden">
           <div className="wrap py-2">
+            <div className="border-b border-line pb-3">
+              <SearchBox onNavigate={() => setMobileOpen(false)} />
+            </div>
             {GROUPS.map((group) => {
               const open = mobileGroup === group.key;
               return (

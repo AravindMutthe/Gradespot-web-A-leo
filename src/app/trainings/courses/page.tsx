@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
+import DirectoryBoard from "@/components/DirectoryBoard";
 import SearchBox from "@/components/SearchBox";
 import { topicCategories } from "@/lib/two-door";
 
@@ -44,6 +45,12 @@ export default function CoursesDirectoryPage() {
               ← All Training
             </Link>
           </p>
+          <DirectoryBoard
+            door="training"
+            eyebrow="Training · Courses"
+            title="Courses by topic"
+            countLine={`${total} courses, grouped by topic below.`}
+          >
           <ul className="border-t border-line">
             {categories.map((cat) => (
               <li key={cat.slug} className="border-b border-line">
@@ -59,6 +66,7 @@ export default function CoursesDirectoryPage() {
               </li>
             ))}
           </ul>
+          </DirectoryBoard>
 
           <div className="mt-10 rounded-2xl border border-line bg-surface p-6">
             <h2 className="text-xl font-semibold">Not sure which track fits your background?</h2>

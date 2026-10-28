@@ -26,6 +26,14 @@
 //   rewrite is dropped with the old template).
 // - Data source: LOCAL repo files only (see course-detail.ts).
 //   Slugs, categories, canonical URLs and routes are unchanged.
+// - Curriculum gating (Stage 5 follow-up, owner-authorised two-tier
+//   policy): the detail page shows module AREAS only ("What you will
+//   learn", verbatim topic lists). Lesson-level curriculum sections
+//   are NOT rendered publicly; a gated block points to the enquiry
+//   panel, and the full syllabus is shared off-site by the team after
+//   enquiry (manual until an Axon/n8n workflow exists). No download
+//   is promised anywhere, and no gated paragraph reaches the model,
+//   so it cannot leak into HTML, metadata, JSON-LD or search.
 
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -193,7 +201,7 @@ export default async function CoursePage({
                     </div>
                     {model.facts.topics && model.facts.topics.length > 0 && (
                       <div>
-                        <dt className="font-semibold text-ink">Topics covered</dt>
+                        <dt className="font-semibold text-ink">What you will learn</dt>
                         <dd className="mt-2">
                           <ul className="list-disc space-y-1 pl-5">
                             {model.facts.topics.map((topic) => (
@@ -206,6 +214,24 @@ export default async function CoursePage({
                   </dl>
                 </div>
               )}
+
+              {/* Two-tier curriculum gate: areas above stay public; the
+                  full syllabus is shared by the team after enquiry. */}
+              <div className="mb-10 rounded-2xl border border-line bg-surface p-7">
+                <h2 className="text-lg font-bold text-ink">
+                  Full syllabus — shared after enquiry
+                </h2>
+                <p className="mt-2 text-[15px] leading-7 text-body">
+                  The full syllabus for this course is shared by the GradeSpot team
+                  after enquiry — via WhatsApp or mail.
+                </p>
+                <a
+                  href="#enquire"
+                  className="btn-primary mt-4 inline-flex min-h-[44px] items-center"
+                >
+                  Enquire for the Full Syllabus
+                </a>
+              </div>
 
               <div className="space-y-12">
                 {model.sections.map((s, i) => (
@@ -245,7 +271,11 @@ export default async function CoursePage({
                   Ask about batches, mode of training and certification guidance for this course.
                 </p>
                 <div className="mt-4">
-                  <LeadForm interest={model.displayTitle} idPrefix="detail-lead" />
+                  <LeadForm
+                    interest={model.displayTitle}
+                    idPrefix="detail-lead"
+                    purposeNote="Share your details and the team will send the full syllabus via WhatsApp or mail."
+                  />
                 </div>
                 <a
                   href={courseWaLink(model.displayTitle)}

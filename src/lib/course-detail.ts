@@ -43,6 +43,9 @@ export const HELD_DETAIL_REASONS: Record<string, string> = {
 };
 
 // Courses whose curriculum section is not rendered (R6: empty curricula).
+// NOTE (curriculum gating follow-up): this set now governs ONLY the
+// curriculum-section skip. The area lists in course-details.ts are a
+// different field and stay public as "What you will learn" (see below).
 export const NO_CURRICULUM_SLUGS = new Set([
   "comptia-network-plus",
   "comptia-security-plus",
@@ -52,13 +55,50 @@ export const NO_CURRICULUM_SLUGS = new Set([
 // content, verified by reading the paragraphs: an ethical-hacking
 // intro under a Cisco heading, ethical-hacking job roles, and a CCNA
 // skills section. Never rendered as Hardware content.
+// Curriculum-gating follow-up: Hardware's "Course Curriculum" section
+// is ALSO misattributed — its 26 paragraphs are identical, paragraph
+// for paragraph, to AZ-104's "Course Curriculum". It is therefore
+// skipped as misattributed (never rendered publicly, never presented
+// as Hardware's gated syllabus) and flagged for the content team.
 const MISATTRIBUTED_SECTIONS: Record<string, Set<string>> = {
   "computer-hardware-and-networking": new Set([
     "Cisco Certified Network Associate",
     "Common Job Roles for Ethical Hacking",
     "Skills To Measure In CCNA 200-301",
+    "Course Curriculum",
   ]),
 };
+
+// Curriculum sections moved behind the enquiry gate (owner-authorised
+// two-tier policy, Stage 5 follow-up): lesson-level lists, NOT module
+// areas. Only headings are recorded in the model — the paragraphs
+// never reach the page, so gated detail cannot leak into HTML,
+// metadata, JSON-LD or the search index. The full syllabus itself is
+// shared off-site by the team after enquiry; nothing is auto-sent and
+// no download is ever promised.
+const GATED_CURRICULUM_HEADINGS = new Set([
+  "Course Curriculum",
+  "Our Curriculum",
+]);
+// CEH has no "Course Curriculum" section: its curriculum is presented
+// in the "Certified Ethical Hacker v13" section (intro + shared item
+// list) and the "Tools Covered" tool list. Both are lesson/material
+// detail, so both are gated for CEH.
+const CEH_GATED_HEADINGS = new Set([
+  "Certified Ethical Hacker v13",
+  "Tools Covered",
+]);
+
+function isGatedCurriculum(slug: string, heading: string): boolean {
+  if (GATED_CURRICULUM_HEADINGS.has(heading)) return true;
+  if (
+    slug === "certified-ethical-hacker-ceh" &&
+    CEH_GATED_HEADINGS.has(heading)
+  ) {
+    return true;
+  }
+  return false;
+}
 
 // Courses without a repo duration that say "confirmed on enquiry".
 const DURATION_ON_ENQUIRY_SLUGS = new Set([
@@ -74,7 +114,11 @@ export interface DetailFacts {
   who: string;
   level: string;
   certification: string;
-  // null = topics suppressed (R6 curriculum rule for Network+/Security+).
+  // Public module AREAS (two-tier curriculum policy): the verbatim
+  // topic lists from course-details.ts. Never null for a verified
+  // course (all 8 carry a detail record); null only where no detail
+  // record exists. The lesson-level curriculum sections are a
+  // different field and are gated, not rendered (see gatedHeadings).
   topics: string[] | null;
 }
 
@@ -99,6 +143,14 @@ export interface DetailModel {
   facts: DetailFacts | null;
   sections: CourseSection[];
   skippedSections: SkippedSection[];
+  // Headings of curriculum sections moved behind the enquiry gate
+  // (two-tier policy). Headings only — never paragraphs — so gated
+  // detail cannot leak into any rendered surface. Empty for held
+  // pages (no gated block) and for verified pages whose curriculum
+  // is fragmentary (R6) or misattributed (Hardware): those pages
+  // still show the gated block, with the syllabus itself supplied
+  // off-site by the team after enquiry.
+  gatedHeadings: string[];
   jobReadyTopicsSuppressed: boolean;
   related: RelatedCourse[];
   compareSlug: string | null;
@@ -121,9 +173,11 @@ function isEnrolHeading(heading: string): boolean {
 export function filterDetailSections(course: Course): {
   kept: CourseSection[];
   skipped: SkippedSection[];
+  gated: string[];
 } {
   const kept: CourseSection[] = [];
   const skipped: SkippedSection[] = [];
+  const gated: string[] = [];
   const misattributed = MISATTRIBUTED_SECTIONS[course.slug] ?? new Set<string>();
   for (const s of course.sections) {
     const h = s.heading ?? "";
@@ -148,11 +202,16 @@ export function filterDetailSections(course: Course): {
       skipped.push({ heading: h, reason: "R6 open: empty curriculum" });
     } else if (misattributed.has(h)) {
       skipped.push({ heading: h, reason: "section body is another course's content, misattributed to this page" });
+    } else if (isGatedCurriculum(course.slug, h)) {
+      // Two-tier policy: lesson-level curriculum moves behind the
+      // enquiry gate. Record the heading only; the paragraphs are
+      // dropped here and never reach the page.
+      gated.push(h);
     } else {
       kept.push(s);
     }
   }
-  return { kept, skipped };
+  return { kept, skipped, gated };
 }
 
 export function buildCourseDetail(
@@ -184,6 +243,7 @@ export function buildCourseDetail(
       facts: null,
       sections: [],
       skippedSections: [],
+      gatedHeadings: [],
       jobReadyTopicsSuppressed: false,
       related: [],
       compareSlug: null,
@@ -201,15 +261,17 @@ export function buildCourseDetail(
   let facts: DetailFacts | null = null;
   let jobReadyTopicsSuppressed = false;
   if (detail) {
-    const topics = NO_CURRICULUM_SLUGS.has(course.slug)
-      ? null
-      : detail.topics.filter((t) => {
-          if (/job-ready/i.test(t)) {
-            jobReadyTopicsSuppressed = true;
-            return false;
-          }
-          return true;
-        });
+    // Two-tier policy: the area lists stay public for every verified
+    // course, including Network+/Security+ (their R6 problem is the
+    // curriculum SECTION, which stays suppressed below — not the
+    // area list). Only the job-ready topic is filtered (SOC).
+    const topics = detail.topics.filter((t) => {
+      if (/job-ready/i.test(t)) {
+        jobReadyTopicsSuppressed = true;
+        return false;
+      }
+      return true;
+    });
     facts = {
       who: detail.who,
       level: detail.level,
@@ -218,7 +280,7 @@ export function buildCourseDetail(
     };
   }
 
-  const { kept, skipped } = filterDetailSections(course);
+  const { kept, skipped, gated } = filterDetailSections(course);
 
   return {
     slug: course.slug,
@@ -231,6 +293,7 @@ export function buildCourseDetail(
     facts,
     sections: kept,
     skippedSections: skipped,
+    gatedHeadings: gated,
     jobReadyTopicsSuppressed,
     related,
     compareSlug: compare?.slug ?? null,

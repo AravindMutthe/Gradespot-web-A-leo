@@ -20,6 +20,7 @@ export default function LeadForm({
   submitLabel = "Request a Callback",
   showCountry = false,
   showPartnership = false,
+  purposeNote,
 }: {
   interest?: string;
   idPrefix?: string;
@@ -38,6 +39,13 @@ export default function LeadForm({
   // createLead includes it in the insert, but it persists ONLY once the
   // leads.country column exists — that DB migration is still pending.
   showCountry?: boolean;
+  // Optional pre-submission purpose note, rendered above the fields.
+  // Used ONLY by course detail pages (curriculum-gating policy: the
+  // full syllabus is sent by the team after enquiry). Undefined
+  // everywhere else, so every other form renders exactly as before.
+  // This note changes no submission semantics, status mapping, or
+  // success/error copy.
+  purposeNote?: string;
 }) {
   const pathname = usePathname();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -125,6 +133,9 @@ export default function LeadForm({
         <span aria-hidden>·</span>
         <span>No spam, ever</span>
       </p>
+      {purposeNote && (
+        <p className="mb-5 text-sm leading-6 text-body">{purposeNote}</p>
+      )}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor={id("name")} className={label}>

@@ -94,17 +94,24 @@ describe("Stage 5 detail — inventory and dispositions", () => {
     }
   });
 
-  it("suppresses curricula for Network+ and Security+ (R6) and keeps them elsewhere", () => {
+  it("keeps Network+ and Security+ curriculum sections suppressed (R6) while their area lists stay public", () => {
+    // Curriculum-gating follow-up: R6 was always about the curriculum
+    // SECTION (a 1-line DHCP fragment / a 5-line fragment), never
+    // about the area lists in course-details.ts. Under the two-tier
+    // policy the areas stay public ("What you will learn") and the
+    // fragmentary sections stay suppressed — nothing substantive to
+    // gate, and the full syllabus is supplied off-site after enquiry.
     for (const slug of ["comptia-network-plus", "comptia-security-plus"]) {
       const c = findLocalCourse(slug)!;
       const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
-      expect(model.facts!.topics).toBeNull();
+      expect(model.facts!.topics!.length).toBeGreaterThan(0);
       expect(
         model.sections.some((s) => s.heading === "Course Curriculum"),
       ).toBe(false);
       expect(
         model.skippedSections.some((s) => s.heading === "Course Curriculum"),
       ).toBe(true);
+      expect(model.gatedHeadings).toEqual([]);
     }
     const ceh = findLocalCourse("certified-ethical-hacker-ceh")!;
     const cehModel = buildCourseDetail(ceh, courseDetails[ceh.slug], undefined);

@@ -51,7 +51,6 @@ import { SampleTag } from "@/components/SampleTag";
 import { topicSlug } from "@/lib/two-door";
 import { DemoLegend } from "@/components/DemoLegend";
 import {
-  ENQUIRE_LABEL,
   PENDING_LABEL,
   buildCourseDetail,
   findLocalCourse,
@@ -169,7 +168,7 @@ export default async function CoursePage({
               </p>
               <div className="mt-7 flex flex-wrap gap-4">
                 <Link href="/contact-us" className="btn-primary min-h-[44px]">
-                  {ENQUIRE_LABEL}
+                  Enquire Now
                 </Link>
                 <Link href="/trainings" className="btn-outline-light min-h-[44px]">
                   All Trainings
@@ -190,8 +189,18 @@ export default async function CoursePage({
               )}
               <div className="mt-7 flex flex-wrap gap-4">
                 <a href="#enquire" className="btn-primary min-h-[44px]">
-                  {ENQUIRE_LABEL}
+                  Enquire Now
                 </a>
+                {/* LP hero pair, conditional (fail-closed): View Syllabus
+                    renders only where the "What you will learn" areas
+                    list below actually renders (facts.topics non-empty).
+                    Held pages take the held branch above, which has no
+                    View Syllabus — never a button at a missing section. */}
+                {model.facts?.topics && model.facts.topics.length > 0 && (
+                  <a href="#syllabus" className="btn-outline-light min-h-[44px]">
+                    View Syllabus
+                  </a>
+                )}
                 <Link href="/trainings" className="btn-outline-light min-h-[44px]">
                   All Trainings
                 </Link>
@@ -246,7 +255,7 @@ export default async function CoursePage({
                       <dd className={model.sample ? "text-sample" : undefined}>{model.facts.certification}</dd>
                     </div>
                     {model.facts.topics && model.facts.topics.length > 0 && (
-                      <div>
+                      <div id="syllabus" className="scroll-mt-24">
                         <dt className="font-semibold text-ink">What you will learn</dt>
                         <dd className="mt-2">
                           <ul className="list-disc space-y-1 pl-5">

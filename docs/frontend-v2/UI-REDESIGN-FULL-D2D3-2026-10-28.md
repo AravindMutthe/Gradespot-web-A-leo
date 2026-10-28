@@ -125,6 +125,9 @@ second anywhere on the page.
 - Every interactive target stays at least 44×44px (desktop triggers,
   drawer rows, footer rows, search results); footer link rows keep the
   44px height from the audit fix.
+- Section headings are one system: every `SectionTitle` carries the
+  same brand rule as `PageHero` (added in the 2026-10-28 fix commit),
+  so headings read as new everywhere, not only on the home hero.
 - Reduced motion: transitions remain colour/chevron only; the hero
   column keeps `hero-no-reveal` (no fade-in on the LCP element).
 

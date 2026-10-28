@@ -42,9 +42,17 @@ export function SectionTitle({
 }) {
   return (
     <div className={center ? "text-center" : ""} data-reveal>
+      {/* Full redesign (2026-10-28): every section heading carries the
+          same brand rule as PageHero, so section headings read as one
+          new system — not the old treatment. Centered titles center
+          the rule too. Decorative only (aria-hidden). */}
+      <span
+        className={`block h-1 w-10 rounded-full bg-brand ${center ? "mx-auto" : ""}`}
+        aria-hidden
+      />
       {label && (
         <p
-          className={`text-[12px] font-bold uppercase tracking-[0.18em] text-signal-strong ${
+          className={`mt-3 text-[12px] font-bold uppercase tracking-[0.18em] text-signal-strong ${
             center ? "text-center" : ""
           }`}
         >

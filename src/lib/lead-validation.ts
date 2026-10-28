@@ -45,6 +45,41 @@ export interface LeadPayload {
   partnershipType?: string;
 }
 
+// Anti-spam additions (forms redesign, no vendor, no account, no key):
+// - Honeypot: the forms render a visually hidden field named `website`
+//   (bot-attractive, NOT a browser autofill token). A filled honeypot
+//   is rejected WITHOUT recording a lead and WITHOUT naming the
+//   honeypot in the error — the caller sees only the generic message.
+// - Minimum time-to-submit: the forms stamp `formLoadedAt` (client
+//   epoch ms) at mount. A submission faster than MIN_SUBMIT_MS after
+//   load is rejected as bot-like. This is a SOFT signal, not proof of
+//   humanity: timestamps can be spoofed by a determined submitter, and
+//   a client clock far ahead of the server can shorten the measured
+//   gap. Missing or non-numeric timestamps are ALLOWED (old clients,
+//   API compat) — the defence is the layering (honeypot + time +
+//   existing 20-per-60s per-IP rate limit + validation), never any
+//   single check. Neither field is copied into the returned payload,
+//   so it can never reach storage.
+export const MIN_SUBMIT_MS = 3000;
+export const ANTI_SPAM_MESSAGE = "Please check the fields and try again.";
+
+export function validateHoneypot(value: unknown): string | null {
+  if (value === undefined) return null;
+  if (typeof value !== "string") return ANTI_SPAM_MESSAGE;
+  if (value.trim().length > 0) return ANTI_SPAM_MESSAGE;
+  return null;
+}
+
+export function validateSubmitTiming(
+  value: unknown,
+  nowMs: number = Date.now(),
+): string | null {
+  if (value === undefined) return null;
+  if (typeof value !== "number" || !Number.isFinite(value)) return null;
+  if (nowMs - value < MIN_SUBMIT_MS) return ANTI_SPAM_MESSAGE;
+  return null;
+}
+
 export type LeadErrors = Record<string, string>;
 
 const NAME_PATTERN = /^[\p{L}\p{M}][\p{L}\p{M} .'-]*$/u;
@@ -53,6 +88,32 @@ const SEQUENTIAL = new Set(["0123456789", "1234567890", "9876543210", "098765432
 function asString(value: unknown): string | null {
   return typeof value === "string" ? value : null;
 }
+
+// Spam TLDs for the name-field web-address check below. Kept narrow
+// on purpose: it must catch "example.com" / "www.example.com" as a
+// name without catching "St. John" (dot followed by a space, not a
+// TLD) or "J. R. R. Tolkien" (initials, not domains).
+const SPAM_TLDS = [
+  "com",
+  "net",
+  "org",
+  "io",
+  "co",
+  "in",
+  "me",
+  "info",
+  "biz",
+  "xyz",
+  "site",
+  "online",
+  "top",
+  "click",
+  "link",
+  "live",
+  "fun",
+  "pro",
+  "app",
+];
 
 export function validateName(value: unknown): string | null {
   const v = asString(value)?.trim() ?? "";
@@ -63,6 +124,17 @@ export function validateName(value: unknown): string | null {
     return "Name may only contain letters, spaces, hyphens, apostrophes and dots";
   if ((v.match(/\p{L}/gu) ?? []).length < 2)
     return "Please enter your full name (at least 2 letters)";
+  // Web addresses are not names: reject URL-like content that the
+  // letter pattern above would otherwise pass ("www.example.com",
+  // "example.com", "https://…"). Legitimate dotted names ("St. John",
+  // initials) do not match: the dot must be followed directly by a
+  // spam TLD and then a space, end, slash, or colon.
+  if (/www\./i.test(v) || /https?:\/\//i.test(v))
+    return "Please enter your full name (web addresses are not accepted)";
+  if (
+    new RegExp(`\\b[a-z0-9-]+\\.(${SPAM_TLDS.join("|")})(\\s|$|\\/|:)` , "i").test(v)
+  )
+    return "Please enter your full name (web addresses are not accepted)";
   return null;
 }
 
@@ -180,6 +252,14 @@ export function validateLead(
     return { data: null, errors: { form: "Invalid request body" } };
   }
   const b = body as Record<string, unknown>;
+  // Anti-spam gate FIRST, before field errors: a filled honeypot or a
+  // too-fast submission returns ONLY the generic message — the error
+  // shape never names the honeypot or the timing rule, so a bot learns
+  // nothing about which check tripped. Neither field is copied into
+  // the returned payload, so neither can ever reach storage.
+  const antiSpam =
+    validateHoneypot(b.website) ?? validateSubmitTiming(b.formLoadedAt);
+  if (antiSpam) return { data: null, errors: { form: antiSpam } };
   const errors: LeadErrors = {};
   const put = (key: string, err: string | null) => {
     if (err && !errors[key]) errors[key] = err;

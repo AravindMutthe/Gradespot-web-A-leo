@@ -5,6 +5,17 @@ import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
 import { newIdempotencyKey } from "@/lib/lead-contract";
 import { business } from "@/data/site";
+import {
+  leadFormCard,
+  leadFormErrorPanel,
+  leadFormErrorText,
+  leadFormField,
+  leadFormHelper,
+  leadFormHoneypot,
+  leadFormLabel,
+  leadFormSuccess,
+  leadFormWaButton,
+} from "@/components/lead-form-styles";
 
 // Course / demo registration form (Aravind's decision, 2026-10-23;
 // DECISIONS.md §20). This is LEAD registration — it posts to the same
@@ -28,6 +39,9 @@ export default function RegisterForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverMessage, setServerMessage] = useState<string>("");
   const [recordedText, setRecordedText] = useState("");
+  // Anti-spam mount timestamp (see LeadForm / lead-validation.ts):
+  // the server rejects submissions faster than 3s after load.
+  const [formLoadedAt] = useState(() => Date.now());
 
   const waNumber = business.phones[0].replace(/[^+\d]/g, "").replace(/^\+/, "");
   const waText = encodeURIComponent(
@@ -54,6 +68,11 @@ export default function RegisterForm({
       message: "",
       whatsappOptIn: fd.get("whatsappOptIn") === "true",
       source: `website:${pathname ?? "/register"}`,
+      // Anti-spam fields: honeypot (must stay empty) + mount
+      // timestamp. validateLead checks both but never copies them
+      // into the stored payload.
+      website: String(fd.get("website") ?? ""),
+      formLoadedAt,
     };
     // Same validators as /api/leads (§25.18) — this also closes the
     // old empty-course hole: an unchosen course now fails here AND
@@ -61,6 +80,11 @@ export default function RegisterForm({
     const checked = validateLead(payload);
     if (!checked.data) {
       setErrors(checked.errors);
+      // Anti-spam failures surface ONLY the generic message.
+      if (checked.errors.form) {
+        setServerMessage(checked.errors.form);
+        setState("error");
+      }
       return;
     }
     setState("sending");
@@ -85,7 +109,9 @@ export default function RegisterForm({
         if (body && typeof body === "object" && "errors" in body) {
           setErrors(body.errors as Record<string, string>);
         }
-        if (body && typeof body === "object" && typeof body.error === "string") {
+        if (body && typeof body === "object" && typeof body.message === "string") {
+          setServerMessage(body.message);
+        } else if (body && typeof body === "object" && typeof body.error === "string") {
           setServerMessage(body.error);
         }
         setState("error");
@@ -95,14 +121,13 @@ export default function RegisterForm({
     }
   }
 
-  const field =
-    "w-full rounded-xl border border-line bg-parchment px-4 py-3 text-[15px] text-heading outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/20";
-  const label = "block text-sm font-semibold text-heading";
+  const field = leadFormField;
+  const label = leadFormLabel;
 
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-[20px] border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]"
+      className={leadFormCard}
       noValidate
     >
       <div className="grid gap-4 sm:grid-cols-2">
@@ -110,8 +135,8 @@ export default function RegisterForm({
           <label htmlFor="reg-name" className={label}>
             Full Name *
           </label>
-          <input id="reg-name" name="name" required autoComplete="name" className={field} placeholder="Your name" />
-          {errors.name && <p className="mt-1 text-xs text-field-error">{errors.name}</p>}
+          <input id="reg-name" name="name" required autoComplete="name" aria-invalid={!!errors.name} aria-describedby={errors.name ? "reg-name-error" : undefined} className={field} placeholder="Your name" />
+          {errors.name && <p id="reg-name-error" className={leadFormErrorText}>{errors.name}</p>}
         </div>
         <div>
           <label htmlFor="reg-phone" className={label}>
@@ -123,11 +148,13 @@ export default function RegisterForm({
             type="tel"
             required
             autoComplete="tel"
+            aria-invalid={!!errors.phone}
+            aria-describedby={errors.phone ? "reg-phone-error" : undefined}
             className={field}
             placeholder="+91 …"
             inputMode="tel"
           />
-          {errors.phone && <p className="mt-1 text-xs text-field-error">{errors.phone}</p>}
+          {errors.phone && <p id="reg-phone-error" className={leadFormErrorText}>{errors.phone}</p>}
         </div>
       </div>
       <div className="mt-4">
@@ -139,17 +166,19 @@ export default function RegisterForm({
           name="email"
           type="email"
           autoComplete="email"
+          aria-invalid={!!errors.email}
+          aria-describedby={errors.email ? "reg-email-error" : undefined}
           className={field}
           placeholder="you@example.com"
         />
-        {errors.email && <p className="mt-1 text-xs text-field-error">{errors.email}</p>}
+        {errors.email && <p id="reg-email-error" className={leadFormErrorText}>{errors.email}</p>}
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="reg-course" className={label}>
             Course *
           </label>
-          <select id="reg-course" name="course" required className={field} defaultValue={initialCourse ?? ""}>
+          <select id="reg-course" name="course" required className={field} aria-invalid={!!(errors.course || errors.interest)} aria-describedby={(errors.course || errors.interest) ? "reg-course-error" : undefined} defaultValue={initialCourse ?? ""}>
             <option value="" disabled>
               Select a course
             </option>
@@ -159,8 +188,8 @@ export default function RegisterForm({
               </option>
             ))}
           </select>
-          {errors.course && <p className="mt-1 text-xs text-field-error">{errors.course}</p>}
-          {errors.interest && <p className="mt-1 text-xs text-field-error">{errors.interest}</p>}
+          {errors.course && <p id="reg-course-error" className={leadFormErrorText}>{errors.course}</p>}
+          {errors.interest && <p id="reg-course-error" className={leadFormErrorText}>{errors.interest}</p>}
         </div>
         <div>
           <label htmlFor="reg-type" className={label}>
@@ -186,28 +215,40 @@ export default function RegisterForm({
           registration and are never sold.
         </span>
       </label>
+      {/* Honeypot: visually hidden, never focusable, never autofilled.
+          Filled honeypots are rejected server-side with a generic
+          error that never names this field. Real users never see it. */}
+      <div aria-hidden="true" className={leadFormHoneypot}>
+        <input
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+        />
+      </div>
       <button type="submit" disabled={state === "sending"} className="btn-primary mt-5 w-full disabled:opacity-60">
         {state === "sending" ? "Registering…" : "Register"}
       </button>
-      <p className="mt-3 text-center text-xs leading-5 text-body">
+      <p className={leadFormHelper}>
         Registering sends us your details so the team can confirm your seat or demo timing —
         it is an enquiry, not an online payment or a user account.
       </p>
       {state === "recorded" && (
-        <div className="mt-4 rounded-lg bg-success-surface p-4 text-sm text-success-text">
+        <div role="status" className={leadFormSuccess}>
           <p>Thank you — your registration enquiry has been received and recorded. Our team will call to confirm the details.</p>
           <a
             href={`https://wa.me/${waNumber}?text=${waText}`}
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-block rounded-xl bg-wa px-5 py-2.5 font-semibold text-white transition-transform hover:scale-[1.03]"
+            className={leadFormWaButton}
           >
             Continue on WhatsApp →
           </a>
         </div>
       )}
       {state === "error" && (
-        <p className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
+        <p role="alert" className={leadFormErrorPanel}>
           {serverMessage ||
             "We could not submit your registration. Please check the fields and try again, or call us directly."}
         </p>

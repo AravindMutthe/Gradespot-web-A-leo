@@ -53,16 +53,25 @@ export const navCourses: NavCourse[] = [
   { slug: "autocad", title: "AutoCAD", label: "AutoCAD", category: "Design & CAD", image: "/images/courses/autocad.jpg" },
 ];
 
+// Category order. This MUST match the declared repo order in
+// src/data/courses.ts (courseCategories, first-occurrence file order):
+// an earlier draft of this list ran Cybersecurity first, which would
+// have made any consumer of it disagree with the trainings index.
+// Stage 6 taxonomy-sync reconciliation (2026-10-28): order corrected
+// to the declared set; the label set itself was already identical
+// (same 10 names, no label changed). This list is currently unused
+// by any rendered component (the Stage 1 chrome has no mega menu);
+// it is kept aligned so a future consumer cannot silently diverge.
 export const navCategoryOrder = [
-  "Cybersecurity",
-  "Cisco",
   "Microsoft Azure",
+  "Cisco",
   "CompTIA",
-  "AWS",
   "Networking",
+  "Digital Marketing",
+  "Cybersecurity",
+  "AWS",
   "Programming & Data",
   "Medical Coding",
-  "Digital Marketing",
   "Design & CAD",
 ];
 

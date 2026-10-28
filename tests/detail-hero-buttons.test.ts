@@ -82,26 +82,30 @@ describe("Detail hero buttons — placement", () => {
     expect(heldSpan).toContain('href="/contact-us"');
   });
 
-  it("View Syllabus is wrapped in exactly the topics condition and targets it", () => {
+  it("View Syllabus targets the grouped syllabus section on every full page", () => {
+    // SUPERSEDED (syllabus-card stage): the grouped syllabus section
+    // below always renders on a full page (its gated block is
+    // unconditional), so View Syllabus is no longer wrapped in the
+    // topics condition. The topics condition now governs only the
+    // areas list INSIDE the grouped section.
     expect(detail).toContain('href="#syllabus"');
     expect(detail).toContain('id="syllabus"');
-    // The button renders only under the same condition as the list.
-    expect(detail).toMatch(
-      /model\.facts\?\.topics && model\.facts\.topics\.length > 0 && \([\s\S]{0,300}View Syllabus/,
-    );
-    // The id sits on the topics list, under the same condition.
-    expect(detail).toMatch(
-      /model\.facts\.topics && model\.facts\.topics\.length > 0 && \([\s\S]{0,200}id="syllabus"/,
-    );
     // Exactly one "#syllabus" href (the hero button) and one
-    // id="syllabus" (the topics list) — the id itself carries no #.
+    // id="syllabus" (the grouped section) — the id itself carries no #.
     expect(detail.match(/#syllabus/g)?.length).toBe(1);
     expect(detail.match(/id="syllabus"/g)?.length).toBe(1);
+    // The areas list inside the grouped section is still
+    // topics-conditioned.
+    expect(detail).toMatch(
+      /model\.facts\?\.topics && model\.facts\.topics\.length > 0 && \([\s\S]{0,300}What you will learn/,
+    );
   });
 
-  it("held branch has no View Syllabus and keeps the held wording", () => {
+  it("held branch has no View Syllabus, no About, and keeps the held wording", () => {
     expect(heldSpan).not.toContain("View Syllabus");
     expect(heldSpan).not.toContain("#syllabus");
+    expect(heldSpan).not.toContain("About the Course");
+    expect(heldSpan).not.toContain("#about");
     expect(PENDING_LABEL).toBe("Course details to be confirmed");
     expect(heldSpan).toContain("PENDING_LABEL");
   });

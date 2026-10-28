@@ -48,7 +48,6 @@ import { courseDetails } from "@/data/course-details";
 import { comparisons } from "@/data/comparisons";
 import { courseWaLink } from "@/lib/wa";
 import { SampleTag } from "@/components/SampleTag";
-import { topicSlug } from "@/lib/two-door";
 import { DemoLegend } from "@/components/DemoLegend";
 import {
   PENDING_LABEL,
@@ -114,14 +113,30 @@ export default async function CoursePage({
   // in Stage 5 — the check stays so a future published FAQ is handled.
   const publishedFaqs = model.heldBack ? [] : courseFaqs(course);
 
+  // Breadcrumb (owner-refined, 4 levels): Home / Trainings / Courses /
+  // course title. The topic-category level is deliberately SKIPPED
+  // (shorter trail for phone widths; sibling discovery survives via
+  // related courses + All Trainings). No category crumb anywhere.
   const crumbs = [
     { name: "Home", path: "/" },
     { name: "Trainings", path: "/trainings" },
-    // Two-door categorization: detail pages link back to their topic
-    // category page, not only to the directory.
-    { name: model.category, path: `/trainings/category/${topicSlug(course.category)}` },
+    { name: "Courses", path: "/trainings/courses" },
     { name: model.displayTitle },
   ];
+
+  // Grouped-syllabus split (owner-approved re-composition, wording
+  // verbatim): "outcomes" are the kept sections titled "Course
+  // Outcomes" or "Common Job Roles" — the only outcome-ish rendered
+  // content on detail pages (model filtering already drops
+  // misattributed/skipped sections upstream, e.g. Hardware's roles
+  // section). Pages with no such kept section (AZ-900, Hardware, all
+  // sample pages whose sections are []) render areas + gated only —
+  // nothing is invented to fill the gap.
+  const isOutcomeSection = (s: CourseSection) =>
+    /course outcomes/i.test(s.heading ?? "") ||
+    /common job roles/i.test(s.heading ?? "");
+  const outcomeSections = model.sections.filter(isOutcomeSection);
+  const aboutSections = model.sections.filter((s) => !isOutcomeSection(s));
 
   return (
     <>
@@ -137,7 +152,7 @@ export default async function CoursePage({
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Trainings", path: "/trainings" },
-          { name: model.category, path: `/trainings/category/${topicSlug(course.category)}` },
+          { name: "Courses", path: "/trainings/courses" },
           { name: model.displayTitle, path: `/trainings/${course.slug}` },
         ])}
       />
@@ -187,20 +202,31 @@ export default async function CoursePage({
               {!model.sample && model.durationLabel && (
                 <p className="mt-4 text-base font-semibold text-white">{model.durationLabel}</p>
               )}
+              {/* Hero buttons, owner-approved reading order:
+                  About → Syllabus → Enquire → All Trainings. No
+                  enquiry-first pressure: the visitor reads about the
+                  course, then its syllabus, then enquires. Enquire
+                  stays the solid primary; About/Syllabus are
+                  secondary. Fail-closed: About renders only where the
+                  about sections below actually exist (verified pages;
+                  sample pages carry no repo sections, so no About and
+                  no dead anchor). View Syllabus renders on every full
+                  page because the grouped syllabus section below
+                  always renders (its gated block is unconditional);
+                  the areas list inside it stays topics-conditioned.
+                  Held pages take the held branch above, unchanged. */}
               <div className="mt-7 flex flex-wrap gap-4">
+                {aboutSections.length > 0 && (
+                  <a href="#about" className="btn-outline-light min-h-[44px]">
+                    About the Course
+                  </a>
+                )}
+                <a href="#syllabus" className="btn-outline-light min-h-[44px]">
+                  View Syllabus
+                </a>
                 <a href="#enquire" className="btn-primary min-h-[44px]">
                   Enquire Now
                 </a>
-                {/* LP hero pair, conditional (fail-closed): View Syllabus
-                    renders only where the "What you will learn" areas
-                    list below actually renders (facts.topics non-empty).
-                    Held pages take the held branch above, which has no
-                    View Syllabus — never a button at a missing section. */}
-                {model.facts?.topics && model.facts.topics.length > 0 && (
-                  <a href="#syllabus" className="btn-outline-light min-h-[44px]">
-                    View Syllabus
-                  </a>
-                )}
                 <Link href="/trainings" className="btn-outline-light min-h-[44px]">
                   All Trainings
                 </Link>
@@ -254,52 +280,79 @@ export default async function CoursePage({
                       <dt className="w-32 shrink-0 font-semibold text-ink">Certification</dt>
                       <dd className={model.sample ? "text-sample" : undefined}>{model.facts.certification}</dd>
                     </div>
-                    {model.facts.topics && model.facts.topics.length > 0 && (
-                      <div id="syllabus" className="scroll-mt-24">
-                        <dt className="font-semibold text-ink">What you will learn</dt>
-                        <dd className="mt-2">
-                          <ul className="list-disc space-y-1 pl-5">
-                            {model.facts.topics.map((topic) => (
-                              <li key={topic} className={model.sample ? "text-sample" : undefined}>{topic}</li>
-                            ))}
-                          </ul>
-                        </dd>
-                      </div>
-                    )}
                   </dl>
                 </div>
               )}
 
-              {/* Two-tier curriculum gate: areas above stay public; the
-                  full syllabus is shared by the team after enquiry. */}
-              <div className="mb-10 rounded-2xl border border-line bg-surface p-7">
+              {/* Grouped syllabus view (owner-approved): the areas list
+                  + the course outcomes + the gated block, in that
+                  order, in one section. Re-composition only — every
+                  word verbatim from its previous location. The areas
+                  list moves out of the facts card above (no
+                  duplication); the outcomes are the kept outcome
+                  sections; the gated block keeps its exact meaning
+                  (shared after enquiry only). */}
+              <section id="syllabus" className="mb-10 scroll-mt-24 rounded-2xl border border-line bg-surface p-7">
                 <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
-                  Full syllabus — shared after enquiry {model.sample && <SampleTag />}
+                  Syllabus {model.sample && <SampleTag />}
                 </h2>
-                <p className="mt-2 text-[15px] leading-7 text-body">
-                  The full syllabus for this course is shared by the GradeSpot team
-                  after enquiry — via WhatsApp or mail.
-                </p>
-                <a
-                  href="#enquire"
-                  className="btn-primary mt-4 inline-flex min-h-[44px] items-center"
-                >
-                  Enquire for the Full Syllabus
-                </a>
-              </div>
-
-              <div className="space-y-12">
-                {model.sections.map((s, i) => (
-                  <article key={i}>
+                {model.facts?.topics && model.facts.topics.length > 0 && (
+                  <div className="mt-4">
+                    <h3 className="font-semibold text-ink">What you will learn</h3>
+                    <ul className="mt-2 list-disc space-y-1 pl-5">
+                      {model.facts.topics.map((topic) => (
+                        <li key={topic} className={model.sample ? "text-sample" : undefined}>{topic}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {outcomeSections.map((s, i) => (
+                  <article key={i} className="mt-6">
                     {s.heading && (
-                      <h2 className="text-[28px] font-semibold leading-[34px] text-ink">
+                      <h3 className="text-[22px] font-semibold leading-snug text-ink">
                         {s.heading}
-                      </h2>
+                      </h3>
                     )}
                     <SectionBody section={s} />
                   </article>
                 ))}
-              </div>
+                <div className="mt-6 border-t border-line pt-6">
+                  <h3 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
+                    Full syllabus — shared after enquiry {model.sample && <SampleTag />}
+                  </h3>
+                  <p className="mt-2 text-[15px] leading-7 text-body">
+                    The full syllabus for this course is shared by the GradeSpot team
+                    after enquiry — via WhatsApp or mail.
+                  </p>
+                  <a
+                    href="#enquire"
+                    className="btn-primary mt-4 inline-flex min-h-[44px] items-center"
+                  >
+                    Enquire for the Full Syllabus
+                  </a>
+                </div>
+              </section>
+
+              {/* About the course: the remaining kept sections
+                  (description, overview, objectives, features, skills
+                  — everything that is not an outcome section above),
+                  in original order. Renders only where such sections
+                  exist; sample pages carry none, so no About section
+                  and no About button for them. */}
+              {aboutSections.length > 0 && (
+                <div id="about" className="scroll-mt-24 space-y-12">
+                  {aboutSections.map((s, i) => (
+                    <article key={i}>
+                      {s.heading && (
+                        <h2 className="text-[28px] font-semibold leading-[34px] text-ink">
+                          {s.heading}
+                        </h2>
+                      )}
+                      <SectionBody section={s} />
+                    </article>
+                  ))}
+                </div>
+              )}
 
               {model.compareSlug && model.compareTitle && (
                 <div className="mt-12 rounded-2xl border border-line bg-surface p-8">

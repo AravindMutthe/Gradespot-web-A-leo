@@ -161,9 +161,19 @@ describe("Two-door — training directory (no filters, no long list)", () => {
     expect(categoryPage).toContain('href="/trainings"');
   });
 
-  it("detail pages link back to their topic category page", () => {
-    expect(detailPage).toContain("topicSlug");
-    expect(detailPage).toContain("`/trainings/category/${topicSlug(course.category)}`");
+  it("detail breadcrumb no longer carries a topic-category level (owner-refined 4-level trail)", () => {
+    // SUPERSEDED (syllabus-card stage, corrected breadcrumb
+    // amendment): the detail breadcrumb is Home / Trainings /
+    // Courses / title — the topic-category level was deliberately
+    // dropped for shorter phone-width trails. Sibling discovery
+    // survives via related courses + All Trainings, and category
+    // pages remain reachable from the Trainings directory. The
+    // category back-link therefore no longer comes from the detail
+    // breadcrumb, and the detail template no longer references
+    // topicSlug for it.
+    expect(detailPage).not.toContain("topicSlug");
+    expect(detailPage).not.toContain("/trainings/category/${topicSlug(course.category)}");
+    expect(detailPage).toContain('"/trainings/courses"');
   });
 });
 

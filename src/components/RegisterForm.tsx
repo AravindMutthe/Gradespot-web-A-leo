@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
+import { newIdempotencyKey } from "@/lib/lead-contract";
 import { business } from "@/data/site";
 
 // Course / demo registration form (Aravind's decision, 2026-10-23;
@@ -12,6 +13,9 @@ import { business } from "@/data/site";
 // or "Demo: X", matching the existing demo convention). It is NOT a
 // user account: no password, no login. Accounts belong to the LMS /
 // admin phase (gradespot-axon).
+// Stage 7: only a RECORDED lead (201 + stored "supabase") shows the
+// recorded confirmation and the WhatsApp continuation; a log-only lead
+// gets 503 and honest not-confirmed copy, never a success state.
 export default function RegisterForm({
   courses,
   initialCourse,
@@ -20,14 +24,15 @@ export default function RegisterForm({
   initialCourse?: string;
 }) {
   const pathname = usePathname();
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "recorded" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [sentText, setSentText] = useState("");
+  const [serverMessage, setServerMessage] = useState<string>("");
+  const [recordedText, setRecordedText] = useState("");
 
   const waNumber = business.phones[0].replace(/[^+\d]/g, "").replace(/^\+/, "");
   const waText = encodeURIComponent(
-    sentText
-      ? `Hi GradeSpot, I just registered on your website (${sentText}). Please share the details.`
+    recordedText
+      ? `Hi GradeSpot, I just registered on your website (${recordedText}). Please share the details.`
       : "Hi GradeSpot, I just registered on your website. Please share the details.",
   );
 
@@ -59,20 +64,29 @@ export default function RegisterForm({
       return;
     }
     setState("sending");
-    setSentText(interest);
+    setServerMessage("");
+    setRecordedText(interest);
     try {
       const res = await fetch("/api/leads", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": newIdempotencyKey(),
+        },
         body: JSON.stringify(payload),
       });
-      if (res.ok) {
-        setState("sent");
+      const body = await res.json().catch(() => ({}));
+      // Stage 7 honest contract: only 201 + stored "supabase" is a
+      // recorded lead. A 503 log-only response is NOT a success.
+      if (res.status === 201 && body && body.stored === "supabase") {
+        setState("recorded");
         form.reset();
       } else {
-        const body = await res.json().catch(() => ({}));
         if (body && typeof body === "object" && "errors" in body) {
           setErrors(body.errors as Record<string, string>);
+        }
+        if (body && typeof body === "object" && typeof body.error === "string") {
+          setServerMessage(body.error);
         }
         setState("error");
       }
@@ -179,9 +193,9 @@ export default function RegisterForm({
         Registering sends us your details so the team can confirm your seat or demo timing —
         it is an enquiry, not an online payment or a user account.
       </p>
-      {state === "sent" && (
+      {state === "recorded" && (
         <div className="mt-4 rounded-lg bg-success-surface p-4 text-sm text-success-text">
-          <p>Thank you — your registration is in. Our team will call to confirm the details.</p>
+          <p>Thank you — your registration enquiry has been received and recorded. Our team will call to confirm the details.</p>
           <a
             href={`https://wa.me/${waNumber}?text=${waText}`}
             target="_blank"
@@ -194,8 +208,8 @@ export default function RegisterForm({
       )}
       {state === "error" && (
         <p className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
-          We could not submit your registration. Please check the fields and try again, or call
-          us directly.
+          {serverMessage ||
+            "We could not submit your registration. Please check the fields and try again, or call us directly."}
         </p>
       )}
     </form>

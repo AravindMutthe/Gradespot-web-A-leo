@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
+import { newIdempotencyKey } from "@/lib/lead-contract";
 import { business } from "@/data/site";
 
 // Lead form per the researched conversion rules:
@@ -11,7 +12,9 @@ import { business } from "@/data/site";
 // - phone is a real tel input; WhatsApp opt-in checkbox (WhatsApp policy
 //   requires opt-in before business-initiated messaging)
 // - every lead carries its source page for attribution
-// - success state confirms AND offers an instant WhatsApp continuation
+// - Stage 7: only a RECORDED lead (201 + stored "supabase") shows the
+//   recorded confirmation and the WhatsApp continuation; a log-only lead
+//   gets 503 and honest not-confirmed copy, never a success state
 export default function LeadForm({
   interest,
   idPrefix = "lead",
@@ -48,14 +51,15 @@ export default function LeadForm({
   purposeNote?: string;
 }) {
   const pathname = usePathname();
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "recorded" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [sentInterest, setSentInterest] = useState<string>(interest ?? "");
+  const [serverMessage, setServerMessage] = useState<string>("");
+  const [recordedInterest, setRecordedInterest] = useState<string>(interest ?? "");
 
   const waNumber = business.phones[0].replace(/[^+\d]/g, "").replace(/^\+/, "");
   const waText = encodeURIComponent(
-    sentInterest
-      ? `Hi GradeSpot, I just sent an enquiry about ${sentInterest} on your website. Please share the details.`
+    recordedInterest
+      ? `Hi GradeSpot, I just sent an enquiry about ${recordedInterest} on your website. Please share the details.`
       : "Hi GradeSpot, I just sent an enquiry on your website. Please share the details.",
   );
 
@@ -93,20 +97,30 @@ export default function LeadForm({
       return;
     }
     setState("sending");
-    setSentInterest(payload.interest);
+    setServerMessage("");
+    setRecordedInterest(payload.interest);
     try {
       const res = await fetch("/api/leads", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": newIdempotencyKey(),
+        },
         body: JSON.stringify(payload),
       });
-      if (res.ok) {
-        setState("sent");
+      const body = await res.json().catch(() => ({}));
+      // Stage 7 honest contract: only 201 + stored "supabase" is a
+      // recorded lead. Anything else — including 503 log-only — is NOT
+      // a success, even though the form data was well-formed.
+      if (res.status === 201 && body && body.stored === "supabase") {
+        setState("recorded");
         form.reset();
       } else {
-        const body = await res.json().catch(() => ({}));
         if (body && typeof body === "object" && "errors" in body) {
           setErrors(body.errors as Record<string, string>);
+        }
+        if (body && typeof body === "object" && typeof body.error === "string") {
+          setServerMessage(body.error);
         }
         setState("error");
       }
@@ -303,9 +317,9 @@ export default function LeadForm({
       <p className="mt-3 text-center text-xs leading-5 text-body">
         Your details are used only to respond to this enquiry — no spam, ever.
       </p>
-      {state === "sent" && (
+      {state === "recorded" && (
         <div className="mt-4 rounded-lg bg-success-surface p-4 text-sm text-success-text">
-          <p>Thank you — your enquiry has been received. Our team will get back to you shortly.</p>
+          <p>Thank you — your enquiry has been received and recorded. Our team will get back to you shortly.</p>
           <a
             href={`https://wa.me/${waNumber}?text=${waText}`}
             target="_blank"
@@ -318,8 +332,8 @@ export default function LeadForm({
       )}
       {state === "error" && (
         <p className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
-          We could not submit your enquiry. Please check the fields and try again, or call us
-          directly.
+          {serverMessage ||
+            "We could not submit your enquiry. Please check the fields and try again, or call us directly."}
         </p>
       )}
     </form>

@@ -36,11 +36,11 @@ export default function ContactPage() {
             <h2 className="font-display text-2xl font-semibold text-heading">Get in Touch</h2>
             <div className="mt-6 space-y-6 text-sm leading-6">
               <div>
-                <h3 className="font-semibold text-signal">Our Location</h3>
+                <h3 className="font-semibold text-signal-strong">Our Location</h3>
                 <p className="mt-1 text-body">{business.address}</p>
               </div>
               <div>
-                <h3 className="font-semibold text-signal">Send Us Mail</h3>
+                <h3 className="font-semibold text-signal-strong">Send Us Mail</h3>
                 {business.emails.map((e) => (
                   <p key={e}>
                     <a className="text-body hover:text-signal" href={`mailto:${e}`}>
@@ -50,7 +50,7 @@ export default function ContactPage() {
                 ))}
               </div>
               <div>
-                <h3 className="font-semibold text-signal">Call Us</h3>
+                <h3 className="font-semibold text-signal-strong">Call Us</h3>
                 {allPhones.map((p) => (
                   <p key={p}>
                     <a className="text-body hover:text-signal" href={telHref(p)}>
@@ -60,7 +60,7 @@ export default function ContactPage() {
                 ))}
               </div>
               <div>
-                <h3 className="font-semibold text-signal">Office Hours</h3>
+                <h3 className="font-semibold text-signal-strong">Office Hours</h3>
                 <p className="mt-1 text-body">{business.officeHours}</p>
               </div>
             </div>

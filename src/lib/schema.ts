@@ -178,11 +178,23 @@ export function courseFaqs(course: Course): { q: string; a: string }[] {
 
 export function courseSchema(
   course: Course,
-  opts?: { displayTitle?: string; held?: boolean; suppressOffers?: boolean },
+  opts?: {
+    displayTitle?: string;
+    held?: boolean;
+    suppressOffers?: boolean;
+    // LP rebuild: LP pages pass their neutral model description
+    // (never the raw summary — SOC/Security+ "Enroll" tails).
+    description?: string;
+    // LP rebuild: pass null to OMIT educationalCredentialAwarded
+    // (sample LPs: the sample certification is preparation
+    // wording, not an awarded credential). Undefined keeps the
+    // previous behaviour (detail certification where named).
+    credentialAwarded?: string | null;
+  },
 ) {
   // Stage 5: the detail template passes displayTitle (SOC neutralised)
   // and held (held pages get a minimal schema). Callers without opts
-  // (the LP pages) keep the previous behaviour exactly.
+  // (other pages) keep the previous behaviour exactly.
   const name = opts?.displayTitle ?? course.title;
   const held = opts?.held ?? false;
   const schema: Record<string, unknown> = {
@@ -190,10 +202,12 @@ export function courseSchema(
     "@type": "Course",
     name,
     url: `${SITE_URL}/trainings/${course.slug}`,
-    description: held
-      ? `${name} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad. Course details are confirmed on enquiry.`
-      : course.summary ||
-        `${course.title} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.`,
+    description:
+      opts?.description ??
+      (held
+        ? `${name} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad. Course details are confirmed on enquiry.`
+        : course.summary ||
+          `${course.title} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.`),
     // Single canonical entity by reference — never redefined here.
     provider: { "@id": ORG_ID },
   };
@@ -208,8 +222,14 @@ export function courseSchema(
     // educationalCredentialAwarded ONLY where course-details names a
     // certification for this course (11 full courses). Catalogue
     // courses and courses without a named certification get none.
+    // LP sample pages pass null: preparation wording is not an
+    // awarded credential.
     const detail = courseDetails[course.slug];
-    if (detail?.certification) {
+    if (opts?.credentialAwarded === null) {
+      // Omitted deliberately — see above.
+    } else if (opts?.credentialAwarded !== undefined) {
+      schema.educationalCredentialAwarded = opts.credentialAwarded;
+    } else if (detail?.certification) {
       schema.educationalCredentialAwarded = detail.certification;
     }
     // Stage 5: the detail template never publishes offers (no verified

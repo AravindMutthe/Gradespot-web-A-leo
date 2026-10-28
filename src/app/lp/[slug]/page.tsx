@@ -1,328 +1,409 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { courses as localCourses } from "@/data/courses";
-import { courseDetails } from "@/data/course-details";
-import { testimonials } from "@/data/testimonials";
+import { courses } from "@/data/courses";
 import { business, telHref } from "@/data/site";
-import { getCourse } from "@/lib/data";
+import { buildLpModel, courseSlugForLpSlug, lpSlugFor } from "@/lib/lp-model";
 import { lpPageMetadata } from "@/lib/metadata";
-import { generatedCourseFaqs, getJobRoles } from "@/lib/course-faqs";
-import { courseWaLink, syllabusWaLink } from "@/lib/wa";
-import { courseSchema, faqSchema } from "@/lib/schema";
+import { courseSchema } from "@/lib/schema";
+import { waLink } from "@/lib/wa";
+import { DemoLegend } from "@/components/DemoLegend";
 import JsonLd from "@/components/JsonLd";
 import LpLeadForm from "@/components/LpLeadForm";
-import { FaqList } from "@/components/ui";
+import { SampleTag } from "@/components/SampleTag";
 
-// City × course landing pages (research expansion pack, DECISIONS.md
-// §18) — the ppc report's playbook (tactics 1–5) and the folder-1
-// local-SEO matrix, applied to the 11 full courses:
-//   /lp/<course>-in-hyderabad
-// Nav-free chrome (the layout's Chrome switch drops the global
-// header/footer here), message-matched H1 (course + city), ONE primary
-// CTA repeated in identical words ("Get My Free Counselling Call"),
-// a 3-field form above the fold, per-course pre-filled WhatsApp, a
-// sticky mobile Call/WhatsApp/CTA bar, and content strictly from the
-// course's real published data — topics, outcomes, job roles, and
-// duration/fees only where published. No batch dates exist anywhere in
-// the record, so none are shown.
-
-const CTA = "Get My Free Counselling Call";
-
-// One verbatim Google testimonial per LP (proof next to the ask, ppc
-// report §1.6) — chosen by course where a matching review exists.
-const testimonialBySlug: Record<string, string> = {
-  "soc-analyst": "M Vamsi",
-  "azure-administrator-az-104": "Arif Syed",
-  "certified-ethical-hacker-ceh": "Kammarapalli pallavi",
-};
-
-function lpSlug(courseSlug: string) {
-  return `${courseSlug}-in-hyderabad`;
-}
-
+// LP rebuild (Frontend 3.0, Das 7-step spine — Leo's 13 steps
+// mapped into it; see docs/frontend-v2/LP-REBUILD-CHECKPOINT
+// for the layout matrix):
+//   Chrome: slim strip + logo/phone bar (logo + phone pill only,
+//   no site nav, no site search, no site footer — LP stays
+//   nav-free; the bar wraps at narrow widths so it never crops
+//   the logo or the phone pill at max zoom).
+//   1 Compact hero: eyebrow (domain category) + H1 + CTAs +
+//      summary card (duration / mode / location / certification /
+//      vendor mark).
+//   2 Learning overview: level / mode / location + the
+//      cybersecurity framing line (variant b only).
+//   3 Enquiry panel: enquiry info + LpLeadForm (one clear
+//      primary action; no price, no batch date).
+//   4 Syllabus and practical topics: verified module AREAS as
+//      rows + the gated full-syllabus block (enquiry CTA).
+//   5 Intended audience: who + suitability (roles live in
+//      outcomes, not here).
+//   6 Learning outcomes: certification alignment qualifier +
+//      preparation roles + the Digital Marketing measurement
+//      line (variant c only).
+//   Proof (matched only) -> cross-link -> 7 Final enquiry.
+//   Sticky bottom bar: Call / WhatsApp / Free Counselling.
+// Labs: none shown (no approved labs exist — a labs section is
+// omitted rather than asserted). FAQs: none (no source-supported
+// answers exist — step 7 collapses to the final enquiry action
+// and carries NO FAQ schema). Imageless: no course photos, no
+// art, no stock — text first, vendor marks excepted (demo
+// images, see lp-model.ts). No fixed-height cards, no fixed
+// pixel widths, no nowrap anywhere — max-zoom reflow is
+// structural (visual verification still owed to the parent).
 export function generateStaticParams() {
-  return localCourses.filter((c) => !c.catalogOnly).map((c) => ({ slug: lpSlug(c.slug) }));
+  return courses.filter((c) => !c.catalogOnly).map((c) => ({ slug: lpSlugFor(c.slug) }));
 }
 
-async function resolve(slug: string) {
-  if (!slug.endsWith("-in-hyderabad")) return null;
-  const courseSlug = slug.slice(0, -"-in-hyderabad".length);
-  const course = await getCourse(courseSlug);
-  if (!course || course.catalogOnly) return null;
-  return course;
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const course = await resolve(slug);
-  if (!course) return { title: "Training in Hyderabad" };
-  const d = courseDetails[course.slug];
-  return lpPageMetadata(course, d, `/lp/${slug}`);
+  const courseSlug = courseSlugForLpSlug(slug);
+  const lp = courseSlug ? buildLpModel(courseSlug) : null;
+  if (!lp) return {};
+  return lpPageMetadata(lp, `/lp/${lp.lpSlug}`);
 }
 
-export default async function LandingPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function LpPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const course = await resolve(slug);
-  if (!course) notFound();
+  const courseSlug = courseSlugForLpSlug(slug);
+  const lp = courseSlug ? buildLpModel(courseSlug) : null;
+  if (!lp) notFound();
 
-  const d = courseDetails[course.slug];
-  const short = d?.short ?? course.title;
-  const roles = getJobRoles(course);
-  const faqs = generatedCourseFaqs(course).slice(0, 5);
-  const tName = testimonialBySlug[course.slug] ?? "naresh chepuri";
-  const testimonial = testimonials.find((t) => t.name === tName) ?? testimonials[0];
+  const course = courses.find((c) => c.slug === lp.slug)!;
   const phone = business.phones[0];
-
-  const facts: string[] = [];
-  if (course.duration) facts.push(`Duration: ${course.duration}`);
-  facts.push("Online & Offline Classes");
-  facts.push("Dilsukhnagar, Hyderabad");
-  if (d) facts.push(`Certification: ${d.certification}`);
+  const tag = lp.sample ? <SampleTag /> : null;
 
   return (
-    <>
-      <JsonLd data={courseSchema(course)} />
-      <JsonLd data={faqSchema(faqs)} />
+    <main>
+      <JsonLd
+        data={courseSchema(course, {
+          displayTitle: lp.displayTitle,
+          suppressOffers: true,
+          description: lp.metaDescription,
+          // Sample certification wording is preparation language,
+          // not an awarded credential — omit the credential field.
+          credentialAwarded: lp.sample ? null : undefined,
+        })}
+      />
 
-      {/* Slim utility strip (location line only — the theme toggle
-          moved to the floating button, §25.9; the LP stays nav-free). */}
-      <div className="bg-ink-deep text-footer-text">
-        <div className="wrap flex items-center justify-between gap-3 py-1">
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em]">
-            {business.locationLabel}
-          </p>
+      {/* Chrome: slim strip + logo/phone bar. No nav, no search. */}
+      <div className="bg-ink-deep">
+        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-center gap-x-3 gap-y-1 px-5 py-2 text-center text-[12px] font-medium tracking-wide text-footer-text">
+          <span>{business.locationLabel}</span>
+          <span aria-hidden="true">·</span>
+          <span>Online &amp; Offline Classes</span>
         </div>
       </div>
-
-      {/* LP chrome: logo + phone only, no nav. Logo carries the
-          same §22 luminous plate as the main header (.logo-plate,
-          §25 per-theme variant + official light artwork in dark). */}
-      <div className="glass-panel border-b border-line">
-        <div className="wrap flex items-center justify-between py-3">
-          <Link
-            href="/"
-            aria-label="GradeSpot IT Solutions — Home"
-            className="logo-plate rounded-2xl px-3 py-1 ring-1 ring-line"
-          >
-            <span className="dark:hidden">
-              <Image
-                src="/images/logo.png"
-                alt="GradeSpot IT Solutions"
-                width={193}
-                height={60}
-                className="h-11 w-auto"
-                priority
-              />
-            </span>
-            <span className="hidden dark:block">
-              <Image
-                src="/images/logo-light.png"
-                alt="GradeSpot IT Solutions"
-                width={193}
-                height={60}
-                className="h-11 w-auto"
-                priority
-              />
-            </span>
+      <header className="border-b border-line bg-surface">
+        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-5 py-3 md:px-6">
+          <Link href="/" className="flex items-center" aria-label="GradeSpot IT Solutions — home">
+            <Image
+              src="/images/logo-light.png"
+              alt="GradeSpot IT Solutions"
+              width={180}
+              height={44}
+              className="h-11 w-auto"
+              priority
+            />
           </Link>
           <a
             href={telHref(phone)}
-            className="flex min-h-[44px] items-center rounded-full border border-heading/30 px-4 py-2 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-signal"
+            className="flex min-h-[44px] items-center rounded-full border border-line bg-surface px-4 py-2 text-sm font-semibold text-heading"
           >
+            Call: {phone}
+          </a>
+        </div>
+      </header>
+
+      {/* Step 1 — compact hero (dark; sample text never on ink). */}
+      <section className="bg-ink text-white">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-5 py-12 md:px-6 lg:grid-cols-[1.6fr_1fr] lg:py-16">
+          <div>
+            <p className="text-sm font-semibold tracking-wide text-white/85">
+              {lp.category} · Hyderabad
+            </p>
+            <h1 className="mt-3 max-w-4xl text-4xl font-bold leading-[1.15] text-white md:text-[46px]">
+              {lp.h1}
+            </h1>
+            {lp.sample && <div className="mt-4">{tag}</div>}
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <a href="#leadform" className="btn-primary min-h-[44px] px-6 py-3">
+                Enquire Now
+              </a>
+              <a href="#syllabus" className="btn-outline-light min-h-[44px] px-6 py-3">
+                View Syllabus
+              </a>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-line bg-surface p-6 text-[15px] text-body">
+            <dl className="space-y-3">
+              <div className="flex flex-wrap gap-x-2 gap-y-1">
+                <dt className="font-semibold text-heading">Duration:</dt>
+                <dd className={lp.sample ? "text-sample" : undefined}>{lp.durationLabel}</dd>
+              </div>
+              <div className="flex flex-wrap gap-x-2 gap-y-1">
+                <dt className="font-semibold text-heading">Mode:</dt>
+                <dd className={lp.sample ? "text-sample" : undefined}>{lp.mode}</dd>
+              </div>
+              <div className="flex flex-wrap gap-x-2 gap-y-1">
+                <dt className="font-semibold text-heading">Location:</dt>
+                <dd>{business.locationLabel}</dd>
+              </div>
+              <div className="flex flex-wrap gap-x-2 gap-y-1">
+                <dt className="font-semibold text-heading">Certification:</dt>
+                <dd className={lp.sample ? "text-sample" : undefined}>{lp.certification}</dd>
+              </div>
+              {lp.vendorMark && (
+                <div className="flex flex-wrap items-center gap-3 pt-1">
+                  <dt className="font-semibold text-heading">Vendor alignment:</dt>
+                  <dd className="flex flex-wrap items-center gap-2">
+                    <Image
+                      src={lp.vendorMark.image}
+                      alt={`${lp.vendorMark.vendor} logo`}
+                      width={lp.vendorMark.imageWidth}
+                      height={lp.vendorMark.imageHeight}
+                      className="h-8 w-auto"
+                    />
+                    <span>{lp.vendorMark.vendor}</span>
+                  </dd>
+                </div>
+              )}
+            </dl>
+            {lp.sample && (
+              <p className="mt-4 border-t border-line pt-4 text-sample">{lp.sampleSummary}</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {lp.sample && <DemoLegend />}
+
+      {/* Step 2 — learning overview. */}
+      <section className="section-pad bg-canvas">
+        <div className="wrap">
+          <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
+            Learning overview
+          </h2>
+          <div className="mt-6 grid gap-3 md:grid-cols-3">
+            <div className="rounded-2xl border border-line bg-surface p-5">
+              <p className="text-sm font-semibold text-heading">Level</p>
+              <p className={`mt-2 text-[15px] leading-6 ${lp.sample ? "text-sample" : "text-body"}`}>
+                {lp.level}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-line bg-surface p-5">
+              <p className="text-sm font-semibold text-heading">Mode</p>
+              <p className={`mt-2 text-[15px] leading-6 ${lp.sample ? "text-sample" : "text-body"}`}>
+                {lp.mode}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-line bg-surface p-5">
+              <p className="text-sm font-semibold text-heading">Location</p>
+              <p className="mt-2 text-[15px] leading-6 text-body">
+                {business.locationLabel}
+              </p>
+            </div>
+          </div>
+          {lp.variant === "cybersecurity" && (
+            <p className="mt-6 max-w-3xl text-[15px] leading-6 text-body">
+              Coverage focuses on authorized testing and defensive practice.
+            </p>
+          )}
+        </div>
+      </section>
+
+      {/* Step 3 — enquiry panel (form out of the hero, per Das). */}
+      <section id="leadform" className="scroll-mt-6 border-t border-line bg-surface section-pad">
+        <div className="wrap grid items-start gap-10 lg:grid-cols-[1fr_380px]">
+          <div>
+            <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
+              Enquire about this course
+            </h2>
+            <p className="mt-4 max-w-2xl text-[15px] leading-6 text-body">
+              Share your details and the team will respond to your enquiry. Batch, schedule and
+              fees are confirmed on enquiry. A demo class can be arranged — ask about a demo and
+              availability is confirmed on enquiry. The full syllabus is shared by the GradeSpot
+              team after enquiry — via WhatsApp or mail.
+            </p>
+            <a
+              href={waLink(
+                `Hi GradeSpot, I want to know more about ${lp.displayTitle} training in Hyderabad.`,
+              )}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-block rounded-xl bg-wa px-5 py-2.5 font-semibold text-white transition-transform hover:scale-[1.03]"
+            >
+              Chat on WhatsApp →
+            </a>
+          </div>
+          <LpLeadForm courseTitle={lp.displayTitle} />
+        </div>
+      </section>
+
+      {/* Step 4 — syllabus and practical topics (areas public, detail gated). */}
+      <section id="syllabus" className="scroll-mt-6 border-t border-line bg-canvas section-pad">
+        <div className="wrap">
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
+              Syllabus and practical topics
+            </h2>
+            {tag}
+          </div>
+          <ul className="mt-6 grid gap-3 md:grid-cols-2">
+            {lp.topics.map((topic) => (
+              <li
+                key={topic}
+                className="flex items-start gap-2 rounded-2xl border border-line bg-surface px-4 py-3 text-[15px] leading-6"
+              >
+                <span aria-hidden="true" className="font-bold text-signal">✓</span>
+                <span className={lp.sample ? "text-sample" : "text-body"}>{topic}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-8 rounded-2xl border border-line bg-surface p-7">
+            <div className="flex flex-wrap items-center gap-3">
+              <h3 className="font-display text-xl font-bold text-heading">
+                Full syllabus — shared after enquiry
+              </h3>
+              {tag}
+            </div>
+            <p className="mt-2 text-[15px] leading-6 text-body">
+              The complete syllabus is shared by the GradeSpot team after enquiry — via WhatsApp or
+              mail. The topics above are the public coverage; lesson-level detail is not published
+              here.
+            </p>
+            <a href="#leadform" className="btn-primary mt-4 inline-block min-h-[44px] px-6 py-3">
+              Enquire for the Full Syllabus
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Step 5 — intended audience. */}
+      <section className="border-t border-line bg-surface section-pad">
+        <div className="wrap">
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
+              Who it&apos;s for
+            </h2>
+            {tag}
+          </div>
+          <p className={`mt-4 max-w-3xl text-[15px] leading-6 ${lp.sample ? "text-sample" : "text-body"}`}>
+            {lp.who}
+          </p>
+        </div>
+      </section>
+
+      {/* Step 6 — learning outcomes (supported objectives only). */}
+      <section className="border-t border-line bg-canvas section-pad">
+        <div className="wrap">
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
+              Learning outcomes
+            </h2>
+            {tag}
+          </div>
+          <p className={`mt-4 max-w-3xl text-[15px] leading-6 ${lp.sample ? "text-sample" : "text-body"}`}>
+            {lp.outcomeLine}
+          </p>
+          {lp.variant === "digital-marketing" && (
+            <p className="mt-4 max-w-3xl text-[15px] leading-6 text-body">
+              Measurement covered: marketing analytics and campaign measurement.
+            </p>
+          )}
+          <div className="mt-6 flex flex-wrap gap-2">
+            {lp.roles.map((role) => (
+              <span
+                key={role}
+                className={`rounded-full border px-4 py-2 text-sm font-medium ${
+                  lp.sample
+                    ? "border-sample text-sample"
+                    : "border-line bg-surface text-body"
+                }`}
+              >
+                {role}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Proof — matched testimonials only, never a fallback. */}
+      {lp.testimonial && (
+        <section className="border-t border-line bg-surface section-pad">
+          <div className="wrap">
+            <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
+              What students say
+            </h2>
+            <blockquote className="mt-6 max-w-3xl rounded-2xl border border-line bg-canvas p-7">
+              <p className="text-[15px] leading-6 text-body">&ldquo;{lp.testimonial.text}&rdquo;</p>
+              <footer className="mt-4 text-sm text-body">
+                — {lp.testimonial.name}
+                <span className="text-muted"> · Posted on Google</span>
+              </footer>
+            </blockquote>
+          </div>
+        </section>
+      )}
+
+      {/* Cross-link — verified course link (no LP links into the site). */}
+      <section className="border-t border-line bg-surface section-pad">
+        <div className="wrap">
+          <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
+            See the full course page
+          </h2>
+          <p className="mt-4 max-w-3xl text-[15px] leading-6 text-body">
+            More detail on {lp.displayTitle} — including the full course description and related
+            courses — is on the course page.
+          </p>
+          <Link href={`/trainings/${lp.slug}`} className="btn-secondary mt-4 inline-block min-h-[44px] px-6 py-3">
+            View the course page →
+          </Link>
+        </div>
+      </section>
+
+      {/* Step 7 — final enquiry (FAQ collapses here: no
+          source-supported answers exist, so no FAQ section and
+          no FAQ schema on any LP). */}
+      <section className="border-t border-line bg-canvas section-pad">
+        <div className="wrap text-center">
+          <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
+            Ready to learn {lp.short}?
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-6 text-body">
+            Enquire about {lp.displayTitle} — batch, schedule and fees are confirmed on enquiry.
+          </p>
+          <a href="#leadform" className="btn-primary mt-6 inline-block min-h-[44px] px-6 py-3">
+            Enquire Now
+          </a>
+        </div>
+      </section>
+
+      {/* Neutral footer (no legal-entity claim). */}
+      <footer className="bg-ink-deep pb-24 nav:pb-8">
+        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-5 py-4 text-[13px] text-footer-text md:px-6">
+          <span>GradeSpot IT Solutions — {business.locationLabel}</span>
+          <a href={telHref(phone)} className="font-semibold">
             {phone}
           </a>
         </div>
-      </div>
-
-      {/* Hero: message-matched H1 + form above the fold */}
-      <section className="panel-ink py-6 md:py-8">
-        <div className="wrap grid items-start gap-10 lg:grid-cols-2">
-          <div>
-            <p className="eyebrow text-brand-bright">
-              Hyderabad · {course.category}
-            </p>
-            <h1 className="mt-3 text-4xl font-bold leading-[1.15] text-paper md:text-[46px]">
-              {short} Training in Hyderabad
-            </h1>
-            {d && <p className="mt-4 max-w-xl text-base leading-7 text-white/85">{d.outcome}.</p>}
-            <ul className="mt-6 space-y-2.5 text-[15px] text-white/90">
-              {d && (
-                <li>
-                  <span className="mr-2 font-bold text-brand-bright">✓</span>For: {d.who}
-                </li>
-              )}
-              <li>
-                <span className="mr-2 font-bold text-brand-bright">✓</span>Hands-on labs and live
-                classes — not just theory
-              </li>
-              {roles.length > 0 && (
-                <li>
-                  <span className="mr-2 font-bold text-brand-bright">✓</span>Prepares you for roles
-                  like {roles.slice(0, 3).join(", ")}
-                </li>
-              )}
-              <li>
-                <span className="mr-2 font-bold text-brand-bright">✓</span>Free demo class available —
-                ask when our counsellor calls
-              </li>
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#leadform" className="btn-primary">
-                {CTA}
-              </a>
-              <a
-                href={syllabusWaLink(course.title)}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-outline-light"
-              >
-                Get the Syllabus on WhatsApp
-              </a>
-            </div>
-          </div>
-          <div id="leadform" className="scroll-mt-6">
-            <LpLeadForm courseTitle={course.title} />
-            <p className="mt-4 rounded-xl bg-white/[0.07] px-5 py-4 text-sm leading-6 text-white/85 ring-1 ring-white/10">
-              <span className="font-semibold text-white">{testimonial.name}</span> — “
-              {testimonial.text}”{" "}
-              <span className="text-white/60">({testimonial.source})</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Facts strip */}
-      <section className="border-b border-line bg-surface-light">
-        <div className="wrap flex flex-wrap gap-x-8 gap-y-2 py-4 text-sm font-semibold text-heading">
-          {facts.map((f) => (
-            <span key={f}>{f}</span>
-          ))}
-        </div>
-      </section>
-
-      {/* Topics + roles */}
-      <section className="section-pad">
-        <div className="wrap grid gap-12 lg:grid-cols-2">
-          <div>
-            <h2 className="text-[28px] font-bold leading-[34px] text-heading">
-              What you will learn
-            </h2>
-            {d ? (
-              <ul className="mt-5 space-y-3">
-                {d.topics.map((t) => (
-                  <li key={t} className="flex gap-3 text-[15px] leading-6 text-body">
-                    <span className="mt-1 font-bold text-signal">✓</span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-5 text-[15px] leading-7 text-body">{course.summary}</p>
-            )}
-            <div className="mt-8">
-              <a href="#leadform" className="btn-primary">
-                {CTA}
-              </a>
-            </div>
-          </div>
-          <div>
-            {roles.length > 0 && (
-              <>
-                <h2 className="text-[28px] font-bold leading-[34px] text-heading">
-                  Roles this training prepares you for
-                </h2>
-                <div className="mt-5 flex flex-wrap gap-2.5">
-                  {roles.map((r) => (
-                    <span
-                      key={r}
-                      className="rounded-full bg-surface-light px-4 py-2 text-sm font-semibold text-heading"
-                    >
-                      {r}
-                    </span>
-                  ))}
-                </div>
-              </>
-            )}
-            <div className="mt-8 rounded-2xl border border-line bg-surface-light p-6">
-              <h3 className="text-lg font-bold text-heading">Prefer to read everything first?</h3>
-              <p className="mt-2 text-sm leading-6 text-body">
-                The full course page carries the complete curriculum, every section and the
-                enquiry form.
-              </p>
-              <Link
-                href={`/trainings/${course.slug}`}
-                className="mt-3 inline-block text-sm font-bold text-signal hover:text-signal-strong"
-              >
-                See the full {short} course page →
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ + final CTA repeat */}
-      <section className="bg-surface-light section-pad">
-        <div className="wrap mx-auto max-w-3xl">
-          <h2 className="text-center text-[28px] font-bold leading-[34px] text-heading">
-            Quick answers
-          </h2>
-          <div className="mt-8">
-            <FaqList items={faqs} />
-          </div>
-          <div className="mt-10 text-center">
-            <a href="#leadform" className="btn-primary">
-              {CTA}
-            </a>
-            <p className="mt-3 text-sm text-body">
-              Same offer, one button — or{" "}
-              <a
-                href={courseWaLink(course.title)}
-                target="_blank"
-                rel="noreferrer"
-                className="font-semibold text-signal hover:underline"
-              >
-                WhatsApp us instead →
-              </a>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* LP footer: minimal, no nav */}
-      <footer className="bg-ink-deep py-8 pb-24 text-sm text-footer-text nav:pb-8">
-        <div className="wrap flex flex-wrap items-center justify-between gap-3">
-          <p>
-            © {new Date().getFullYear()} {business.legalName}
-          </p>
-          <p>
-            {phone} · {business.address}
-          </p>
-        </div>
       </footer>
 
-      {/* Sticky mobile action bar (LP pattern) */}
-      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 border-t border-white/10 bg-ink-deep text-center nav:hidden">
-        <a href={telHref(phone)} className="py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-white active:bg-white/10">
+      {/* Sticky bar: Call / WhatsApp / Free Counselling. */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 flex bg-ink shadow-[0_-2px_8px_rgba(16,35,63,0.25)]">
+        <a
+          href={telHref(phone)}
+          className="flex min-h-[44px] flex-1 items-center justify-center px-1 text-center text-[12px] font-bold text-white"
+        >
           Call Now
         </a>
         <a
-          href={courseWaLink(course.title)}
+          href={waLink(`Hi GradeSpot, I have a question about ${lp.displayTitle}.`)}
           target="_blank"
           rel="noreferrer"
-          className="border-x border-white/10 py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-wa-bright active:bg-white/10"
+          className="flex min-h-[44px] flex-1 items-center justify-center px-1 text-center text-[12px] font-bold text-white"
         >
           WhatsApp
         </a>
-        <a href="#leadform" className="py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-brand-bright active:bg-white/10">
+        <a
+          href="#leadform"
+          className="flex min-h-[44px] flex-1 items-center justify-center px-1 text-center text-[12px] font-bold text-white"
+        >
           Free Counselling
         </a>
       </div>
-    </>
+    </main>
   );
 }

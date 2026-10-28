@@ -4,16 +4,23 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
 import { newIdempotencyKey } from "@/lib/lead-contract";
+import { waLink } from "@/lib/wa";
 
-// Landing-page lead form (ppc report §1.4: size the form to the offer —
+// Landing-page lead form (size the form to the offer —
 // a free counselling call asks for name, phone and ONE qualifying
 // question). The qualifying answer rides in the message field; the
 // course is the fixed interest; source attribution is automatic from
 // the path, exactly like the main LeadForm. Email is optional here
 // (the API accepts it empty for LP leads) — phone is the lead.
-// Stage 7: only a RECORDED lead (201 + stored "supabase") shows the
-// recorded confirmation; a log-only lead gets 503 and honest
-// not-confirmed copy, never a success panel.
+// Stage 7 (LP rebuild): only a RECORDED lead (201 + stored
+// "supabase") shows the recorded confirmation with a WhatsApp
+// continuation. A log-only lead gets 503 and the API's honest
+// not-confirmed copy — note the 503 body carries `message`, not
+// `error`, so this form reads BOTH fields; reading only `error`
+// would have shown a generic fallback instead of the honest
+// not-confirmed copy. Invalid -> 400 errors
+// inline; too many -> 429 message. No bare success state, no
+// timing promise (not even for recorded leads), no seat/batch promise.
 export default function LpLeadForm({
   courseTitle,
   idPrefix = "lp",
@@ -61,6 +68,9 @@ export default function LpLeadForm({
       const body = await res.json().catch(() => ({}));
       // Stage 7 honest contract: only 201 + stored "supabase" is a
       // recorded lead. A 503 log-only response is NOT a success.
+      // The 503 body carries `message` (LEAD_NOT_CONFIRMED_MESSAGE),
+      // not `error` — read message first so the honest copy
+      // surfaces instead of a generic fallback.
       if (res.status === 201 && body && body.stored === "supabase") {
         setState("recorded");
         form.reset();
@@ -68,7 +78,9 @@ export default function LpLeadForm({
         if (body && typeof body === "object" && "errors" in body) {
           setErrors(body.errors as Record<string, string>);
         }
-        if (body && typeof body === "object" && typeof body.error === "string") {
+        if (body && typeof body === "object" && typeof body.message === "string") {
+          setServerMessage(body.message);
+        } else if (body && typeof body === "object" && typeof body.error === "string") {
           setServerMessage(body.error);
         }
         setState("error");
@@ -88,9 +100,18 @@ export default function LpLeadForm({
       <div className="rounded-2xl border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]">
         <h3 className="font-display text-xl font-bold text-heading">Thank you!</h3>
         <p className="mt-2 text-sm leading-6 text-body">
-          Your free counselling call request for {courseTitle} has been received and recorded.
-          Our counsellor will call you shortly — keep your phone nearby.
+          Your enquiry has been received and recorded. Our team will get back to you.
         </p>
+        <a
+          href={waLink(
+            `Hi GradeSpot, I just sent an enquiry about ${courseTitle} on your website. Please share the details.`,
+          )}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-4 inline-block rounded-xl bg-wa px-5 py-2.5 font-semibold text-white transition-transform hover:scale-[1.03]"
+        >
+          Continue on WhatsApp →
+        </a>
       </div>
     );
   }
@@ -102,7 +123,7 @@ export default function LpLeadForm({
       noValidate
     >
       <h3 className="font-display text-xl font-bold text-heading">Get My Free Counselling Call</h3>
-      <p className="mt-1 text-sm text-body">3 fields. A counsellor calls you back.</p>
+      <p className="mt-1 text-sm text-body">3 fields — name, phone, and when you can start.</p>
       <div className="mt-5 space-y-4">
         <div>
           <label htmlFor={id("name")} className={label}>

@@ -11,7 +11,6 @@
 
 import type { Metadata } from "next";
 import type { Course } from "@/data/courses";
-import type { CourseDetail } from "@/data/course-details";
 import type { Service } from "@/data/services";
 import type { Article } from "@/data/articles";
 
@@ -126,17 +125,23 @@ export function coursePageMetadata(
 }
 
 export function lpPageMetadata(
-  course: Course,
-  detail: CourseDetail | undefined,
+  lp: { short: string; metaDescription: string },
   canonicalPath: string,
 ): Metadata {
-  const short = detail?.short ?? course.title;
-  const title = `${short} Training in Hyderabad`;
-  const description = `${short} training in Hyderabad at GradeSpot IT Solutions, Dilsukhnagar — online & offline classes. ${detail?.outcome ?? "Book a free counselling call."}`;
+  // LP rebuild: the description comes from the LP model, never
+  // from the raw course summary or course-details outcome (SOC
+  // job-ready, SOC/Security+ "Enroll" tails). Sample LPs carry
+  // the sample summary itself (demo-fill meta precedent: meta
+  // cannot carry a tag or color, so the page's Sample tag +
+  // legend are the markers). OG image is the generic home card,
+  // never a per-course photo (provenance unreviewed; a CEH photo
+  // must not stand in for every course).
+  const title = `${lp.short} Training in Hyderabad`;
+  const description = withPlace(lp.metaDescription);
   return {
     title,
     description,
-    ...social(title, description, course.image ?? DEFAULT_OG_IMAGE, canonicalPath),
+    ...social(title, description, "/images/og/home.jpg", canonicalPath),
   };
 }
 

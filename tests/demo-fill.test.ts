@@ -19,9 +19,12 @@
 //      personal names, testimonials, logos, partnership claims,
 //      batch/seat/trainer/placement/guarantee/client/case-study
 //      facts, certificate details, or legal finalisation);
-//   6. held tracks stay held: LP pages, lead/verify contract, legal
+//   6. held tracks stay held: lead/verify contract, legal
 //      drafts, and the open /careers-in-index question (careers is
 //      still NOT in the search index — reported open, not decided).
+//      LP pages are NO LONGER a held track: the LP rebuild
+//      (tests/lp-rebuild.test.ts) demo-fills the 3 held LPs with
+//      marked samples under the same guardrails.
 // MERGE GATE (stated here so it travels with the code): ZERO sample
 // markers before any production deploy. Every sample below must be
 // replaced by real company data and approved before production.
@@ -307,11 +310,11 @@ describe("Demo-fill — exclusions hold on the sample dataset", () => {
 });
 
 describe("Demo-fill — held tracks stay held", () => {
-  it("LP pages are untouched: no sample import, no SampleTag, no DemoLegend", () => {
-    expect(lpPage).not.toContain("SampleTag");
-    expect(lpPage).not.toContain("DemoLegend");
-    expect(lpPage).not.toContain("demo-fill");
-    expect(lpPage).not.toContain("demo-samples");
+  it("LP pages are no longer untouched: LP demo-fill is pinned by tests/lp-rebuild.test.ts (this test is superseded for LP)", () => {
+    expect(lpPage).toContain("SampleTag");
+    expect(lpPage).toContain("DemoLegend");
+    // The full LP demo-fill contract (every sample flagged + tagged
+    // + coloured) lives in tests/lp-rebuild.test.ts, not here.
   });
 
   it("lead/verify contract is untouched: 503 for log-only, no 202 anywhere", () => {

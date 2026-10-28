@@ -36,6 +36,13 @@ export interface SampleCourse {
   level: string;
   certification: string;
   who: string;
+  // LP rebuild: preparation-language role titles for the landing
+  // page's roles panel. Fresh generic wording, never copied from
+  // repo sections (CCNA/CCNP/DM sections are contested or
+  // truncated) and never a placement promise. Only the three held
+  // full courses carry sample roles; verified courses use their
+  // filtered-section roles instead.
+  roles?: string[];
   sample: true;
 }
 
@@ -520,6 +527,7 @@ export const SAMPLE_COURSES: SampleCourse[] = [
     level: "Beginner",
     certification: "Preparation for Cisco CCNA 200-301",
     who: "Students, IT freshers and working professionals",
+    roles: ["Network support roles", "IT support roles", "Network technician roles"],
     sample: true,
   },
   {
@@ -539,6 +547,11 @@ export const SAMPLE_COURSES: SampleCourse[] = [
     level: "Advanced",
     certification: "Preparation for Cisco CCNP 350-401 ENCOR",
     who: "Network engineers and CCNA holders moving to enterprise networking",
+    roles: [
+      "Enterprise network engineer roles",
+      "Network design roles",
+      "Senior network support roles",
+    ],
     sample: true,
   },
   {
@@ -558,6 +571,11 @@ export const SAMPLE_COURSES: SampleCourse[] = [
     level: "Beginner",
     certification: "Course completion certificate",
     who: "Students, entrepreneurs and career switchers",
+    roles: [
+      "Digital marketing executive roles",
+      "Social media marketing roles",
+      "SEO executive roles",
+    ],
     sample: true,
   },
 ];

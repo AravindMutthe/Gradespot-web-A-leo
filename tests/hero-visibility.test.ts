@@ -21,7 +21,11 @@
 // #ffffff in this token set, so both render white).
 // These tests read the page sources and the token file, so a
 // regression that strips the light class — or changes the tokens
-// until the pairing fails AA — fails here. They deliberately scope
+// until the pairing fails AA — fails here. LP REBUILD NOTE: the LP
+// hero moved from panel-ink/text-paper to v3 bg-ink/text-white
+// (same 15.74:1 pairing as the detail hero); the LP test below
+// pins the rebuilt form, and the history above describes the
+// pre-rebuild fix. They deliberately scope
 // to the two hero files plus the homepage guard: a repo-wide scan
 // would false-positive, because ui.tsx holds BOTH the light
 // PageHero (correctly text-heading on light hero-paper) and dark
@@ -80,12 +84,12 @@ describe("hero title visibility (dark-hero pairing)", () => {
     expect(contrast("#ffffff", token(css, "ink"))).toBeGreaterThan(4.5);
   });
 
-  it("LP hero: dark panel-ink section with a paper h1 (all 11 LP pages share this template)", () => {
-    expect(lp).toMatch(/<section className="panel-ink/);
+  it("LP hero: dark bg-ink section with a white h1 (all 11 LP pages share this template; LP rebuild moved it from panel-ink/text-paper to v3 bg-ink/text-white)", () => {
+    expect(lp).toMatch(/<section className="bg-ink[^\"]*text-white/);
     const classes = h1ClassNames(lp);
     expect(classes).toHaveLength(1);
-    expect(classes[0]).toMatch(/\btext-paper\b/);
-    expect(contrast(token(css, "paper"), token(css, "ink-deep"))).toBeGreaterThan(4.5);
+    expect(classes[0]).toMatch(/\btext-white\b/);
+    expect(contrast("#ffffff", token(css, "ink"))).toBeGreaterThan(4.5);
   });
 
   it("regression: no dark-hero h1 in either fixed file lacks a light-text class", () => {

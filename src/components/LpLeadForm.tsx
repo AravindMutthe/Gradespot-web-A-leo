@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { validateLead } from "@/lib/lead-validation";
+import { newIdempotencyKey } from "@/lib/lead-contract";
 
 // Landing-page lead form (ppc report §1.4: size the form to the offer —
 // a free counselling call asks for name, phone and ONE qualifying
@@ -10,6 +11,9 @@ import { validateLead } from "@/lib/lead-validation";
 // course is the fixed interest; source attribution is automatic from
 // the path, exactly like the main LeadForm. Email is optional here
 // (the API accepts it empty for LP leads) — phone is the lead.
+// Stage 7: only a RECORDED lead (201 + stored "supabase") shows the
+// recorded confirmation; a log-only lead gets 503 and honest
+// not-confirmed copy, never a success panel.
 export default function LpLeadForm({
   courseTitle,
   idPrefix = "lp",
@@ -18,8 +22,9 @@ export default function LpLeadForm({
   idPrefix?: string;
 }) {
   const pathname = usePathname();
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "recorded" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [serverMessage, setServerMessage] = useState<string>("");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -43,19 +48,28 @@ export default function LpLeadForm({
       return;
     }
     setState("sending");
+    setServerMessage("");
     try {
       const res = await fetch("/api/leads", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": newIdempotencyKey(),
+        },
         body: JSON.stringify(payload),
       });
-      if (res.ok) {
-        setState("sent");
+      const body = await res.json().catch(() => ({}));
+      // Stage 7 honest contract: only 201 + stored "supabase" is a
+      // recorded lead. A 503 log-only response is NOT a success.
+      if (res.status === 201 && body && body.stored === "supabase") {
+        setState("recorded");
         form.reset();
       } else {
-        const body = await res.json().catch(() => ({}));
         if (body && typeof body === "object" && "errors" in body) {
           setErrors(body.errors as Record<string, string>);
+        }
+        if (body && typeof body === "object" && typeof body.error === "string") {
+          setServerMessage(body.error);
         }
         setState("error");
       }
@@ -69,13 +83,13 @@ export default function LpLeadForm({
   const label = "block text-sm font-semibold text-heading";
   const id = (n: string) => `${idPrefix}-${n}`;
 
-  if (state === "sent") {
+  if (state === "recorded") {
     return (
       <div className="rounded-2xl border border-line border-t-[3px] border-t-brand bg-parchment p-7 shadow-[0_20px_40px_rgba(31,24,16,0.10)]">
         <h3 className="font-display text-xl font-bold text-heading">Thank you!</h3>
         <p className="mt-2 text-sm leading-6 text-body">
-          Your free counselling call request for {courseTitle} is in. Our counsellor will call
-          you shortly — keep your phone nearby.
+          Your free counselling call request for {courseTitle} has been received and recorded.
+          Our counsellor will call you shortly — keep your phone nearby.
         </p>
       </div>
     );
@@ -170,8 +184,8 @@ export default function LpLeadForm({
       </p>
       {state === "error" && (
         <p className="mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text">
-          We could not submit your request. Please check the fields and try again, or call us
-          directly.
+          {serverMessage ||
+            "We could not submit your request. Please check the fields and try again, or call us directly."}
         </p>
       )}
     </form>

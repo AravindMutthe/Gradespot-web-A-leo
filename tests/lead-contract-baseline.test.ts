@@ -1,18 +1,19 @@
-// Frontend 3.0 — Stage 0 baseline regression-test scaffolding.
+// Frontend 3.0 — Stage 0 baseline regression-test scaffolding, updated
+// by Stage 7.
 //
 // Purpose: record main's ACTUAL lead/verification behaviour against the
 // v1.1 contract, with honest pass/fail status. Nothing here changes a
-// route; correcting the gaps below is Stage 7 work, and any correction
+// route; correcting the gaps below was Stage 7 work, and any correction
 // must preserve existing external route and consumer compatibility.
 // A breaking request-contract change, if ever needed, is escalated,
 // never silently introduced.
 //
-// Honesty note on the GAP tests: they use `it.fails` deliberately.
-// `it.fails` passes only while the inner assertion FAILS — i.e. while
-// the gap is still present. That is documentation of a known gap, not
-// a faked pass: the day the gap is fixed, the `it.fails` test itself
-// fails and must be replaced by a real passing test. Do not convert
-// these to plain passing tests without fixing the behaviour.
+// Honesty note on the former GAP tests: they used `it.fails`
+// deliberately — `it.fails` passes only while the inner assertion FAILS,
+// i.e. while the gap is still present. Stage 7 fixed the gaps, so the
+// `it.fails` tests were replaced by real passing tests in this file and
+// in tests/lead-verify-contract.test.ts. Do not reintroduce `it.fails`
+// without a live gap behind it.
 //
 // v1.1 contract (specification, NOT main's behaviour):
 //   201 Created — durably stored, stable lead ID.
@@ -89,31 +90,43 @@ describe("Stage 0 baseline — catalogue inventory (main data, unchanged)", () =
   });
 });
 
-describe("Stage 0 baseline — lead route vs v1.1 contract (GAPS, Stage 7)", () => {
+describe("Stage 0 baseline — lead route vs v1.1 contract (FIXED in Stage 7)", () => {
   const route = readSource("../src/app/api/leads/route.ts");
 
-  it("returns 201 unconditionally on main (documented defect)", () => {
-    // Main returns status 201 in all cases; the stored flag is in the
-    // body, not the status. This test documents that fact.
-    expect(route).toContain("status: 201");
+  it("returns 201 only when durably stored, not unconditionally", () => {
+    // Stage 7: the route maps stored "supabase" -> 201 and stored "log"
+    // -> 503 through leadOutcomeToResponse; it no longer answers a bare
+    // unconditional 201 for every stored outcome.
+    expect(route).toContain("leadOutcomeToResponse");
+    expect(route).not.toMatch(/return NextResponse\.json\(\{ ok: true, stored: result\.stored/);
   });
 
-  it.fails("GAP (Stage 7): log-only lead must not return 201", () => {
-    // v1.1 requires the status to reflect durability: 201 only when
-    // durably stored, 202 only with a proven durable queue, 503 when
-    // neither is safely accepted. Main branches on nothing: it always
-    // answers 201. This assertion fails until Stage 7 fixes it.
-    expect(route).toMatch(/stored\s*===\s*"supabase"\s*\?\s*201\s*:\s*202/);
+  it("Stage 7: log-only lead returns 503 with honest not-confirmed copy", () => {
+    const contract = readSource("../src/lib/lead-contract.ts");
+    expect(contract).toContain("status: 503");
+    expect(contract).toContain("couldn't confirm your enquiry as recorded");
+    expect(contract).toContain("stored: \"log\"");
+    expect(contract).toContain("id: null");
   });
 
-  it.fails("GAP (Stage 7): route defines 202/503 durability states", () => {
-    expect(route).toContain("status: 202");
-    expect(route).toContain("status: 503");
+  it("Stage 7: route defines no queued/pending state for log-only leads", () => {
+    // 202 means "accepted for processing" and there is no durable queue
+    // in this stage, so the route must not answer 202 for any lead.
+    expect(route).not.toMatch(/status:\s*202/);
+    expect(route).toContain("status: 429");
   });
 
-  it.fails("GAP (Stage 7): idempotency is handled", () => {
+  it("Stage 7: idempotency is handled (best-effort, per instance)", () => {
+    const contract = readSource("../src/lib/lead-contract.ts");
+    const route = readSource("../src/app/api/leads/route.ts");
+    expect(route).toMatch(/Idempotency-Key/);
+    expect(contract).toContain("getCachedLeadOutcome");
+    expect(contract).toContain("rememberLeadOutcome");
+    expect(contract).toMatch(/NOT shared across/i);
     const data = readSource("../src/lib/data.ts");
-    expect(data).toMatch(/idempotency/i);
+    // No DB schema change in Stage 7: dedupe lives in the route layer,
+    // not in a new table or migration.
+    expect(data).not.toMatch(/idempotency/i);
   });
 });
 

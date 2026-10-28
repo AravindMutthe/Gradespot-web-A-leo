@@ -8,8 +8,10 @@ import LeadForm from "@/components/LeadForm";
 // invitation to discuss, NOT a franchise offer. No investment
 // figures, no ROI/earnings claims, no territory promises, no
 // franchise terms appear here — none exist yet. Proof is limited to
-// facts: GradeSpot is Pilot Customer #1 for its own products, and
-// the products are real and in use on this site.
+// facts: GradeSpot is Pilot Customer #1 for its own products in the
+// sense that they are built for its own institute first — the
+// products are in development, not finished systems in use on this
+// site. Certificate verification does run on this site.
 export const metadata = staticPageMetadata({
   title: "Partner With Us",
   description: "Collaborations and franchise discussions are welcome at GradeSpot IT Solutions, Hyderabad — for institutes, colleges, trainers, content and community partners, and new-centre conversations.",
@@ -26,8 +28,8 @@ const tracks = [
   {
     n: "02",
     t: "Franchise Discussions",
-    d: "For people thinking about a new centre. GradeSpot runs its own institute in Dilsukhnagar, Hyderabad and builds the products it runs on — if you'd like to talk about a centre of your own, the conversation starts here, with no package and no pressure.",
-    points: ["New-centre conversations", "Run on the GradeSpot stack", "Start with a talk, not a form fee", "Decide together, step by step"],
+    d: "For people thinking about a new centre. GradeSpot runs its own institute in Dilsukhnagar, Hyderabad and builds products for its own institute first — if you'd like to talk about a centre of your own, the conversation starts here, with no package and no pressure.",
+    points: ["New-centre conversations", "Built for our own institute first", "Start with a talk, not a form fee", "Decide together, step by step"],
   },
 ];
 
@@ -43,7 +45,7 @@ export default function PartnerPage() {
     <>
       <PageHero
         title="Collaborations & franchise discussions are welcome"
-        subtitle="GradeSpot IT Solutions is a training institute that also builds the products it runs on. If you are an institute, a college, a trainer, a partner — or you're thinking about a centre of your own — we are open to a conversation."
+        subtitle="GradeSpot IT Solutions is a training institute that also builds products for its own institute. If you are an institute, a college, a trainer, a partner — or you're thinking about a centre of your own — we are open to a conversation."
       />
 
       {/* Two tracks */}
@@ -117,10 +119,10 @@ export default function PartnerPage() {
               The proof is this website
             </h3>
             <p className="mt-2 text-[15px] leading-7 text-body">
-              GradeSpot is Pilot Customer #1 for its own products: the enquiry pipeline, demo
-              bookings and certificate verification on this site run on the same stack a
-              collaboration or centre would use. No projections — just a working system you
-              can inspect right now.
+              GradeSpot is Pilot Customer #1 for its own products: they are built for its
+              own institute first, and offered for discussion and pilot — not described as
+              finished before they are. Certificate verification already runs on this site;
+              the institute products are in development. No projections.
             </p>
           </div>
         </div>

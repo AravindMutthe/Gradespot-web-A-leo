@@ -1,42 +1,43 @@
 import { staticPageMetadata } from "@/lib/metadata";
 import { testimonials } from "@/data/testimonials";
-import { CtaBand, LogoWall, PageHero } from "@/components/ui";
+import { CtaBand, PageHero } from "@/components/ui";
 
 export const metadata = staticPageMetadata({
   title: "Testimonials",
-  description: "The accomplishments of our students — voices of satisfaction and success from clients of GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.",
+  description:
+    "Testimonials from students and clients of GradeSpot IT Solutions, Dilsukhnagar, Hyderabad, as published on the live site.",
   path: "/testimonials",
 });
 
+// Stage 8: the testimonials index keeps the published Google reviews
+// verbatim (wording and names unedited, each labelled "Posted on
+// Google") — this page IS the testimonials collection, so these are
+// not fallback reviews. Removed: the employer logo wall (R10) and the
+// card grid, replaced by compact text rows.
 export default function TestimonialsPage() {
   return (
     <>
       <PageHero
         title="Testimonials"
-        subtitle="“The Accomplishments of Our Students” — explore the voices of satisfaction and success as our clients share their experiences with us."
+        subtitle="What our students and clients say about GradeSpot IT Solutions."
       />
       <section className="section-pad">
-        <div className="wrap grid gap-6 md:grid-cols-2">
+        <div className="wrap mx-auto max-w-4xl divide-y divide-line border-y border-line">
           {testimonials.map((t) => (
-            <figure
-              key={t.name}
-              className="flex flex-col rounded-2xl border border-line bg-parchment p-7 shadow-sm"
-            >
-              <span aria-hidden className="font-display text-[40px] font-semibold leading-[0.6] text-signal">
-                &ldquo;
-              </span>
-              <blockquote className="mt-3 grow text-[15px] leading-7 text-heading">
-                {t.text}
+            <figure key={t.name} className="py-6">
+              <blockquote className="text-[15px] leading-7 text-heading">
+                &ldquo;{t.text}&rdquo;
               </blockquote>
-              <figcaption className="mt-4 border-t border-line pt-3.5">
+              <figcaption className="mt-3">
                 <span className="font-semibold text-heading">{t.name}</span>
-                <span className="block font-mono text-[11px] uppercase tracking-[0.08em] text-body">{t.source}</span>
+                <span className="block font-mono text-[11px] uppercase tracking-[0.08em] text-body">
+                  {t.source}
+                </span>
               </figcaption>
             </figure>
           ))}
         </div>
       </section>
-      <LogoWall />
       <CtaBand />
     </>
   );

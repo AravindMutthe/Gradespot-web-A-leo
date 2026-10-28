@@ -1,15 +1,15 @@
 import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
-import { PageHero, SectionTitle, FaqList, AnswerLead } from "@/components/ui";
+import { PageHero, SectionTitle, AnswerLead } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import LeadForm from "@/components/LeadForm";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema } from "@/lib/schema";
 import { services } from "@/data/services";
 
 export const metadata = staticPageMetadata({
   title: "For Colleges",
-  description: "College workshops, industrial trainings and internships from GradeSpot IT Solutions — hands-on technical programs conducted for colleges and their students in Hyderabad.",
+  description: "College workshops, industrial trainings and internships from GradeSpot IT Solutions — technical programs conducted for colleges and their students in Hyderabad.",
   path: "/for-colleges",
 });
 
@@ -46,28 +46,10 @@ const collegeServices = ["college-workshops", "industrial-trainings", "internshi
 const steps = [
   { n: "1", t: "Enquire", d: "Tell us your branch, batch size and the outcome you want." },
   { n: "2", t: "Plan", d: "We map a workshop, industrial training or internship plan to your academic calendar." },
-  { n: "3", t: "Deliver", d: "Hands-on sessions conducted at your college, led by our trainers and instructors." },
+  { n: "3", t: "Deliver", d: "Sessions conducted at your college, led by our trainers and instructors." },
   { n: "4", t: "Extend", d: "Students can continue into full trainings, internships and certification paths at GradeSpot." },
 ];
 
-const collegeFaqs = [
-  {
-    q: "Where are the workshops conducted?",
-    a: "At colleges — College Workshops are technical workshops conducted for college students, with hands-on sessions at the college itself.",
-  },
-  {
-    q: "What does an Industrial Training cover?",
-    a: "Practical training programs aligned to industry needs, with a practical industry-aligned curriculum and expert instructors — for students and working professionals.",
-  },
-  {
-    q: "What do students get from the Internships?",
-    a: "Internship programs offering exceptional learning opportunities and industry exposure, with hands-on industry exposure and mentorship.",
-  },
-  {
-    q: "Which topics can a workshop cover?",
-    a: "GradeSpot's training catalogue spans cybersecurity, networking, cloud computing, computer hardware, digital marketing and data programs — workshops are drawn from the same hands-on curriculum.",
-  },
-];
 
 export default function ForCollegesPage() {
   return (
@@ -78,7 +60,6 @@ export default function ForCollegesPage() {
           { name: "For Colleges", path: "/for-colleges" },
         ])}
       />
-      <JsonLd data={faqSchema(collegeFaqs)} />
       <PageHero
         title="Workshops, Industrial Trainings & Internships for Your Students"
         subtitle="GradeSpot IT Solutions partners with colleges to give students hands-on technical skills and real industry exposure — conducted at your campus."
@@ -86,7 +67,7 @@ export default function ForCollegesPage() {
       <div className="wrap pt-8">
         <AnswerLead id="answer-summary">
           GradeSpot partners with colleges to run workshops, industrial trainings and internships
-          that give students hands-on technical skills and real industry exposure, conducted at
+          that give students technical skills and real industry exposure, conducted at
           the college campus, with programs planned through the enquiry form and confirmed with
           the college team directly.
         </AnswerLead>
@@ -132,36 +113,27 @@ export default function ForCollegesPage() {
 
           <div className="mt-20">
             <SectionTitle label="Programs" title="Three programs for colleges" center />
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mx-auto mt-10 max-w-4xl divide-y divide-line border-y border-line">
               {collegeServices.map((s) => (
-                <article
-                  key={s.slug}
-                  className="flex flex-col rounded-2xl border border-line bg-parchment px-8 py-10 shadow-sm transition duration-300 hover:shadow-[0_20px_40px_rgba(31,24,16,0.12)]"
-                >
-                  <h3 className="text-xl font-bold text-heading">{s.title}</h3>
-                  {s.summary && <p className="mt-2 text-sm leading-6 text-body">{s.summary}</p>}
-                  {s.offerings && (
-                    <ul className="mt-4 space-y-2">
-                      {s.offerings.map((o) => (
-                        <li key={o} className="flex gap-2.5 text-sm leading-6 text-body">
-                          <span className="mt-0.5 font-bold text-signal">✓</span>
-                          {o}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <a
-                    href="#enquire"
-                    className="mt-auto inline-block pt-5 text-sm font-bold text-signal hover:text-signal-strong"
-                  >
-                    Enquire for your college →
-                  </a>
-                  <Link
-                    href={`/services/${s.slug}`}
-                    className="mt-1 inline-block text-sm font-semibold text-body hover:text-signal"
-                  >
-                    About {s.title}
-                  </Link>
+                <article key={s.slug} className="flex flex-wrap items-baseline justify-between gap-3 py-5">
+                  <div>
+                    <h3 className="text-xl font-bold text-heading">{s.title}</h3>
+                    <p className="mt-1 text-sm leading-6 text-body">Service details to be confirmed</p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <a
+                      href="#enquire"
+                      className="text-sm font-bold text-signal hover:text-signal-strong"
+                    >
+                      Enquire for your college →
+                    </a>
+                    <Link
+                      href={`/services/${s.slug}`}
+                      className="text-sm font-semibold text-body hover:text-signal"
+                    >
+                      About {s.title}
+                    </Link>
+                  </div>
                 </article>
               ))}
             </div>
@@ -204,13 +176,13 @@ export default function ForCollegesPage() {
           from the college track as it is from the institute track. */}
       <section className="section-pad pt-0">
         <div className="wrap">
-          <div className="panel-ink flex flex-wrap items-center justify-between gap-6 rounded-[24px] p-8 md:p-10">
+          <div className="flex flex-wrap items-center justify-between gap-6 rounded-[24px] border border-line bg-surface-light p-8 md:p-10">
             <div className="max-w-2xl">
-              <p className="eyebrow text-brand-bright">Partner With Us</p>
-              <h2 className="mt-3 font-display text-[28px] font-semibold leading-tight text-paper">
+              <p className="eyebrow text-signal-strong">Partner With Us</p>
+              <h2 className="mt-3 font-display text-[28px] font-semibold leading-tight text-heading">
                 Thinking beyond one program?
               </h2>
-              <p className="mt-2 text-[15px] leading-7 text-paper/80">
+              <p className="mt-2 text-[15px] leading-7 text-body">
                 Collaborations and franchise discussions are welcome — with colleges,
                 institutes, trainers and people thinking about a centre of their own.
               </p>
@@ -228,8 +200,7 @@ export default function ForCollegesPage() {
             <SectionTitle label="Partner With Us" title="Plan a program for your college" />
             <p className="mt-4 max-w-xl">
               Tell us what your students need. We will map a workshop, industrial training or
-              internship plan to your calendar — every enquiry is stored with its source, and
-              our team responds directly.
+              internship plan to your calendar, and our team responds directly.
             </p>
             <div className="mt-8">
               <LeadForm
@@ -246,10 +217,17 @@ export default function ForCollegesPage() {
             </div>
           </div>
           <div>
-            <SectionTitle label="Questions" title="College FAQ" />
-            <div className="mt-6">
-              <FaqList items={collegeFaqs} />
-            </div>
+            <SectionTitle label="Questions" title="What happens next" />
+            <p className="mt-4 max-w-xl">
+              Send the form and the team will call you back to discuss the program, the
+              calendar and the scope. Schedules, fees and availability are confirmed on
+              enquiry — nothing here promises a batch, a fee or a seat.
+            </p>
+            <p className="mt-4 max-w-xl">
+              <Link href="/contact-us" className="font-semibold text-signal hover:underline">
+                Or reach the team on the contact page →
+              </Link>
+            </p>
           </div>
         </div>
       </section>

@@ -1,22 +1,28 @@
 import { staticPageMetadata } from "@/lib/metadata";
-import Image from "next/image";
 import Link from "next/link";
 import { aboutParagraphs } from "@/data/pages";
 import { team } from "@/data/team";
-import { CredentialCard, CtaBand, ExperienceBadge, FeatureTrio, LogoWall, PageHero, SectionTitle, SignatureBlock, StatsRibbon } from "@/components/ui";
+import { CtaBand, PageHero, SectionTitle } from "@/components/ui";
 import JsonLd from "@/components/JsonLd";
 import { aboutPageSchema } from "@/lib/schema";
 
 export const metadata = staticPageMetadata({
   title: "About Us",
-  description: "GradeSpot IT Solutions assists companies in enhancing their digital presence and fortifying their security — IT training, corporate training and internships from Dilsukhnagar, Hyderabad, trusted by 1,500+ happy learners.",
+  description:
+    "GradeSpot IT Solutions assists companies in enhancing their digital presence and fortifying their security — IT training, corporate training and internships from Dilsukhnagar, Hyderabad.",
   path: "/about-us",
 });
 
+// Frontend 3.0 — Stage 8 re-template. Held from the old body, outright:
+// ISO/AICTE credential cards (proof not found), the employer logo wall,
+// the stats ribbon, the feature trio, the "9 years" experience badge,
+// the signature image, team portraits, and the "1,500+ happy learners"
+// paragraph (unverified count). What remains is published company copy
+// plus the leadership list as text rows.
 export default function AboutPage() {
-  // aboutParagraphs order follows the live About page: intro, ISO, AICTE,
-  // trusted-by, then the long company narrative, then process lines.
-  const narrative = aboutParagraphs.slice(5, 13);
+  // aboutParagraphs order follows the live About page. Index 5 is the
+  // "1,500+ happy learners" paragraph — held, not rendered.
+  const narrative = aboutParagraphs.slice(6, 13);
   return (
     <>
       <JsonLd data={aboutPageSchema()} />
@@ -29,39 +35,25 @@ export default function AboutPage() {
               title="We assist companies in enhancing their digital presence and fortifying their Security."
             />
             <p className="mt-4">{aboutParagraphs[0]}</p>
-            <div className="mt-6 flex flex-wrap items-center gap-6">
-              <ExperienceBadge />
-              <SignatureBlock />
-            </div>
-            <div className="mt-6 space-y-4">
-              <CredentialCard
-                title="An ISO Certified Company"
-                body={aboutParagraphs[2]}
-                seal="iso"
-              />
-              <CredentialCard
-                title="AICTE Internships Approved"
-                body={aboutParagraphs[4]}
-                seal="aicte"
-              />
-            </div>
+            <p className="mt-4 text-sm leading-6 text-body">
+              Nikhil Duth D — Founder &amp; Managing Director. Accreditation
+              details are confirmed on enquiry.
+            </p>
           </div>
           <div>
             <h3 className="text-2xl font-semibold text-heading">How We Work</h3>
             <ol className="mt-4 space-y-4">
-              <li className="rounded-2xl border border-line bg-parchment p-5 shadow-sm">
+              <li className="rounded-2xl border border-line bg-surface-light p-5">
                 <span className="font-extrabold text-signal">01</span>
                 <p className="mt-1">Explore from our range of services for your business needs</p>
               </li>
-              <li className="rounded-2xl border border-line bg-parchment p-5 shadow-sm">
+              <li className="rounded-2xl border border-line bg-surface-light p-5">
                 <span className="font-extrabold text-signal">02</span>
                 <p className="mt-1">Connect with us to schedule a meeting and discuss your needs</p>
               </li>
-              <li className="rounded-2xl border border-line bg-parchment p-5 shadow-sm">
+              <li className="rounded-2xl border border-line bg-surface-light p-5">
                 <span className="font-extrabold text-signal">03</span>
-                <p className="mt-1">
-                  Talk to a Trainer — online &amp; offline classes with top-class trainings.
-                </p>
+                <p className="mt-1">Talk to a Trainer about online and offline classes.</p>
               </li>
             </ol>
             <Link href="/contact-us" className="btn-primary mt-6">
@@ -71,21 +63,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <StatsRibbon />
-
-      <FeatureTrio />
-
       <section className="section-pad">
         <div className="wrap">
           <SectionTitle label="Our Story" title="About GradeSpot IT Solutions" center />
-          <div
-            data-reveal
-            className="mx-auto mt-8 max-w-4xl space-y-5 rounded-[20px] border border-line border-l-[3px] border-l-brand bg-parchment px-7 py-8 shadow-[0_1px_2px_rgba(31,24,16,0.05)] md:px-10 md:py-10"
-          >
+          <div className="mx-auto mt-8 max-w-4xl space-y-5">
             {narrative.map((p, i) => (
-              <p key={i} className={i === 0 ? "text-[17px] leading-8 text-heading" : undefined}>
-                {p}
-              </p>
+              <p key={i}>{p}</p>
             ))}
           </div>
         </div>
@@ -94,23 +77,25 @@ export default function AboutPage() {
       <section className="bg-surface-light section-pad">
         <div className="wrap">
           <SectionTitle title="Meet Our Leadership" center />
-          <div className="mx-auto mt-8 grid max-w-4xl gap-6 sm:grid-cols-3">
+          <div className="mx-auto mt-8 max-w-4xl divide-y divide-line border-y border-line">
             {team.map((m) => (
-              <article key={m.name} className="text-center">
-                <Image
-                  src={m.image}
-                  alt={m.name}
-                  width={350}
-                  height={350}
-                  sizes="(min-width:640px) 33vw, 100vw"
-                  className="mx-auto h-56 w-full rounded object-cover"
-                />
-                <h3 className="mt-3 text-lg font-semibold">{m.name}</h3>
-                <p className="text-sm text-signal">{m.role}</p>
-              </article>
+              <div key={m.name} className="flex flex-wrap items-baseline justify-between gap-3 py-4">
+                <div>
+                  <h3 className="text-lg font-semibold">{m.name}</h3>
+                  <p className="text-sm text-signal">{m.role}</p>
+                </div>
+                {m.profileHref ? (
+                  <Link
+                    href={m.profileHref}
+                    className="text-sm font-bold text-signal hover:text-signal-strong"
+                  >
+                    View Profile →
+                  </Link>
+                ) : null}
+              </div>
             ))}
           </div>
-          <div className="mx-auto mt-12 max-w-3xl rounded-[18px] border border-line bg-parchment px-7 py-6 text-center shadow-[0_1px_2px_rgba(31,24,16,0.05)]">
+          <div className="mx-auto mt-12 max-w-3xl text-center">
             <h3 className="font-display text-[20px] font-semibold text-heading">
               Questions about trainings or services?
             </h3>
@@ -123,8 +108,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      <LogoWall />
 
       <CtaBand />
     </>

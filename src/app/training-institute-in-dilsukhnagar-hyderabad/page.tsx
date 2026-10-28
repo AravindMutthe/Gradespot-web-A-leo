@@ -1,12 +1,13 @@
 import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
-import { PageHero, SectionTitle, CourseCard, CtaBand, FaqList } from "@/components/ui";
+import { PageHero, SectionTitle, CtaBand } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema } from "@/lib/schema";
 import { business, telHref } from "@/data/site";
-import { testimonials } from "@/data/testimonials";
-import { getCourses } from "@/lib/data";
+import { courses } from "@/data/courses";
+import { courseDetails } from "@/data/course-details";
+import { buildCourseDetail } from "@/lib/course-detail";
 
 export const metadata = staticPageMetadata({
   title: "IT Training Institute in Dilsukhnagar, Hyderabad",
@@ -15,15 +16,20 @@ export const metadata = staticPageMetadata({
   image: "/images/map-dilsukhnagar.jpg",
 });
 
-// Local institute page (research expansion pack, DECISIONS.md §18 —
-// folder-1 tactic 8 local-SEO pattern + ppc report §2.5/§2.2: the
-// website + reviews win the AI answer; answer-first content with the
-// real address, phone and facts is what gets cited). Everything here
-// is a published fact: address, phone, hours, courses, and the verbatim
-// Google testimonials. The Organization entity (with locality-level
-// geo, DECISIONS §25.25) lives in the layout — this page carries only
-// its breadcrumb and FAQPage, never a second org definition.
-
+// Local institute page — Stage 8 re-template. Held/corrected from the
+// old body: the fee FAQ ("some fees are published… CCNA plans on the
+// pricing page") → fees confirmed on enquiry; the demo FAQ ("every full
+// course page carries a free demo booking form") → demo availability
+// confirmed on enquiry; the counselling FAQ → ask on enquiry; the
+// "live sessions with recorded videos and hands-on labs" line → online
+// and offline classes only; the generic testimonial slice (unmatched
+// reviews attached to this page) removed; the CourseCard grid replaced
+// by text rows (held courses show their held notice, never a summary);
+// FAQPage schema removed (no recorded approval for this FAQ set);
+// data source switched from DB-first getCourse() to local repo files.
+// No map image block on this page: the local OpenStreetMap-built map
+// lives on the contact page. The metadata image below is the page's
+// OG card, unchanged.
 const localFaqs = [
   {
     q: "Where is GradeSpot IT Solutions located in Hyderabad?",
@@ -39,28 +45,28 @@ const localFaqs = [
   },
   {
     q: "Can I attend classes online instead of visiting Dilsukhnagar?",
-    a: "Yes. GradeSpot runs online and offline classes for its trainings — live sessions with recorded videos and hands-on labs — so you can learn from the institute without travelling to Dilsukhnagar.",
+    a: "Yes. GradeSpot runs online and offline classes for its trainings, so you can learn from the institute without travelling to Dilsukhnagar.",
   },
   {
     q: "How do I find the fee for a course?",
-    a: `Some course fees are published on the course pages (for example the CCNA plans on the pricing page); the rest are confirmed on enquiry. Call ${business.phones[0]} and the team will share the current fee for the course you want.`,
+    a: `Fees are confirmed on enquiry. Call ${business.phones[0]} and the team will share the current fee for the course you want.`,
   },
   {
-    q: "Can I attend a demo before enrolling?",
-    a: "Yes — every full course page carries a free demo booking form, and the landing pages for Hyderabad courses take a free counselling call request. The team confirms the timing with you.",
+    q: "Can I attend a demo before joining?",
+    a: "Demo availability is confirmed on enquiry — send an enquiry or call and the team will confirm what is available for the course you want.",
   },
   {
     q: "How do I reach or visit the institute?",
     a: `The institute is in Dilsukhnagar, Hyderabad, at ${business.address}. Call ${business.phones[0]} for directions or to book a visit — the contact page also carries a map of the Dilsukhnagar location.`,
   },
   {
-    q: "Can I book a free counselling session?",
-    a: "Yes — free counselling is one of the published offers on the site. Send an enquiry or register for a course and the team will arrange a counselling call with you.",
+    q: "Can I book a counselling session?",
+    a: "Ask about a counselling call on enquiry — send an enquiry or register your interest and the team will arrange a call with you.",
   },
 ];
 
-export default async function LocalInstitutePage() {
-  const fullCourses = (await getCourses()).filter((c) => !c.catalogOnly);
+export default function LocalInstitutePage() {
+  const fullCourses = courses.filter((c) => !c.catalogOnly);
   const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(business.address)}`;
 
   return (
@@ -71,7 +77,6 @@ export default async function LocalInstitutePage() {
           { name: "Training Institute in Dilsukhnagar, Hyderabad", path: "/training-institute-in-dilsukhnagar-hyderabad" },
         ])}
       />
-      <JsonLd data={faqSchema(localFaqs)} />
       <PageHero
         title="IT Training Institute in Dilsukhnagar, Hyderabad"
         subtitle="Cybersecurity, cloud, networking and digital marketing training — at our Dilsukhnagar institute and online."
@@ -82,18 +87,16 @@ export default async function LocalInstitutePage() {
             <Breadcrumbs
               items={[{ name: "Home", path: "/" }, { name: "Training Institute in Dilsukhnagar" }]}
             />
-            {/* Answer-first block (AEO: the direct answer comes first) */}
             <p className="mt-8 text-[17px] leading-8 text-heading">
               GradeSpot IT Solutions is an IT training institute in Dilsukhnagar, Hyderabad,
-              offering professional training programs for corporates and students across
+              offering training programs for corporates and students across
               computer hardware, networking, cybersecurity, cloud computing, digital marketing
-              and data science — with online and offline classes, hands-on labs and expert
-              instructors. Call {business.phones[0]} to talk to a trainer.
+              and data science — with online and offline classes. Call {business.phones[0]} to talk to a trainer.
             </p>
           </div>
 
           <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3">
-            <article className="rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm">
+            <article className="rounded-2xl border border-line bg-surface-light px-7 py-8">
               <h2 className="text-lg font-bold text-heading">Visit us</h2>
               <address className="mt-3 text-sm not-italic leading-6 text-body">
                 {business.address}
@@ -107,7 +110,7 @@ export default async function LocalInstitutePage() {
                 View on Google Maps →
               </a>
             </article>
-            <article className="rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm">
+            <article className="rounded-2xl border border-line bg-surface-light px-7 py-8">
               <h2 className="text-lg font-bold text-heading">Call or write</h2>
               <p className="mt-3 text-sm leading-6 text-body">
                 {business.phones.map((p) => (
@@ -122,14 +125,14 @@ export default async function LocalInstitutePage() {
                 ))}
               </p>
             </article>
-            <article className="rounded-2xl border border-line bg-parchment px-7 py-8 shadow-sm">
+            <article className="rounded-2xl border border-line bg-surface-light px-7 py-8">
               <h2 className="text-lg font-bold text-heading">Office hours</h2>
               <p className="mt-3 font-display text-2xl font-extrabold text-heading">
                 {business.officeHours}
               </p>
               <p className="mt-2 text-sm leading-6 text-body">
-                Online &amp; offline classes. Walk in for a counselling session, or book a free
-                demo class from any course page.
+                Online &amp; offline classes. Walk in for a counselling session, or send an
+                enquiry about a course.
               </p>
             </article>
           </div>
@@ -139,10 +142,26 @@ export default async function LocalInstitutePage() {
       <section className="bg-surface-light section-pad">
         <div className="wrap">
           <SectionTitle label="Trainings" title="Courses at our Hyderabad institute" center />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {fullCourses.map((c) => (
-              <CourseCard key={c.slug} course={c} />
-            ))}
+          <div className="mx-auto mt-10 max-w-4xl divide-y divide-line border-y border-line">
+            {fullCourses.map((c) => {
+              const m = buildCourseDetail(c, courseDetails[c.slug], undefined);
+              return (
+                <article key={c.slug} className="flex flex-wrap items-baseline justify-between gap-3 py-5">
+                  <div>
+                    <h3 className="text-lg font-bold text-heading">{m.displayTitle}</h3>
+                    <p className="mt-1 text-sm leading-6 text-body">
+                      {m.heldBack ? "Course details to be confirmed" : c.category}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/trainings/${c.slug}`}
+                    className="text-sm font-bold text-signal hover:text-signal-strong"
+                  >
+                    View the course →
+                  </Link>
+                </article>
+              );
+            })}
           </div>
           <p className="mt-10 text-center">
             <Link href="/trainings" className="btn-primary">
@@ -160,39 +179,27 @@ export default async function LocalInstitutePage() {
               <Link
                 key={c.slug}
                 href={`/lp/${c.slug}-in-hyderabad`}
-                className="rounded-full border border-line bg-parchment px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-signal"
+                className="rounded-full border border-line bg-surface-light px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-signal"
               >
-                {c.title} in Hyderabad
+                {buildCourseDetail(c, courseDetails[c.slug], undefined).displayTitle} in Hyderabad
               </Link>
             ))}
           </div>
 
           <div className="mx-auto mt-16 max-w-3xl">
-            <SectionTitle label="Learner Voices" title="What our learners say" center />
-            <div className="mt-8 space-y-4">
-              {testimonials.slice(0, 4).map((t) => (
-                <blockquote
-                  key={t.name}
-                  className="rounded-2xl border border-line bg-parchment px-7 py-6 shadow-sm"
-                >
-                  <p className="text-[15px] leading-7 text-heading">“{t.text}”</p>
-                  <footer className="mt-3 text-sm font-semibold text-body">
-                    {t.name} · <span className="font-normal">{t.source}</span>
-                  </footer>
-                </blockquote>
-              ))}
-            </div>
-            <p className="mt-6 text-center">
-              <Link href="/testimonials" className="text-sm font-bold text-signal hover:text-signal-strong">
-                Read all testimonials →
-              </Link>
-            </p>
-          </div>
-
-          <div className="mx-auto mt-16 max-w-3xl">
             <SectionTitle label="Questions" title="Visiting us — quick answers" center />
-            <div className="mt-8">
-              <FaqList items={localFaqs} />
+            <div className="mt-8 space-y-3">
+              {localFaqs.map((f) => (
+                <details
+                  key={f.q}
+                  className="rounded-2xl border border-line bg-surface-light px-6 py-5"
+                >
+                  <summary className="cursor-pointer font-display text-[17px] font-semibold text-heading">
+                    {f.q}
+                  </summary>
+                  <p className="mt-2 text-[15px] leading-7 text-body">{f.a}</p>
+                </details>
+              ))}
             </div>
           </div>
         </div>

@@ -2,8 +2,7 @@ import { staticPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { PageHero, SectionTitle } from "@/components/ui";
 import RegisterForm from "@/components/RegisterForm";
-import OfferCards from "@/components/OfferCards";
-import { getCourses } from "@/lib/data";
+import { courses } from "@/data/courses";
 import { business, telHref } from "@/data/site";
 
 // Registration (DECISIONS.md §20) — Aravind's decision, 2026-10-23:
@@ -14,7 +13,7 @@ import { business, telHref } from "@/data/site";
 // (the course-page Register buttons use it).
 export const metadata = staticPageMetadata({
   title: "Register",
-  description: "Register for a GradeSpot IT Solutions course or a free demo class in Dilsukhnagar, Hyderabad — online and offline trainings. The team confirms your seat or demo timing by phone.",
+  description: "Register your interest in a GradeSpot IT Solutions course in Dilsukhnagar, Hyderabad — online and offline trainings. The team calls to discuss batch, mode and next steps.",
   path: "/register",
 });
 
@@ -24,7 +23,6 @@ export default async function RegisterPage({
   searchParams: Promise<{ course?: string }>;
 }) {
   const { course: courseSlug } = await searchParams;
-  const courses = await getCourses();
   const initial = courses.find((c) => c.slug === courseSlug);
   const phone = business.phones[0];
 
@@ -32,25 +30,25 @@ export default async function RegisterPage({
     <>
       <PageHero
         title="Register"
-        subtitle="Register for a course — or start with a free demo class. Send the form and our team will call to confirm your seat, batch and mode of training. No payment is taken on this page."
+        subtitle="Register your interest in a course. Send the form and our team will call to discuss batch, mode and next steps. No payment is taken on this page."
       />
       <section className="section-pad">
         <div className="wrap grid items-start gap-12 lg:grid-cols-[1fr_460px]">
           <div data-reveal>
-            <SectionTitle label="How It Works" title="Three steps to your seat" />
+            <SectionTitle label="How It Works" title="Three steps to starting" />
             <ol className="mt-8 space-y-6">
               {[
                 {
                   t: "Send the registration",
-                  d: "Pick your course and tell us whether you want full course registration or a free demo first. Phone is the only detail we truly need.",
+                  d: "Pick your course and tell us what you want. Phone is the only detail we truly need.",
                 },
                 {
-                  t: "We call to confirm",
-                  d: "The team confirms batch timings, online or offline mode, and answers your questions about the syllabus and certification path.",
+                  t: "We call to discuss",
+                  d: "The team calls to discuss batch timings, online or offline mode, and your questions about the syllabus and certification path.",
                 },
                 {
                   t: "Start learning",
-                  d: "Join at the Dilsukhnagar institute or online. If you chose the demo, decide about the full course only after the session.",
+                  d: "Join at the Dilsukhnagar institute or online, once batch, mode and next steps are agreed on the call.",
                 },
               ].map((s, i) => (
                 <li key={s.t} className="flex gap-4">
@@ -81,14 +79,6 @@ export default async function RegisterPage({
               courses={courses.map((c) => c.title)}
               initialCourse={initial?.title}
             />
-          </div>
-        </div>
-      </section>
-      <section className="bg-surface-light section-pad">
-        <div className="wrap">
-          <SectionTitle label="No-Cost First Steps" title="Not ready to register?" center />
-          <div className="mt-10">
-            <OfferCards />
           </div>
         </div>
       </section>

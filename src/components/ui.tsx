@@ -220,7 +220,7 @@ export const siteFaqs = [
   { q: "What's the best way to get in touch with your team?", a: servicesFaqAnswers.contact },
   {
     q: "Do you offer online or offline classes?",
-    a: "Both. GradeSpot runs online and offline classes for its trainings from its institute in Dilsukhnagar, Hyderabad — live sessions with recorded videos and hands-on labs.",
+    a: "Both. GradeSpot runs online and offline classes for its trainings from its institute in Dilsukhnagar, Hyderabad.",
   },
   {
     q: "How do I know the current batch schedule?",
@@ -228,11 +228,11 @@ export const siteFaqs = [
   },
   {
     q: "Can I attend a free demo class?",
-    a: "Yes. GradeSpot offers a free demo class — register on the site and the team confirms the demo timing by phone.",
+    a: "Demo availability is confirmed on enquiry — send an enquiry or call +91 91826 54056 and the team will confirm what is available for the course you want.",
   },
   {
     q: "What are the fees for a training?",
-    a: "Fees are published per course where a pricing section exists — for example the CCNA and CCNP plans on the course pages. For other trainings the fee is confirmed on enquiry — call +91 91826 54056. Nothing is charged before you confirm.",
+    a: "Fees are confirmed on enquiry — call +91 91826 54056 or send an enquiry and the team will share the current fee. Nothing is charged before you confirm.",
   },
   {
     q: "Do your trainings prepare for certifications?",
@@ -240,7 +240,7 @@ export const siteFaqs = [
   },
   {
     q: "Do you guarantee placements?",
-    a: "No. GradeSpot publishes the job roles each training prepares you for and the companies its students work with, and backs preparation with hands-on labs, certification guidance and career-oriented services — but it publishes no placement percentages and guarantees no job.",
+    a: "No. GradeSpot publishes the job roles each training prepares you for, and backs preparation with certification guidance and career-oriented services — but it publishes no placement percentages and guarantees no job.",
   },
 ];
 
@@ -291,7 +291,7 @@ export function CtaBand() {
           <p className="eyebrow text-brand-bright">Free Consultation</p>
           <h2 className="mt-2.5 text-[32px] font-semibold leading-[38px] text-paper">Need Help?</h2>
           <p className="mt-1.5 text-paper/80">
-            Reach out to the world&apos;s most reliable IT services. Get a free consultation.
+            Reach out for a free consultation — tell us what you need and the team will call you back.
           </p>
         </div>
         <div className="flex flex-wrap gap-3.5">

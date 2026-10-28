@@ -24,7 +24,7 @@ export const comparisons: Comparison[] = [
     b: "comptia-security-plus",
     title: "CEH vs Security+: Which Cybersecurity Certification First?",
     focusA:
-      "Offensive security — ethical hacking methodology: footprinting, scanning, system hacking, malware analysis and vulnerability analysis, with live labs.",
+      "Offensive security — ethical hacking methodology: footprinting, scanning, system hacking, malware analysis and vulnerability analysis.",
     focusB:
       "Defensive foundations — security concepts, threats and vulnerabilities, control categories, gap analysis and Zero Trust architecture concepts.",
     chooseA:
@@ -42,7 +42,7 @@ export const comparisons: Comparison[] = [
     focusB:
       "Vendor-neutral networking — components, topologies, cabling, IP addressing, routing, WANs, wireless, cloud and datacenter concepts across vendors.",
     chooseA:
-      "Choose CCNA if you want Cisco-specific, job-focused networking depth — it is the certification named in the published outcome for entry-level networking roles, with published fee plans.",
+      "Choose CCNA if you want Cisco-specific, job-focused networking depth — it is the certification named in the published outcome for entry-level networking roles.",
     chooseB:
       "Choose Network+ if you want a vendor-neutral foundation first — the published audience is beginners and IT support staff building a networking base that transfers across vendors.",
   },
@@ -52,7 +52,7 @@ export const comparisons: Comparison[] = [
     b: "comptia-pentest-plus",
     title: "CEH vs PenTest+: Ethical Hacking or Penetration Testing?",
     focusA:
-      "Offensive security — ethical hacking methodology: footprinting, scanning, system hacking, malware analysis and vulnerability analysis, with live labs.",
+      "Offensive security — ethical hacking methodology: footprinting, scanning, system hacking, malware analysis and vulnerability analysis.",
     focusB:
       "Hands-on penetration testing — planning and scoping engagements, passive and active reconnaissance, vulnerability scanning with Nmap & Zenmap, social engineering, wireless and network attacks, and post-exploitation, reporting and remediation.",
     chooseA:
@@ -68,9 +68,9 @@ export const comparisons: Comparison[] = [
     focusA:
       "Defence — threat detection, SIEM operations (Splunk Enterprise Security, IBM QRadar, AlienVault), log analysis and incident response processes.",
     focusB:
-      "Offence — ethical hacking methodology: footprinting, scanning, system hacking, malware analysis and vulnerability analysis, with live labs.",
+      "Offence — ethical hacking methodology: footprinting, scanning, system hacking, malware analysis and vulnerability analysis.",
     chooseA:
-      "Choose SOC Analyst if you want to defend: monitoring, detection and incident response, prepared for Tier 1/2/3 SOC roles over a 90-day job-oriented program.",
+      "Choose SOC Analyst if you want to defend: monitoring, detection and incident response, prepared for Tier 1/2/3 SOC roles.",
     chooseB:
       "Choose CEH v13 if you want to attack (legally): hands-on hacking labs and the EC-Council CEH v13 certification toward ethical hacker and penetration tester roles.",
   },

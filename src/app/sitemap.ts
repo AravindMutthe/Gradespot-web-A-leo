@@ -111,6 +111,8 @@ const LASTMOD: Record<string, string> = {
   "/trainings/soc-analyst": "2026-10-23",
   "/trainings/vapt": "2026-10-23",
   "/why-choose-us": "2026-10-24",
+  // New in this batch (Stage 8): creation date of the route.
+  "/careers": "2026-10-28",
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -141,6 +143,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/register",
     "/accessibility",
     "/partner-with-us",
+    "/careers",
     "/corporate-and-international",
   ];
   return [

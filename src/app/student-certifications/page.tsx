@@ -1,58 +1,53 @@
 import { staticPageMetadata } from "@/lib/metadata";
-import Image from "next/image";
 import Link from "next/link";
-import { certificationsParagraphs } from "@/data/pages";
 import { certificationGallery } from "@/data/certifications";
-import { CtaBand, LogoWall, PageHero } from "@/components/ui";
+import { CtaBand, PageHero } from "@/components/ui";
 
 export const metadata = staticPageMetadata({
   title: "Student Certifications",
-  description: "Certifications achieved by GradeSpot students, as showcased on our live site — 100+ certifications from the Dilsukhnagar, Hyderabad institute.",
+  description:
+    "Certifications achieved by GradeSpot students, as published on the live site, from the Dilsukhnagar, Hyderabad institute.",
   path: "/student-certifications",
-  image: "/images/certifications/cert-1.jpg",
 });
 
+// Stage 8: "100+" count removed from title and metadata (unverified —
+// the same claim Stage 1/2 already removed elsewhere), the certificate
+// image gallery replaced by its published caption list (gallery images
+// held pending provenance/consent review — they show student names),
+// the "Pay after you Pass" panel replaced by an enquiry notice (R8
+// terms unverified), the employer logo wall removed, and "Enroll
+// today" marketing copy dropped.
 export default function CertificationsPage() {
   return (
     <>
       <PageHero
-        title="Our Students 100+ Certifications"
-        subtitle="Certifications achieved by GradeSpot students, as showcased on our live site."
+        title="Student Certifications"
+        subtitle="Certifications achieved by GradeSpot students, as published on the live site."
       />
       <section className="section-pad">
         <div className="wrap">
           <div className="mx-auto max-w-4xl space-y-5">
-            {certificationsParagraphs.slice(0, 3).map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
+            <p>
+              At GradeSpot IT Solutions, we present the certifications our alumni have achieved,
+              as published on the live site. The list below names the certification shown for
+              each student; the certificate images themselves are held pending a provenance
+              and consent review.
+            </p>
             <p className="rounded-2xl border border-line bg-surface-light p-5 font-medium text-heading">
-              Our distinctive &lsquo;Pay after you Pass&rsquo; methodology is designed to help
-              you attain your desired credentials prior to any financial obligations.
+              Payment terms for any training are confirmed on enquiry — ask the team before
+              you commit.
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mx-auto mt-12 max-w-4xl divide-y divide-line border-y border-line">
             {certificationGallery.map((c) => (
-              <figure key={c.image} className="text-center">
-                <Image
-                  src={c.image}
-                  alt={c.caption}
-                  width={300}
-                  height={300}
-                  sizes="(min-width:1024px) 25vw, (min-width:640px) 33vw, 50vw"
-                  className="mx-auto w-full rounded object-cover"
-                />
-                <figcaption className="mt-2 text-sm font-medium text-heading">
-                  {c.caption}
-                </figcaption>
-              </figure>
+              <p key={c.image} className="py-3 text-[15px] leading-6 text-heading">
+                {c.caption}
+              </p>
             ))}
           </div>
 
           <div className="mx-auto mt-12 max-w-4xl space-y-5">
-            {certificationsParagraphs.slice(3).map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
             <p>
               Received a certificate from us?{" "}
               <Link href="/certificate-verification" className="font-semibold text-signal hover:underline">
@@ -63,7 +58,6 @@ export default function CertificationsPage() {
           </div>
         </div>
       </section>
-      <LogoWall />
       <CtaBand />
     </>
   );

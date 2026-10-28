@@ -176,19 +176,28 @@ export function courseFaqs(course: Course): { q: string; a: string }[] {
   return out;
 }
 
-export function courseSchema(course: Course) {
+export function courseSchema(
+  course: Course,
+  opts?: { displayTitle?: string; held?: boolean; suppressOffers?: boolean },
+) {
+  // Stage 5: the detail template passes displayTitle (SOC neutralised)
+  // and held (held pages get a minimal schema). Callers without opts
+  // (the LP pages) keep the previous behaviour exactly.
+  const name = opts?.displayTitle ?? course.title;
+  const held = opts?.held ?? false;
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Course",
-    name: course.title,
+    name,
     url: `${SITE_URL}/trainings/${course.slug}`,
-    description:
-      course.summary ||
-      `${course.title} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.`,
+    description: held
+      ? `${name} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad. Course details are confirmed on enquiry.`
+      : course.summary ||
+        `${course.title} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad.`,
     // Single canonical entity by reference — never redefined here.
     provider: { "@id": ORG_ID },
   };
-  if (!course.catalogOnly) {
+  if (!course.catalogOnly && !held) {
     // The site publishes "Online & Offline Classes" for its trainings.
     schema.hasCourseInstance = {
       "@type": "CourseInstance",
@@ -203,24 +212,29 @@ export function courseSchema(course: Course) {
     if (detail?.certification) {
       schema.educationalCredentialAwarded = detail.certification;
     }
-    // Offers only where a real published pricing section exists
-    // ("Plan Name — ₹Price" paragraphs), never invented fees.
-    const offers: Record<string, unknown>[] = [];
-    for (const s of course.sections) {
-      if (s.style !== "pricing") continue;
-      for (const p of s.paragraphs) {
-        const m = p.match(/₹\s*([\d,]+)/);
-        if (!m) continue;
-        offers.push({
-          "@type": "Offer",
-          category: p.split(" — ")[0] ?? "Course fee",
-          price: m[1].replace(/,/g, ""),
-          priceCurrency: "INR",
-          url: `${SITE_URL}/trainings/${course.slug}`,
-        });
+    // Stage 5: the detail template never publishes offers (no verified
+    // price exists). Other callers keep the previous behaviour unless
+    // they pass suppressOffers.
+    if (!opts?.suppressOffers) {
+      // Offers only where a real published pricing section exists
+      // ("Plan Name — ₹Price" paragraphs), never invented fees.
+      const offers: Record<string, unknown>[] = [];
+      for (const s of course.sections) {
+        if (s.style !== "pricing") continue;
+        for (const p of s.paragraphs) {
+          const m = p.match(/₹\s*([\d,]+)/);
+          if (!m) continue;
+          offers.push({
+            "@type": "Offer",
+            category: p.split(" — ")[0] ?? "Course fee",
+            price: m[1].replace(/,/g, ""),
+            priceCurrency: "INR",
+            url: `${SITE_URL}/trainings/${course.slug}`,
+          });
+        }
       }
+      if (offers.length > 0) schema.offers = offers;
     }
-    if (offers.length > 0) schema.offers = offers;
   }
   return schema;
 }

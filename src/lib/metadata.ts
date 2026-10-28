@@ -99,14 +99,24 @@ function withPlace(description: string): string {
   return `${description} Training in Dilsukhnagar, Hyderabad with online and offline classes.`;
 }
 
-export function coursePageMetadata(course: Course, canonicalPath: string): Metadata {
+export function coursePageMetadata(
+  course: Course,
+  canonicalPath: string,
+  opts?: { displayTitle?: string; held?: boolean },
+) {
+  // Stage 5: held pages must NOT carry an unconfirmed or truncated
+  // summary as the meta/OG description, and SOC must NOT carry the
+  // job-ready title. Callers without opts keep previous behaviour.
+  const title = opts?.displayTitle ?? course.title;
   const description = withPlace(
-    course.summary || `${course.title} — training at GradeSpot IT Solutions, Hyderabad.`,
+    opts?.held
+      ? `${title} — training at GradeSpot IT Solutions, Dilsukhnagar, Hyderabad. Course details are confirmed on enquiry.`
+      : course.summary || `${course.title} — training at GradeSpot IT Solutions, Hyderabad.`,
   );
   return {
-    title: course.title,
+    title,
     description,
-    ...social(course.title, description, course.image ?? DEFAULT_OG_IMAGE, canonicalPath),
+    ...social(title, description, course.image ?? DEFAULT_OG_IMAGE, canonicalPath),
   };
 }
 

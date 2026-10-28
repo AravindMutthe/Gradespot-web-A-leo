@@ -1,106 +1,61 @@
+// Frontend 3.0 — Stage 5 course-detail template (compact, text-first).
+//
+// Replaces the pre-template detail page in full. What was removed and
+// why (all recorded in src/lib/course-detail.ts):
+// - Hero image (provenance unreviewed) and the priority/object-cover
+//   treatment that came with it. OG images are unchanged (Stage 4
+//   precedent: metadata, pre-existing local files).
+// - DemoBand and every "free demo" promise: no course has a confirmed
+//   demo offer. Enquiry covers demo questions.
+// - RegisterStrip and the "Ready to enrol?" panel: no seat promise;
+//   conversion semantics for Register remain an open owner decision.
+// - B2BStrip: cross-sell for services whose scope is held (Stage 4).
+// - LogoWall, StatsRibbon, FeatureTrio: unverified promotional
+//   surfaces, same as Stages 3/4.
+// - AnswerLead / courseAnswerSummary: it asserts a free demo class
+//   for every full course and repeats published outcomes (including
+//   SOC's job-ready outcome) as answer text.
+// - Generated FAQs (lib/course-faqs): unapproved. Only repo sections
+//   styled "faq" count as published FAQs, and no verified page has
+//   one — so Stage 5 detail pages emit no FAQPage schema.
+// - The old EnquiryRail (demo link, syllabus promise, learner
+//   counters) is not reused; the enquiry panel below uses LeadForm
+//   plus a WhatsApp enquiry link only. EnquiryRail itself is left
+//   untouched on disk, like CourseCardBody/ServiceCard before it.
+// - Section headings render verbatim (the old questionHeading
+//   rewrite is dropped with the old template).
+// - Data source: LOCAL repo files only (see course-detail.ts).
+//   Slugs, categories, canonical URLs and routes are unchanged.
+
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { courses as localCourses, type CourseSection } from "@/data/courses";
-import { getCourse, getCourses } from "@/lib/data";
 import { coursePageMetadata } from "@/lib/metadata";
-import { BlogCards, CourseCard, FaqList, FeatureTrio, LogoWall, StatsRibbon, AnswerLead } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import EnquiryRail from "@/components/EnquiryRail";
-import DemoBand from "@/components/DemoBand";
+import LeadForm from "@/components/LeadForm";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, courseFaqs, courseSchema, faqSchema, webPageSchema } from "@/lib/schema";
-import { generatedCourseFaqs } from "@/lib/course-faqs";
-import { courseAnswerSummary } from "@/lib/aeo";
 import { courseDetails } from "@/data/course-details";
 import { comparisons } from "@/data/comparisons";
-
-// Zero-click formatting (§25.23): section headings that genuinely pose
-// a question the section answers are rendered as questions. Data is
-// untouched — the mapping happens at render. Anything not listed here
-// keeps its published heading verbatim. Variants (e.g. "Course Overview
-// - CCNA 200-301 Training", "Common Job Roles After CCNA") are matched
-// by prefix, so every course's wording maps the same way.
-function questionHeading(heading: string, short: string): string {
-  const h = heading.replace(/:\s*$/, "").trim();
-  if (h.startsWith("Course Overview")) return `What is ${short}?`;
-  if (h.startsWith("Common Job Roles")) return `What jobs can you get after ${short}?`;
-  if (h.startsWith("Key Learning")) return `What will you learn in ${short}?`;
-  if (h.startsWith("Program") && h.includes("Features")) return `What does the ${short} program include?`;
-  if (h === "Course Curriculum" || h === "Our Curriculum") return `What does the ${short} curriculum cover?`;
-  if (h === "Our Pricing") return `What does ${short} cost?`;
-  if (h === "Our Students works for") return "Where do our students work?";
-  if (h === "About This Course") return `What is ${short}?`;
-  return heading;
-}
-
-// Indicative FX line for pricing cards (international build). Reference
-// rates 2026-10-25, reused from the replica work (Converterhub mid-market
-// via web search, Finnhub cross-check): 1 INR = 0.010534 USD, 0.007876
-// GBP, 0.009403 EUR, rounded to whole units. Render-time, so it applies
-// to Supabase rows too; data strings and schema offers are untouched.
-// Returns null when the price string has no parseable ₹ amount.
-function indicativeFx(price: string | undefined): string | null {
-  if (!price) return null;
-  const m = price.replace(/,/g, "").match(/₹\s*(\d+)/);
-  if (!m) return null;
-  const inr = Number(m[1]);
-  if (!Number.isFinite(inr) || inr <= 0) return null;
-  const usd = Math.round(inr * 0.010534);
-  const gbp = Math.round(inr * 0.007876);
-  const eur = Math.round(inr * 0.009403);
-  return `≈ $${usd} · £${gbp} · €${eur} (indicative)`;
-}
+import { courseWaLink } from "@/lib/wa";
+import {
+  ENQUIRE_LABEL,
+  PENDING_LABEL,
+  buildCourseDetail,
+  findLocalCourse,
+} from "@/lib/course-detail";
 
 function SectionBody({ section }: { section: CourseSection }) {
+  // "cards" sections render as a plain list, not a card grid: the
+  // template is text-first throughout.
   if (section.style === "cards") {
     return (
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-3 list-disc space-y-1 pl-5">
         {section.paragraphs.map((p, j) => (
-          <div
-            key={j}
-            className="rounded-xl border border-line bg-surface-light px-4 py-3 text-center text-[15px] font-semibold text-heading"
-          >
-            {p}
-          </div>
+          <li key={j}>{p}</li>
         ))}
-      </div>
-    );
-  }
-  if (section.style === "pricing") {
-    return (
-      <div className="mt-4 grid gap-4 md:grid-cols-3">
-        {section.paragraphs.map((p, j) => {
-          const [name, price] = p.split(" — ");
-          const fx = indicativeFx(price);
-          return (
-            <div
-              key={j}
-              className="rounded-2xl border border-line bg-parchment px-6 py-8 text-center shadow-sm"
-            >
-              <p className="text-sm font-semibold uppercase tracking-wide text-body">{name}</p>
-              <p className="mt-2 text-3xl font-extrabold text-heading">{price ?? p}</p>
-              {fx && <p className="mt-2 text-sm font-semibold text-body">{fx}</p>}
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-  if (section.style === "faq") {
-    return (
-      <div className="mt-3 space-y-4">
-        {section.paragraphs.map((p, j) =>
-          j % 2 === 0 ? (
-            <h3 key={j} className="pt-2 text-lg font-semibold text-heading">
-              {p}
-            </h3>
-          ) : (
-            <p key={j}>{p}</p>
-          ),
-        )}
-      </div>
+      </ul>
     );
   }
   return (
@@ -108,54 +63,6 @@ function SectionBody({ section }: { section: CourseSection }) {
       {section.paragraphs.map((p, j) => (
         <p key={j}>{p}</p>
       ))}
-    </div>
-  );
-}
-
-// Register strip (DECISIONS.md §20): the registration door beside
-// the demo band on every course page. Links to /register with the
-// course pre-selected.
-function RegisterStrip({ slug, title }: { slug: string; title: string }) {
-  return (
-    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-[18px] border border-line bg-parchment px-7 py-6">
-      <div>
-        <h2 className="font-display text-[21px] font-semibold text-heading">
-          Ready to register for {title}?
-        </h2>
-        <p className="mt-1 max-w-xl text-sm leading-6 text-body">
-          Send the two-minute registration and the team will call to confirm your seat, batch
-          and mode of training.
-        </p>
-      </div>
-      <Link href={`/register?course=${slug}`} className="btn-navy">
-        Register for This Course
-      </Link>
-    </div>
-  );
-}
-
-// Corporate / B2B door on every course page (research: a corporate-training
-// module belongs on course pages, not only on a separate B2B page). Copy is
-// the business's own published positioning — corporate trainings are a
-// published GradeSpot service and the founder's published role.
-function B2BStrip() {
-  return (
-    <div className="mt-12 rounded-[20px] panel-ink p-8 md:flex md:items-center md:justify-between md:gap-8">
-      <div>
-        <h2 className="font-display text-2xl font-semibold text-paper">Training a Team or a Classroom?</h2>
-        <p className="mt-2 max-w-xl text-paper/80">
-          GradeSpot also runs Corporate Trainings, College Workshops and Industrial Trainings —
-          the same hands-on programs, delivered for your organisation.
-        </p>
-      </div>
-      <div className="mt-5 flex flex-wrap gap-3 md:mt-0 md:shrink-0">
-        <Link href="/services/corporate-trainings" className="btn-primary">
-          Corporate Trainings
-        </Link>
-        <Link href="/services" className="btn-outline-light">
-          All Services
-        </Link>
-      </div>
     </div>
   );
 }
@@ -170,9 +77,13 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const course = await getCourse(slug);
+  const course = findLocalCourse(slug);
   if (!course) return { title: "Course not found" };
-  return coursePageMetadata(course, `/trainings/${slug}`);
+  const model = buildCourseDetail(course, courseDetails[course.slug], undefined);
+  return coursePageMetadata(course, `/trainings/${slug}`, {
+    displayTitle: model.displayTitle,
+    held: model.heldBack,
+  });
 }
 
 export default async function CoursePage({
@@ -181,261 +92,200 @@ export default async function CoursePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const course = await getCourse(slug);
+  const course = findLocalCourse(slug);
   if (!course) notFound();
 
-  // Related trainings: same published category, real catalogue data only.
-  const related = (await getCourses())
-    .filter((c) => c.category === course.category && c.slug !== course.slug)
-    .slice(0, 3);
+  const comparePair = comparisons.find((c) => c.a === course.slug || c.b === course.slug);
+  const model = buildCourseDetail(course, courseDetails[course.slug], comparePair);
+  // Published FAQ pairs only: repo sections styled "faq". Generated
+  // FAQs are never rendered and never emitted as schema. No verified
+  // page has a styled-faq section, so in practice this emits nothing
+  // in Stage 5 — the check stays so a future published FAQ is handled.
+  const publishedFaqs = model.heldBack ? [] : courseFaqs(course);
 
   const crumbs = [
     { name: "Home", path: "/" },
     { name: "Trainings", path: "/trainings" },
-    { name: course.title },
+    { name: model.displayTitle },
   ];
-
-  // Research expansion (§18): generated factual FAQs (real fields only)
-  // merged with the course's published FAQ sections, plus the demo path
-  // and any comparison page this course appears in.
-  const publishedFaqs = courseFaqs(course);
-  const generatedFaqs = generatedCourseFaqs(course).filter(
-    (g) => !publishedFaqs.some((p) => p.q.trim().toLowerCase() === g.q.trim().toLowerCase()),
-  );
-  const allFaqs = [...generatedFaqs, ...publishedFaqs];
-  const comparePair = comparisons.find((c) => c.a === course.slug || c.b === course.slug);
-  const detail = courseDetails[course.slug];
-  const short = detail?.short ?? course.title;
-  const answerSummary = courseAnswerSummary(course, detail);
 
   return (
     <>
-      <JsonLd data={courseSchema(course)} />
-      <JsonLd data={webPageSchema(`/trainings/${course.slug}`, course.title, "#answer-summary")} />
+      <JsonLd
+        data={courseSchema(course, {
+          displayTitle: model.displayTitle,
+          held: model.heldBack,
+          suppressOffers: true,
+        })}
+      />
+      <JsonLd data={webPageSchema(`/trainings/${course.slug}`, model.displayTitle)} />
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Trainings", path: "/trainings" },
-          { name: course.title, path: `/trainings/${course.slug}` },
+          { name: model.displayTitle, path: `/trainings/${course.slug}` },
         ])}
       />
-      <JsonLd data={faqSchema(allFaqs)} />
+      {publishedFaqs.length > 0 && <JsonLd data={faqSchema(publishedFaqs)} />}
 
       <section className="bg-ink py-6 text-white md:py-8">
         <div className="wrap">
-          <Breadcrumbs
-            dark
-            items={crumbs}
-          />
-          <p className="eyebrow mt-6 text-brand-bright">
-            {course.category}
-          </p>
+          <Breadcrumbs dark items={crumbs} />
+          <p className="eyebrow mt-6 text-brand-bright">{model.category}</p>
           <h1 className="mt-2 max-w-4xl text-4xl font-semibold md:text-5xl md:leading-tight">
-            {course.title}
+            {model.displayTitle}
           </h1>
-          {course.summary && (
-            <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">{course.summary}</p>
+          {model.heldBack ? (
+            <>
+              <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">
+                {PENDING_LABEL}. Availability, schedule and course details are confirmed
+                directly by the GradeSpot team.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-4">
+                <Link href="/contact-us" className="btn-primary min-h-[44px]">
+                  {ENQUIRE_LABEL}
+                </Link>
+                <Link href="/trainings" className="btn-outline-light min-h-[44px]">
+                  All Trainings
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              {model.summary && (
+                <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">{model.summary}</p>
+              )}
+              {model.durationLabel && (
+                <p className="mt-4 text-base font-semibold text-white">{model.durationLabel}</p>
+              )}
+              <div className="mt-7 flex flex-wrap gap-4">
+                <a href="#enquire" className="btn-primary min-h-[44px]">
+                  {ENQUIRE_LABEL}
+                </a>
+                <Link href="/trainings" className="btn-outline-light min-h-[44px]">
+                  All Trainings
+                </Link>
+              </div>
+            </>
           )}
-          {course.duration && (
-            <p className="mt-4 inline-block rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white">
-              Duration: {course.duration}
-            </p>
-          )}
-          <div className="mt-7 flex flex-wrap gap-4">
-            <a href="#enquire" className="btn-primary">
-              Enquire About This Course
-            </a>
-            <Link href="/trainings" className="btn-outline-light">
-              All Trainings
-            </Link>
-          </div>
         </div>
       </section>
 
-      {course.image && (
-        <div className="wrap mt-10">
-          <Image
-            src={course.image}
-            alt={course.title}
-            width={1140}
-            height={480}
-            sizes="(min-width:1200px) 1140px, 100vw"
-            priority
-            fetchPriority="high"
-            className="h-72 w-full rounded-2xl object-cover md:h-96"
-          />
-        </div>
-      )}
-
-      <section className="section-pad">
-        <div className="wrap">
-          {course.catalogOnly ? (
+      {!model.heldBack && (
+        <section className="section-pad">
+          <div className="wrap">
             <div className="mx-auto max-w-3xl">
-              <AnswerLead id="answer-summary">{answerSummary}</AnswerLead>
-              <h2 className="mt-8 text-[32px] font-semibold leading-[38px]">{questionHeading("About This Course", short)}</h2>
-              <p className="mt-4">
-                {course.title} is part of the GradeSpot IT Solutions training catalogue, offered
-                at our Dilsukhnagar, Hyderabad institute with online and offline classes. Our
-                organization offers an array of professional training programs for both
-                corporates and students — ranging across computer hardware, networking,
-                cybersecurity, cloud computing, digital marketing, data science and more — with
-                comprehensive, up-to-date expertise in each technology.
-              </p>
-              <p className="mt-4">
-                For the current batch schedule, curriculum and enrolment details for this
-                course, talk to a trainer and we will walk you through the complete program.
-              </p>
-              <div id="enquire" className="mt-8 scroll-mt-32">
-                <EnquiryRail courseTitle={course.title} />
-              </div>
-              <div id="demo" className="scroll-mt-32">
-                <DemoBand courseTitle={course.title} />
-              </div>
-              <RegisterStrip slug={course.slug} title={course.title} />
-              {generatedFaqs.length > 0 && (
-                <div className="mt-12">
-                  <h2 className="text-[28px] font-semibold leading-[34px]">
-                    {course.title} — FAQs
-                  </h2>
-                  <div className="mt-6">
-                    <FaqList items={generatedFaqs} />
-                  </div>
+              {model.facts && (
+                <div className="mb-10 rounded-2xl border border-line bg-surface p-7">
+                  <h2 className="text-lg font-bold text-ink">Course facts</h2>
+                  <dl className="mt-4 space-y-3 text-[15px] leading-7 text-body">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
+                      <dt className="w-32 shrink-0 font-semibold text-ink">Who it&apos;s for</dt>
+                      <dd>{model.facts.who}</dd>
+                    </div>
+                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
+                      <dt className="w-32 shrink-0 font-semibold text-ink">Level</dt>
+                      <dd>{model.facts.level}</dd>
+                    </div>
+                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
+                      <dt className="w-32 shrink-0 font-semibold text-ink">Certification</dt>
+                      <dd>{model.facts.certification}</dd>
+                    </div>
+                    {model.facts.topics && model.facts.topics.length > 0 && (
+                      <div>
+                        <dt className="font-semibold text-ink">Topics covered</dt>
+                        <dd className="mt-2">
+                          <ul className="list-disc space-y-1 pl-5">
+                            {model.facts.topics.map((topic) => (
+                              <li key={topic}>{topic}</li>
+                            ))}
+                          </ul>
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
                 </div>
               )}
-              <B2BStrip />
-            </div>
-          ) : (
-            <div className="grid items-start gap-12 lg:grid-cols-[1fr_370px]">
-              <div className="order-2 min-w-0 lg:order-1">
-                <div className="mb-10">
-                  <AnswerLead id="answer-summary">{answerSummary}</AnswerLead>
-                </div>
-                {/* Course facts (DECISIONS §25.37): rendered ONLY from
-                    course-details for the 11 full courses that have it —
-                    audience (eligibility), level, certification and
-                    topics. Courses without a detail entry show nothing
-                    here, never a guessed fact. Fees live in the pricing
-                    sections below, duration in the hero pill, batch
-                    timings stay "confirmed on enquiry" (no schedule is
-                    published anywhere), and no syllabus PDF exists in
-                    the repo, so no PDF is linked. */}
-                {detail && (
-                  <div className="mb-10 rounded-2xl border border-line bg-parchment p-7">
-                    <h2 className="text-lg font-bold text-heading">Course facts</h2>
-                    <dl className="mt-4 space-y-3 text-[15px] leading-7 text-body">
-                      <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-                        <dt className="w-32 shrink-0 font-semibold text-heading">Who it&apos;s for</dt>
-                        <dd>{detail.who}</dd>
-                      </div>
-                      <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-                        <dt className="w-32 shrink-0 font-semibold text-heading">Level</dt>
-                        <dd>{detail.level}</dd>
-                      </div>
-                      <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-                        <dt className="w-32 shrink-0 font-semibold text-heading">Certification</dt>
-                        <dd>{detail.certification}</dd>
-                      </div>
-                      {detail.topics.length > 0 && (
-                        <div>
-                          <dt className="font-semibold text-heading">Topics covered</dt>
-                          <dd className="mt-2">
-                            <ul className="list-disc space-y-1 pl-5">
-                              {detail.topics.map((topic) => (
-                                <li key={topic}>{topic}</li>
-                              ))}
-                            </ul>
-                          </dd>
-                        </div>
-                      )}
-                    </dl>
-                  </div>
-                )}
-                <div className="space-y-12">
-                  {course.sections.map((s, i) => (
-                    <div key={i}>
-                      <article>
-                        {s.heading && (
-                          <h2 className="text-[28px] font-semibold leading-[34px]">{questionHeading(s.heading, short)}</h2>
-                        )}
-                        <SectionBody section={s} />
-                      </article>
-                      {s.heading === "Visit our Blog" && (
-                        <div className="mt-6">
-                          <BlogCards />
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div id="demo" className="scroll-mt-32">
-                  <DemoBand courseTitle={course.title} />
-                </div>
-                <RegisterStrip slug={course.slug} title={course.title} />
-                {generatedFaqs.length > 0 && (
-                  <div className="mt-12">
-                    <h2 className="text-[28px] font-semibold leading-[34px]">
-                      {course.title} — FAQs
-                    </h2>
-                    <div className="mt-6">
-                      <FaqList items={generatedFaqs} />
-                    </div>
-                  </div>
-                )}
-                {comparePair && (
-                  <div className="mt-12 rounded-2xl border border-line bg-parchment p-8">
-                    <h2 className="text-2xl font-semibold">Still deciding?</h2>
-                    <p className="mt-2 max-w-xl">
-                      We compared this course side-by-side with the closest alternative — topics,
-                      duration, certification and roles — so you can choose with the facts in
-                      front of you.
-                    </p>
-                    <Link
-                      href={`/compare/${comparePair.slug}`}
-                      className="mt-4 inline-block text-[15px] font-bold text-signal hover:text-signal-strong"
-                    >
-                      {comparePair.title} →
-                    </Link>
-                  </div>
-                )}
-                <div className="mt-12 rounded-2xl border border-line bg-surface-light p-8 text-center">
-                  <h2 className="text-2xl font-semibold">Ready to enrol?</h2>
-                  <p className="mx-auto mt-2 max-w-xl">
-                    Send an enquiry and our team will help you with batches, mode of training and
-                    certification guidance for {course.title}.
-                  </p>
-                  <a href="#enquire" className="btn-primary mt-5">
-                    Enquire Now
-                  </a>
-                </div>
-                <B2BStrip />
-              </div>
-              <div id="enquire" className="order-1 scroll-mt-32 lg:order-2">
-                <EnquiryRail courseTitle={course.title} />
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
 
-      {related.length > 0 && (
-        <section className="section-pad bg-surface-light">
-          <div className="wrap">
-            <h2 className="text-[28px] font-semibold leading-[34px]">Related Trainings</h2>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {related.map((c) => (
-                <CourseCard key={c.slug} course={c} />
-              ))}
+              <div className="space-y-12">
+                {model.sections.map((s, i) => (
+                  <article key={i}>
+                    {s.heading && (
+                      <h2 className="text-[28px] font-semibold leading-[34px] text-ink">
+                        {s.heading}
+                      </h2>
+                    )}
+                    <SectionBody section={s} />
+                  </article>
+                ))}
+              </div>
+
+              {model.compareSlug && model.compareTitle && (
+                <div className="mt-12 rounded-2xl border border-line bg-surface p-8">
+                  <h2 className="text-2xl font-semibold text-ink">Still deciding?</h2>
+                  <p className="mt-2 max-w-xl text-body">
+                    We compared this course side-by-side with the closest alternative — topics,
+                    duration, certification and roles — so you can choose with the facts in
+                    front of you.
+                  </p>
+                  <Link
+                    href={`/compare/${model.compareSlug}`}
+                    className="mt-4 inline-block min-h-[44px] text-[15px] font-bold text-signal hover:text-signal-strong"
+                  >
+                    {model.compareTitle} →
+                  </Link>
+                </div>
+              )}
+
+              <div id="enquire" className="mt-12 scroll-mt-32 rounded-2xl border border-line bg-surface p-7">
+                <h2 className="text-[22px] font-semibold leading-snug text-ink">
+                  Request a Callback
+                </h2>
+                <p className="mt-1.5 text-sm leading-6 text-body">
+                  Ask about batches, mode of training and certification guidance for this course.
+                </p>
+                <div className="mt-4">
+                  <LeadForm interest={model.displayTitle} idPrefix="detail-lead" />
+                </div>
+                <a
+                  href={courseWaLink(model.displayTitle)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 flex min-h-[44px] items-center justify-center gap-2 rounded-xl border-2 border-wa px-6 py-3 text-[15px] font-semibold text-wa"
+                >
+                  Chat about this course on WhatsApp
+                </a>
+                <p className="mt-4 text-sm leading-6 text-body">
+                  Prefer the contact page?{" "}
+                  <Link href="/contact-us" className="font-semibold text-ink">
+                    Enquire via contact
+                  </Link>
+                </p>
+              </div>
+
+              {model.related.length > 0 && (
+                <div className="mt-12">
+                  <h2 className="text-[28px] font-semibold leading-[34px] text-ink">
+                    Related Trainings
+                  </h2>
+                  <ul className="mt-6 border-t border-line">
+                    {model.related.map((r) => (
+                      <li key={r.slug} className="border-b border-line">
+                        <Link
+                          href={`/trainings/${r.slug}`}
+                          className="flex min-h-[44px] items-center justify-between gap-4 py-3"
+                        >
+                          <span className="text-lg font-semibold text-ink">{r.title}</span>
+                          <span className="shrink-0 text-sm text-muted">→</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </section>
-      )}
-
-      {!course.catalogOnly && (
-        <>
-          <LogoWall />
-          <StatsRibbon />
-          <FeatureTrio />
-        </>
       )}
     </>
   );

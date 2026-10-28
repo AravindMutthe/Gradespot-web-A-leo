@@ -124,19 +124,33 @@ export default async function CoursePage({
     { name: model.displayTitle },
   ];
 
-  // Grouped-syllabus split (owner-approved re-composition, wording
-  // verbatim): "outcomes" are the kept sections titled "Course
-  // Outcomes" or "Common Job Roles" — the only outcome-ish rendered
-  // content on detail pages (model filtering already drops
-  // misattributed/skipped sections upstream, e.g. Hardware's roles
-  // section). Pages with no such kept section (AZ-900, Hardware, all
-  // sample pages whose sections are []) render areas + gated only —
-  // nothing is invented to fill the gap.
-  const isOutcomeSection = (s: CourseSection) =>
+  // Grouped-syllabus outcomes rule (owner-delegated re-mapping,
+  // wording verbatim): the card's ONE outcomes element is the
+  // page's "Key Learning Objectives" list where one exists, moved
+  // into the card; otherwise the kept "Course Outcomes" /
+  // "Common Job Roles" section; otherwise nothing (areas + gated
+  // only — sample pages, whose sections are []). The objectives
+  // list appears exactly once on the page (in the card, never also
+  // in About). A legacy outcome section on a page whose card uses
+  // KLO (Network+, PenTest+, Security+) stays in About verbatim —
+  // published content is never dropped, and never duplicated into
+  // the card. Note: SOC/CEH carry a dashed "Key Learning -
+  // Objectives" heading, which is NOT the "Key Learning
+  // Objectives" list, so those pages fall back to their legacy
+  // outcome section. Model filtering already drops
+  // misattributed/skipped sections upstream.
+  const isKloSection = (s: CourseSection) =>
+    /key learning objectives/i.test(s.heading ?? "");
+  const isLegacyOutcomeSection = (s: CourseSection) =>
     /course outcomes/i.test(s.heading ?? "") ||
     /common job roles/i.test(s.heading ?? "");
-  const outcomeSections = model.sections.filter(isOutcomeSection);
-  const aboutSections = model.sections.filter((s) => !isOutcomeSection(s));
+  const kloSections = model.sections.filter(isKloSection);
+  const legacyOutcomeSections = model.sections.filter(isLegacyOutcomeSection);
+  const cardOutcomeSections =
+    kloSections.length > 0 ? kloSections : legacyOutcomeSections;
+  const aboutSections = model.sections.filter(
+    (s) => !cardOutcomeSections.includes(s),
+  );
 
   return (
     <>
@@ -285,12 +299,14 @@ export default async function CoursePage({
               )}
 
               {/* Grouped syllabus view (owner-approved): the areas list
-                  + the course outcomes + the gated block, in that
+                  + the card outcomes element + the gated block, in that
                   order, in one section. Re-composition only — every
                   word verbatim from its previous location. The areas
                   list moves out of the facts card above (no
-                  duplication); the outcomes are the kept outcome
-                  sections; the gated block keeps its exact meaning
+                  duplication); the outcomes element is the Key
+                  Learning Objectives list where one exists, else the
+                  kept Course Outcomes / Common Job Roles section;
+                  the gated block keeps its exact meaning
                   (shared after enquiry only). */}
               <section id="syllabus" className="mb-10 scroll-mt-24 rounded-2xl border border-line bg-surface p-7">
                 <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
@@ -306,7 +322,7 @@ export default async function CoursePage({
                     </ul>
                   </div>
                 )}
-                {outcomeSections.map((s, i) => (
+                {cardOutcomeSections.map((s, i) => (
                   <article key={i} className="mt-6">
                     {s.heading && (
                       <h3 className="text-[22px] font-semibold leading-snug text-ink">
@@ -334,11 +350,13 @@ export default async function CoursePage({
               </section>
 
               {/* About the course: the remaining kept sections
-                  (description, overview, objectives, features, skills
-                  — everything that is not an outcome section above),
-                  in original order. Renders only where such sections
-                  exist; sample pages carry none, so no About section
-                  and no About button for them. */}
+                  (description, overview, features, skills, and any
+                  legacy outcome section on a page whose card uses
+                  Key Learning Objectives — everything not in the
+                  card's outcomes element above), in original order.
+                  Renders only where such sections exist; sample
+                  pages carry none, so no About section and no About
+                  button for them. */}
               {aboutSections.length > 0 && (
                 <div id="about" className="scroll-mt-24 space-y-12">
                   {aboutSections.map((s, i) => (

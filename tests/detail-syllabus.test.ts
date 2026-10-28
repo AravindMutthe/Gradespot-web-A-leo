@@ -13,11 +13,16 @@
 //      #syllabus (grouped section, always on full pages), Enquire ->
 //      #enquire (form panel) or /contact-us on held pages.
 //   3. grouped syllabus section, in order: areas list ("What you
-//      will learn") + course outcomes + gated block. Outcomes are
-//      the kept sections titled "Course Outcomes" or "Common Job
-//      Roles" — verbatim, moved, never rewritten. Pages with no such
-//      kept section (AZ-900, Hardware, all sample pages) render
-//      areas + gated only; nothing is invented.
+//      will learn") + card outcomes element + gated block. The
+//      card outcomes element is the "Key Learning Objectives"
+//      list where one exists (moved verbatim into the card), else
+//      the kept section titled "Course Outcomes" or "Common Job
+//      Roles", else nothing (areas + gated only; sample pages
+//      carry no sections). Exactly one outcomes element per card;
+//      a legacy outcome section on a KLO page stays in About
+//      verbatim, never duplicated into the card. SOC/CEH carry a
+//      dashed "Key Learning - Objectives" heading, which is NOT
+//      the KLO list, so they fall back to legacy.
 //   4. About renders only where about sections exist (the 8
 //      verified pages); sample pages carry no repo sections, so no
 //      About button and no dead anchor for them.
@@ -71,9 +76,17 @@ const heldSpan = (() => {
   return detail.slice(start, end);
 })();
 
-const isOutcomeSection = (s: CourseSection) =>
+const isKloSection = (s: CourseSection) =>
+  /key learning objectives/i.test(s.heading ?? "");
+const isLegacyOutcomeSection = (s: CourseSection) =>
   /course outcomes/i.test(s.heading ?? "") ||
   /common job roles/i.test(s.heading ?? "");
+// Mirror of the template's card-outcomes rule: KLO wins where one
+// exists, else the legacy outcome section, else nothing.
+const cardOutcomes = (sections: CourseSection[]) => {
+  const klo = sections.filter(isKloSection);
+  return klo.length > 0 ? klo : sections.filter(isLegacyOutcomeSection);
+};
 
 describe("Detail 4-button hero + grouped syllabus", () => {
   it("hero buttons are in the approved order with resolving targets", () => {
@@ -124,7 +137,7 @@ describe("Detail 4-button hero + grouped syllabus", () => {
     expect(syllabusAt).toBeGreaterThan(-1);
     expect(aboutAt).toBeGreaterThan(syllabusAt);
     const areasAt = detail.indexOf("What you will learn", syllabusAt);
-    const outcomesAt = detail.indexOf("outcomeSections.map", syllabusAt);
+    const outcomesAt = detail.indexOf("cardOutcomeSections.map", syllabusAt);
     const gatedAt = detail.indexOf(
       "Full syllabus — shared after enquiry",
       syllabusAt,
@@ -141,10 +154,13 @@ describe("Detail 4-button hero + grouped syllabus", () => {
     expect(detail).not.toContain("Download syllabus");
   });
 
-  it("per-course partition: about + outcomes cover sections exactly, nothing lost", () => {
+  it("per-course partition: about + card outcomes cover sections exactly, nothing lost", () => {
     expect(courses.length).toBe(36);
     let aboutPages = 0;
-    let outcomePages = 0;
+    let cardOutcomePages = 0;
+    let kloPages = 0;
+    let legacyFallbackPages = 0;
+    let bothPages = 0;
     let held = 0;
     for (const c of courses) {
       const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
@@ -153,12 +169,24 @@ describe("Detail 4-button hero + grouped syllabus", () => {
         expect(model.sections).toEqual([]);
         continue;
       }
-      const outcomes = model.sections.filter(isOutcomeSection);
-      const about = model.sections.filter((s) => !isOutcomeSection(s));
+      const klo = model.sections.filter(isKloSection);
+      const legacy = model.sections.filter(isLegacyOutcomeSection);
+      const outcomes = cardOutcomes(model.sections);
+      const about = model.sections.filter((s) => !outcomes.includes(s));
       // Partition: every kept section lands in exactly one group.
       expect(about.length + outcomes.length).toBe(model.sections.length);
+      // Card outcomes and About never overlap (no duplication).
+      expect(outcomes.some((s) => about.includes(s))).toBe(false);
       if (about.length > 0) aboutPages++;
-      if (outcomes.length > 0) outcomePages++;
+      if (outcomes.length > 0) cardOutcomePages++;
+      if (klo.length > 0) kloPages++;
+      if (klo.length === 0 && legacy.length > 0) legacyFallbackPages++;
+      if (klo.length > 0 && legacy.length > 0) {
+        bothPages++;
+        // Legacy stays in About verbatim, never duplicated into the card.
+        expect(about.some((s) => isLegacyOutcomeSection(s))).toBe(true);
+        expect(outcomes.some((s) => isLegacyOutcomeSection(s))).toBe(false);
+      }
       if (model.sample) {
         // Sample pages carry no repo sections: no About, no outcomes.
         expect(model.sections).toEqual([]);
@@ -167,23 +195,75 @@ describe("Detail 4-button hero + grouped syllabus", () => {
       }
     }
     expect(held).toBe(0);
-    // 8 verified pages carry about sections; 6 of them also carry an
-    // outcome section (AZ-104, Network+, PenTest+, Security+, SOC,
-    // CEH). AZ-900 and Hardware have no kept outcome section.
+    // 8 verified pages carry about sections, and all 8 now carry a
+    // card outcomes element: 5 via Key Learning Objectives
+    // (AZ-900, Network+, PenTest+, Security+, Hardware) and 3 via
+    // the legacy fallback (AZ-104, SOC, CEH). 3 pages carry both
+    // KLO and legacy (Network+, PenTest+, Security+).
     expect(aboutPages).toBe(8);
-    expect(outcomePages).toBe(6);
+    expect(cardOutcomePages).toBe(8);
+    expect(kloPages).toBe(5);
+    expect(legacyFallbackPages).toBe(3);
+    expect(bothPages).toBe(3);
     const az900 = buildCourseDetail(
       findLocalCourse("azure-fundamentals-az-900")!,
       courseDetails["azure-fundamentals-az-900"],
       undefined,
     );
-    expect(az900.sections.filter(isOutcomeSection)).toEqual([]);
+    expect(cardOutcomes(az900.sections).map((s) => s.heading)).toEqual([
+      "Key Learning Objectives:",
+    ]);
+    expect(az900.sections.filter(isKloSection).length).toBe(1);
     const hardware = buildCourseDetail(
       findLocalCourse("computer-hardware-and-networking")!,
       courseDetails["computer-hardware-and-networking"],
       undefined,
     );
-    expect(hardware.sections.filter(isOutcomeSection)).toEqual([]);
+    // Hardware has no LEGACY outcome section, but it does have a
+    // KLO list — so its card now carries outcomes (correcting the
+    // previous stage's "areas + gated only" placement for it).
+    expect(hardware.sections.filter(isLegacyOutcomeSection)).toEqual([]);
+    expect(cardOutcomes(hardware.sections).map((s) => s.heading)).toEqual([
+      "Key Learning Objectives:",
+    ]);
+    // SOC/CEH dashed headings are NOT the KLO list: they fall back
+    // to their legacy outcome section.
+    for (const slug of ["soc-analyst", "certified-ethical-hacker-ceh"]) {
+      const model = buildCourseDetail(
+        findLocalCourse(slug)!,
+        courseDetails[slug],
+        undefined,
+      );
+      expect(model.sections.filter(isKloSection)).toEqual([]);
+      expect(cardOutcomes(model.sections).length).toBe(1);
+      expect(cardOutcomes(model.sections).every(isLegacyOutcomeSection)).toBe(true);
+    }
+  });
+
+  it("objectives appear exactly once: card renders card outcomes, About renders the rest", () => {
+    // Template source: the syllabus card maps cardOutcomeSections
+    // exactly once, and the About block maps aboutSections exactly
+    // once — no second rendering of either group anywhere.
+    expect(detail.match(/cardOutcomeSections\.map/g)?.length).toBe(1);
+    expect(detail.match(/aboutSections\.map/g)?.length).toBe(1);
+    // The card's map sits inside the syllabus section, before the
+    // gated block; the About map sits after the syllabus section.
+    const syllabusAt = detail.indexOf('id="syllabus"');
+    const gatedAt = detail.indexOf("Full syllabus — shared after enquiry", syllabusAt);
+    const cardMapAt = detail.indexOf("cardOutcomeSections.map", syllabusAt);
+    const aboutMapAt = detail.indexOf("aboutSections.map", syllabusAt);
+    expect(cardMapAt).toBeGreaterThan(syllabusAt);
+    expect(cardMapAt).toBeLessThan(gatedAt);
+    expect(aboutMapAt).toBeGreaterThan(gatedAt);
+    // Model level: on every verified page, no KLO section survives
+    // in About (it moved into the card).
+    for (const c of courses) {
+      const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
+      if (model.heldBack || model.sample) continue;
+      const outcomes = cardOutcomes(model.sections);
+      const about = model.sections.filter((s) => !outcomes.includes(s));
+      expect(about.filter(isKloSection)).toEqual([]);
+    }
   });
 
   it("breadcrumb is exactly Home / Trainings / Courses / title, no category level", () => {

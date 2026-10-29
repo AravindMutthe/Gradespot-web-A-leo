@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SearchBox from "@/components/SearchBox";
+import { DemoBadge } from "@/components/DemoMarker";
 import {
   SEARCH_CATEGORIES,
   buildSearchIndex,
@@ -185,6 +186,8 @@ export default async function SearchPage({
                       <Link href={entry.href} className="transition-colors hover:text-action-dark">
                         {entry.title}
                       </Link>
+                      {/* Demo branch only: demo snippets carry the marker. */}
+                      {entry.demo && <DemoBadge />}
                     </h3>
                     <p className="mt-2 flex flex-wrap gap-2">
                       <span className="inline-block rounded-md border border-line bg-canvas px-2.5 py-1.5 text-[13px] font-semibold text-body">

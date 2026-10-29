@@ -23,6 +23,11 @@ import {
   parseSearchQuery,
   searchEntries,
 } from "../src/lib/search";
+import {
+  DEMO_CCNP_SUMMARY,
+  DEMO_COURSE_CONTENT,
+  DEMO_SERVICE_CONTENT,
+} from "../src/data/demo-content";
 
 function readSource(rel: string): string {
   return readFileSync(new URL(rel, import.meta.url), "utf8");
@@ -124,37 +129,58 @@ describe("Stage 6 search — taxonomy sync with the trainings index", () => {
 });
 
 describe("Stage 6 search — held content rules (purge gates)", () => {
-  it("marks the 28 held courses + 12 services as held, with pending notices", () => {
-    const held = byKind("course").filter((e) => e.statusLabel !== null);
-    expect(held.length).toBe(28);
+  it("marks the 28 formerly-held courses + 12 services as demo, with demo snippets (demo branch)", () => {
+    // Demo branch contract change: no entry carries a held
+    // statusLabel anymore; the formerly-held entries are demo entries
+    // (flagged demo, snippet = demo summary). isHeldCourseSlug is
+    // deliberately unchanged — it still classifies the slugs — the
+    // index overrides it for demo slugs only.
+    const demoCourses = byKind("course").filter((e) => e.demo);
+    expect(demoCourses.length).toBe(31);
     for (const slug of HELD_FULL_DETAIL) {
       expect(isHeldCourseSlug(slug)).toBe(true);
     }
     for (const course of courses.filter((c) => c.catalogOnly)) {
       expect(isHeldCourseSlug(course.slug)).toBe(true);
     }
-    const heldServices = byKind("service").filter((e) => e.statusLabel !== null);
-    expect(heldServices.length).toBe(12);
+    const demoServices = byKind("service").filter((e) => e.demo);
+    expect(demoServices.length).toBe(12);
+    expect(byKind("course").filter((e) => e.statusLabel !== null).length).toBe(0);
+    expect(byKind("service").filter((e) => e.statusLabel !== null).length).toBe(0);
   });
 
-  it("held entries expose a pending notice + enquiry action only, never a snippet", () => {
-    for (const entry of byKind("course").filter((e) => e.statusLabel !== null)) {
-      expect(entry.snippet).toBeNull();
-      expect(entry.actionLabel).toBe("Enquire About This Course");
-      expect(entry.actionHref).toBe("/contact-us");
+  it("demo entries expose a flagged demo snippet + details action, never a held notice", () => {
+    for (const entry of byKind("course").filter((e) => e.demo)) {
+      const slug = entry.href.replace("/trainings/", "");
+      // Network+ / Security+ carry their verified repo summary (only
+      // duration + curriculum note are demo overlays); every other
+      // demo course carries its demo summary.
+      expect(entry.snippet).toBe(
+        slug === "ccnp-350-401-encor"
+          ? DEMO_CCNP_SUMMARY
+          : (DEMO_COURSE_CONTENT[slug]?.summary ??
+              sourceBySlug.get(slug)?.summary),
+      );
+      expect(entry.actionLabel).toBe("View course details");
+      expect(entry.actionHref).toBe(entry.href);
+      expect(entry.statusLabel).toBeNull();
       const blob = JSON.stringify(entry);
       expect(blob).not.toMatch(/batch|seat count|trainer|guaranteed|placement %/i);
     }
-    for (const entry of byKind("service").filter((e) => e.statusLabel !== null)) {
-      expect(entry.snippet).toBeNull();
+    for (const entry of byKind("service").filter((e) => e.demo)) {
+      const slug = entry.href.replace("/services/", "");
+      expect(entry.snippet).toBe(DEMO_SERVICE_CONTENT[slug]?.summary);
       expect(entry.actionLabel).toBe("View service details");
       expect(entry.actionHref).toBe(entry.href);
+      expect(entry.statusLabel).toBeNull();
     }
   });
 
-  it("verified entries carry their repo summary verbatim and nothing else", () => {
-    const verified = byKind("course").filter((e) => e.statusLabel === null);
-    expect(verified.length).toBe(8);
+  it("non-demo verified entries carry their repo summary verbatim and nothing else", () => {
+    const verified = byKind("course").filter(
+      (e) => e.statusLabel === null && !e.demo,
+    );
+    expect(verified.length).toBe(5);
     for (const entry of verified) {
       const slug = entry.href.replace("/trainings/", "");
       expect(entry.snippet).toBe(sourceBySlug.get(slug)?.summary);
@@ -162,18 +188,21 @@ describe("Stage 6 search — held content rules (purge gates)", () => {
     }
   });
 
-  it("SOC is neutral everywhere; held CCNP/CCNA surface no content at all", () => {
+  it("SOC is neutral everywhere; CCNP/CCNA surface demo content only, flagged demo", () => {
     const soc = courseBySlug("soc-analyst");
     expect(soc?.title).toBe("SOC Analyst Training in Hyderabad");
     expect(index.some((e) => /job-ready/i.test(e.title))).toBe(false);
     expect(index.some((e) => /job-ready/i.test(e.snippet ?? ""))).toBe(false);
     const ccnp = courseBySlug("ccnp-350-401-encor");
-    expect(ccnp?.statusLabel).toBe("Course details to be confirmed");
-    expect(ccnp?.snippet).toBeNull();
+    expect(ccnp?.demo).toBe(true);
+    expect(ccnp?.statusLabel).toBeNull();
+    expect(ccnp?.snippet).toBe(DEMO_CCNP_SUMMARY);
     expect(ccnp?.title).not.toMatch(/CCNA/i);
+    expect(ccnp?.snippet).not.toMatch(/CCNA/i);
     const ccna = courseBySlug("ccna-200-301");
-    expect(ccna?.statusLabel).toBe("Course details to be confirmed");
-    expect(ccna?.snippet).toBeNull();
+    expect(ccna?.demo).toBe(true);
+    expect(ccna?.statusLabel).toBeNull();
+    expect(ccna?.snippet).toBe(DEMO_COURSE_CONTENT["ccna-200-301"]?.summary);
   });
 });
 

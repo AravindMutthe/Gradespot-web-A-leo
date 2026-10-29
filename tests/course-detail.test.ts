@@ -21,6 +21,10 @@ import {
 } from "../src/lib/course-detail";
 import { courseFaqs, courseSchema } from "../src/lib/schema";
 import { coursePageMetadata } from "../src/lib/metadata";
+import {
+  DEMO_CCNP_SUMMARY,
+  DEMO_COURSE_CONTENT,
+} from "../src/data/demo-content";
 
 function readSource(rel: string): string {
   return readFileSync(new URL(rel, import.meta.url), "utf8");
@@ -52,15 +56,31 @@ describe("Stage 5 detail — inventory and dispositions", () => {
     expect(new Set([...held.map((c) => c.slug), ...VERIFIED]).size).toBe(36);
   });
 
-  it("renders formerly-held pages as held pages: title + held notice only, no invented data", () => {
+  it("renders formerly-held pages as demo pages: title + demo summary + demo body, flagged demo (demo branch)", () => {
+    // Demo branch contract change: the 28 formerly-held pages now
+    // render demo content (owner demo order 2026-10-29), flagged
+    // demo — they are NOT held pages on this branch, and this branch
+    // never merges as-is.
     for (const c of courses) {
       if (!(c.catalogOnly || HELD_FULL.includes(c.slug))) continue;
       const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
-      expect(model.heldBack).toBe(true);
-      expect(model.summary).toBeNull();
-      expect(model.durationLabel).toBeNull();
+      expect(model.heldBack).toBe(false);
+      expect(model.demo).toBe(true);
+      expect(model.summary).toBeTruthy();
+      expect(model.summary).toBe(
+        c.slug === "ccnp-350-401-encor"
+          ? DEMO_CCNP_SUMMARY
+          : DEMO_COURSE_CONTENT[c.slug]?.summary,
+      );
       expect(model.facts).toBeNull();
-      expect(model.sections).toEqual([]);
+      if (c.slug === "ccnp-350-401-encor") {
+        expect(model.demoPartial).toBe(true);
+        expect(model.sections).toEqual([]);
+        expect(model.durationLabel).toBeNull();
+      } else {
+        expect(model.demoPartial).toBe(false);
+        expect(model.sections.length).toBeGreaterThan(0);
+      }
       expect("sample" in model).toBe(false);
     }
   });
@@ -68,10 +88,15 @@ describe("Stage 5 detail — inventory and dispositions", () => {
   it("never renders CCNA content as CCNP content", () => {
     const ccnp = findLocalCourse("ccnp-350-401-encor")!;
     const model = buildCourseDetail(ccnp, courseDetails[ccnp.slug], undefined);
-    // Held pages carry no body content at all, so no CCNA trace
-    // can surface: no summary, no facts, no sections.
-    expect(model.heldBack).toBe(true);
-    expect(model.summary).toBeNull();
+    // CCNP is a demo PARTIAL page on this branch (Das's shape): title,
+    // confirmed track identity, demo description, under-review notice
+    // — and zero CCNA-derived job roles, exam requirements, or
+    // learning outcomes. Sections are empty by design.
+    expect(model.heldBack).toBe(false);
+    expect(model.demo).toBe(true);
+    expect(model.demoPartial).toBe(true);
+    expect(model.summary).toBe(DEMO_CCNP_SUMMARY);
+    expect(model.summary).not.toMatch(/CCNA/i);
     expect(model.facts).toBeNull();
     expect(model.sections).toEqual([]);
   });
@@ -81,16 +106,24 @@ describe("Stage 5 detail — inventory and dispositions", () => {
       "azure-fundamentals-az-900": "Duration confirmed on enquiry",
       "azure-administrator-az-104": "Duration confirmed on enquiry",
       "computer-hardware-and-networking": "Duration confirmed on enquiry",
-      "comptia-network-plus": "Duration: 30 days",
+      // Demo branch: Network+ / Security+ durations are enquiry-only
+      // (no 30-day or hours figure asserted, even as demo).
+      "comptia-network-plus": "Duration confirmed on enquiry",
       "comptia-pentest-plus": "Duration: 60 hours",
-      "comptia-security-plus": "Duration: 30 days",
+      "comptia-security-plus": "Duration confirmed on enquiry",
       "soc-analyst": "Duration confirmed on enquiry", // Stage 5 neutralisation 2026-10-28: unverified 90 days removed
       "certified-ethical-hacker-ceh": "Duration: 45 days",
     };
+    const demoSlugs = new Set([
+      "computer-hardware-and-networking",
+      "comptia-network-plus",
+      "comptia-security-plus",
+    ]);
     for (const slug of VERIFIED) {
       const c = findLocalCourse(slug)!;
       const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
       expect(model.heldBack).toBe(false);
+      expect(model.demo).toBe(demoSlugs.has(slug));
       expect(model.summary).toBeTruthy();
       expect(model.summary).not.toMatch(/…\s*$/);
       expect(model.durationLabel).toBe(expectations[slug]);

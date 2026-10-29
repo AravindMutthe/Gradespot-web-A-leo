@@ -27,6 +27,13 @@
 //   Register, no demo CTA, no "enrol" — no service has a confirmed
 //   defined registration process or a confirmed demo offer.
 
+// Demo branch imports (feat/demo-content-gaps). The demo data file
+// is the ONLY source of demo copy; this module never invents any.
+import {
+  DEMO_SERVICE_CONTENT,
+  isDemoServiceSlug,
+} from "@/data/demo-content";
+
 export interface ServiceRowInput {
   slug: string;
   title: string;
@@ -41,13 +48,36 @@ export interface ServiceRow {
   actionHref: string;
   titleHref: string;
   heldBack: boolean;
+  // Demo branch only (feat/demo-content-gaps): true when the row
+  // carries demo scope copy. Templates must render the Demo marker
+  // whenever this is true.
+  demo: boolean;
 }
 
 export const SERVICE_PENDING_LABEL = "Service details to be confirmed";
 export const SERVICE_ENQUIRE_LABEL = "Enquire About This Service";
 export const SERVICE_DETAILS_LABEL = "View service details";
+// Demo branch only: the listing status line for demo-scope rows.
+export const SERVICE_DEMO_LABEL = "Demo scope available";
 
 export function buildServiceRow(service: ServiceRowInput): ServiceRow {
+  // Demo branch only (feat/demo-content-gaps): demo-scope rows link
+  // to their demo detail page with the demo summary. The detail page
+  // carries the marker + legend; the listing renders the badge.
+  if (isDemoServiceSlug(service.slug)) {
+    const demo = DEMO_SERVICE_CONTENT[service.slug];
+    return {
+      slug: service.slug,
+      displayTitle: service.title,
+      description: demo?.summary ?? null,
+      statusLabel: SERVICE_DEMO_LABEL,
+      actionLabel: SERVICE_DETAILS_LABEL,
+      actionHref: `/services/${service.slug}`,
+      titleHref: `/services/${service.slug}`,
+      heldBack: false,
+      demo: true,
+    };
+  }
   // Purge gates (2026-10-29): demo-fill removed. Every service is
   // held back to title-only until its scope is confirmed (R9 stays
   // open); the detail page carries the pending notice + enquiry.
@@ -60,5 +90,6 @@ export function buildServiceRow(service: ServiceRowInput): ServiceRow {
     actionHref: `/services/${service.slug}`,
     titleHref: `/services/${service.slug}`,
     heldBack: true,
+    demo: false,
   };
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getServices } from "@/lib/data";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
+import { DemoBadge, DemoNote } from "@/components/DemoMarker";
 import { buildServiceRow } from "@/lib/services-rows";
 import { BUSINESS_PATHWAYS, SERVICE_GROUPS } from "@/lib/two-door";
 
@@ -55,6 +56,8 @@ export default async function ServicesPage() {
       </div>
       <section className="section-pad">
         <div className="wrap">
+          {/* Demo branch only: legend wherever demo rows appear. */}
+          {rows.some((row) => row.demo) && <DemoNote />}
           {SERVICE_GROUPS.map((group) => (
             <div key={group.label} className="mb-12">
               <DirectoryBoard door="business" title={group.label}>
@@ -69,6 +72,7 @@ export default async function ServicesPage() {
                             <Link href={row.titleHref} className="hover:text-action-dark focus-visible:underline">
                               {row.displayTitle}
                             </Link>
+                            {row.demo && <DemoBadge />}
                           </h3>
                           <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
                         </div>

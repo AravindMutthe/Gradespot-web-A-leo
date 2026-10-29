@@ -53,9 +53,10 @@ const heldSpan = (() => {
 })();
 
 describe("Detail hero buttons — placement", () => {
-  it("covers all 36 courses; 28 held, 8 verified render topics", () => {
+  it("covers all 36 courses; 0 held, 31 demo, 8 verified render topics", () => {
     expect(courses.length).toBe(36);
     let held = 0;
+    let demo = 0;
     let withTopics = 0;
     for (const c of courses) {
       const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
@@ -63,11 +64,15 @@ describe("Detail hero buttons — placement", () => {
         held++;
         expect(model.facts).toBeNull();
       } else {
-        expect(model.facts?.topics?.length ?? 0).toBeGreaterThan(0);
-        withTopics++;
+        if (model.demo) demo++;
+        if ((model.facts?.topics?.length ?? 0) > 0) withTopics++;
       }
     }
-    expect(held).toBe(28);
+    // Demo branch: no held pages remain; 31 demo pages (25 catalogue
+    // + CCNA + CCNP + DM + Network+ + Security+ + Hardware); all 8
+    // verified pages still render topics (5 published, 3 demo areas).
+    expect(held).toBe(0);
+    expect(demo).toBe(31);
     expect(withTopics).toBe(8);
   });
 

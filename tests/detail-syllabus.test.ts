@@ -198,15 +198,16 @@ describe("Detail 4-button hero + grouped syllabus", () => {
       // (handled by the heldBack branch above, which continues).
 
     }
-    expect(held).toBe(28);
-    // 8 verified pages carry about sections, and all 8 now carry a
-    // card outcomes element: 5 via Key Learning Objectives
-    // (AZ-900, Network+, PenTest+, Security+, Hardware) and 3 via
-    // the legacy fallback (AZ-104, SOC, CEH). 3 pages carry both
-    // KLO and legacy (Network+, PenTest+, Security+).
-    expect(aboutPages).toBe(8);
-    expect(cardOutcomePages).toBe(8);
-    expect(kloPages).toBe(5);
+    expect(held).toBe(0);
+    // Demo branch: 35 pages carry about sections (all except the
+    // CCNP partial page, which has no sections by design) and 35
+    // carry a card outcomes element; 32 carry Key Learning Objectives
+    // (28 demo full pages + Network+ + Security+ + AZ-900 +
+    // PenTest+); the legacy fallback stays 3 (AZ-104, SOC, CEH) and
+    // both-KLO-and-legacy stays 3 (Network+, PenTest+, Security+).
+    expect(aboutPages).toBe(35);
+    expect(cardOutcomePages).toBe(35);
+    expect(kloPages).toBe(32);
     expect(legacyFallbackPages).toBe(3);
     expect(bothPages).toBe(3);
     const az900 = buildCourseDetail(
@@ -226,9 +227,11 @@ describe("Detail 4-button hero + grouped syllabus", () => {
     // Hardware has no LEGACY outcome section, but it does have a
     // KLO list — so its card now carries outcomes (correcting the
     // previous stage's "areas + gated only" placement for it).
+    // Demo branch: Hardware's KLO heading is the demo heading
+    // (no trailing colon), not the published heading.
     expect(hardware.sections.filter(isLegacyOutcomeSection)).toEqual([]);
     expect(cardOutcomes(hardware.sections).map((s) => s.heading)).toEqual([
-      "Key Learning Objectives:",
+      "Key Learning Objectives",
     ]);
     // SOC/CEH dashed headings are NOT the KLO list: they fall back
     // to their legacy outcome section.

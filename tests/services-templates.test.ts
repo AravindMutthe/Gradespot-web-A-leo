@@ -14,11 +14,15 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { services } from "../src/data/services";
 import {
+  SERVICE_DEMO_LABEL,
   SERVICE_DETAILS_LABEL,
   SERVICE_ENQUIRE_LABEL,
   SERVICE_PENDING_LABEL,
   buildServiceRow,
 } from "../src/lib/services-rows";
+import {
+  DEMO_SERVICE_CONTENT,
+} from "../src/data/demo-content";
 import { servicePageMetadata } from "../src/lib/metadata";
 
 function readSource(rel: string): string {
@@ -38,18 +42,20 @@ const HELD_TEXTS = services.flatMap((s) => [
   ...(s.offerings ?? []),
 ]);
 
-describe("Stage 4 services index — inventory and held-back rows (purge gates)", () => {
+describe("Stage 4 services index — inventory and demo rows (demo branch)", () => {
   it("renders 12 rows, one per service, in repo order with slugs unchanged", () => {
     expect(rows.length).toBe(12);
     expect(rows.map((r) => r.slug)).toEqual(services.map((s) => s.slug));
-    expect(rows.every((r) => r.heldBack)).toBe(true);
+    // Demo branch: all 12 rows are demo rows (not held-back rows).
+    expect(rows.every((r) => r.demo)).toBe(true);
+    expect(rows.every((r) => r.heldBack)).toBe(false);
     expect(rows.every((r) => "sample" in r)).toBe(false);
   });
 
-  it("holds every row title-only with the pending notice and a details action", () => {
+  it("renders every row with its demo scope summary and the demo label", () => {
     for (const row of rows) {
-      expect(row.description).toBeNull();
-      expect(row.statusLabel).toBe(SERVICE_PENDING_LABEL);
+      expect(row.description).toBe(DEMO_SERVICE_CONTENT[row.slug]?.summary);
+      expect(row.statusLabel).toBe(SERVICE_DEMO_LABEL);
       expect(row.actionLabel).toBe(SERVICE_DETAILS_LABEL);
       expect(row.actionHref).toBe(`/services/${row.slug}`);
       expect(row.titleHref).toBe(`/services/${row.slug}`);

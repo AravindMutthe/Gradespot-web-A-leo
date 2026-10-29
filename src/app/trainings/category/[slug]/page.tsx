@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
+import { DemoBadge, DemoNote } from "@/components/DemoMarker";
 import { courses, courseDurations } from "@/data/courses";
 import { buildTrainingRow } from "@/lib/trainings-rows";
 import { topicCategories, topicCategoryBySlug } from "@/lib/two-door";
@@ -69,6 +70,8 @@ export default async function CategoryPage({
       </div>
       <section className="section-pad">
         <div className="wrap">
+          {/* Demo branch only: legend wherever demo rows appear. */}
+          {rows.some((row) => row.demo) && <DemoNote />}
           <p className="mb-4 flex flex-wrap gap-4">
             <Link href="/trainings/courses" className="font-semibold text-ink underline">
               ← All Courses
@@ -96,6 +99,7 @@ export default async function CategoryPage({
                       ) : (
                         row.displayTitle
                       )}
+                      {row.demo && <DemoBadge />}
                     </h2>
                     {row.statusLabel ? (
                       <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>

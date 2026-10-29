@@ -4,6 +4,8 @@ import { services } from "@/data/services";
 import { PageHero, SectionTitle } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
+import { DemoBadge, DemoNote } from "@/components/DemoMarker";
+import { DEMO_TIER_DESCRIPTIONS } from "@/data/demo-content";
 import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata = staticPageMetadata({
@@ -27,6 +29,10 @@ export const metadata = staticPageMetadata({
 // deliberately NOT added to header or footer nav — the pricing-nav
 // gap is undecided until the pricing decision (Set A vs B) is made.
 // Local service data only (titles); no DB reads.
+// Demo exception (feat/demo-content-gaps, preview only): the
+// institute tiers block carries demo plan-concept descriptions
+// (no amounts, no capability lists presented as available) with
+// the demo marker + legend. The enquiry-only policy is unchanged.
 const instituteTiers = [
   "Missed Enquiry Killer",
   "Admissions on Autopilot",
@@ -98,6 +104,16 @@ export default function PricingPage() {
               contents and pricing are scoped per institute on enquiry — the products behind
               them are in development, so no capability list is published here yet.
             </p>
+            {/* Demo branch only (feat/demo-content-gaps): tier
+                descriptions are placeholder plan concepts — no
+                amounts, no capability lists presented as available —
+                and carry the demo marker + legend. The enquiry-only
+                pricing policy is unchanged, and this page is still
+                NOT added to header or footer nav. */}
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <DemoBadge />
+            </div>
+            <DemoNote />
             <div className="mt-8 grid gap-6 lg:grid-cols-3">
               {instituteTiers.map((name, i) => (
                 <article
@@ -109,7 +125,8 @@ export default function PricingPage() {
                   </p>
                   <h3 className="mt-3 text-xl font-bold text-heading">{name}</h3>
                   <p className="mt-2 text-sm leading-6 text-body">
-                    Contents and pricing scoped per institute on enquiry.
+                    {DEMO_TIER_DESCRIPTIONS[name] ??
+                      "Contents and pricing scoped per institute on enquiry."}
                   </p>
                 </article>
               ))}

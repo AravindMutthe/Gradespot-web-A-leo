@@ -43,6 +43,8 @@ import { coursePageMetadata } from "@/lib/metadata";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import LeadForm from "@/components/LeadForm";
 import JsonLd from "@/components/JsonLd";
+import { DemoBadge, DemoNote } from "@/components/DemoMarker";
+import { DEMO_CCNP_NOTICE } from "@/data/demo-content";
 import { breadcrumbSchema, courseFaqs, courseSchema, faqSchema, webPageSchema } from "@/lib/schema";
 import { courseDetails } from "@/data/course-details";
 import { comparisons } from "@/data/comparisons";
@@ -89,7 +91,9 @@ export async function generateMetadata({
   const model = buildCourseDetail(course, courseDetails[course.slug], undefined);
   return coursePageMetadata(course, `/trainings/${slug}`, {
     displayTitle: model.displayTitle,
-    held: model.heldBack,
+    // Demo branch only: demo copy must never enter meta/OG
+    // descriptions — treat demo pages as held for metadata purposes.
+    held: model.heldBack || model.demo,
   });
 }
 
@@ -154,7 +158,8 @@ export default async function CoursePage({
       <JsonLd
         data={courseSchema(course, {
           displayTitle: model.displayTitle,
-          held: model.heldBack,
+          // Demo branch only: demo copy must never enter JSON-LD.
+          held: model.heldBack || model.demo,
           suppressOffers: true,
         })}
       />
@@ -176,6 +181,14 @@ export default async function CoursePage({
           <h1 className="mt-2 max-w-4xl text-4xl font-semibold text-white md:text-5xl md:leading-tight">
             {model.displayTitle}
           </h1>
+          {/* Demo branch only: every demo page carries its marker +
+              legend in the hero, before any demo copy. */}
+          {model.demo && (
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <DemoBadge />
+            </div>
+          )}
+          {model.demo && <DemoNote dark />}
           {model.heldBack ? (
             <>
               <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">
@@ -228,9 +241,13 @@ export default async function CoursePage({
                     About the Course
                   </a>
                 )}
-                <a href="#syllabus" className="btn-outline-light min-h-[44px]">
-                  View Syllabus
-                </a>
+                {/* Demo branch only: partial pages have no syllabus
+                    section, so no Syllabus button (no dead anchor). */}
+                {!model.demoPartial && (
+                  <a href="#syllabus" className="btn-outline-light min-h-[44px]">
+                    View Syllabus
+                  </a>
+                )}
                 <a href="#enquire" className="btn-primary min-h-[44px]">
                   Enquire Now
                 </a>
@@ -247,7 +264,19 @@ export default async function CoursePage({
         <section className="section-pad">
           <div className="wrap">
             <div className="mx-auto max-w-3xl">
-              {model.facts && (
+              {/* Demo branch only: CCNP partial-page notice (Das's
+                  shape) — no syllabus, no about, no compare block. */}
+              {model.demoPartial && (
+                <div className="mb-10 rounded-2xl border border-line bg-surface p-7">
+                  <h2 className="text-lg font-bold text-ink">
+                    Detailed syllabus under review
+                  </h2>
+                  <p className="mt-2 text-[15px] leading-7 text-body">
+                    {DEMO_CCNP_NOTICE}
+                  </p>
+                </div>
+              )}
+              {model.facts && !model.demoPartial && (
                 <div className="mb-10 rounded-2xl border border-line bg-surface p-7">
                   <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
                     Course facts
@@ -279,6 +308,10 @@ export default async function CoursePage({
                   kept Course Outcomes / Common Job Roles section;
                   the gated block keeps its exact meaning
                   (shared after enquiry only). */}
+              {/* Demo branch only: partial pages skip the syllabus
+                  section entirely — the notice above + the enquiry
+                  panel below are the whole partial shape. */}
+              {!model.demoPartial && (
               <section id="syllabus" className="mb-10 scroll-mt-24 rounded-2xl border border-line bg-surface p-7">
                 <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
                   Syllabus
@@ -319,6 +352,7 @@ export default async function CoursePage({
                   </a>
                 </div>
               </section>
+              )}
 
               {/* About the course: the remaining kept sections
                   (description, overview, features, skills, and any
@@ -327,8 +361,9 @@ export default async function CoursePage({
                   card's outcomes element above), in original order.
                   Renders only where such sections exist; held pages
                   take the held branch above, so no About section
-                  and no About button for them. */}
-              {aboutSections.length > 0 && (
+                  and no About button for them. Demo partial pages
+                  skip About too. */}
+              {!model.demoPartial && aboutSections.length > 0 && (
                 <div id="about" className="scroll-mt-24 space-y-12">
                   {aboutSections.map((s, i) => (
                     <article key={i}>
@@ -343,7 +378,7 @@ export default async function CoursePage({
                 </div>
               )}
 
-              {model.compareSlug && model.compareTitle && (
+              {model.compareSlug && model.compareTitle && !model.demoPartial && (
                 <div className="mt-12 rounded-2xl border border-line bg-surface p-8">
                   <h2 className="text-2xl font-semibold text-ink">Still deciding?</h2>
                   <p className="mt-2 max-w-xl text-body">

@@ -21,6 +21,10 @@
 //   the 25 catalogue-only courses plus the three Stage 5 held
 //   full-detail courses (CCNA R1, CCNP R2, Digital Marketing R4).
 //   Every service is held (no confirmed scope in repo data).
+// - Demo exception (feat/demo-content-gaps, preview only): demo
+//   slugs override the held rule in buildSearchIndex — their demo
+//   summary is the snippet, flagged demo: true, and the results page
+//   renders the Demo marker. isHeldCourseSlug is unchanged.
 // - Verified courses contribute their repo summary verbatim as the
 //   snippet — nothing is generated, completed or paraphrased.
 // - SOC is indexed under its neutral display title only
@@ -56,6 +60,13 @@ import {
   ENQUIRE_LABEL as COURSE_ENQUIRE_LABEL,
 } from "@/lib/course-detail";
 import {
+  DEMO_CCNP_SUMMARY,
+  DEMO_COURSE_CONTENT,
+  DEMO_SERVICE_CONTENT,
+  isDemoCourseSlug,
+  isDemoServiceSlug,
+} from "@/data/demo-content";
+import {
   SERVICE_PENDING_LABEL,
   SERVICE_DETAILS_LABEL,
 } from "@/lib/services-rows";
@@ -71,12 +82,16 @@ export interface SearchEntry {
   categorySlug: string | null;
   // Verified course summary verbatim; null for held items,
   // services, and pages (their rows show a status/type label
-  // instead).
+  // instead). Demo entries carry the demo summary here.
   snippet: string | null;
   // Held notice, or null for verified courses and pages.
   statusLabel: string | null;
   actionLabel: string;
   actionHref: string;
+  // Demo branch only (feat/demo-content-gaps): true when the
+  // snippet is demo copy. The search page must render the Demo
+  // marker whenever this is true.
+  demo: boolean;
 }
 
 // Slug for a category label, shared with the trainings index anchors:
@@ -129,7 +144,28 @@ export function buildSearchIndex(): SearchEntry[] {
   for (const course of courses) {
     const heldBack = course.catalogOnly || course.slug in HELD_DETAIL_REASONS;
     const title = displayCourseTitle(course.title);
-    if (heldBack) {
+    // Demo branch only (feat/demo-content-gaps): demo pages are
+    // searchable by their demo summary, flagged demo so the results
+    // page renders the marker. This overrides the held rule for demo
+    // slugs only; isHeldCourseSlug above is unchanged.
+    if (isDemoCourseSlug(course.slug)) {
+      const demoContent = DEMO_COURSE_CONTENT[course.slug];
+      entries.push({
+        kind: "course",
+        title,
+        href: `/trainings/${course.slug}`,
+        category: course.category,
+        categorySlug: categorySlug(course.category),
+        snippet:
+          course.slug === "ccnp-350-401-encor"
+            ? DEMO_CCNP_SUMMARY
+            : (demoContent?.summary ?? course.summary),
+        statusLabel: null,
+        actionLabel: "View course details",
+        actionHref: `/trainings/${course.slug}`,
+        demo: true,
+      });
+    } else if (heldBack) {
       entries.push({
         kind: "course",
         title,
@@ -140,6 +176,7 @@ export function buildSearchIndex(): SearchEntry[] {
         statusLabel: COURSE_PENDING_LABEL,
         actionLabel: COURSE_ENQUIRE_LABEL,
         actionHref: "/contact-us",
+        demo: false,
       });
     } else {
       entries.push({
@@ -152,6 +189,7 @@ export function buildSearchIndex(): SearchEntry[] {
         statusLabel: null,
         actionLabel: "View course details",
         actionHref: `/trainings/${course.slug}`,
+        demo: false,
       });
     }
   }
@@ -163,10 +201,16 @@ export function buildSearchIndex(): SearchEntry[] {
       href: `/services/${service.slug}`,
       category: null,
       categorySlug: null,
-      snippet: null,
-      statusLabel: SERVICE_PENDING_LABEL,
+      // Demo branch only: demo scope summary, flagged demo.
+      snippet: isDemoServiceSlug(service.slug)
+        ? (DEMO_SERVICE_CONTENT[service.slug]?.summary ?? null)
+        : null,
+      statusLabel: isDemoServiceSlug(service.slug)
+        ? null
+        : SERVICE_PENDING_LABEL,
       actionLabel: SERVICE_DETAILS_LABEL,
       actionHref: `/services/${service.slug}`,
+      demo: isDemoServiceSlug(service.slug),
     });
   }
 
@@ -181,6 +225,7 @@ export function buildSearchIndex(): SearchEntry[] {
       statusLabel: null,
       actionLabel: "Visit page",
       actionHref: page.href,
+      demo: false,
     });
   }
 

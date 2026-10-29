@@ -18,6 +18,7 @@ import {
 import { buildSearchIndex, searchEntries } from "../src/lib/search";
 import { courseSchema } from "../src/lib/schema";
 import { coursePageMetadata } from "../src/lib/metadata";
+import { DEMO_CCNP_SUMMARY, DEMO_COURSE_CONTENT } from "../src/data/demo-content";
 
 function readSource(rel: string): string {
   return readFileSync(new URL(rel, import.meta.url), "utf8");
@@ -68,9 +69,13 @@ describe("curriculum gating — model", () => {
       const c = findLocalCourse(slug)!;
       const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
       expect(model.heldBack).toBe(false);
-      const expected = courseDetails[slug].topics.filter(
-        (t) => !/job-ready/i.test(t),
-      );
+      // Demo branch: Hardware's published area list is superseded by
+      // demo module areas on this branch only (never AZ-104's
+      // curriculum). Every other verified area list stays verbatim.
+      const expected =
+        slug === "computer-hardware-and-networking"
+          ? DEMO_COURSE_CONTENT[slug]?.topics
+          : courseDetails[slug].topics.filter((t) => !/job-ready/i.test(t));
       expect(model.facts!.topics).toEqual(expected);
     }
   });
@@ -139,10 +144,15 @@ describe("curriculum gating — page, search, metadata, schema", () => {
     for (const entry of index) {
       if (entry.kind !== "course") continue;
       const course = courses.find((c) => `/trainings/${c.slug}` === entry.href)!;
-      // Snippet is one of: null (held courses) or the verified
-      // repo summary — never a gated lesson/lab/tool list.
+      // Snippet is one of: null (held courses — none on the demo
+      // branch), the verified repo summary, or a flagged demo summary
+      // — never a gated lesson/lab/tool list.
       expect(
-        entry.snippet === null || entry.snippet === course.summary,
+        entry.snippet === null ||
+          entry.snippet === course.summary ||
+          (entry.demo &&
+            (entry.snippet === DEMO_COURSE_CONTENT[course.slug]?.summary ||
+              entry.snippet === DEMO_CCNP_SUMMARY)),
       ).toBe(true);
       const hay = JSON.stringify(entry).toLowerCase();
       for (const s of CURRICULUM_ONLY_STRINGS) {

@@ -31,6 +31,12 @@ import {
 } from "@/data/courses";
 import type { CourseDetail } from "@/data/course-details";
 import { displayCourseTitle } from "@/lib/trainings-rows";
+import {
+  DEMO_CCNP_SUMMARY,
+  DEMO_COURSE_CONTENT,
+  DEMO_CURRICULUM_NOTE,
+  isDemoCourseSlug,
+} from "@/data/demo-content";
 
 // Full-detail courses held in full, with the reason recorded.
 export const HELD_DETAIL_REASONS: Record<string, string> = {
@@ -139,6 +145,15 @@ export interface DetailModel {
   displayTitle: string;
   heldBack: boolean;
   heldReason: string | null;
+  // Demo branch only (feat/demo-content-gaps): true when the page
+  // renders demo placeholder copy. Demo pages are never held, but
+  // they are never verified either — templates must render the Demo
+  // marker + legend whenever this is true, and metadata/schema must
+  // not carry demo copy (callers pass held || demo there).
+  demo: boolean;
+  // Demo branch only: CCNP partial-page shape — summary + notice,
+  // no body sections, no CCNA-derived material.
+  demoPartial: boolean;
   summary: string | null;
   durationLabel: string | null;
   facts: DetailFacts | null;
@@ -236,13 +251,21 @@ export function buildCourseDetail(
     .slice(0, 3)
     .map((c) => ({ slug: c.slug, title: displayCourseTitle(c.title) }));
 
-  if (heldBack) {
+  // Demo branch only (feat/demo-content-gaps): demo slugs render
+  // placeholder demo copy instead of the held presentation. The demo
+  // flag is what templates key their marker + legend on; SOC is
+  // never a demo slug and is untouched by this branch.
+  const demo = isDemoCourseSlug(course.slug);
+
+  if (heldBack && !demo) {
     return {
       slug: course.slug,
       category: course.category,
       displayTitle,
       heldBack: true,
       heldReason,
+      demo: false,
+      demoPartial: false,
       summary: null,
       durationLabel: null,
       facts: null,
@@ -253,6 +276,143 @@ export function buildCourseDetail(
       related: [],
       compareSlug: null,
       compareTitle: null,
+    };
+  }
+
+  if (demo) {
+    // CCNP partial page (Das's shape): summary + notice only, no
+    // body sections, no CCNA-derived material of any kind.
+    if (course.slug === "ccnp-350-401-encor") {
+      return {
+        slug: course.slug,
+        category: course.category,
+        displayTitle,
+        heldBack: false,
+        heldReason: null,
+        demo: true,
+        demoPartial: true,
+        summary: DEMO_CCNP_SUMMARY,
+        durationLabel: null,
+        facts: null,
+        sections: [],
+        skippedSections: [],
+        gatedHeadings: [],
+        jobReadyTopicsSuppressed: false,
+        related,
+        compareSlug: compare?.slug ?? null,
+        compareTitle: compare?.title ?? null,
+      };
+    }
+
+    // Network+ / Security+: published sections and area lists stay;
+    // only the duration wording and the curriculum status are demo.
+    if (
+      course.slug === "comptia-network-plus" ||
+      course.slug === "comptia-security-plus"
+    ) {
+      const { kept, skipped, gated } = filterDetailSections(course);
+      let facts: DetailFacts | null = null;
+      if (detail) {
+        facts = {
+          who: detail.who,
+          level: detail.level,
+          certification: detail.certification,
+          topics: detail.topics,
+        };
+      }
+      return {
+        slug: course.slug,
+        category: course.category,
+        displayTitle,
+        heldBack: false,
+        heldReason: null,
+        demo: true,
+        demoPartial: false,
+        summary: course.summary || null,
+        durationLabel: "Duration confirmed on enquiry",
+        facts,
+        sections: [...kept, DEMO_CURRICULUM_NOTE],
+        skippedSections: skipped,
+        gatedHeadings: gated,
+        jobReadyTopicsSuppressed: false,
+        related,
+        compareSlug: compare?.slug ?? null,
+        compareTitle: compare?.title ?? null,
+      };
+    }
+
+    // Hardware: demo sections + demo module areas replace the
+    // published area list on this branch only. Never AZ-104's
+    // curriculum: no "Course Curriculum" heading is written here,
+    // and the filter below would gate one if it ever appeared.
+    // The published sections are still filtered so the misattributed
+    // AZ-104 curriculum stays recorded as skipped — the guard must
+    // survive the demo overlay.
+    if (course.slug === "computer-hardware-and-networking") {
+      const demoContent = DEMO_COURSE_CONTENT[course.slug];
+      const { kept } = filterDetailSections({
+        ...course,
+        sections: demoContent?.sections ?? [],
+      });
+      const real = filterDetailSections(course);
+      let facts: DetailFacts | null = null;
+      if (detail) {
+        facts = {
+          who: detail.who,
+          level: detail.level,
+          certification: detail.certification,
+          topics: demoContent?.topics ?? null,
+        };
+      }
+      return {
+        slug: course.slug,
+        category: course.category,
+        displayTitle,
+        heldBack: false,
+        heldReason: null,
+        demo: true,
+        demoPartial: false,
+        summary: demoContent?.summary ?? null,
+        durationLabel: "Duration confirmed on enquiry",
+        facts,
+        sections: kept,
+        skippedSections: real.skipped,
+        gatedHeadings: real.gated,
+        jobReadyTopicsSuppressed: false,
+        related,
+        compareSlug: compare?.slug ?? null,
+        compareTitle: compare?.title ?? null,
+      };
+    }
+
+    // Full demo pages: the 25 catalogue-only courses, CCNA, and
+    // Digital Marketing. Demo sections run through the same filter
+    // as published sections, so no offer/pricing/enrol heading can
+    // slip through even as demo.
+    const demoContent = DEMO_COURSE_CONTENT[course.slug];
+    const { kept, skipped, gated } = filterDetailSections({
+      ...course,
+      sections: demoContent?.sections ?? [],
+    });
+    return {
+      slug: course.slug,
+      category: course.category,
+      displayTitle,
+      heldBack: false,
+      heldReason: null,
+      demo: true,
+      demoPartial: false,
+      summary: demoContent?.summary ?? null,
+      durationLabel:
+        demoContent?.durationLabel ?? "Duration not yet published",
+      facts: null,
+      sections: kept,
+      skippedSections: skipped,
+      gatedHeadings: gated,
+      jobReadyTopicsSuppressed: false,
+      related,
+      compareSlug: compare?.slug ?? null,
+      compareTitle: compare?.title ?? null,
     };
   }
 
@@ -293,6 +453,8 @@ export function buildCourseDetail(
     displayTitle,
     heldBack: false,
     heldReason: null,
+    demo: false,
+    demoPartial: false,
     summary: course.summary || null,
     durationLabel,
     facts,

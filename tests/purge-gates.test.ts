@@ -35,10 +35,16 @@ import {
 } from "../src/lib/course-detail";
 import { buildTrainingRow } from "../src/lib/trainings-rows";
 import {
+  SERVICE_DEMO_LABEL,
   SERVICE_PENDING_LABEL,
   buildServiceRow,
 } from "../src/lib/services-rows";
 import { buildSearchIndex, isHeldCourseSlug } from "../src/lib/search";
+import {
+  DEMO_CCNP_SUMMARY,
+  DEMO_COURSE_CONTENT,
+  DEMO_SERVICE_CONTENT,
+} from "../src/data/demo-content";
 import { buildLpModel } from "../src/lib/lp-model";
 import sitemap from "../src/app/sitemap";
 
@@ -136,20 +142,34 @@ describe("Purge gates — zero demo vendor marks, real marks kept", () => {
 });
 
 describe("Purge gates — held fallbacks hold everywhere", () => {
-  it("28 held courses render held (title + pending notice only)", () => {
+  it("28 formerly-held courses render demo (title + demo summary + demo body, flagged demo)", () => {
+    // Demo branch contract change: the 28 formerly-held pages render
+    // demo content instead of the held fallback. The held fallback
+    // code still exists for non-demo pages; this branch never merges
+    // as-is, so the production held gate is unaffected.
     const held = courses.filter((c) => c.catalogOnly || HELD_FULL.includes(c.slug));
     expect(held.length).toBe(28);
     for (const c of held) {
       const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
-      expect(model.heldBack).toBe(true);
-      expect(model.summary).toBeNull();
+      expect(model.heldBack).toBe(false);
+      expect(model.demo).toBe(true);
+      expect(model.summary).toBe(
+        c.slug === "ccnp-350-401-encor"
+          ? DEMO_CCNP_SUMMARY
+          : DEMO_COURSE_CONTENT[c.slug]?.summary,
+      );
       expect(model.facts).toBeNull();
-      expect(model.sections).toEqual([]);
+      if (c.slug === "ccnp-350-401-encor") {
+        expect(model.demoPartial).toBe(true);
+        expect(model.sections).toEqual([]);
+      } else {
+        expect(model.sections.length).toBeGreaterThan(0);
+      }
       expect(isHeldCourseSlug(c.slug)).toBe(true);
     }
   });
 
-  it("training rows, service rows and search entries agree on held", () => {
+  it("training rows, service rows and search entries agree on demo", () => {
     for (const c of courses.filter((x) => x.catalogOnly)) {
       const row = buildTrainingRow({
         slug: c.slug,
@@ -158,17 +178,23 @@ describe("Purge gates — held fallbacks hold everywhere", () => {
         summary: c.summary,
         catalogOnly: true,
       });
-      expect(row.heldBack).toBe(true);
-      expect(row.statusLabel).toBe(PENDING_LABEL);
+      expect(row.heldBack).toBe(false);
+      expect(row.demo).toBe(true);
+      expect(row.description).toBe(DEMO_COURSE_CONTENT[c.slug]?.summary);
+      expect(row.statusLabel).toBeNull();
+      expect(row.actionLabel).toBe("View course details");
     }
     for (const s of services) {
       const row = buildServiceRow({ slug: s.slug, title: s.title });
-      expect(row.heldBack).toBe(true);
-      expect(row.statusLabel).toBe(SERVICE_PENDING_LABEL);
+      expect(row.heldBack).toBe(false);
+      expect(row.demo).toBe(true);
+      expect(row.description).toBe(DEMO_SERVICE_CONTENT[s.slug]?.summary);
+      expect(row.statusLabel).toBe(SERVICE_DEMO_LABEL);
     }
     const index = buildSearchIndex();
-    expect(index.filter((e) => e.kind === "course" && e.statusLabel !== null).length).toBe(28);
-    expect(index.filter((e) => e.kind === "service" && e.statusLabel !== null).length).toBe(12);
+    expect(index.filter((e) => e.kind === "course" && e.demo).length).toBe(31);
+    expect(index.filter((e) => e.kind === "service" && e.demo).length).toBe(12);
+    expect(index.filter((e) => e.statusLabel !== null).length).toBe(0);
   });
 
   it("8 LPs build, 3 held LPs return null, sitemap lists only live LPs", () => {

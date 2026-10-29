@@ -19,6 +19,10 @@ import {
   displayCourseTitle,
   groupTrainingRows,
 } from "../src/lib/trainings-rows";
+import {
+  DEMO_CCNP_SUMMARY,
+  DEMO_COURSE_CONTENT,
+} from "../src/data/demo-content";
 
 function readSource(rel: string): string {
   return readFileSync(new URL(rel, import.meta.url), "utf8");
@@ -84,38 +88,43 @@ describe("Stage 3 trainings index — inventory and category order", () => {
   });
 });
 
-describe("Stage 3 trainings index — held-back rows (purge gates)", () => {
-  it("holds the three truncated summaries as title-only rows, never the truncated text", () => {
+describe("Stage 3 trainings index — demo rows (demo branch)", () => {
+  it("renders the three truncated summaries as demo rows, never the truncated text", () => {
     for (const slug of HELD_SLUGS) {
       // Evidence the underlying hold is real: the source summary ends mid-sentence.
       expect(sourceBySlug.get(slug)?.summary.endsWith("…")).toBe(true);
       const row = bySlug.get(slug)!;
-      expect(row.heldBack).toBe(true);
-      expect(row.description).toBeNull();
-      expect(row.titleHref).toBeNull();
-      expect(row.durationLabel).toBeNull();
-      expect(row.statusLabel).toBe("Course details to be confirmed");
-      expect(row.actionLabel).toBe("Enquire About This Course");
-      expect(row.actionHref).toBe("/contact-us");
+      expect(row.heldBack).toBe(false);
+      expect(row.demo).toBe(true);
+      expect(row.description).toBe(
+        slug === "ccnp-350-401-encor"
+          ? DEMO_CCNP_SUMMARY
+          : DEMO_COURSE_CONTENT[slug]?.summary,
+      );
+      expect(row.titleHref).toBe(`/trainings/${slug}`);
+      expect(row.statusLabel).toBeNull();
+      expect(row.actionLabel).toBe("View course details");
+      expect(row.actionHref).toBe(`/trainings/${slug}`);
     }
   });
 
-  it("holds all 25 catalogue-only courses as title-only rows with enquiry actions", () => {
+  it("renders all 25 catalogue-only courses as demo rows with details actions", () => {
     const pending = rows.filter((r) => sourceBySlug.get(r.slug)?.catalogOnly);
     expect(pending.length).toBe(25);
     for (const row of pending) {
-      expect(row.heldBack).toBe(true);
-      expect(row.description).toBeNull();
-      expect(row.titleHref).toBeNull();
-      expect(row.statusLabel).toBe("Course details to be confirmed");
-      expect(row.actionLabel).toBe("Enquire About This Course");
-      expect(row.actionHref).toBe("/contact-us");
+      expect(row.heldBack).toBe(false);
+      expect(row.demo).toBe(true);
+      expect(row.description).toBe(DEMO_COURSE_CONTENT[row.slug]?.summary);
+      expect(row.titleHref).toBe(`/trainings/${row.slug}`);
+      expect(row.statusLabel).toBeNull();
+      expect(row.actionLabel).toBe("View course details");
+      expect(row.actionHref).toBe(`/trainings/${row.slug}`);
     }
   });
 
-  it("renders the 8 verified full-detail summaries verbatim and complete", () => {
-    const verified = rows.filter((r) => !r.heldBack);
-    expect(verified.length).toBe(8);
+  it("renders the 5 non-demo verified full-detail summaries verbatim and complete", () => {
+    const verified = rows.filter((r) => !r.heldBack && !r.demo);
+    expect(verified.length).toBe(5);
     for (const row of verified) {
       expect(row.description).toBe(sourceBySlug.get(row.slug)?.summary);
       expect(row.description?.endsWith("…")).toBe(false);
@@ -124,13 +133,32 @@ describe("Stage 3 trainings index — held-back rows (purge gates)", () => {
       expect(row.actionLabel).toBe("View course details");
       expect(row.actionHref).toBe(`/trainings/${row.slug}`);
     }
+    // Network+ / Security+ are demo pages on this branch, but their
+    // summaries are verified repo copy (only duration + curriculum
+    // note are demo overlays); Hardware carries a demo summary.
+    for (const slug of ["comptia-network-plus", "comptia-security-plus"]) {
+      const row = bySlug.get(slug)!;
+      expect(row.demo).toBe(true);
+      expect(row.description).toBe(sourceBySlug.get(slug)?.summary);
+    }
+    {
+      const row = bySlug.get("computer-hardware-and-networking")!;
+      expect(row.demo).toBe(true);
+      expect(row.description).toBe(
+        DEMO_COURSE_CONTENT["computer-hardware-and-networking"]?.summary,
+      );
+    }
   });
 });
 
 describe("Stage 3 trainings index — durations and actions", () => {
   it("uses only repo durations, with the explicit prefix", () => {
-    expect(bySlug.get("comptia-network-plus")?.durationLabel).toBe("Duration: 30 days");
-    expect(bySlug.get("comptia-security-plus")?.durationLabel).toBe("Duration: 30 days");
+    expect(bySlug.get("comptia-network-plus")?.durationLabel).toBe(
+      "Duration confirmed on enquiry",
+    ); // Demo branch: no 30-day figure asserted, even as demo
+    expect(bySlug.get("comptia-security-plus")?.durationLabel).toBe(
+      "Duration confirmed on enquiry",
+    ); // Demo branch: no 30-day figure asserted, even as demo
     expect(bySlug.get("comptia-pentest-plus")?.durationLabel).toBe("Duration: 60 hours");
     expect(bySlug.get("certified-ethical-hacker-ceh")?.durationLabel).toBe("Duration: 45 days");
     expect(bySlug.get("soc-analyst")?.durationLabel).toBe("Duration confirmed on enquiry"); // Stage 5 neutralisation 2026-10-28
@@ -145,6 +173,13 @@ describe("Stage 3 trainings index — durations and actions", () => {
   it("never groups a duration with another label and never invents one", () => {
     for (const row of rows) {
       if (row.durationLabel) {
+        // Demo branch: CCNA alone carries an explicitly demo-marked
+        // duration; every other row follows the existing rules and
+        // never contains the word "demo".
+        if (row.slug === "ccna-200-301") {
+          expect(row.durationLabel).toBe("Duration (demo): 8 weeks");
+          continue;
+        }
         expect(
           row.durationLabel.startsWith("Duration: ") ||
             row.durationLabel === "Duration confirmed on enquiry" ||

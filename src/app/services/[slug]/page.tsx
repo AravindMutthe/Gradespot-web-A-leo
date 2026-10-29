@@ -7,6 +7,11 @@ import { servicePageMetadata } from "@/lib/metadata";
 import { PageHero } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
+import { DemoBadge, DemoNote } from "@/components/DemoMarker";
+import {
+  DEMO_SERVICE_CONTENT,
+  isDemoServiceSlug,
+} from "@/data/demo-content";
 import { breadcrumbSchema, serviceSchema } from "@/lib/schema";
 import { SERVICE_ENQUIRE_LABEL, SERVICE_PENDING_LABEL } from "@/lib/services-rows";
 
@@ -37,6 +42,9 @@ export async function generateMetadata({
 // service — and only that service — moves to verified rendering.
 // Slugs, canonical URLs and routes are unchanged. The Service
 // JSON-LD below asserts name, URL, provider and area served only.
+// Demo exception (feat/demo-content-gaps, preview only): demo-scope
+// services render placeholder scope copy with marker + legend; the
+// held presentation above stays for every non-demo service.
 
 export default async function ServicePage({
   params,
@@ -46,6 +54,12 @@ export default async function ServicePage({
   const { slug } = await params;
   const service = await getService(slug);
   if (!service) notFound();
+  // Demo branch only (feat/demo-content-gaps): demo-scope services
+  // render placeholder scope copy with marker + legend. Every other
+  // service keeps the held presentation below, unchanged.
+  const demo = isDemoServiceSlug(slug)
+    ? DEMO_SERVICE_CONTENT[slug]
+    : undefined;
   return (
     <>
       <JsonLd data={serviceSchema(service.title, service.slug)} />
@@ -69,16 +83,69 @@ export default async function ServicePage({
             />
           </div>
           <div className="mx-auto mt-8 max-w-4xl space-y-10">
-            <article>
-              <h2 className="flex flex-wrap items-center gap-3 text-[28px] font-semibold leading-[34px]">
-                {service.title} at GradeSpot
-              </h2>
-              <p className="mt-3 text-lg leading-8">{SERVICE_PENDING_LABEL}.</p>
-              <p className="mt-3 text-[15px] leading-7 text-body">
-                Scope, deliverables and availability for this service are confirmed directly
-                by the GradeSpot team.
-              </p>
-            </article>
+            {demo ? (
+              <>
+                <article>
+                  <h2 className="flex flex-wrap items-center gap-3 text-[28px] font-semibold leading-[34px]">
+                    {service.title} at GradeSpot <DemoBadge />
+                  </h2>
+                  <DemoNote />
+                  <p className="mt-4 text-lg leading-8">{demo.summary}</p>
+                </article>
+                <article>
+                  <h2 className="text-[22px] font-semibold leading-snug text-ink">
+                    What this service covers
+                  </h2>
+                  <ul className="mt-3 list-disc space-y-1 pl-5">
+                    {demo.scope.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+                <article>
+                  <h2 className="text-[22px] font-semibold leading-snug text-ink">
+                    What you receive
+                  </h2>
+                  <ul className="mt-3 list-disc space-y-1 pl-5">
+                    {demo.deliverables.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+                <article>
+                  <h2 className="text-[22px] font-semibold leading-snug text-ink">
+                    What is not included
+                  </h2>
+                  <ul className="mt-3 list-disc space-y-1 pl-5">
+                    {demo.exclusions.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+                <article>
+                  <h2 className="text-[22px] font-semibold leading-snug text-ink">
+                    How engagements work
+                  </h2>
+                  <p className="mt-3 text-[15px] leading-7 text-body">
+                    {demo.engagement}
+                  </p>
+                  <p className="mt-3 text-[15px] leading-7 text-body">
+                    {demo.consultation}
+                  </p>
+                </article>
+              </>
+            ) : (
+              <article>
+                <h2 className="flex flex-wrap items-center gap-3 text-[28px] font-semibold leading-[34px]">
+                  {service.title} at GradeSpot
+                </h2>
+                <p className="mt-3 text-lg leading-8">{SERVICE_PENDING_LABEL}.</p>
+                <p className="mt-3 text-[15px] leading-7 text-body">
+                  Scope, deliverables and availability for this service are confirmed directly
+                  by the GradeSpot team.
+                </p>
+              </article>
+            )}
             <div className="rounded-2xl border border-line bg-surface-light p-8 text-center">
               <h2 className="text-2xl font-semibold">Interested in {service.title}?</h2>
               <p className="mx-auto mt-2 max-w-xl">

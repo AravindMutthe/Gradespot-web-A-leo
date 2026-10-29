@@ -18,6 +18,14 @@
 // - Conversion actions on the index are limited to the two labels below.
 //   No other conversion label is produced by this module.
 
+// Demo branch imports (feat/demo-content-gaps). The demo data file
+// is the ONLY source of demo copy; this module never invents any.
+import {
+  DEMO_CCNP_SUMMARY,
+  DEMO_COURSE_CONTENT,
+  isDemoCourseSlug,
+} from "@/data/demo-content";
+
 export interface TrainingRowInput {
   slug: string;
   title: string;
@@ -38,6 +46,10 @@ export interface TrainingRow {
   actionHref: string;
   titleHref: string | null;
   heldBack: boolean;
+  // Demo branch only (feat/demo-content-gaps): true when the row
+  // links to a demo detail page. Templates must render the Demo
+  // marker whenever this is true.
+  demo: boolean;
 }
 
 // Summaries that end mid-sentence in the repo data. Rendering them
@@ -80,6 +92,42 @@ export function buildTrainingRow(course: TrainingRowInput): TrainingRow {
   const heldBack = course.catalogOnly || HELD_SUMMARY_SLUGS.has(course.slug);
   const displayTitle = displayCourseTitle(course.title);
 
+  // Demo branch only (feat/demo-content-gaps): demo detail pages
+  // are reachable from listings (linked title + demo summary) and
+  // carry the demo marker in the template. Duration wording follows
+  // the detail model: CCNA's demo duration, enquiry-only for
+  // Network+/Security+/Hardware, nothing claimed otherwise.
+  if (isDemoCourseSlug(course.slug)) {
+    const demoContent = DEMO_COURSE_CONTENT[course.slug];
+    const durationLabel =
+      course.slug === "ccna-200-301"
+        ? (demoContent?.durationLabel ?? null)
+        : course.slug === "comptia-network-plus" ||
+            course.slug === "comptia-security-plus" ||
+            course.slug === "computer-hardware-and-networking"
+          ? "Duration confirmed on enquiry"
+          : course.slug === "ccnp-350-401-encor" ||
+              course.slug === "digital-marketing"
+            ? null
+            : "Duration not yet published";
+    return {
+      slug: course.slug,
+      category: course.category,
+      displayTitle,
+      description:
+        course.slug === "ccnp-350-401-encor"
+          ? DEMO_CCNP_SUMMARY
+          : (demoContent?.summary ?? course.summary),
+      durationLabel,
+      statusLabel: null,
+      actionLabel: DETAILS_LABEL,
+      actionHref: `/trainings/${course.slug}`,
+      titleHref: `/trainings/${course.slug}`,
+      heldBack: false,
+      demo: true,
+    };
+  }
+
   let durationLabel: string | null;
   if (heldBack && HELD_SUMMARY_SLUGS.has(course.slug)) {
     // Held full-detail rows: duration facts are part of what is held.
@@ -104,6 +152,7 @@ export function buildTrainingRow(course: TrainingRowInput): TrainingRow {
       actionHref: "/contact-us",
       titleHref: null,
       heldBack: true,
+      demo: false,
     };
   }
 
@@ -118,6 +167,7 @@ export function buildTrainingRow(course: TrainingRowInput): TrainingRow {
     actionHref: `/trainings/${course.slug}`,
     titleHref: `/trainings/${course.slug}`,
     heldBack: false,
+    demo: false,
   };
 }
 

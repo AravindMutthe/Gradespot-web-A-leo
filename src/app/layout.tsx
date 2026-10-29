@@ -7,7 +7,7 @@ import { organizationSchema, websiteSchema } from "@/lib/schema";
 export const metadata: Metadata = {
   // Canonical/OG base — the LEO build itself is the ranking entity
   // (DECISIONS.md §25.21): self-referential to the Leo domain.
-  metadataBase: new URL("https://gradespot-leo-build-app.vercel.app"),
+  metadataBase: new URL("https://leo-web-a.vercel.app"),
   title: {
     default: "GradeSpot IT Solutions - Empower Your Business with Top-Notch IT Solutions",
     template: "%s - GradeSpot IT Solutions",

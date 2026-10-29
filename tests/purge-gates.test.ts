@@ -180,10 +180,10 @@ describe("Purge gates — held fallbacks hold everywhere", () => {
     }
     const urls = sitemap().map((e) => e.url);
     for (const slug of VERIFIED_LP_SLUGS) {
-      expect(urls).toContain(`https://gradespot-leo-build-app.vercel.app/lp/${slug}-in-hyderabad`);
+      expect(urls).toContain(`https://leo-web-a.vercel.app/lp/${slug}-in-hyderabad`);
     }
     for (const slug of ["ccna-200-301", "ccnp-350-401-encor", "digital-marketing"]) {
-      expect(urls).not.toContain(`https://gradespot-leo-build-app.vercel.app/lp/${slug}-in-hyderabad`);
+      expect(urls).not.toContain(`https://leo-web-a.vercel.app/lp/${slug}-in-hyderabad`);
     }
   });
 

@@ -21,21 +21,21 @@
 
 ### Microsoft Certified: Azure Fundamentals | AZ-900
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/azure-fundamentals-az-900
+- URL: https://leo-web-a.vercel.app/trainings/azure-fundamentals-az-900
 - Category: Microsoft Azure
 - Certification: Microsoft AZ-900
 - Summary: Gain hands-on expertise in Azure fundamentals with our Practical Microsoft Azure Fundamentals Training, mastering essential techniques to leverage cloud computing effectively and efficiently, empowering businesses to innovate and scale with confidence.
 
 ### Microsoft Certified: Azure Administrator Associate | AZ-104
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/azure-administrator-az-104
+- URL: https://leo-web-a.vercel.app/trainings/azure-administrator-az-104
 - Category: Microsoft Azure
 - Certification: Microsoft AZ-104
 - Summary: Empower your IT team with comprehensive Azure Administration Training, mastering essential skills to effectively manage and optimize Microsoft Azure cloud services for seamless business operations.
 
 ### Cisco Certified Network Associate: CCNA 200-301
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/ccna-200-301
+- URL: https://leo-web-a.vercel.app/trainings/ccna-200-301
 - Category: Cisco
 - Duration: 45 days
 - Certification: Cisco CCNA 200-301
@@ -46,7 +46,7 @@
 
 ### CCNP Enterprise 350-401 ENCOR
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/ccnp-350-401-encor
+- URL: https://leo-web-a.vercel.app/trainings/ccnp-350-401-encor
 - Category: Cisco
 - Duration: 45 days
 - Certification: Cisco CCNP 350-401 ENCOR
@@ -57,15 +57,15 @@
 
 ### CompTIA Network+: N10-008
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-network-plus
+- URL: https://leo-web-a.vercel.app/trainings/comptia-network-plus
 - Category: CompTIA
 - Duration: 30 days
 - Certification: CompTIA Network+ (N10-008 / N10-009)
-- Summary: Gain hands-on expertise in cybersecurity with our Practical Ethical Hacking Training, mastering essential techniques to safeguard digital assets and mitigate cyber threats.
+- Summary: Gain hands-on expertise in computer networking with CompTIA Network+ training — network components, topologies and architectures; OSI and TCP/IP models, media and cabling; IP addressing, routing and network services; WANs, wireless networks, cloud and datacenter — preparing for the CompTIA Network+ (N10-008 / N10-009) certification.
 
 ### CompTIA PenTest+: PT0-002
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-pentest-plus
+- URL: https://leo-web-a.vercel.app/trainings/comptia-pentest-plus
 - Category: CompTIA
 - Duration: 60 hours
 - Certification: CompTIA PenTest+ (PT0-002)
@@ -73,238 +73,237 @@
 
 ### CompTIA Security+: Sy0-701
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-security-plus
+- URL: https://leo-web-a.vercel.app/trainings/comptia-security-plus
 - Category: CompTIA
 - Duration: 30 days
 - Certification: CompTIA Security+ (SY0-601 / SY0-701)
-- Summary: Elevate your cybersecurity expertise with CompTIA Security+ Training. Gain essential skills through hands-on learning and real-world scenarios. Enroll now!
+- Summary: Elevate your cybersecurity expertise with CompTIA Security+ Training. Gain essential skills through hands-on learning and real-world scenarios. Enquire now!
 
 ### Computer Hardware and Networking Training
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/computer-hardware-and-networking
+- URL: https://leo-web-a.vercel.app/trainings/computer-hardware-and-networking
 - Category: Networking
 - Certification: Course completion certificate
-- Summary: Gain hands-on expertise in cybersecurity with our Practical Ethical Hacking Training, mastering essential techniques to safeguard digital assets and mitigate cyber threats.
+- Summary: Gain hands-on expertise in computer hardware and networking — computer hardware fundamentals, networking essentials and hands-on practical labs, with live classes and recorded videos — toward a course completion certification.
 
 ### Complete Digital Marketing
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/digital-marketing
+- URL: https://leo-web-a.vercel.app/trainings/digital-marketing
 - Category: Digital Marketing
 - Duration: 45 days
 - Certification: Course completion certificate
-- Summary: Master digital marketing in just 45 days with GradeSpot IT Solutions and land a job with a guaranteed success rate. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright…
+- Summary: Master digital marketing in just 45 days with GradeSpot IT Solutions and prepare for a career in digital marketing. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright…
 
-### SOC Analyst Training in Hyderabad | Job-Ready in 90 Days
+### SOC Analyst Training in Hyderabad
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/soc-analyst
+- URL: https://leo-web-a.vercel.app/trainings/soc-analyst
 - Category: Cybersecurity
-- Duration: 90 days
 - Certification: EC-Council CSA / SC-200 aligned
-- Summary: Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Become a certified SOC Analyst with our hands-on training. Learn threat detection, incident response, SIEM tools, and more. Enroll today!
+- Summary: Master SOC Analyst Skills – Start Your Cybersecurity Career Today! Prepare for SOC Analyst certification examinations with our hands-on training — preparation for an examination, not the award of a certification. Learn threat detection, incident response, SIEM tools, and more. Enquire today!
 
 ### Certified Ethical Hacker [CEH v13]
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/certified-ethical-hacker-ceh
+- URL: https://leo-web-a.vercel.app/trainings/certified-ethical-hacker-ceh
 - Category: Cybersecurity
 - Duration: 45 days
 - Certification: EC-Council CEH v13
-- Summary: Master Ethical Hacking Skills – Start Your Cybersecurity Career Today! Become a certified Ethical Hacker with our hands-on training. Learn Hacking Concepts, System Hacking, Malware Analysis, and many more.
+- Summary: Master Ethical Hacking Skills – Start Your Cybersecurity Career Today! Prepare for the Certified Ethical Hacker (CEH) examination with our hands-on training — preparation for an examination, not the award of a certification. Learn Hacking Concepts, System Hacking, Malware Analysis, and many more.
 
 ### Microsoft Certified: Azure Security Engineer Associate | AZ-500
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/azure-security-engineer-az-500
+- URL: https://leo-web-a.vercel.app/trainings/azure-security-engineer-az-500
 - Category: Microsoft Azure
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Designing and Implementing Microsoft DevOps Solutions | AZ-400
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/microsoft-devops-az-400
+- URL: https://leo-web-a.vercel.app/trainings/microsoft-devops-az-400
 - Category: Microsoft Azure
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Security, Compliance, and Identity Fundamentals | SC-900
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/sc-900
+- URL: https://leo-web-a.vercel.app/trainings/sc-900
 - Category: Microsoft Azure
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Microsoft Certified: Security Operations Analyst Associate | SC-200
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/sc-200
+- URL: https://leo-web-a.vercel.app/trainings/sc-200
 - Category: Microsoft Azure
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Microsoft Sentinel Training
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/microsoft-sentinel
+- URL: https://leo-web-a.vercel.app/trainings/microsoft-sentinel
 - Category: Microsoft Azure
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### AWS Certified Cloud Practitioner | AWS CLF-C02
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/aws-cloud-practitioner
+- URL: https://leo-web-a.vercel.app/trainings/aws-cloud-practitioner
 - Category: AWS
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### AWS Certified Solutions Architect – Associate | AWS SAA-C03
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/aws-solutions-architect-associate
+- URL: https://leo-web-a.vercel.app/trainings/aws-solutions-architect-associate
 - Category: AWS
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### AWS Certified DevOps Engineer - Professional | AWS DOP-C02
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/aws-devops-engineer
+- URL: https://leo-web-a.vercel.app/trainings/aws-devops-engineer
 - Category: AWS
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### CompTIA A+ Core 1: 220-1101
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-a-plus-core-1
+- URL: https://leo-web-a.vercel.app/trainings/comptia-a-plus-core-1
 - Category: CompTIA
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### CompTIA A+ Core 2: 220-1102
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/comptia-a-plus-core-2
+- URL: https://leo-web-a.vercel.app/trainings/comptia-a-plus-core-2
 - Category: CompTIA
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Program in Cybersecurity Technologies
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/cybersecurity-technologies
+- URL: https://leo-web-a.vercel.app/trainings/cybersecurity-technologies
 - Category: Cybersecurity
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Vulnerability Assessment & Penetration Testing [VA PT]
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/vapt
+- URL: https://leo-web-a.vercel.app/trainings/vapt
 - Category: Cybersecurity
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Core Java
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/core-java
+- URL: https://leo-web-a.vercel.app/trainings/core-java
 - Category: Programming & Data
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Java Full Stack
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/java-full-stack
+- URL: https://leo-web-a.vercel.app/trainings/java-full-stack
 - Category: Programming & Data
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Power BI
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/power-bi
+- URL: https://leo-web-a.vercel.app/trainings/power-bi
 - Category: Programming & Data
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### MySQL
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/mysql
+- URL: https://leo-web-a.vercel.app/trainings/mysql
 - Category: Programming & Data
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Data Analytics
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/data-analytics
+- URL: https://leo-web-a.vercel.app/trainings/data-analytics
 - Category: Programming & Data
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Data Science
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/data-science
+- URL: https://leo-web-a.vercel.app/trainings/data-science
 - Category: Programming & Data
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Certified Professional Coder - CPC
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/certified-professional-coder-cpc
+- URL: https://leo-web-a.vercel.app/trainings/certified-professional-coder-cpc
 - Category: Medical Coding
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Hierarchical condition category - HCC
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/hcc-medical-coding
+- URL: https://leo-web-a.vercel.app/trainings/hcc-medical-coding
 - Category: Medical Coding
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Inpatient Diagnosis-Related Group - IP-DRG
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/ip-drg-medical-coding
+- URL: https://leo-web-a.vercel.app/trainings/ip-drg-medical-coding
 - Category: Medical Coding
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### E&M (Evaluation and Management)
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/em-medical-coding
+- URL: https://leo-web-a.vercel.app/trainings/em-medical-coding
 - Category: Medical Coding
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Radiology - Medical Coding
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/radiology-medical-coding
+- URL: https://leo-web-a.vercel.app/trainings/radiology-medical-coding
 - Category: Medical Coding
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### Anesthesia - Medical Coding
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/anesthesia-medical-coding
+- URL: https://leo-web-a.vercel.app/trainings/anesthesia-medical-coding
 - Category: Medical Coding
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ### AutoCAD
 
-- URL: https://gradespot-leo-build-app.vercel.app/trainings/autocad
+- URL: https://leo-web-a.vercel.app/trainings/autocad
 - Category: Design & CAD
 - Note: catalogue course — listed in the trainings catalogue without a published detail page; no curriculum, fee or duration is published for it
 - Summary: 
 
 ## Services
 
-- [Corporate Trainings](https://gradespot-leo-build-app.vercel.app/services/corporate-trainings): Professional IT training programs for corporates and students across hardware, networking, cybersecurity, cloud computing, digital marketing and more.
-- [Internships](https://gradespot-leo-build-app.vercel.app/services/internships): Internship programs offering exceptional learning opportunities and industry exposure.
-- [Industrial Trainings](https://gradespot-leo-build-app.vercel.app/services/industrial-trainings): Practical training programs aligned to industry needs for students and working professionals.
-- [College Workshops](https://gradespot-leo-build-app.vercel.app/services/college-workshops): Technical workshops conducted for college students.
-- [Cybersecurity Services](https://gradespot-leo-build-app.vercel.app/services/cybersecurity-services): Cybersecurity solutions for diverse organizations, addressing security needs with expertise and precision.
-- [Web Development](https://gradespot-leo-build-app.vercel.app/services/web-development): Cost-effective solutions for premium web designs, featuring aesthetically pleasing themes.
-- [Digital Marketing Solutions](https://gradespot-leo-build-app.vercel.app/services/digital-marketing-solutions): Cost-effective digital marketing services to enhance online presence and business performance.
-- [Network Infrastructure Building](https://gradespot-leo-build-app.vercel.app/services/network-infrastructure-building): Efficient network infrastructure building services for businesses.
-- [Logo Designing](https://gradespot-leo-build-app.vercel.app/services/logo-designing): Creative logo designing services that leave a lasting impression.
-- [US IT Staffing](https://gradespot-leo-build-app.vercel.app/services/us-it-staffing): IT staffing services for US requirements.
-- [Domestic Consultancy](https://gradespot-leo-build-app.vercel.app/services/domestic-consultancy): Consultancy services for domestic (India) opportunities.
-- [Abroad Consultancy](https://gradespot-leo-build-app.vercel.app/services/abroad-consultancy): Consultancy services for overseas opportunities.
+- [Corporate Trainings](https://leo-web-a.vercel.app/services/corporate-trainings): Professional IT training programs for corporates and students across hardware, networking, cybersecurity, cloud computing, digital marketing and more.
+- [Internships](https://leo-web-a.vercel.app/services/internships): Internship programs offering exceptional learning opportunities and industry exposure.
+- [Industrial Trainings](https://leo-web-a.vercel.app/services/industrial-trainings): Practical training programs aligned to industry needs for students and working professionals.
+- [College Workshops](https://leo-web-a.vercel.app/services/college-workshops): Technical workshops conducted for college students.
+- [Cybersecurity Services](https://leo-web-a.vercel.app/services/cybersecurity-services): Cybersecurity solutions for diverse organizations, addressing security needs with expertise and precision.
+- [Web Development](https://leo-web-a.vercel.app/services/web-development): Cost-effective solutions for premium web designs, featuring aesthetically pleasing themes.
+- [Digital Marketing Solutions](https://leo-web-a.vercel.app/services/digital-marketing-solutions): Cost-effective digital marketing services to enhance online presence and business performance.
+- [Network Infrastructure Building](https://leo-web-a.vercel.app/services/network-infrastructure-building): Efficient network infrastructure building services for businesses.
+- [Logo Designing](https://leo-web-a.vercel.app/services/logo-designing): Creative logo designing services that leave a lasting impression.
+- [US IT Staffing](https://leo-web-a.vercel.app/services/us-it-staffing): IT staffing services for US requirements.
+- [Domestic Consultancy](https://leo-web-a.vercel.app/services/domestic-consultancy): Consultancy services for domestic (India) opportunities.
+- [Abroad Consultancy](https://leo-web-a.vercel.app/services/abroad-consultancy): Consultancy services for overseas opportunities.
 
 ## Learning articles
 
-- [How to Start a Cybersecurity Career](https://gradespot-leo-build-app.vercel.app/blog/how-to-start-a-cybersecurity-career) (authored 2026-10-23): A practical roadmap from zero: build the networking base, choose offence or defence, and use certifications as milestones — mapped to real GradeSpot courses and the roles they prepare you for.
-- [CEH vs Security+: Which Certification Should You Do First?](https://gradespot-leo-build-app.vercel.app/blog/ceh-vs-security-plus-which-first) (authored 2026-10-23): CEH teaches you to attack; Security+ teaches you to defend. A factual comparison of focus, duration, certification and roles — from the two courses' own published pages.
-- [What Does a SOC Analyst Actually Do?](https://gradespot-leo-build-app.vercel.app/blog/what-does-a-soc-analyst-do) (authored 2026-10-23): Monitoring, detection and response — the daily work of a Security Operations Centre analyst, explained through the topics and tools of a real SOC training syllabus.
+- [How to Start a Cybersecurity Career](https://leo-web-a.vercel.app/blog/how-to-start-a-cybersecurity-career) (authored 2026-10-23): A practical roadmap from zero: build the networking base, choose offence or defence, and use certifications as milestones — mapped to real GradeSpot courses and the roles they prepare you for.
+- [CEH vs Security+: Which Certification Should You Do First?](https://leo-web-a.vercel.app/blog/ceh-vs-security-plus-which-first) (authored 2026-10-23): CEH teaches you to attack; Security+ teaches you to defend. A factual comparison of focus, duration, certification and roles — from the two courses' own published pages.
+- [What Does a SOC Analyst Actually Do?](https://leo-web-a.vercel.app/blog/what-does-a-soc-analyst-do) (authored 2026-10-23): Monitoring, detection and response — the daily work of a Security Operations Centre analyst, explained through the topics and tools of a real SOC training syllabus.
 
 ## Frequently asked questions (site-wide)
 
@@ -322,7 +321,7 @@ To get in touch with us, we offer multiple channels of communication. You may re
 
 ### Do you offer online or offline classes?
 
-Both. GradeSpot runs online and offline classes for its trainings from its institute in Dilsukhnagar, Hyderabad — live sessions with recorded videos and hands-on labs.
+Both. GradeSpot runs online and offline classes for its trainings from its institute in Dilsukhnagar, Hyderabad.
 
 ### How do I know the current batch schedule?
 
@@ -330,11 +329,11 @@ Batch schedules are confirmed on enquiry — call +91 91826 54056 or send an enq
 
 ### Can I attend a free demo class?
 
-Yes. GradeSpot offers a free demo class — register on the site and the team confirms the demo timing by phone.
+Demo availability is confirmed on enquiry — send an enquiry or call +91 91826 54056 and the team will confirm what is available for the course you want.
 
 ### What are the fees for a training?
 
-Fees are published per course where a pricing section exists — for example the CCNA and CCNP plans on the course pages. For other trainings the fee is confirmed on enquiry — call +91 91826 54056. Nothing is charged before you confirm.
+Fees are confirmed on enquiry — call +91 91826 54056 or send an enquiry and the team will share the current fee. Nothing is charged before you confirm.
 
 ### Do your trainings prepare for certifications?
 
@@ -342,11 +341,11 @@ Yes — each training prepares you for the certification named on its course pag
 
 ### Do you guarantee placements?
 
-No. GradeSpot publishes the job roles each training prepares you for and the companies its students work with, and backs preparation with hands-on labs, certification guidance and career-oriented services — but it publishes no placement percentages and guarantees no job.
+No. GradeSpot publishes the job roles each training prepares you for, and backs preparation with certification guidance and career-oriented services — but it publishes no placement percentages and guarantees no job.
 
 ## Frequently asked questions (per course, as published on course pages)
 
-### Complete Digital Marketing — Master digital marketing in just 45 days with GradeSpot IT Solutions and land a job with a guaranteed success rate. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright professional future.
+### Complete Digital Marketing — Master digital marketing in just 45 days with GradeSpot IT Solutions and prepare for a career in digital marketing. Learn from experts, gain hands-on experience, and step into a lucrative career with confidence. Join us now for a transformative journey towards a bright professional future.
 
 Complete your registration by filling out the form.
 
@@ -358,7 +357,7 @@ heading
 
 paragraphs
 
-### Complete Digital Marketing — Unlock the full potential of Digital Marketing with our comprehensive Digital Marketing Course! Gain hands-on expertise in online advertising, social media management, search engine optimization, and more. Learn how to optimize digital marketing strategies, enhance brand visibility, and drive business growth in the digital landscape. Enroll now to become a certified Digital Marketing professional and lead your organization towards digital transformation.
+### Complete Digital Marketing — Unlock the full potential of Digital Marketing with our comprehensive Digital Marketing Course! Gain hands-on expertise in online advertising, social media management, search engine optimization, and more. Learn how to optimize digital marketing strategies, enhance brand visibility, and drive business growth in the digital landscape. Enquire now about the path to becoming a certified Digital Marketing professional and lead your organization towards digital transformation.
 
 Empower your learning journey with our engaging live classes.
 
@@ -410,7 +409,7 @@ Comprehensive Curriculum: Our Digital Marketing Training Program consists of a c
 
 Hands-on Labs and Projects: To ensure a well-rounded learning experience, our course includes hands-on labs and projects that allow you to apply your knowledge in real-world scenarios. You’ll gain confidence in your abilities by working on practical exercises and projects that simulate the challenges you may encounter as a Digital Marketing Executive. This hands-on approach ensures that you’re well-prepared to tackle any Digital Marketing tasks with ease.
 
-### Complete Digital Marketing — Enroll in Our Digital Marketing Training Today!
+### Complete Digital Marketing — Enquire about Our Digital Marketing Training Today!
 
 heading
 

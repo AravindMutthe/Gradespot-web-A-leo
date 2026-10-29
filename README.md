@@ -1,4 +1,4 @@
-# gradespot-leo-build-app
+# leo-web-a
 
 Leo's own build of the GradeSpot website — from scratch, own design,
 not depending on WordPress; works as the original site plus additional
@@ -32,7 +32,7 @@ frontend is configurable from admin — the promotions seam
 today, and admin control itself arrives via `gradespot-axon`.
 
 Status: v1 approved 2026-10-24, live at
-https://gradespot-leo-build-app.vercel.app.
+https://leo-web-a.vercel.app.
 
 New here? Read in this order: this README → `DECISIONS.md` (§19–§20
 design, §25 SEO/AEO) → `src/data/site.ts` → `src/app/page.tsx` →
@@ -257,7 +257,7 @@ one landing page, the lead form, and certificate verification.
    what changed and how you verified it.
 7. Review: Aravind reviews every PR; merge happens only on his word.
    Merging does NOT deploy — production is API-uploaded from the
-   local working copy (Vercel project `gradespot-leo-build-app`)
+   local working copy (Vercel project `leo-web-a`)
    only when he commissions it.
 
 ## Website / repo development
@@ -338,8 +338,8 @@ front-desk engine.
 
 `main` is v1 (`1adc40d` crowned as `main`, single branch since
 2026-10-24 evening). Live at
-https://gradespot-leo-build-app.vercel.app (Vercel project
-`gradespot-leo-build-app`, API-upload deploys, not git-connected).
+https://leo-web-a.vercel.app (Vercel project
+`leo-web-a`, API-upload deploys, not git-connected).
 Next for this repo: the v2 wave, then the shared Phase 3/4/5 and
 launch/migration.
 
@@ -366,7 +366,7 @@ launch/migration.
   (`leo-build-v1` crowned as `main`). Features on branches; merges
   only on Aravind's review.
 - **Deploying:** NOT git-connected. Production is API-uploaded from
-  the local working copy (Vercel project `gradespot-leo-build-app`,
+  the local working copy (Vercel project `leo-web-a`,
   Mumbai region). Pushing to GitHub deploys nothing.
 - **Free tier only.** All assets downloaded into the repo — nothing
   hotlinked, no remote code fetched.

@@ -23,6 +23,6 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "*", allow: "/" },
       ...AI_CRAWLERS.map((agent) => ({ userAgent: agent, allow: "/" })),
     ],
-    sitemap: "https://gradespot-leo-build-app.vercel.app/sitemap.xml",
+    sitemap: "https://leo-web-a.vercel.app/sitemap.xml",
   };
 }

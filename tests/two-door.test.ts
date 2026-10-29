@@ -192,7 +192,7 @@ describe("Two-door — planned pages stay honest and unindexed", () => {
     expect(programmesPage).not.toContain("DemoLegend");
     expect(byHref("/trainings/training-programmes")).toBeUndefined();
     expect(siteUrls).not.toContain(
-      "https://gradespot-leo-build-app.vercel.app/trainings/training-programmes",
+      "https://leo-web-a.vercel.app/trainings/training-programmes",
     );
     expect(sitemapSrc).not.toContain("/trainings/training-programmes");
   });
@@ -205,7 +205,7 @@ describe("Two-door — planned pages stay honest and unindexed", () => {
     expect(studyGuidesPage).not.toContain("DemoLegend");
     expect(byHref("/trainings/study-guides")).toBeUndefined();
     expect(siteUrls).not.toContain(
-      "https://gradespot-leo-build-app.vercel.app/trainings/study-guides",
+      "https://leo-web-a.vercel.app/trainings/study-guides",
     );
     expect(sitemapSrc).not.toContain("/trainings/study-guides");
   });
@@ -236,7 +236,7 @@ describe("Two-door — certifications page: no mapping, no forbidden claims", ()
   it("is indexed and in the sitemap (unlike the planned pages)", () => {
     expect(byHref("/trainings/certifications")).toBeDefined();
     expect(siteUrls).toContain(
-      "https://gradespot-leo-build-app.vercel.app/trainings/certifications",
+      "https://leo-web-a.vercel.app/trainings/certifications",
     );
   });
 });
@@ -336,7 +336,7 @@ describe("Two-door — homepage, search and sitemap follow the new routes", () =
   });
 
   it("sitemap gains the same indexed pages and excludes the planned pages", () => {
-    const base = "https://gradespot-leo-build-app.vercel.app";
+    const base = "https://leo-web-a.vercel.app";
     expect(siteUrls).toContain(`${base}/trainings/courses`);
     expect(siteUrls).toContain(`${base}/trainings/certifications`);
     for (const cat of topicCategories()) {

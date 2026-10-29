@@ -26,7 +26,7 @@ import { courseDetails } from "@/data/course-details";
 // Implication: the Leo build and gsitssolutions.com carry the same
 // content, so search engines will treat them as duplicates and the
 // self-canonical tells them to prefer the Leo build.
-export const SITE_URL = "https://gradespot-leo-build-app.vercel.app";
+export const SITE_URL = "https://leo-web-a.vercel.app";
 export const ORG_ID = `${SITE_URL}/#organization`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 

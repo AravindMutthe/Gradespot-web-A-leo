@@ -15,7 +15,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BASE = "https://gradespot-leo-build-app.vercel.app"
+BASE = "https://leo-web-a.vercel.app"
 
 
 def read(rel: str) -> str:

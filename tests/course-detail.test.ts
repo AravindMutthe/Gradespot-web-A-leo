@@ -229,7 +229,7 @@ describe("Stage 5 detail — schema, metadata and removed surfaces", () => {
     ]) {
       expect(code).not.toContain(forbidden);
     }
-    expect(page).toContain("✉️</span> Enquire");
+    expect(page).toContain("Enquire Now");
     expect(page).toContain("PENDING_LABEL");
   });
 

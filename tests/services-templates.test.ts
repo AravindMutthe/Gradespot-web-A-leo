@@ -83,7 +83,7 @@ describe("Stage 4 services templates — removed surfaces and forbidden content"
     expect(index).not.toContain("servicesFaqAnswers");
     expect(index).not.toContain("24/7 Customer Support");
     expect(index).not.toContain("Smart Solutions");
-    expect(index).toContain("✉️</span> Enquire");
+    expect(index).toContain("Enquire About Our Services");
   });
 
   it("detail renders the pending notice + enquiry only, never repo summaries, prices or timelines", () => {
@@ -93,10 +93,7 @@ describe("Stage 4 services templates — removed surfaces and forbidden content"
     expect(detail).not.toContain("SampleTag");
     expect(detail).not.toContain("DemoLegend");
     expect(detail).toContain("SERVICE_PENDING_LABEL");
-    // The detail enquiry control now renders the literal ✉️ Enquire
-    // control (owner swap); the constant itself is unchanged and
-    // still pinned by value below.
-    expect(detail).toContain("✉️</span> Enquire");
+    expect(detail).toContain("SERVICE_ENQUIRE_LABEL");
     expect(detail).toContain("/contact-us");
     // The labels themselves, pinned literally (not via the constants).
     expect(SERVICE_PENDING_LABEL).toBe("Service details to be confirmed");

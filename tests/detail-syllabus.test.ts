@@ -5,7 +5,7 @@
 // component-rendering test setup, so rendered output is pinned by the
 // live fetch in the checkpoint, as with demo-fill and LP rebuild):
 //   1. hero buttons on full detail pages, in exactly this order:
-//      About the Course -> View Syllabus -> ✉️ Enquire ->
+//      About the Course -> View Syllabus -> Enquire Now ->
 //      All Trainings. Enquire stays the solid primary; About and
 //      View Syllabus are secondary; All Trainings keeps its style.
 //   2. every hero href resolves to an id on the same page: About ->
@@ -96,7 +96,7 @@ describe("Detail 4-button hero + grouped syllabus", () => {
     const labels = [
       "About the Course",
       "View Syllabus",
-      "✉️</span> Enquire",
+      "Enquire Now",
       "All Trainings",
     ];
     const positions = labels.map((l) => heroSpan.indexOf(l));
@@ -132,7 +132,7 @@ describe("Detail 4-button hero + grouped syllabus", () => {
     // there — unlike the previous stage's topics condition.
     expect(heroSpan).not.toMatch(/topics[\s\S]{0,200}View Syllabus/);
     // Held pages: Enquire + All Trainings only, no About/Syllabus.
-    expect(heldSpan).toContain("✉️</span> Enquire");
+    expect(heldSpan).toContain("Enquire Now");
     expect(heldSpan).toContain("All Trainings");
     expect(heldSpan).not.toContain("About the Course");
     expect(heldSpan).not.toContain("View Syllabus");
@@ -157,7 +157,7 @@ describe("Detail 4-button hero + grouped syllabus", () => {
     expect(detail).toMatch(
       /The full syllabus for this course is shared by the GradeSpot team\s+after enquiry — via WhatsApp or mail\./,
     );
-    expect(detail).toContain("✉️</span> Enquire");
+    expect(detail).toContain("Enquire for the Full Syllabus");
     expect(detail).not.toContain("Download syllabus");
   });
 
@@ -300,10 +300,10 @@ describe("Detail 4-button hero + grouped syllabus", () => {
     expect(detail).not.toMatch(/>\s*Register\s*</);
     expect(detail).toContain("About the Course");
     expect(detail).toContain("View Syllabus");
-    expect(detail).toContain("✉️</span> Enquire");
+    expect(detail).toContain("Enquire Now");
     expect(detail).toContain("All Trainings");
     // LP pages keep their own pair and anchors, untouched.
-    expect(lp).toContain("✉️</span> Enquire");
+    expect(lp).toContain("Enquire Now");
     expect(lp).toContain("View Syllabus");
     expect(lp).toContain('href="#leadform"');
     expect(lp).toContain('href="#syllabus"');

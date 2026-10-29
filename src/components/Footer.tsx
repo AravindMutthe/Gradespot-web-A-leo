@@ -49,7 +49,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     heading: "Get support",
     links: [
       { label: "Contact us", href: "/contact-us" },
-      { label: "✉️ Enquire", href: "/register" },
+      { label: "Course enquiry", href: "/register" },
       { label: "FAQs", href: "/faq" },
       { label: "Accessibility", href: "/accessibility" },
     ],
@@ -88,7 +88,7 @@ export default function Footer() {
             href={telHref(phone)}
             className="mt-1 inline-flex min-h-11 items-center text-[15px] font-semibold text-paper hover:text-brand-accent"
           >
-            <span aria-hidden="true">📞</span> Call
+            {phone}
           </a>
         </div>
         {COLUMNS.map((col) => (
@@ -101,14 +101,7 @@ export default function Footer() {
                     href={link.href}
                     className="inline-flex min-h-11 items-center text-[15px] text-footer-text hover:text-paper"
                   >
-                    {link.label.startsWith("✉️") ? (
-                              <>
-                                <span aria-hidden="true">✉️</span>{" "}
-                                {link.label.replace(/^✉️\s*/, "")}
-                              </>
-                            ) : (
-                              link.label
-                            )}
+                    {link.label}
                   </Link>
                 </li>
               ))}

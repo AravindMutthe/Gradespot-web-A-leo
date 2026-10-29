@@ -66,7 +66,7 @@ const GROUPS: NavGroup[] = [
     label: "Support",
     links: [
       { label: "Contact us", href: "/contact-us" },
-      { label: "✉️ Enquire", href: "/register" },
+      { label: "Course enquiry", href: "/register" },
       { label: "Certificate verification", href: "/certificate-verification" },
       { label: "FAQs", href: "/faq" },
     ],
@@ -160,14 +160,7 @@ export default function Header() {
                         onClick={() => setOpenGroup(null)}
                         className="flex min-h-11 items-center rounded-lg px-3 text-[15px] text-body hover:bg-surface-muted hover:text-brand-dark"
                       >
-                        {link.label.startsWith("✉️") ? (
-                              <>
-                                <span aria-hidden="true">✉️</span>{" "}
-                                {link.label.replace(/^✉️\s*/, "")}
-                              </>
-                            ) : (
-                              link.label
-                            )}
+                        {link.label}
                       </Link>
                     ))}
                   </div>
@@ -191,7 +184,7 @@ export default function Header() {
             href="/contact-us"
             className="flex min-h-11 items-center rounded-lg bg-brand-dark px-5 text-[15px] font-semibold text-white hover:bg-ink"
           >
-            <span aria-hidden="true">✉️</span> Enquire
+            Enquire
           </Link>
           <button
             type="button"
@@ -236,14 +229,7 @@ export default function Header() {
                           onClick={() => setMobileOpen(false)}
                           className="flex min-h-11 items-center rounded-lg px-2 text-[15px] text-body hover:text-brand-dark"
                         >
-                          {link.label.startsWith("✉️") ? (
-                              <>
-                                <span aria-hidden="true">✉️</span>{" "}
-                                {link.label.replace(/^✉️\s*/, "")}
-                              </>
-                            ) : (
-                              link.label
-                            )}
+                          {link.label}
                         </Link>
                       ))}
                     </div>

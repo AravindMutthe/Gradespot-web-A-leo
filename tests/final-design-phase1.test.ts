@@ -155,10 +155,8 @@ describe("final design phase 1: vocabulary pass", () => {
   });
 
   it("chrome Register links are enquiry-consistent, URLs unchanged", () => {
-    // Owner Call/Enquire swap: the chrome enquiry links now read
-    // "✉️ Enquire" (emoji wrapped in aria-hidden at render).
-    expect(HEADER).toContain("✉️ Enquire");
-    expect(FOOTER).toContain("✉️ Enquire");
+    expect(HEADER).toContain("Course enquiry");
+    expect(FOOTER).toContain("Course enquiry");
     expect(HEADER).not.toContain('{ label: "Register"');
     expect(FOOTER).not.toContain('{ label: "Register"');
   });

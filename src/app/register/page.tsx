@@ -65,7 +65,7 @@ export default async function RegisterPage({
             <p className="mt-9 max-w-xl text-[15px] leading-7 text-body">
               Rather talk first? Call{" "}
               <a href={telHref(phone)} className="font-semibold text-action hover:text-action-dark">
-                <span aria-hidden="true">📞</span> Call
+                {phone}
               </a>{" "}
               or browse the{" "}
               <Link href="/trainings" className="font-semibold text-action hover:text-action-dark">

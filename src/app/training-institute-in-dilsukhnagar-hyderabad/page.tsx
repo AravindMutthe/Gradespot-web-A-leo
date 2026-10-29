@@ -116,7 +116,7 @@ export default function LocalInstitutePage() {
               <p className="mt-3 text-sm leading-6 text-body">
                 {business.phones.map((p) => (
                   <a key={p} href={telHref(p)} className="block font-semibold text-heading hover:text-action-dark">
-                    <span aria-hidden="true">📞</span> Call
+                    {p}
                   </a>
                 ))}
                 {business.emails.map((e) => (

@@ -204,7 +204,7 @@ export default async function ComparePairPage({ params }: { params: Promise<{ pa
                     <p className="mt-3 text-[15px] leading-7 text-body">{HELD}</p>
                     <div className="mt-6">
                       <Link href="/contact-us" className="btn-primary">
-                        <span aria-hidden="true">✉️</span> Enquire
+                        Enquire About This Course
                       </Link>
                     </div>
                   </>

@@ -120,7 +120,7 @@ describe("curriculum gating — page, search, metadata, schema", () => {
   it("renders the gated block and purpose note, and no download promise, in live code", () => {
     const code = page.replace(/^\s*\/\/.*$/gm, "");
     expect(code).toContain("Full syllabus — shared after enquiry");
-    expect(code).toContain("✉️</span> Enquire");
+    expect(code).toContain("Enquire for the Full Syllabus");
     expect(code).toContain('href="#enquire"');
     expect(code).toContain("What you will learn");
     expect(code).toContain(

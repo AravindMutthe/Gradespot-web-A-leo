@@ -143,35 +143,60 @@ describe("Das Part B(b): Register speaks enquiry language", () => {
   });
 });
 
-describe("Call / Enquire display swap (owner order)", () => {
-  it("no old Call/Enquire display string survives anywhere in src", () => {
+describe("Call / Enquire display swap, narrowed scope (owner correction)", () => {
+  // Owner correction 2026-10-29: the swap applies ONLY to the Header
+  // Call pills (desktop + mobile) and the site-wide SiteStickyBar
+  // (Call + Enquire). Every other surface reverted to its 7a21a95
+  // labels; Gate 1 + Das work is untouched by this narrowing.
+  it("emoji Call/Enquire labels appear ONLY in Header + SiteStickyBar", () => {
     for (const { file, src } of allSrc()) {
-      for (const old of ["Call {phone}", "Call: {phone}", "Call Now", "Enquire Now"]) {
-        expect(src, `${file}: ${old}`).not.toContain(old);
+      if (file === "components/Header.tsx") {
+        expect(src, file).not.toContain("✉️");
+      } else if (file === "components/SiteStickyBar.tsx") {
+        // Both emoji live here by design; asserted below.
+      } else {
+        expect(src, file).not.toContain("📞");
+        expect(src, file).not.toContain("✉️");
       }
     }
   });
 
-  it("Call controls read 📞 Call with an aria-hidden emoji", () => {
-    for (const src of [HEADER, STICKY, FOOTER, LP, CONTACT]) {
+  it("Header pills and the sticky bar read 📞 Call with an aria-hidden emoji", () => {
+    for (const src of [HEADER, STICKY]) {
       expect(src).toMatch(/aria-hidden="true">📞<\/span> Call/);
     }
     // tel: targets are untouched — only the displayed text changed.
     expect(HEADER).toContain("telHref(phone)");
     expect(STICKY).toContain("telHref(phone)");
-    expect(FOOTER).toContain("telHref(phone)");
-    expect(CONTACT).toContain("telHref(p)");
   });
 
-  it("Enquire controls read ✉️ Enquire with an aria-hidden emoji", () => {
-    for (const src of [STICKY, LP, DETAIL]) {
-      expect(src).toMatch(/aria-hidden="true">✉️<\/span> Enquire/);
-    }
-    // Data-driven labels (nav, search/category rows) wrap the emoji
-    // at render; the label data itself stays plain text.
-    expect(HEADER).toContain('label: "✉️ Enquire"');
-    expect(HEADER).toContain('link.label.startsWith("✉️")');
-    expect(FOOTER).toContain('link.label.startsWith("✉️")');
+  it("the sticky bar alone reads ✉️ Enquire; chrome nav labels are plain again", () => {
+    expect(STICKY).toMatch(/aria-hidden="true">✉️<\/span> Enquire/);
+    expect(HEADER).toContain('label: "Course enquiry"');
+    expect(FOOTER).toContain('label: "Course enquiry"');
+    expect(HEADER).not.toContain('startsWith("✉️")');
+    expect(FOOTER).not.toContain('startsWith("✉️")');
+    // Header's own /contact-us button is plain Enquire again.
+    expect(HEADER).toMatch(/Enquire\s*<\/Link>/);
+  });
+
+  it("reverted surfaces show the pre-swap labels again", () => {
+    // Footer contact: bare number variable, not an emoji Call.
+    expect(FOOTER).toContain("{phone}");
+    // Contact page: bare number variables.
+    expect(CONTACT).toContain("{p}");
+    // LP pages: own hero + footer + sticky labels, not SiteStickyBar.
+    expect(LP).toContain("Call: {phone}");
+    expect(LP).toContain("Call Now");
+    expect(LP).toContain("Enquire Now");
+    expect(LP).toContain("Enquire for the Full Syllabus");
+    // Detail pages: plain hero labels.
+    expect(DETAIL).toContain("Enquire Now");
+    expect(DETAIL).toContain("Enquire for the Full Syllabus");
+    expect(DETAIL).toContain("Enquire via contact");
+    // Register page: the "Rather talk first? Call 📞 Call" redundancy is gone.
+    expect(REGISTER_PAGE).toContain("{phone}");
+    expect(REGISTER_PAGE).not.toContain("📞");
   });
 
   it("WhatsApp, Free Counselling and the floating Register link are untouched", () => {
@@ -183,12 +208,14 @@ describe("Call / Enquire display swap (owner order)", () => {
     expect(read("../src/components/FloatingActions.tsx")).toContain("Register");
   });
 
-  it("the number survives ONLY in the flagged prose/data surfaces", () => {
+  it("the literal number string appears only in data/prose files", () => {
     // Allowlist (each explained in the branch report): the data
     // definition itself, meta descriptions (not visible UI), and
     // prose mentions inside FAQ answers / policy body text — plain
     // strings that cannot host a Call control without restructuring
-    // the FAQ/policy data model. No tel anchor displays a number.
+    // the FAQ/policy data model. Reverted UI surfaces use the
+    // {phone}/{p} variables, not the literal string, so they are
+    // correctly absent from this list.
     const allowed = new Set([
       "data/site.ts",
       "app/contact-us/page.tsx",
@@ -200,11 +227,6 @@ describe("Call / Enquire display swap (owner order)", () => {
     for (const { file, src } of allSrc()) {
       if (/(91826 54056|9182654056)/.test(src)) {
         expect(allowed.has(file), `${file} shows the number`).toBe(true);
-      }
-      // Inner content only: the opening tag itself legitimately
-      // contains {p} (key) and telHref(p) (href).
-      for (const m of src.matchAll(/<a\b[^>]*telHref\([^)]*\)[^>]*>([\s\S]*?)<\/a>/g)) {
-        expect(m[1]).not.toMatch(/\{phone\}|\{p\}|54056/);
       }
     }
   });

@@ -102,7 +102,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             href={telHref(phone)}
             className="flex min-h-[44px] shrink-0 items-center rounded-full border border-line bg-surface px-4 py-2 text-sm font-semibold text-heading"
           >
-            <span aria-hidden="true">📞</span> Call
+            Call: {phone}
           </a>
         </div>
       </header>
@@ -119,7 +119,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             </h1>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <a href="#leadform" className="btn-primary min-h-[44px] px-6 py-3">
-                <span aria-hidden="true">✉️</span> Enquire
+                Enquire Now
               </a>
               <a href="#syllabus" className="btn-outline-light min-h-[44px] px-6 py-3">
                 View Syllabus
@@ -242,7 +242,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
               here.
             </p>
             <a href="#leadform" className="btn-primary mt-4 inline-block min-h-[44px] px-6 py-3">
-              <span aria-hidden="true">✉️</span> Enquire
+              Enquire for the Full Syllabus
             </a>
           </div>
         </div>
@@ -337,7 +337,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             Enquire about {lp.displayTitle} — batch, schedule and fees are confirmed on enquiry.
           </p>
           <a href="#leadform" className="btn-primary mt-6 inline-block min-h-[44px] px-6 py-3">
-            <span aria-hidden="true">✉️</span> Enquire
+            Enquire Now
           </a>
         </div>
       </section>
@@ -347,7 +347,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-5 py-4 text-[13px] text-footer-text md:px-6">
           <span>GradeSpot IT Solutions — {business.locationLabel}</span>
           <a href={telHref(phone)} className="font-semibold">
-            <span aria-hidden="true">📞</span> Call
+            {phone}
           </a>
         </div>
       </footer>
@@ -358,7 +358,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
           href={telHref(phone)}
           className="flex min-h-[44px] flex-1 items-center justify-center px-1 text-center text-[12px] font-bold text-white"
         >
-          <span aria-hidden="true">📞</span> Call
+          Call Now
         </a>
         <a
           href={waLink(`Hi GradeSpot, I have a question about ${lp.displayTitle}.`)}

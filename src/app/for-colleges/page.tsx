@@ -125,7 +125,7 @@ export default function ForCollegesPage() {
                       href="#enquire"
                       className="text-sm font-bold text-action hover:text-action-dark"
                     >
-                      <span aria-hidden="true">✉️</span> Enquire
+                      Enquire for your college →
                     </a>
                     <Link
                       href={`/services/${s.slug}`}

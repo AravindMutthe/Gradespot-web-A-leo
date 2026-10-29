@@ -125,7 +125,7 @@ export default async function ServicesPage() {
               requirement.
             </p>
             <Link href="/contact-us" className="btn-primary mt-5">
-              <span aria-hidden="true">✉️</span> Enquire
+              Enquire About Our Services
             </Link>
           </div>
         </div>

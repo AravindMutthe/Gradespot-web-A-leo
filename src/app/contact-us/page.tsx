@@ -54,7 +54,7 @@ export default function ContactPage() {
                 {allPhones.map((p) => (
                   <p key={p}>
                     <a className="text-body hover:text-action-dark" href={telHref(p)}>
-                      <span aria-hidden="true">📞</span> Call
+                      {p}
                     </a>
                   </p>
                 ))}

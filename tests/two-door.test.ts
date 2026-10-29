@@ -274,7 +274,7 @@ describe("Two-door — business directory: exactly 12 services, 4 pathways", () 
     expect(servicesDir).toContain("SERVICE_GROUPS");
     expect(servicesDir).toContain("buildServiceRow");
     expect(servicesDir).not.toContain("DemoLegend");
-    expect(servicesDir).toContain("✉️</span> Enquire");
+    expect(servicesDir).toContain("Enquire About Our Services");
   });
 
   it("pathways are business pages, not services, and Partner With Us lists no partners", () => {

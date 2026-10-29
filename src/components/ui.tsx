@@ -299,7 +299,7 @@ export function CtaBand() {
             Request a Callback
           </Link>
           <a href={telHref(phone)} className="btn-outline-light">
-            <span aria-hidden="true">📞</span> Call
+            Call {phone}
           </a>
         </div>
       </div>

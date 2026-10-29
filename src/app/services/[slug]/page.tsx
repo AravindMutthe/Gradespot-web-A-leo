@@ -8,7 +8,7 @@ import { PageHero } from "@/components/ui";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, serviceSchema } from "@/lib/schema";
-import { SERVICE_PENDING_LABEL } from "@/lib/services-rows";
+import { SERVICE_ENQUIRE_LABEL, SERVICE_PENDING_LABEL } from "@/lib/services-rows";
 
 export function generateStaticParams() {
   return localServices.map((s) => ({ slug: s.slug }));
@@ -85,7 +85,7 @@ export default async function ServicePage({
                 Send an enquiry and our team will discuss your requirement.
               </p>
               <Link href="/contact-us" className="btn-primary mt-5">
-                <span aria-hidden="true">✉️</span> Enquire
+                {SERVICE_ENQUIRE_LABEL}
               </Link>
             </div>
             <p>

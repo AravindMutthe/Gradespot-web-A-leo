@@ -79,7 +79,7 @@ export default function AccessibilityPage() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3.5">
                 <a href={telHref(phone)} className="btn-primary">
-                  <span aria-hidden="true">📞</span> Call
+                  Call {phone}
                 </a>
                 <a href={`mailto:${business.emails[0]}`} className="btn-outline-navy">
                   {business.emails[0]}

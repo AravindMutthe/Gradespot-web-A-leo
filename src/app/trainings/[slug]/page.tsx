@@ -188,7 +188,7 @@ export default async function CoursePage({
                   in globals.css (.detail-hero-cta, below md only). */}
               <div className="detail-hero-cta mt-7 grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-4">
                 <Link href="/contact-us" className="btn-primary min-h-[44px]">
-                  <span aria-hidden="true">✉️</span> Enquire
+                  Enquire Now
                 </Link>
                 <Link href="/trainings" className="btn-outline-light min-h-[44px]">
                   All Trainings
@@ -232,7 +232,7 @@ export default async function CoursePage({
                   View Syllabus
                 </a>
                 <a href="#enquire" className="btn-primary min-h-[44px]">
-                  <span aria-hidden="true">✉️</span> Enquire
+                  Enquire Now
                 </a>
                 <Link href="/trainings" className="btn-outline-light min-h-[44px]">
                   All Trainings
@@ -315,7 +315,7 @@ export default async function CoursePage({
                     href="#enquire"
                     className="btn-primary mt-4 inline-flex min-h-[44px] items-center"
                   >
-                    <span aria-hidden="true">✉️</span> Enquire
+                    Enquire for the Full Syllabus
                   </a>
                 </div>
               </section>
@@ -385,7 +385,7 @@ export default async function CoursePage({
                 <p className="mt-4 text-sm leading-6 text-body">
                   Prefer the contact page?{" "}
                   <Link href="/contact-us" className="font-semibold text-ink">
-                    <span aria-hidden="true">✉️</span> Enquire
+                    Enquire via contact
                   </Link>
                 </p>
               </div>

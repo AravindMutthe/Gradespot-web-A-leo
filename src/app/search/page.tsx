@@ -90,7 +90,7 @@ export default async function SearchPage({
               href="/contact-us"
               className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-[15px] font-semibold text-body hover:border-brand-dark hover:text-brand-dark"
             >
-              <span aria-hidden="true">✉️</span> Enquire
+              Enquire
             </Link>
           </p>
         </div>
@@ -168,7 +168,7 @@ export default async function SearchPage({
               </p>
               <p className="mt-4">
                 <Link href="/contact-us" className="btn-primary">
-                  <span aria-hidden="true">✉️</span> Enquire
+                  Enquire
                 </Link>
               </p>
             </div>
@@ -208,15 +208,7 @@ export default async function SearchPage({
                         href={entry.actionHref}
                         className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-[15px] font-semibold text-body hover:border-brand-dark hover:text-brand-dark"
                       >
-                        {entry.actionLabel.startsWith("Enquire") ? (
-                          <>
-                            <span aria-hidden="true">✉️</span> Enquire
-                          </>
-                        ) : (
-                          <>
-                            {entry.actionLabel} →
-                          </>
-                        )}
+                        {entry.actionLabel} →
                       </Link>
                     </p>
                   </article>

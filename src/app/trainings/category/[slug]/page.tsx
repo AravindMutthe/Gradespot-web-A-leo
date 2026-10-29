@@ -112,13 +112,7 @@ export default async function CategoryPage({
                     href={row.actionHref}
                     className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
                   >
-                    {row.actionLabel.startsWith("Enquire") ? (
-                      <>
-                        <span aria-hidden="true">✉️</span> Enquire
-                      </>
-                    ) : (
-                      row.actionLabel
-                    )}
+                    {row.actionLabel}
                   </Link>
                 </article>
               </li>

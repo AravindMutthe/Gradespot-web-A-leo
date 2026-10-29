@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Chrome from "@/components/Chrome";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import SiteStickyBar from "@/components/SiteStickyBar";
 import JsonLd from "@/components/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 
@@ -56,7 +59,21 @@ export default function RootLayout({
       <body>
         <JsonLd data={organizationSchema()} />
         <JsonLd data={websiteSchema()} />
-        <Chrome>{children}</Chrome>
+        {/* Static chrome is server-rendered and passed as props, so
+            Footer / spacer / sticky bar ship no client JS: only the
+            Header island hydrates (see Chrome.tsx, feat/main-perf-tbt). */}
+        <Chrome
+          header={<Header />}
+          footer={
+            <>
+              <Footer />
+              <div aria-hidden="true" className="h-[68px] md:hidden" />
+              <SiteStickyBar />
+            </>
+          }
+        >
+          {children}
+        </Chrome>
       </body>
     </html>
   );

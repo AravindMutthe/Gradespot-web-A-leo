@@ -41,6 +41,7 @@ const LP_FORM = readSource("../src/components/LpLeadForm.tsx");
 const HEADER = readSource("../src/components/Header.tsx");
 const FOOTER = readSource("../src/components/Footer.tsx");
 const CHROME = readSource("../src/components/Chrome.tsx");
+const LAYOUT = readSource("../src/app/layout.tsx");
 const STICKY = readSource("../src/components/SiteStickyBar.tsx");
 const GLOBALS = readSource("../src/app/globals.css");
 const COURSES_DIR = readSource("../src/app/trainings/courses/page.tsx");
@@ -120,14 +121,25 @@ describe("final design phase 1: site sticky bar", () => {
   });
 
   it("Chrome renders it on site pages only, with footer clearance", () => {
-    expect(CHROME).toContain("<SiteStickyBar />");
-    expect(CHROME).toContain("h-[68px] md:hidden");
+    // Perf contract (feat/main-perf-tbt): the static chrome is
+    // server-rendered in the root layout and passed to Chrome as
+    // props, so Footer / spacer / sticky bar ship no client JS —
+    // only the Header island hydrates. Chrome itself imports
+    // neither Footer nor SiteStickyBar anymore.
+    expect(CHROME).not.toContain('components/Footer');
+    expect(CHROME).not.toContain('components/SiteStickyBar');
+    expect(LAYOUT).toContain("<Footer />");
+    expect(LAYOUT).toContain("h-[68px] md:hidden");
+    expect(LAYOUT).toContain("<SiteStickyBar />");
+    expect(LAYOUT.indexOf("<Footer />")).toBeLessThan(
+      LAYOUT.indexOf("<SiteStickyBar />"),
+    );
     // LP branch returns a bare main (no header, footer, or sticky
-    // bar); the sticky bar renders after the footer in the site
-    // branch only.
+    // bar); the site branch renders header, main, then the footer
+    // prop in that order.
     expect(CHROME).toContain('return <main id="main">{children}</main>;');
-    expect(CHROME.indexOf("<Footer />")).toBeLessThan(
-      CHROME.indexOf("<SiteStickyBar />"),
+    expect(CHROME).toContain(
+      "{header}\n      <main id=\"main\">{children}</main>\n      {footer}",
     );
   });
 });

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
+import { ChapterRow } from "@/components/prospectus";
+import { chapterNumber } from "@/lib/chapter-contract";
 import SearchBox from "@/components/SearchBox";
 import { TRAINING_DIRECTORY_ENTRIES } from "@/lib/two-door";
 
@@ -48,25 +50,18 @@ export default function TrainingsDirectoryPage() {
         <div className="wrap">
           <DirectoryBoard door="training" title="Browse training">
           <ul className="border-t border-line">
-            {TRAINING_DIRECTORY_ENTRIES.map((entry) => (
+            {TRAINING_DIRECTORY_ENTRIES.map((entry, i) => (
               <li key={entry.href} className="border-b border-line">
-                <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
-                  <div className="min-w-0">
-                    <h2 className="text-lg font-semibold">
-                      <Link href={entry.href} className="hover:text-action-dark">
-                        {entry.title}
-                      </Link>
-                    </h2>
-                    <p className="mt-1 text-[15px] text-body">{entry.line}</p>
-                    <p className="mt-1 text-[15px] text-muted">{entry.status}</p>
-                  </div>
-                  <Link
-                    href={entry.href}
-                    className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
-                  >
-                    Browse →
-                  </Link>
-                </article>
+                <ChapterRow
+                  number={chapterNumber(i + 1)}
+                  door="training"
+                  title={entry.title}
+                  titleHref={entry.href}
+                  description={entry.line}
+                  status={entry.status}
+                  actionLabel="Browse →"
+                  actionHref={entry.href}
+                />
               </li>
             ))}
           </ul>

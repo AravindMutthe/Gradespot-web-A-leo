@@ -1,0 +1,61 @@
+// Direction A — "The Prospectus", Bootstrap Path 2 (design-focus brief
+// §3.2, recommended with eyes open). Bootstrap supplies the editorial
+// grid ONLY. This entry deliberately does NOT import Bootstrap's
+// whole bundle, and does NOT import bootstrap-grid.scss wholesale:
+// that file pulls in containers (whose class name collides with
+// Tailwind's container utility) and the full utilities API (d-flex, m-*, p-*
+// — all collide with Tailwind's utilities). Importing those would be
+// the silent coexistence the brief forbids.
+//
+// Imported, in order: functions, then token-mapped variable overrides
+// (Bootstrap !default variables take these values), then variables,
+// variables-dark, maps, mixins, vendor/rfs, grid (row/col + gutter
+// utilities only). NOT imported: reboot (Tailwind preflight already
+// resets), containers (Tailwind's `wrap` utility owns page width),
+// utilities API (every utility templates need already exists in
+// Tailwind — the selected-utilities set is therefore the grid's own
+// gutter classes, and nothing else, until a template justifies more),
+// root, reboot, helpers, or any component. No Bootstrap JavaScript
+// is imported anywhere: accordions use native <details>, nav uses
+// the existing React sheet — the near-zero client JS posture survives.
+//
+// RECORDED DECISION (brief §5, Gate 1 item 8): Bootstrap's grid
+// breakpoints are aligned to Tailwind's (sm 640, md 768, lg 1024,
+// xl 1280, xxl 1536) instead of Bootstrap's defaults (576/992/1200/
+// 1400), so the editorial grid collapses at the same points as the
+// rest of the site. No third breakpoint system is introduced.
+// Gutter: 1.5rem, matching the `wrap` side padding.
+// Colors: mapped to the Gate 1 tokens FIRST (brand #C24E1F, ink
+// #10233F, teal #0F766E, line #D9E2EC), so Bootstrap provides
+// structure, never identity — uncustomized Bootstrap blue never
+// appears. Tailwind utilities are retired progressively per rebuilt
+// template, never deleted in one sweep; until retirement finishes,
+// two stylesheets ship (grid CSS only from Bootstrap), which is the
+// documented Path 2 cost.
+
+@import "bootstrap/scss/functions";
+
+// Token mapping — must precede the variables import (all !default).
+$primary: #c24e1f;
+$secondary: #10233f;
+$success: #0f766e;
+$body-color: #1e293b;
+$text-muted: #475569;
+$border-color: #d9e2ec;
+$grid-breakpoints: (
+  xs: 0,
+  sm: 640px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+  xxl: 1536px,
+);
+$grid-gutter-width: 1.5rem;
+
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins/breakpoints";
+@import "bootstrap/scss/mixins/grid";
+@import "bootstrap/scss/vendor/rfs";
+@import "bootstrap/scss/grid";

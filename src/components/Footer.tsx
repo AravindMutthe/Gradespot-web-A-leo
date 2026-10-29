@@ -114,6 +114,14 @@ export default function Footer() {
           <p>
             © {year} {business.name}. All rights reserved.
           </p>
+          {/* Direction A — colophon: the prospectus's last page.
+              Address + office hours are published business facts
+              (src/data/site.ts, from the live-site crawl); the
+              enquiry line is the standing honesty language. Footer
+              columns and subheads are otherwise untouched. */}
+          <p>
+            {business.address} · Open {business.officeHours} · Details confirmed on enquiry.
+          </p>
         </div>
       </div>
     </footer>

@@ -35,6 +35,8 @@ import Link from "next/link";
 import { courses, courseCategories } from "@/data/courses";
 import { topicSlug } from "@/lib/two-door";
 import { services } from "@/data/services";
+import { buildContentsChapters } from "@/lib/chapter-contract";
+import { ChapterContents, ContentsGrid, ProspectusCover } from "@/components/prospectus";
 
 export const metadata: Metadata = {
   title: {
@@ -83,149 +85,86 @@ export default function HomePage() {
     }))
     .filter((c) => c.count > 0);
 
+  // Prospectus contents, computed from data only: category counts,
+  // service titles, interest links. No count or entry is invented.
+  const categoryChapters = buildContentsChapters(
+    categories.map((cat) => ({
+      title: cat.name,
+      href: `/trainings/category/${topicSlug(cat.name)}`,
+      meta: `${cat.count} ${cat.count === 1 ? "training" : "trainings"}`,
+    })),
+  );
+  const interestChapters = buildContentsChapters(
+    INTERESTS.map((item) => ({ title: item.label, href: item.href })),
+  );
+  const serviceChapters = buildContentsChapters(
+    services.map((s) => ({ title: s.title, href: `/services/${s.slug}` })),
+  );
+
   return (
     <>
-      {/* Stage 1 — editorial split hero. Left: ink panel, D3 wording,
-          equal-door CTAs. Right: the two doors as text rows, not
-          cards, not a photo panel. */}
-      <section aria-label="Introduction">
-        <div className="wrap grid gap-0 py-6 md:py-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="bg-ink px-6 py-10 sm:px-10 md:py-14">
-            <p className="eyebrow text-brand-bright">Dilsukhnagar · Hyderabad</p>
-            <h1 className="mt-5 max-w-xl text-[40px] font-semibold leading-[1.08] text-white md:text-[56px]">
-              Practical IT training — and IT services — in Hyderabad.
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-footer-text">
-              Explore technical courses and business IT solutions from GradeSpot IT Solutions.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/trainings" className="btn-primary">
-                Explore Training
-              </Link>
-              <Link href="/services" className="btn-outline-light">
-                Explore IT Solutions
-              </Link>
-            </div>
-            <p className="mt-8 max-w-xl text-sm leading-6 text-footer-text">
-              Two doors, one institute — training and IT services, side by side.
-            </p>
-          </div>
-          <div className="border border-line bg-surface px-6 py-10 sm:px-10 md:py-14">
-            <p className="eyebrow text-brand-dark">Two doors</p>
-            <ul className="mt-4">
-              <li className="border-b border-line">
-                <Link
-                  href="/trainings"
-                  className="flex min-h-[64px] items-center justify-between gap-4 py-3"
-                >
-                  <span>
-                    <span className="block text-lg font-semibold text-ink">Training</span>
-                    <span className="block text-sm leading-6 text-muted">
-                      Technical courses across {categories.length} categories — browse the full
-                      catalogue.
-                    </span>
-                  </span>
-                  <span aria-hidden className="shrink-0 text-xl text-brand-dark">
-                    →
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="flex min-h-[64px] items-center justify-between gap-4 py-3"
-                >
-                  <span>
-                    <span className="block text-lg font-semibold text-ink">IT Solutions</span>
-                    <span className="block text-sm leading-6 text-muted">
-                      Business IT services, from web development to cybersecurity.
-                    </span>
-                  </span>
-                  <span aria-hidden className="shrink-0 text-xl text-brand-dark">
-                    →
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      {/* Direction A — prospectus cover. Full-width ink panel, 64px
+          serif title, meta line underneath computed from data only
+          (location + counts), two equal-door CTAs. The old split
+          hero's door rows are replaced by the contents index below
+          the fold — the doors survive as CTAs, not as rows. */}
+      <ProspectusCover
+        metaLine={`Dilsukhnagar · Hyderabad · ${courses.length} trainings · ${services.length} services`}
+        title="Practical IT training — and IT services — in Hyderabad."
+        description="Explore technical courses and business IT solutions from GradeSpot IT Solutions."
+      >
+        <Link href="/trainings" className="btn-primary">
+          Explore Training
+        </Link>
+        <Link href="/services" className="btn-outline-light">
+          Explore IT Solutions
+        </Link>
+      </ProspectusCover>
 
-      {/* Stage 2 — fast discovery: compact 10-category index rows, NOT
-          cards. Counts are computed from the repo data files. */}
+      {/* Contents I — the catalogue index: 10 categories with counts,
+          as a numbered Bootstrap editorial grid (single column below
+          md and at 320 CSS px). */}
       <section aria-label="Browse trainings by category" className="section-pad">
         <div className="wrap">
-          <p className="eyebrow text-brand-dark">Trainings</p>
+          <p className="eyebrow text-brand-dark">Contents</p>
           <h2 className="mt-3 text-3xl font-semibold md:text-4xl">Browse trainings by category</h2>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
             {courses.length} trainings across {categories.length} categories. Pick a category to
             browse the catalogue.
           </p>
-          <ul className="mt-8 border-t border-line">
-            {categories.map((cat) => (
-              <li key={cat.name} className="border-b border-line">
-                <Link
-                  href={`/trainings/category/${topicSlug(cat.name)}`}
-                  className="flex min-h-[56px] items-center justify-between gap-4 py-3"
-                >
-                  <span className="text-lg font-semibold text-ink">{cat.name}</span>
-                  <span className="shrink-0 text-sm text-muted">
-                    {cat.count} {cat.count === 1 ? "training" : "trainings"} →
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-8">
+            <ContentsGrid chapters={categoryChapters} />
+          </div>
           <p className="mt-4 text-sm leading-6 text-muted">
             Availability for each course is confirmed on enquiry.
           </p>
         </div>
       </section>
 
-      {/* Stage 3 — explore by interest: a link strip, not cards. */}
+      {/* Contents II — explore by interest, restyled as a numbered
+          "Start here" contents list (same links, same destinations). */}
       <section aria-label="Explore by interest" className="border-y border-line bg-surface">
         <div className="wrap py-10 md:py-12">
-          <p className="eyebrow text-brand-dark">Explore by interest</p>
+          <p className="eyebrow text-brand-dark">Contents</p>
           <h2 className="mt-3 text-3xl font-semibold md:text-4xl">Start from what you want</h2>
-          <ul className="mt-6 flex flex-wrap gap-3">
-            {INTERESTS.map((item) => (
-              <li key={item.href + item.label}>
-                <Link
-                  href={item.href}
-                  className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
-                >
-                  {item.label} →
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-6">
+            <ChapterContents chapters={interestChapters} />
+          </div>
         </div>
       </section>
 
-      {/* Stage 4 — the IT Solutions door, at the same weight as the
-          training index: title-only rows to the service pages. */}
+      {/* Contents III — the IT Solutions door, at the same weight as
+          the training index: title-only numbered contents. */}
       <section aria-label="IT services" className="section-pad">
         <div className="wrap">
-          <p className="eyebrow text-brand-dark">IT Solutions</p>
+          <p className="eyebrow text-brand-dark">Contents</p>
           <h2 className="mt-3 text-3xl font-semibold md:text-4xl">Business IT services</h2>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
             {services.length} services listed on the services catalogue.
           </p>
-          <ul className="mt-8 border-t border-line">
-            {services.map((s) => (
-              <li key={s.slug} className="border-b border-line">
-                <Link
-                  href={`/services/${s.slug}`}
-                  className="flex min-h-[56px] items-center justify-between gap-4 py-3"
-                >
-                  <span className="text-lg font-semibold text-ink">{s.title}</span>
-                  <span aria-hidden className="shrink-0 text-xl text-brand-dark">
-                    →
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-8">
+            <ContentsGrid chapters={serviceChapters} />
+          </div>
         </div>
       </section>
 

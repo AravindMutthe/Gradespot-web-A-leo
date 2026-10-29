@@ -3,6 +3,8 @@ import Link from "next/link";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
+import { ChapterRow } from "@/components/prospectus";
+import { chapterNumber } from "@/lib/chapter-contract";
 import SearchBox from "@/components/SearchBox";
 import { topicCategories } from "@/lib/two-door";
 
@@ -52,17 +54,17 @@ export default function CoursesDirectoryPage() {
             countLine={`${total} courses, grouped by topic below.`}
           >
           <ul className="border-t border-line">
-            {categories.map((cat) => (
+            {categories.map((cat, i) => (
               <li key={cat.slug} className="border-b border-line">
-                <Link
-                  href={`/trainings/category/${cat.slug}`}
-                  className="row-hover flex min-h-[56px] items-center justify-between gap-4 py-3"
-                >
-                  <span className="text-lg font-semibold text-ink">{cat.name}</span>
-                  <span className="shrink-0 text-sm text-muted">
-                    {cat.count} {cat.count === 1 ? "course" : "courses"} →
-                  </span>
-                </Link>
+                <ChapterRow
+                  number={chapterNumber(i + 1)}
+                  door="training"
+                  title={cat.name}
+                  titleHref={`/trainings/category/${cat.slug}`}
+                  status={`${cat.count} ${cat.count === 1 ? "course" : "courses"}`}
+                  actionLabel="Browse →"
+                  actionHref={`/trainings/category/${cat.slug}`}
+                />
               </li>
             ))}
           </ul>

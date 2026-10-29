@@ -141,9 +141,16 @@ export default function Header() {
                   aria-haspopup="true"
                   aria-controls={`nav-panel-${group.key}`}
                   onClick={() => setOpenGroup(open ? null : group.key)}
-                  className="flex min-h-11 items-center gap-1 rounded px-3 text-[15px] font-semibold text-body hover:text-brand-dark"
+                  className="flex min-h-11 items-center gap-1 rounded px-3 text-body hover:text-brand-dark"
                 >
-                  {group.label}
+                  {/* Direction A — prospectus contents bar: serif group
+                      labels with a mono count of the group's links
+                      (computed from the menu data, never invented).
+                      Mobile sheet structure is unchanged. */}
+                  <span className="font-display text-[17px] font-semibold">{group.label}</span>
+                  <span className="font-mono text-[12px] font-medium text-muted">
+                    {String(group.links.length).padStart(2, "0")}
+                  </span>
                   <span aria-hidden="true" className={open ? "inline-block rotate-180" : "inline-block"}>
                     ▾
                   </span>

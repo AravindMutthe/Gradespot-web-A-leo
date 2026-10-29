@@ -67,6 +67,9 @@ const css = readSource("../src/app/globals.css");
 const detail = readSource("../src/app/trainings/[slug]/page.tsx");
 const lp = readSource("../src/app/lp/[slug]/page.tsx");
 const home = readSource("../src/app/page.tsx");
+// Direction A refactor (2026-10-29): the home hero h1 moved into the
+// shared ProspectusCover component; the guard follows it there.
+const cover = readSource("../src/components/prospectus.tsx");
 
 describe("hero title visibility (dark-hero pairing)", () => {
   it("documents the trap: base headings resolve to ink, identical to the hero background", () => {
@@ -106,8 +109,9 @@ describe("hero title visibility (dark-hero pairing)", () => {
   });
 
   it("unaffected guard: homepage hero h1 still carries its explicit white class", () => {
-    const classes = h1ClassNames(home);
+    const classes = h1ClassNames(cover);
     expect(classes).toHaveLength(1);
     expect(classes[0]).toMatch(/\btext-white\b/);
+    expect(home).toContain("ProspectusCover");
   });
 });

@@ -20,7 +20,7 @@ export function PageHero({ title, subtitle }: { title: string; subtitle?: string
     <section className="hero-paper border-b border-line py-6 md:py-8">
       <div className="wrap" data-reveal>
         <span className="block h-[3px] w-14 rounded-full bg-gradient-to-r from-brand-dark via-brand to-brand-bright" aria-hidden />
-        <h1 className="mt-6 max-w-4xl text-[40px] font-semibold leading-[1.08] text-heading md:text-[56px]">
+        <h1 className="mt-6 max-w-4xl text-[40px] font-semibold leading-[1.08] text-heading md:text-[64px]">
           {title}
         </h1>
         {subtitle && <p className="mt-5 max-w-3xl text-lg leading-8 text-body">{subtitle}</p>}

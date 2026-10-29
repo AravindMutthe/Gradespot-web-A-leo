@@ -112,6 +112,11 @@
   --color-canvas: #f8fafc;
   --color-surface: #ffffff;
   --color-surface-muted: #eef2f7;
+  /* Direction A (2026-10-29) — warm paper surface for chapter pages.
+     MEASURED (relative-luminance, WCAG 2.2): body #1E293B on paper-warm
+     14.25:1, muted #475569 7.38:1, brand-dark #9C3E18 6.57:1, brand
+     #C24E1F 4.65:1 — all AA normal PASS. */
+  --color-paper-warm: #fdfcf8;
   --color-parchment: #ffffff;
   --color-cream: #eef2f7;
   --color-surface-light: #eef2f7;
@@ -474,6 +479,31 @@
     background: var(--color-ink-deep);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+  }
+}
+
+/* Direction A — chapter rule-draw (brief §4). CSS-only motion, driven
+   by the existing RevealFX IntersectionObserver pattern, WITH a real
+   CSS rule this time (the modern pass's data-reveal attributes were
+   inert because no rule targeted them). The rule starts collapsed and
+   grows when its [data-reveal] ancestor gains .is-in. No-JS fallback:
+   without JS, <html> never gains .reveal-on, so rules render full.
+   Reduced-motion: no transition, always full. This rule targets ONLY
+   .chapter-rule-draw inside [data-reveal] — other data-reveal
+   elements keep their current (static) behavior. */
+[data-reveal] .chapter-rule-draw {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s ease;
+}
+[data-reveal].is-in .chapter-rule-draw,
+html:not(.reveal-on) [data-reveal] .chapter-rule-draw {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] .chapter-rule-draw {
+    transform: scaleX(1);
+    transition: none;
   }
 }
 

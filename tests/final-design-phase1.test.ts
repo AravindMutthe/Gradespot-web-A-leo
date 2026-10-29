@@ -101,10 +101,13 @@ describe("final design phase 1: compare bridge + row hover", () => {
   it("row-hover is flat: tint + soft shadow, no gradients, on all three row lists", () => {
     expect(GLOBALS).toContain("@utility row-hover");
     expect(GLOBALS).toContain("background-color: var(--color-surface-light)");
-    expect(COURSES_DIR).toContain("row-hover");
-    expect(CATEGORY_PAGE).toContain("row-hover");
-    expect(SERVICES_PAGE).toContain("row-hover");
+    // Direction A refactor (2026-10-29): rows moved into the shared
+    // ChapterRow component — the treatment is pinned there, and each
+    // directory page must render ChapterRow (not inline rows).
+    const PROSPECTUS = readSource("../src/components/prospectus.tsx");
+    expect(PROSPECTUS).toContain("row-hover");
     for (const src of [COURSES_DIR, CATEGORY_PAGE, SERVICES_PAGE]) {
+      expect(src).toContain("ChapterRow");
       expect(src).not.toContain("bg-gradient");
     }
   });

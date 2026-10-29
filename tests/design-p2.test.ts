@@ -66,8 +66,16 @@ describe("P2 — one shared board system for both doors", () => {
   });
 
   it("rows stay flat text-first rows with the Phase 1 row-hover treatment", () => {
+    // Direction A refactor (2026-10-29): rows moved into the shared
+    // ChapterRow component — the treatment is pinned there, and each
+    // directory page must render ChapterRow (not inline rows).
+    const prospectus = readFileSync(
+      new URL("../src/components/prospectus.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(prospectus).toContain("row-hover");
     for (const page of changedPages) {
-      expect(page).toContain("row-hover");
+      expect(page).toContain("ChapterRow");
       expect(page).toContain("border-t border-line");
       expect(page).toContain("border-b border-line");
     }

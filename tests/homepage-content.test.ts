@@ -67,9 +67,16 @@ describe("Stage 2 homepage — discovery from repo data only", () => {
   });
 
   it("links every interest entry to an existing route", () => {
-    // Interest hrefs live in the INTERESTS array and render via
-    // href={item.href}, so assert the array entries plus the render.
-    expect(home).toContain("href={item.href}");
+    // Direction A refactor (2026-10-29): interest hrefs live in the
+    // INTERESTS array, map into chapter objects (href: item.href),
+    // and render via ChapterContents (href={chapter.href}) — assert
+    // the whole chain, plus the array entries themselves.
+    expect(home).toContain("href: item.href");
+    const prospectus = readFileSync(
+      new URL("../src/components/prospectus.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(prospectus).toContain("href={chapter.href}");
     for (const href of [
       "/trainings",
       "/services",

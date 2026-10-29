@@ -43,6 +43,8 @@ import { coursePageMetadata } from "@/lib/metadata";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import LeadForm from "@/components/LeadForm";
 import JsonLd from "@/components/JsonLd";
+import { buildDetailChapters } from "@/lib/chapter-contract";
+import { ChapterContents, ChapterEyebrow, FactsStrip } from "@/components/prospectus";
 import { breadcrumbSchema, courseFaqs, courseSchema, faqSchema, webPageSchema } from "@/lib/schema";
 import { courseDetails } from "@/data/course-details";
 import { comparisons } from "@/data/comparisons";
@@ -149,6 +151,16 @@ export default async function CoursePage({
     (s) => !cardOutcomeSections.includes(s),
   );
 
+  // Direction A chapter spine (full pages only — held pages keep
+  // their held branch exactly, with no chapters, no contents list).
+  // Numbering is sequential: 01 Syllabus, 02 About (only where about
+  // sections exist), Enquire closing (02 or 03). Validated at build
+  // by the chapter contract (parse inside buildDetailChapters).
+  const detailChapters = model.heldBack ? [] : buildDetailChapters(aboutSections.length > 0);
+  const syllabusChapter = detailChapters.find((c) => c.id === "syllabus");
+  const aboutChapter = detailChapters.find((c) => c.id === "about");
+  const enquireChapter = detailChapters.find((c) => c.id === "enquire");
+
   return (
     <>
       <JsonLd
@@ -172,8 +184,10 @@ export default async function CoursePage({
       <section className="bg-ink py-6 text-white md:py-8">
         <div className="wrap">
           <Breadcrumbs dark items={crumbs} />
-          <p className="eyebrow mt-6 text-brand-bright">{model.category}</p>
-          <h1 className="mt-2 max-w-4xl text-4xl font-semibold text-white md:text-5xl md:leading-tight">
+          <p className="eyebrow mt-6 text-brand-bright">
+            {model.category} · {course.slug}
+          </p>
+          <h1 className="mt-2 max-w-4xl text-4xl font-semibold text-white md:text-[64px] md:leading-tight">
             {model.displayTitle}
           </h1>
           {model.heldBack ? (
@@ -204,6 +218,26 @@ export default async function CoursePage({
               {model.durationLabel && (
                 <p className="mt-4 text-base font-semibold text-white">{model.durationLabel}</p>
               )}
+              {/* Direction A chapter opener: facts as a spec strip
+                  (moved from the body card — same values verbatim,
+                  including the AZ-900 special-case wording), then the
+                  chapter-contents anchor list. Both render only on
+                  full pages; held pages keep the held branch above. */}
+              {model.facts && (
+                <FactsStrip
+                  facts={{
+                    who: model.facts.who,
+                    level: model.facts.level,
+                    certification:
+                      course.slug === "azure-fundamentals-az-900"
+                        ? "Preparation for Microsoft AZ-900"
+                        : model.facts.certification,
+                  }}
+                />
+              )}
+              <div className="mt-8 max-w-3xl">
+                <ChapterContents chapters={detailChapters} dark />
+              </div>
               {/* Hero buttons, owner-approved reading order:
                   About → Syllabus → Enquire → All Trainings. No
                   enquiry-first pressure: the visitor reads about the
@@ -244,43 +278,24 @@ export default async function CoursePage({
       </section>
 
       {!model.heldBack && (
-        <section className="section-pad">
+        <section className="section-pad bg-paper-warm">
           <div className="wrap">
             <div className="mx-auto max-w-3xl">
-              {model.facts && (
-                <div className="mb-10 rounded-2xl border border-line bg-surface p-7">
-                  <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
-                    Course facts
-                  </h2>
-                  <dl className="mt-4 space-y-3 text-[15px] leading-7 text-body">
-                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-                      <dt className="w-32 shrink-0 font-semibold text-ink">Who it&apos;s for</dt>
-                      <dd>{model.facts.who}</dd>
-                    </div>
-                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-                      <dt className="w-32 shrink-0 font-semibold text-ink">Level</dt>
-                      <dd>{model.facts.level}</dd>
-                    </div>
-                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-                      <dt className="w-32 shrink-0 font-semibold text-ink">Certification</dt>
-                      <dd>{model.slug === "azure-fundamentals-az-900" ? "Preparation for Microsoft AZ-900" : model.facts.certification}</dd>
-                    </div>
-                  </dl>
-                </div>
-              )}
-
               {/* Grouped syllabus view (owner-approved): the areas list
                   + the card outcomes element + the gated block, in that
                   order, in one section. Re-composition only — every
                   word verbatim from its previous location. The areas
-                  list moves out of the facts card above (no
-                  duplication); the outcomes element is the Key
-                  Learning Objectives list where one exists, else the
-                  kept Course Outcomes / Common Job Roles section;
-                  the gated block keeps its exact meaning
+                  list is no longer inside the facts presentation (the
+                  facts now live as a strip in the hero); the outcomes
+                  element is the Key Learning Objectives list where one
+                  exists, else the kept Course Outcomes / Common Job
+                  Roles section; the gated block keeps its exact meaning
                   (shared after enquiry only). */}
               <section id="syllabus" className="mb-10 scroll-mt-24 rounded-2xl border border-line bg-surface p-7">
-                <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
+                {syllabusChapter && (
+                  <ChapterEyebrow number={syllabusChapter.number} title="Syllabus" />
+                )}
+                <h2 className="mt-2 flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
                   Syllabus
                 </h2>
                 {model.facts?.topics && model.facts.topics.length > 0 && (
@@ -330,6 +345,9 @@ export default async function CoursePage({
                   and no About button for them. */}
               {aboutSections.length > 0 && (
                 <div id="about" className="scroll-mt-24 space-y-12">
+                  {aboutChapter && (
+                    <ChapterEyebrow number={aboutChapter.number} title="About the course" />
+                  )}
                   {aboutSections.map((s, i) => (
                     <article key={i}>
                       {s.heading && (
@@ -361,7 +379,10 @@ export default async function CoursePage({
               )}
 
               <div id="enquire" className="mt-12 scroll-mt-32 rounded-2xl border border-line bg-surface p-7">
-                <h2 className="text-[22px] font-semibold leading-snug text-ink">
+                {enquireChapter && (
+                  <ChapterEyebrow number={enquireChapter.number} title="Enquire" />
+                )}
+                <h2 className="mt-2 text-[22px] font-semibold leading-snug text-ink">
                   Request a Callback
                 </h2>
                 <p className="mt-1.5 text-sm leading-6 text-body">

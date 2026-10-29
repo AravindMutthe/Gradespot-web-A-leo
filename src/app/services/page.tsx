@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getServices } from "@/lib/data";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
+import { ChapterRow } from "@/components/prospectus";
+import { chapterNumber } from "@/lib/chapter-contract";
 import { buildServiceRow } from "@/lib/services-rows";
 import { BUSINESS_PATHWAYS, SERVICE_GROUPS } from "@/lib/two-door";
 
@@ -59,26 +61,20 @@ export default async function ServicesPage() {
             <div key={group.label} className="mb-12">
               <DirectoryBoard door="business" title={group.label}>
               <ul className="border-t border-line">
-                {group.slugs.map((slug) => {
+                {group.slugs.map((slug, i) => {
                   const row = rowBySlug.get(slug)!;
                   return (
                     <li key={row.slug} className="border-b border-line">
-                      <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
-                        <div className="min-w-0">
-                          <h3 className="flex flex-wrap items-center gap-3 text-lg font-semibold">
-                            <Link href={row.titleHref} className="hover:text-action-dark focus-visible:underline">
-                              {row.displayTitle}
-                            </Link>
-                          </h3>
-                          <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
-                        </div>
-                        <Link
-                          href={row.actionHref}
-                          className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
-                        >
-                          {row.actionLabel}
-                        </Link>
-                      </article>
+                      <ChapterRow
+                        number={chapterNumber(i + 1)}
+                        door="business"
+                        titleTag="h3"
+                        title={row.displayTitle}
+                        titleHref={row.titleHref}
+                        status={row.statusLabel}
+                        actionLabel={row.actionLabel}
+                        actionHref={row.actionHref}
+                      />
                     </li>
                   );
                 })}
@@ -94,24 +90,18 @@ export default async function ServicesPage() {
               description="Business pathways — institutes, colleges and organisations working with GradeSpot."
             >
             <ul className="border-t border-line">
-              {BUSINESS_PATHWAYS.map((pathway) => (
+              {BUSINESS_PATHWAYS.map((pathway, i) => (
                 <li key={pathway.href} className="border-b border-line">
-                  <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
-                    <div className="min-w-0">
-                      <h3 className="text-lg font-semibold">
-                        <Link href={pathway.href} className="hover:text-action-dark focus-visible:underline">
-                          {pathway.title}
-                        </Link>
-                      </h3>
-                      <p className="mt-1 text-[15px] text-body">{pathway.line}</p>
-                    </div>
-                    <Link
-                      href={pathway.href}
-                      className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
-                    >
-                      Visit page
-                    </Link>
-                  </article>
+                  <ChapterRow
+                    number={chapterNumber(i + 1)}
+                    door="business"
+                    titleTag="h3"
+                    title={pathway.title}
+                    titleHref={pathway.href}
+                    description={pathway.line}
+                    actionLabel="Visit page"
+                    actionHref={pathway.href}
+                  />
                 </li>
               ))}
             </ul>

@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
+import { ChapterRow } from "@/components/prospectus";
+import { chapterNumber } from "@/lib/chapter-contract";
 import { courses, courseDurations } from "@/data/courses";
 import { buildTrainingRow } from "@/lib/trainings-rows";
 import { topicCategories, topicCategoryBySlug } from "@/lib/two-door";
@@ -84,39 +86,42 @@ export default async function CategoryPage({
             countLine={`${rows.length} ${rows.length === 1 ? "course" : "courses"} listed below.`}
           >
           <ul className="border-t border-line">
-            {rows.map((row) => (
-              <li key={row.slug} className="border-b border-line">
-                <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
-                  <div className="min-w-0">
-                    <h2 className="flex flex-wrap items-center gap-3 text-lg font-semibold">
-                      {row.titleHref ? (
-                        <Link href={row.titleHref} className="hover:text-action-dark focus-visible:underline">
-                          {row.displayTitle}
-                        </Link>
-                      ) : (
-                        row.displayTitle
-                      )}
-                    </h2>
-                    {row.statusLabel ? (
-                      <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
-                    ) : (
-                      row.description && (
-                        <p className="mt-1 text-[15px] text-body">{row.description}</p>
-                      )
-                    )}
-                    {row.durationLabel && (
-                      <p className="mt-1 text-[15px] text-muted">{row.durationLabel}</p>
-                    )}
-                  </div>
-                  <Link
-                    href={row.actionHref}
-                    className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
-                  >
-                    {row.actionLabel}
-                  </Link>
-                </article>
-              </li>
-            ))}
+            {(() => {
+              // Direction A: a chapter opener per course ONLY where a
+              // verified summary exists (row.description). Catalogue-only
+              // and held rows stay compact index lines — no invented
+              // body. Opener numbers run sequentially across openers.
+              let opener = 0;
+              return rows.map((row) =>
+                row.description ? (
+                  <li key={row.slug} className="border-b border-line">
+                    <ChapterRow
+                      number={chapterNumber(++opener)}
+                      door="training"
+                      title={row.displayTitle}
+                      titleHref={row.titleHref ?? undefined}
+                      description={row.description}
+                      status={row.durationLabel}
+                      actionLabel={row.actionLabel}
+                      actionHref={row.actionHref}
+                    />
+                  </li>
+                ) : (
+                  <li key={row.slug} className="border-b border-line">
+                    <ChapterRow
+                      compact
+                      door="training"
+                      title={row.displayTitle}
+                      titleHref={row.titleHref ?? undefined}
+                      status={row.statusLabel}
+                      meta={row.durationLabel}
+                      actionLabel={row.actionLabel}
+                      actionHref={row.actionHref}
+                    />
+                  </li>
+                ),
+              );
+            })()}
           </ul>
           </DirectoryBoard>
 

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { validateLead } from "@/lib/lead-validation";
+import { MIN_SUBMIT_MS, validateLead } from "@/lib/lead-validation";
 import { newIdempotencyKey } from "@/lib/lead-contract";
 import { business } from "@/data/site";
 import {
   leadFormCard,
+  leadFormConfirm,
   leadFormErrorPanel,
   leadFormErrorText,
   leadFormField,
@@ -40,8 +41,15 @@ export default function RegisterForm({
   const [serverMessage, setServerMessage] = useState<string>("");
   const [recordedText, setRecordedText] = useState("");
   // Anti-spam mount timestamp (see LeadForm / lead-validation.ts):
-  // the server rejects submissions faster than 3s after load.
+  // a submission faster than 3s after load asks for confirmation
+  // instead of rejecting (Das recommendation).
   const [formLoadedAt] = useState(() => Date.now());
+  // Fast-submit confirm step (Das recommendation): when a
+  // human submits faster than MIN_SUBMIT_MS, show the
+  // confirm panel instead of rejecting; the preserved form
+  // data is resubmitted with confirmedFastSubmit: true.
+  const [needsConfirm, setNeedsConfirm] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const waNumber = business.phones[0].replace(/[^+\d]/g, "").replace(/^\+/, "");
   const waText = encodeURIComponent(
@@ -54,7 +62,14 @@ export default function RegisterForm({
     e.preventDefault();
     if (state === "sending") return; // double-submit guard
     setErrors({});
-    const form = e.currentTarget;
+    void submitForm(e.currentTarget, false);
+  }
+
+  // Shared submit path for the first submit AND the fast-submit
+  // confirm click. `confirmed` is true only when the human pressed
+  // the confirm button; it skips the timing check in validateLead
+  // (the honeypot still applies) and is never stored.
+  async function submitForm(form: HTMLFormElement, confirmed: boolean) {
     const fd = new FormData(form);
     const course = String(fd.get("course") ?? "");
     const type = String(fd.get("type") ?? "Course Registration");
@@ -73,7 +88,25 @@ export default function RegisterForm({
       // into the stored payload.
       website: String(fd.get("website") ?? ""),
       formLoadedAt,
+      // Confirmation flag for the fast-submit confirm step:
+      // true only after the human pressed confirm. validateLead
+      // reads it but never stores it.
+      confirmedFastSubmit: confirmed,
     };
+    // Fast-submit confirm gate (Das recommendation): a human who
+    // submits faster than MIN_SUBMIT_MS after load is NOT rejected
+    // and loses nothing — the form keeps their data and asks for
+    // confirmation instead. A filled honeypot never reaches this
+    // gate: it fails validation below with the generic message.
+    if (
+      !confirmed &&
+      Date.now() - formLoadedAt < MIN_SUBMIT_MS &&
+      String(fd.get("website") ?? "").trim() === ""
+    ) {
+      setNeedsConfirm(true);
+      return;
+    }
+    setNeedsConfirm(false);
     // Same validators as /api/leads (§25.18) — this also closes the
     // old empty-course hole: an unchosen course now fails here AND
     // on the server instead of posting "Registration: ".
@@ -127,6 +160,7 @@ export default function RegisterForm({
   return (
     <form
       onSubmit={onSubmit}
+      ref={formRef}
       className={leadFormCard}
       noValidate
     >
@@ -228,15 +262,33 @@ export default function RegisterForm({
         />
       </div>
       <button type="submit" disabled={state === "sending"} className="btn-primary mt-5 w-full disabled:opacity-60">
-        {state === "sending" ? "Registering…" : "Register"}
+        {state === "sending" ? "Sending…" : "Send Enquiry"}
       </button>
+      {needsConfirm && (
+        <div role="status" className={leadFormConfirm}>
+          <p>You submitted very quickly — please confirm to send this enquiry.</p>
+          <button
+            type="button"
+            ref={(el) => {
+              if (el) el.focus();
+            }}
+            onClick={() => {
+              setNeedsConfirm(false);
+              if (formRef.current) void submitForm(formRef.current, true);
+            }}
+            className="btn-primary mt-3 w-full"
+          >
+            Yes, send my enquiry
+          </button>
+        </div>
+      )}
       <p className={leadFormHelper}>
         Registering sends us your details so the team can confirm your seat or demo timing —
         it is an enquiry, not an online payment or a user account.
       </p>
       {state === "recorded" && (
         <div role="status" className={leadFormSuccess}>
-          <p>Thank you — your registration enquiry has been received and recorded. Our team will call to confirm the details.</p>
+          <p>Your enquiry has been recorded</p>
           <a
             href={`https://wa.me/${waNumber}?text=${waText}`}
             target="_blank"

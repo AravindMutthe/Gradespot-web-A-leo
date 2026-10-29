@@ -53,7 +53,7 @@ export default function TrainingsDirectoryPage() {
                 <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
                   <div className="min-w-0">
                     <h2 className="text-lg font-semibold">
-                      <Link href={entry.href} className="hover:text-signal">
+                      <Link href={entry.href} className="hover:text-action-dark">
                         {entry.title}
                       </Link>
                     </h2>

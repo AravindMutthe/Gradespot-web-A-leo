@@ -9,9 +9,16 @@
    transition so pre-template pages keep rendering; their VALUES are
    the new candidates. The keys are not a second system.
 
-   STATUS: every token here is a MEASURED CANDIDATE, not an approved
-   production token. Final tokens, typography, and hero wording are
-   owner-decided at design approval (Gate 1).
+   STATUS: Gate 1 decided 2026-10-29 (decision log in the branch
+   report; owner may overrule any item). Adopted as built:
+   colour values (item 1), door accents (item 5), heading scale
+   (item 7), two breakpoints (item 8), button shapes (item 9).
+   Changed: Fraunces restricted to H1 + major H2, h3/h4 and
+   footer subheads sans (items 2/3); content links blue
+   #2563EB with #1E40AF hover (item 4); zero-use tokens
+   charcoal + navy-deep pruned (item 10). Prior CANDIDATE
+   wording below is historical for the adopted values; dark
+   theme stays deferred (item 6).
 
    MEASURED CONTRAST PAIRS (relative-luminance computation, WCAG 2.2):
      #C24E1F on #FFFFFF  4.77:1  (AA normal PASS — brand text)
@@ -32,6 +39,9 @@
      #FFFFFF on #10233F 15.74:1  (AAA)
      #CBD5E1 on #10233F 10.60:1  (AAA — footer text on ink)
      #2563EB on #F8FAFC  4.94:1  (AA normal PASS — links)
+     #2563EB on #FFFFFF  5.17:1  (AA normal PASS — links)
+     #1E40AF on #FFFFFF  8.72:1  (AA normal PASS — link hover)
+     #1E40AF on #F8FAFC  8.34:1  (AA normal PASS — link hover)
      #0F766E on #FFFFFF  5.47:1  (AA normal PASS — success text)
      #FFFFFF on #0B7A43  5.41:1  (AA normal PASS — white on WhatsApp)
    RULES: brand-accent (#E57439) is never body/interactive text on a
@@ -111,7 +121,6 @@
   --color-ink: #10233f;
   --color-ink-deep: #0b1a2e;
   --color-navy: #10233f;
-  --color-navy-deep: #0b1a2e;
   --color-heading: #10233f;
   --color-body: #1e293b;
   --color-muted: #475569;
@@ -129,10 +138,10 @@
   --color-brand-soft: #fdf0e9;
   --color-signal: #c24e1f;
   --color-signal-strong: #9c3e18;
-  --color-charcoal: #434140;
 
   /* Links & status */
   --color-action: #2563eb;
+  --color-action-dark: #1e40af;
   --color-success-surface: #f0fdfa;
   --color-success-text: #0f766e;
   --color-success-heading: #0f766e;
@@ -159,8 +168,9 @@
   --color-door-business: #0f766e;
 
   /* Typography — restrained two-level hierarchy, self-hosted only:
-     Fraunces for display headings, Instrument Sans for body/UI,
-     IBM Plex Mono for codes/labels. No Google Fonts, no CDN. */
+     Fraunces for H1 + major H2 display headings, Instrument Sans
+     for h3/h4, body/UI, IBM Plex Mono for codes/labels.
+     No Google Fonts, no CDN. */
   --font-sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -179,11 +189,16 @@
     @apply bg-canvas font-sans text-base leading-[1.7] text-body antialiased;
   }
   h1,
-  h2,
-  h3,
-  h4 {
+  h2 {
     @apply font-display text-heading;
     font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+  }
+  /* Gate 1 (2026-10-29): Fraunces stays on H1 + major H2 only.
+     h3/h4 and footer subheads are sans (Instrument). */
+  h3,
+  h4 {
+    @apply font-sans text-heading;
     letter-spacing: -0.01em;
   }
   ::selection {

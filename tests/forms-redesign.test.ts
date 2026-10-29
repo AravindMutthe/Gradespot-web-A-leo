@@ -64,15 +64,65 @@ describe("honeypot", () => {
     expect(checked.data).not.toBeNull();
     expect("website" in checked.data!).toBe(false);
     expect("formLoadedAt" in checked.data!).toBe(false);
+    // The confirm flag is a transport-only signal, like the other
+    // anti-spam fields: read by validation, never stored.
+    expect("confirmedFastSubmit" in checked.data!).toBe(false);
   });
 });
 
 describe("minimum time-to-submit", () => {
-  it(`rejects submissions faster than ${MIN_SUBMIT_MS}ms after load`, () => {
+  it(`rejects UNCONFIRMED submissions faster than ${MIN_SUBMIT_MS}ms after load`, () => {
     expect(MIN_SUBMIT_MS).toBe(3000);
     const checked = validateLead(validBase({ formLoadedAt: Date.now() }));
     expect(checked.data).toBeNull();
     expect(checked.errors.form).toBeDefined();
+  });
+
+  it("accepts CONFIRMED fast submissions (Das: humans are never auto-rejected for speed)", () => {
+    const checked = validateLead(
+      validBase({ formLoadedAt: Date.now(), confirmedFastSubmit: true }),
+    );
+    expect(checked.data).not.toBeNull();
+  });
+
+  it("a non-boolean confirmation flag does not skip the timing check", () => {
+    const checked = validateLead(
+      validBase({ formLoadedAt: Date.now(), confirmedFastSubmit: "true" }),
+    );
+    expect(checked.data).toBeNull();
+  });
+
+  it("the honeypot still rejects even a confirmed fast submission", () => {
+    const checked = validateLead(
+      validBase({
+        formLoadedAt: Date.now(),
+        confirmedFastSubmit: true,
+        website: "https://spam.example",
+      }),
+    );
+    expect(checked.data).toBeNull();
+  });
+
+  it("all three forms carry the recoverable confirm step (no data loss, keyboard-focusable)", () => {
+    for (const src of [LEAD_FORM, LP_FORM, REGISTER_FORM]) {
+      // State + ref + shared submit path with the confirmation flag.
+      expect(src).toContain("needsConfirm");
+      expect(src).toContain("formRef");
+      expect(src).toContain("submitForm");
+      expect(src).toContain("confirmedFastSubmit");
+      expect(src).toContain("MIN_SUBMIT_MS");
+      // The panel itself: announced (role=status), native button,
+      // auto-focused on mount, resubmits the preserved form data.
+      expect(src).toContain('role="status"');
+      expect(src).toContain("leadFormConfirm");
+      expect(src).toContain("You submitted very quickly");
+      expect(src).toContain("Yes, send my enquiry");
+      expect(src).toContain("submitForm(formRef.current, true)");
+      // The old automatic-rejection wording is gone from the forms.
+      expect(src).not.toContain("server rejects submissions faster");
+      expect(src).not.toContain("the server rejects submissions faster");
+    }
+    expect(FORM_STYLES).toContain("leadFormConfirm");
   });
 
   it("accepts submissions at or after the minimum", () => {

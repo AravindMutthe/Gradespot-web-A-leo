@@ -82,7 +82,7 @@ export default function CorporateAndInternationalPage() {
                 key={p.t}
                 className="rounded-[18px] border border-line bg-parchment p-6"
               >
-                <h3 className="font-display text-[20px] font-semibold text-heading">{p.t}</h3>
+                <h3 className="font-sans text-[20px] font-semibold text-heading">{p.t}</h3>
                 <p className="mt-2 text-sm leading-6 text-body">{p.d}</p>
               </article>
             ))}
@@ -106,7 +106,7 @@ export default function CorporateAndInternationalPage() {
           <p className="mt-6 text-center">
             <a
               href="mailto:info@gsitssolutions.com"
-              className="text-[15px] font-bold text-signal hover:text-signal-strong"
+              className="text-[15px] font-bold text-action hover:text-action-dark"
             >
               info@gsitssolutions.com
             </a>

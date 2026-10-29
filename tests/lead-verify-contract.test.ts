@@ -176,8 +176,16 @@ describe("Stage 7 — forms branch on the honest status", () => {
   });
 
   it("recorded copy says 'received and recorded' in every form", () => {
+    // LeadForm + LpLeadForm keep "received and recorded". RegisterForm
+    // now uses the exact Das string (Part B(b)): "Your enquiry has
+    // been recorded" — recorded only on 201, never on 503.
     for (const form of forms) {
-      expect(readSource(form)).toContain("received and recorded");
+      const src = readSource(form);
+      if (form.includes("RegisterForm")) {
+        expect(src).toContain("Your enquiry has been recorded");
+      } else {
+        expect(src).toContain("received and recorded");
+      }
     }
   });
 

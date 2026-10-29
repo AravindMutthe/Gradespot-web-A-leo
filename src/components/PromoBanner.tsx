@@ -36,7 +36,7 @@ export default async function PromoBanner() {
               </Link>
             )}
             <a href={telHref(phone)} className="btn-outline-light">
-              Call {phone}
+              <span aria-hidden="true">📞</span> Call
             </a>
           </div>
         </div>

@@ -89,7 +89,7 @@ describe("Detail hero buttons — mobile compaction", () => {
     const order = [
       "About the Course",
       "View Syllabus",
-      "Enquire Now",
+      "✉️</span> Enquire",
       "All Trainings",
     ];
     let last = -1;

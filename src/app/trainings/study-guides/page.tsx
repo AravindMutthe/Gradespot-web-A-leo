@@ -50,7 +50,7 @@ export default function StudyGuidesPage() {
               Browse Courses
             </Link>
             <Link href="/contact-us" className="btn-primary min-h-[44px]">
-              Enquire About Study Guides
+              <span aria-hidden="true">✉️</span> Enquire
             </Link>
           </div>
         </div>

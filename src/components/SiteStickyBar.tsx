@@ -15,13 +15,13 @@ export default function SiteStickyBar() {
         href={telHref(phone)}
         className="flex min-h-[44px] flex-1 items-center justify-center px-1 text-center text-[12px] font-bold whitespace-nowrap text-white"
       >
-        Call {phone}
+        <span aria-hidden="true">📞</span> Call
       </a>
       <Link
         href="/contact-us"
         className="flex min-h-[44px] flex-1 items-center justify-center px-1 text-center text-[12px] font-bold whitespace-nowrap text-white"
       >
-        Enquire
+        <span aria-hidden="true">✉️</span> Enquire
       </Link>
     </div>
   );

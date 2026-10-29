@@ -106,7 +106,7 @@ export default function LocalInstitutePage() {
                 href={mapsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-4 inline-block text-sm font-bold text-signal hover:text-signal-strong"
+                className="mt-4 inline-block text-sm font-bold text-action hover:text-action-dark"
               >
                 View on Google Maps →
               </a>
@@ -115,12 +115,12 @@ export default function LocalInstitutePage() {
               <h2 className="text-lg font-bold text-heading">Call or write</h2>
               <p className="mt-3 text-sm leading-6 text-body">
                 {business.phones.map((p) => (
-                  <a key={p} href={telHref(p)} className="block font-semibold text-heading hover:text-signal">
-                    {p}
+                  <a key={p} href={telHref(p)} className="block font-semibold text-heading hover:text-action-dark">
+                    <span aria-hidden="true">📞</span> Call
                   </a>
                 ))}
                 {business.emails.map((e) => (
-                  <a key={e} href={`mailto:${e}`} className="block hover:text-signal">
+                  <a key={e} href={`mailto:${e}`} className="block hover:text-action-dark">
                     {e}
                   </a>
                 ))}
@@ -156,7 +156,7 @@ export default function LocalInstitutePage() {
                   </div>
                   <Link
                     href={`/trainings/${c.slug}`}
-                    className="text-sm font-bold text-signal hover:text-signal-strong"
+                    className="text-sm font-bold text-action hover:text-action-dark"
                   >
                     View the course →
                   </Link>
@@ -182,7 +182,7 @@ export default function LocalInstitutePage() {
               <Link
                 key={c.slug}
                 href={`/lp/${c.slug}-in-hyderabad`}
-                className="rounded-full border border-line bg-surface-light px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-signal"
+                className="rounded-full border border-line bg-surface-light px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:border-brand hover:text-action-dark"
               >
                 {buildCourseDetail(c, courseDetails[c.slug], undefined).displayTitle} in Hyderabad
               </Link>

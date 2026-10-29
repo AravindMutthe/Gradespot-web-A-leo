@@ -132,7 +132,7 @@ export function CourseCardBody({
           </span>
         </p>
         <h3 className="mt-3.5 text-[19px] font-semibold leading-snug text-heading">
-          <Link href={`/trainings/${slug}`} className="transition-colors hover:text-signal">
+          <Link href={`/trainings/${slug}`} className="transition-colors hover:text-action-dark">
             {title}
           </Link>
         </h3>
@@ -145,7 +145,7 @@ export function CourseCardBody({
         <div className="mt-auto flex items-center justify-between gap-3 pt-4">
           <Link
             href={`/trainings/${slug}`}
-            className="inline-block text-sm font-bold text-signal transition-colors hover:text-signal-strong"
+            className="inline-block text-sm font-bold text-action transition-colors hover:text-action-dark"
           >
             Read More{" "}
             <span aria-hidden className="inline-block transition-transform group-hover:translate-x-0.5">
@@ -197,7 +197,7 @@ export function ServiceCard({ service }: { service: Service }) {
         Service {idx >= 0 ? String(idx + 1).padStart(2, "0") : ""}
       </p>
       <h3 className="mt-2 text-[21px] font-semibold text-heading">
-        <Link href={`/services/${service.slug}`} className="transition-colors hover:text-signal">
+        <Link href={`/services/${service.slug}`} className="transition-colors hover:text-action-dark">
           {service.title}
         </Link>
       </h3>
@@ -206,7 +206,7 @@ export function ServiceCard({ service }: { service: Service }) {
       )}
       <Link
         href={`/services/${service.slug}`}
-        className="mt-auto inline-block pt-5 text-sm font-bold text-signal transition-colors hover:text-signal-strong"
+        className="mt-auto inline-block pt-5 text-sm font-bold text-action transition-colors hover:text-action-dark"
       >
         Read More →
       </Link>
@@ -299,7 +299,7 @@ export function CtaBand() {
             Request a Callback
           </Link>
           <a href={telHref(phone)} className="btn-outline-light">
-            Call {phone}
+            <span aria-hidden="true">📞</span> Call
           </a>
         </div>
       </div>
@@ -349,7 +349,7 @@ export function TestimonialSpotlight() {
           </Link>
           <Link
             href="/testimonials"
-            className="text-sm font-bold text-signal transition-colors hover:text-signal-strong"
+            className="text-sm font-bold text-action transition-colors hover:text-action-dark"
           >
             Read all learner voices →
           </Link>
@@ -487,12 +487,12 @@ export function BlogCards() {
             />
           </a>
           <div className="flex grow flex-col p-6">
-            <h3 className="font-display text-[17px] font-semibold leading-snug text-heading">
+            <h3 className="font-sans text-[17px] font-semibold leading-snug text-heading">
               <a
                 href={p.url}
                 target="_blank"
                 rel="noreferrer"
-                className="transition-colors hover:text-signal"
+                className="transition-colors hover:text-action-dark"
               >
                 {p.title}
               </a>
@@ -501,7 +501,7 @@ export function BlogCards() {
               href={p.url}
               target="_blank"
               rel="noreferrer"
-              className="mt-auto inline-block pt-4 text-sm font-bold text-signal transition-colors hover:text-signal-strong"
+              className="mt-auto inline-block pt-4 text-sm font-bold text-action transition-colors hover:text-action-dark"
             >
               Read More →
             </a>
@@ -538,7 +538,7 @@ export function FeatureTrio() {
               <p className="font-mono text-[12px] font-semibold text-brand-bright">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mt-1.5 font-display text-[21px] font-semibold text-paper">{t}</h3>
+              <h3 className="mt-1.5 font-sans text-[21px] font-semibold text-paper">{t}</h3>
             </div>
           ))}
           <Link href="/contact-us" className="btn-primary whitespace-nowrap">

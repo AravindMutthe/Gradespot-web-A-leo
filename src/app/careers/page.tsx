@@ -58,7 +58,7 @@ export default function CareersPage() {
                 this one. This Careers page is for people interested in working at
                 GradeSpot itself.
               </p>
-              <Link href="/career-support" className="mt-4 inline-block text-sm font-bold text-signal hover:text-signal-strong">
+              <Link href="/career-support" className="mt-4 inline-block text-sm font-bold text-action hover:text-action-dark">
                 Career Support →
               </Link>
             </div>

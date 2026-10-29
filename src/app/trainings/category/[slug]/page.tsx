@@ -90,7 +90,7 @@ export default async function CategoryPage({
                   <div className="min-w-0">
                     <h2 className="flex flex-wrap items-center gap-3 text-lg font-semibold">
                       {row.titleHref ? (
-                        <Link href={row.titleHref} className="hover:text-signal focus-visible:underline">
+                        <Link href={row.titleHref} className="hover:text-action-dark focus-visible:underline">
                           {row.displayTitle}
                         </Link>
                       ) : (
@@ -112,7 +112,13 @@ export default async function CategoryPage({
                     href={row.actionHref}
                     className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-canvas px-5 py-2 text-[15px] font-semibold text-ink"
                   >
-                    {row.actionLabel}
+                    {row.actionLabel.startsWith("Enquire") ? (
+                      <>
+                        <span aria-hidden="true">✉️</span> Enquire
+                      </>
+                    ) : (
+                      row.actionLabel
+                    )}
                   </Link>
                 </article>
               </li>

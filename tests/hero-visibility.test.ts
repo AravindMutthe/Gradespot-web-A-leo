@@ -70,7 +70,11 @@ const home = readSource("../src/app/page.tsx");
 
 describe("hero title visibility (dark-hero pairing)", () => {
   it("documents the trap: base headings resolve to ink, identical to the hero background", () => {
-    expect(css).toMatch(/h1,\s*h2,\s*h3,\s*h4\s*\{\s*@apply font-display text-heading/);
+    // Gate 1 (2026-10-29): Fraunces restricted to H1 + major H2;
+    // h3/h4 are sans. Both rules still resolve to ink (the trap
+    // itself is unchanged — only the typeface split moved).
+    expect(css).toMatch(/h1,\s*h2\s*\{\s*@apply font-display text-heading/);
+    expect(css).toMatch(/h3,\s*h4\s*\{\s*@apply font-sans text-heading/);
     expect(token(css, "heading")).toBe(token(css, "ink"));
     // Before the fix this pairing measured 1.00:1 — invisible.
     expect(contrast(token(css, "heading"), token(css, "ink"))).toBeCloseTo(1.0, 2);

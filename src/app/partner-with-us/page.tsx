@@ -66,7 +66,7 @@ export default function PartnerPage() {
                   {tr.n}
                 </span>
                 <p className="eyebrow text-signal-strong">Track {tr.n}</p>
-                <h3 className="mt-3 font-display text-[26px] font-semibold text-heading">{tr.t}</h3>
+                <h3 className="mt-3 font-sans text-[26px] font-semibold text-heading">{tr.t}</h3>
                 <p className="mt-3 text-[15px] leading-7 text-body">{tr.d}</p>
                 <ul className="mt-5 flex flex-wrap gap-2">
                   {tr.points.map((pt) => (
@@ -109,13 +109,13 @@ export default function PartnerPage() {
                 <p className="font-mono text-[12px] font-semibold text-signal-strong">
                   STEP {i + 1}
                 </p>
-                <h3 className="mt-2 font-display text-[21px] font-semibold text-heading">{s.t}</h3>
+                <h3 className="mt-2 font-sans text-[21px] font-semibold text-heading">{s.t}</h3>
                 <p className="mt-2 text-sm leading-6 text-body">{s.d}</p>
               </li>
             ))}
           </ol>
           <div className="mx-auto mt-10 max-w-3xl rounded-[18px] border border-line bg-parchment p-6 text-center">
-            <h3 className="font-display text-[20px] font-semibold text-heading">
+            <h3 className="font-sans text-[20px] font-semibold text-heading">
               The proof is this website
             </h3>
             <p className="mt-2 text-[15px] leading-7 text-body">

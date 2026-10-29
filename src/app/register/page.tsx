@@ -12,7 +12,7 @@ import { business, telHref } from "@/data/site";
 // (gradespot-axon). A course can be pre-selected with ?course=<slug>
 // (the course-page Register buttons use it).
 export const metadata = staticPageMetadata({
-  title: "Register",
+  title: "Register Your Interest",
   description: "Register your interest in a GradeSpot IT Solutions course in Dilsukhnagar, Hyderabad — online and offline trainings. The team calls to discuss batch, mode and next steps.",
   path: "/register",
 });
@@ -29,7 +29,7 @@ export default async function RegisterPage({
   return (
     <>
       <PageHero
-        title="Register"
+        title="Register Your Interest"
         subtitle="Register your interest in a course. Send the form and our team will call to discuss batch, mode and next steps. No payment is taken on this page."
       />
       <section className="section-pad">
@@ -56,7 +56,7 @@ export default async function RegisterPage({
                     {i + 1}
                   </span>
                   <div>
-                    <h3 className="font-display text-[19px] font-semibold text-heading">{s.t}</h3>
+                    <h3 className="font-sans text-[19px] font-semibold text-heading">{s.t}</h3>
                     <p className="mt-1 max-w-xl text-[15px] leading-7 text-body">{s.d}</p>
                   </div>
                 </li>
@@ -64,11 +64,11 @@ export default async function RegisterPage({
             </ol>
             <p className="mt-9 max-w-xl text-[15px] leading-7 text-body">
               Rather talk first? Call{" "}
-              <a href={telHref(phone)} className="font-semibold text-signal hover:text-signal-strong">
-                {phone}
+              <a href={telHref(phone)} className="font-semibold text-action hover:text-action-dark">
+                <span aria-hidden="true">📞</span> Call
               </a>{" "}
               or browse the{" "}
-              <Link href="/trainings" className="font-semibold text-signal hover:text-signal-strong">
+              <Link href="/trainings" className="font-semibold text-action hover:text-action-dark">
                 full training catalogue
               </Link>{" "}
               before you decide.

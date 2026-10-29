@@ -75,7 +75,7 @@ export default function CoursesDirectoryPage() {
             </p>
             <Link
               href="/compare"
-              className="mt-4 inline-block min-h-[44px] text-[15px] font-bold text-signal hover:text-signal-strong"
+              className="mt-4 inline-block min-h-[44px] text-[15px] font-bold text-action hover:text-action-dark"
             >
               Compare courses →
             </Link>

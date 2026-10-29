@@ -123,13 +123,13 @@ export default function ForCollegesPage() {
                   <div className="flex flex-col items-end gap-1">
                     <a
                       href="#enquire"
-                      className="text-sm font-bold text-signal hover:text-signal-strong"
+                      className="text-sm font-bold text-action hover:text-action-dark"
                     >
-                      Enquire for your college →
+                      <span aria-hidden="true">✉️</span> Enquire
                     </a>
                     <Link
                       href={`/services/${s.slug}`}
-                      className="text-sm font-semibold text-body hover:text-signal"
+                      className="text-sm font-semibold text-body hover:text-action-dark"
                     >
                       About {s.title}
                     </Link>
@@ -160,11 +160,11 @@ export default function ForCollegesPage() {
           </div>
           <p className="mx-auto mt-10 max-w-3xl text-center text-[15px] leading-7 text-body">
             Businesses looking for automation products for their own institute will find them on{" "}
-            <Link href="/for-institutes" className="font-semibold text-signal hover:underline">
+            <Link href="/for-institutes" className="font-semibold text-action hover:underline">
               For Institutes
             </Link>
             ; companies training their teams can start with{" "}
-            <Link href="/services/corporate-trainings" className="font-semibold text-signal hover:underline">
+            <Link href="/services/corporate-trainings" className="font-semibold text-action hover:underline">
               Corporate Trainings
             </Link>
             .
@@ -224,7 +224,7 @@ export default function ForCollegesPage() {
               enquiry — nothing here promises a batch, a fee or a seat.
             </p>
             <p className="mt-4 max-w-xl">
-              <Link href="/contact-us" className="font-semibold text-signal hover:underline">
+              <Link href="/contact-us" className="font-semibold text-action hover:underline">
                 Or reach the team on the contact page →
               </Link>
             </p>

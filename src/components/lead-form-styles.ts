@@ -42,6 +42,12 @@ export const leadFormSuccess =
 export const leadFormErrorPanel =
   "mt-4 rounded-lg bg-error-surface p-4 text-sm text-error-text";
 
+// Fast-submit confirm panel (Das recommendation): a human who submits
+// faster than MIN_SUBMIT_MS is asked to confirm, never auto-rejected.
+// Token-only, like every other constant in this file.
+export const leadFormConfirm =
+  "mt-4 rounded-lg border border-line bg-surface-muted p-4 text-sm text-body";
+
 export const leadFormWaButton =
   "mt-3 inline-block rounded-xl bg-wa px-5 py-2.5 font-semibold text-white transition-transform hover:scale-[1.03]";
 

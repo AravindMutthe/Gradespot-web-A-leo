@@ -49,7 +49,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     heading: "Get support",
     links: [
       { label: "Contact us", href: "/contact-us" },
-      { label: "Course enquiry", href: "/register" },
+      { label: "✉️ Enquire", href: "/register" },
       { label: "FAQs", href: "/faq" },
       { label: "Accessibility", href: "/accessibility" },
     ],
@@ -88,12 +88,12 @@ export default function Footer() {
             href={telHref(phone)}
             className="mt-1 inline-flex min-h-11 items-center text-[15px] font-semibold text-paper hover:text-brand-accent"
           >
-            {phone}
+            <span aria-hidden="true">📞</span> Call
           </a>
         </div>
         {COLUMNS.map((col) => (
           <nav key={col.heading} aria-label={`Footer — ${col.heading}`}>
-            <h2 className="text-[17px] font-semibold text-paper">{col.heading}</h2>
+            <h2 className="text-[17px] font-sans font-semibold text-paper">{col.heading}</h2>
             <ul className="mt-4 space-y-1">
               {col.links.map((link) => (
                 <li key={link.href}>
@@ -101,7 +101,14 @@ export default function Footer() {
                     href={link.href}
                     className="inline-flex min-h-11 items-center text-[15px] text-footer-text hover:text-paper"
                   >
-                    {link.label}
+                    {link.label.startsWith("✉️") ? (
+                              <>
+                                <span aria-hidden="true">✉️</span>{" "}
+                                {link.label.replace(/^✉️\s*/, "")}
+                              </>
+                            ) : (
+                              link.label
+                            )}
                   </Link>
                 </li>
               ))}

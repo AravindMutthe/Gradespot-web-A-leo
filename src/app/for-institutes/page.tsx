@@ -138,7 +138,7 @@ export default function ForInstitutesPage() {
                   </p>
                   <h3 className="mt-3 text-xl font-bold text-heading">{p.t}</h3>
                   <p className="mt-2 text-sm leading-6 text-body">{p.d}</p>
-                  <a href="#discuss" className="mt-auto inline-block pt-5 text-sm font-bold text-signal hover:text-signal-strong">
+                  <a href="#discuss" className="mt-auto inline-block pt-5 text-sm font-bold text-action hover:text-action-dark">
                     Discuss this product →
                   </a>
                 </article>
@@ -180,7 +180,7 @@ export default function ForInstitutesPage() {
               attached and their permission.
             </p>
             <p className="mt-4">
-              <Link href="/certificate-verification" className="font-semibold text-signal hover:underline">
+              <Link href="/certificate-verification" className="font-semibold text-action hover:underline">
                 Try certificate verification →
               </Link>
             </p>

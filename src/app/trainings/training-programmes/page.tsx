@@ -53,7 +53,7 @@ export default function TrainingProgrammesPage() {
               Browse Courses
             </Link>
             <Link href="/contact-us" className="btn-primary min-h-[44px]">
-              Enquire About Training Programmes
+              <span aria-hidden="true">✉️</span> Enquire
             </Link>
           </div>
         </div>

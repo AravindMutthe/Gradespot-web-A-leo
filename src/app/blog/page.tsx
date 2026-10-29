@@ -51,7 +51,7 @@ export default function BlogIndexPage() {
                 </div>
                 <Link
                   href={`/blog/${a.slug}`}
-                  className="text-sm font-bold text-signal hover:text-signal-strong"
+                  className="text-sm font-bold text-action hover:text-action-dark"
                 >
                   Read the article →
                 </Link>

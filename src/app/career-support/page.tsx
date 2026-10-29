@@ -108,7 +108,7 @@ export default function CareerSupportPage() {
                   </div>
                   <Link
                     href={`/trainings/${course.slug}`}
-                    className="mt-4 inline-block text-sm font-bold text-signal hover:text-signal-strong"
+                    className="mt-4 inline-block text-sm font-bold text-action hover:text-action-dark"
                   >
                     View the course →
                   </Link>
@@ -135,7 +135,7 @@ export default function CareerSupportPage() {
                 </div>
                 <Link
                   href={`/services/${s.slug}`}
-                  className="text-sm font-bold text-signal hover:text-signal-strong"
+                  className="text-sm font-bold text-action hover:text-action-dark"
                 >
                   About {s.title} →
                 </Link>
@@ -149,10 +149,10 @@ export default function CareerSupportPage() {
               the certifications our alumni have achieved.
             </p>
             <div className="mt-4 flex flex-col gap-2">
-              <Link href="/certificate-verification" className="text-sm font-bold text-signal hover:text-signal-strong">
+              <Link href="/certificate-verification" className="text-sm font-bold text-action hover:text-action-dark">
                 Certificate Verification →
               </Link>
-              <Link href="/student-certifications" className="text-sm font-bold text-signal hover:text-signal-strong">
+              <Link href="/student-certifications" className="text-sm font-bold text-action hover:text-action-dark">
                 Student Certifications →
               </Link>
             </div>

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { validateLead } from "@/lib/lead-validation";
+import { MIN_SUBMIT_MS, validateLead } from "@/lib/lead-validation";
 import { newIdempotencyKey } from "@/lib/lead-contract";
 import { waLink } from "@/lib/wa";
 import {
   leadFormCard,
+  leadFormConfirm,
   leadFormErrorPanel,
   leadFormErrorText,
   leadFormField,
@@ -43,14 +44,28 @@ export default function LpLeadForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverMessage, setServerMessage] = useState<string>("");
   // Anti-spam mount timestamp (see LeadForm / lead-validation.ts):
-  // the server rejects submissions faster than 3s after load.
+  // a submission faster than 3s after load asks for confirmation
+  // instead of rejecting (Das recommendation).
   const [formLoadedAt] = useState(() => Date.now());
+  // Fast-submit confirm step (Das recommendation): when a
+  // human submits faster than MIN_SUBMIT_MS, show the
+  // confirm panel instead of rejecting; the preserved form
+  // data is resubmitted with confirmedFastSubmit: true.
+  const [needsConfirm, setNeedsConfirm] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (state === "sending") return; // double-submit guard
     setErrors({});
-    const form = e.currentTarget;
+    void submitForm(e.currentTarget, false);
+  }
+
+  // Shared submit path for the first submit AND the fast-submit
+  // confirm click. `confirmed` is true only when the human pressed
+  // the confirm button; it skips the timing check in validateLead
+  // (the honeypot still applies) and is never stored.
+  async function submitForm(form: HTMLFormElement, confirmed: boolean) {
     const fd = new FormData(form);
     const payload = {
       name: String(fd.get("name") ?? ""),
@@ -65,7 +80,25 @@ export default function LpLeadForm({
       // into the stored payload.
       website: String(fd.get("website") ?? ""),
       formLoadedAt,
+      // Confirmation flag for the fast-submit confirm step:
+      // true only after the human pressed confirm. validateLead
+      // reads it but never stores it.
+      confirmedFastSubmit: confirmed,
     };
+    // Fast-submit confirm gate (Das recommendation): a human who
+    // submits faster than MIN_SUBMIT_MS after load is NOT rejected
+    // and loses nothing — the form keeps their data and asks for
+    // confirmation instead. A filled honeypot never reaches this
+    // gate: it fails validation below with the generic message.
+    if (
+      !confirmed &&
+      Date.now() - formLoadedAt < MIN_SUBMIT_MS &&
+      String(fd.get("website") ?? "").trim() === ""
+    ) {
+      setNeedsConfirm(true);
+      return;
+    }
+    setNeedsConfirm(false);
     // Same validators as /api/leads (§25.18) — caught here, never sent.
     const checked = validateLead(payload);
     if (!checked.data) {
@@ -120,7 +153,7 @@ export default function LpLeadForm({
   if (state === "recorded") {
     return (
       <div role="status" className={leadFormCard}>
-        <h3 className="font-display text-xl font-bold text-heading">Thank you!</h3>
+        <h3 className="font-sans text-xl font-bold text-heading">Thank you!</h3>
         <p className="mt-2 text-sm leading-6 text-body">
           Your enquiry has been received and recorded. Our team will get back to you.
         </p>
@@ -141,10 +174,11 @@ export default function LpLeadForm({
   return (
     <form
       onSubmit={onSubmit}
+      ref={formRef}
       className={leadFormCard}
       noValidate
     >
-      <h3 className="font-display text-xl font-bold text-heading">Get My Free Counselling Call</h3>
+      <h3 className="font-sans text-xl font-bold text-heading">Get My Free Counselling Call</h3>
       <p className="mt-1 text-sm text-body">3 required fields — name, phone, and when you can start. Email is optional.</p>
       <div className="mt-5 space-y-4">
         <div>
@@ -240,6 +274,24 @@ export default function LpLeadForm({
       >
         {state === "sending" ? "Sending…" : "Get My Free Counselling Call"}
       </button>
+      {needsConfirm && (
+        <div role="status" className={leadFormConfirm}>
+          <p>You submitted very quickly — please confirm to send this enquiry.</p>
+          <button
+            type="button"
+            ref={(el) => {
+              if (el) el.focus();
+            }}
+            onClick={() => {
+              setNeedsConfirm(false);
+              if (formRef.current) void submitForm(formRef.current, true);
+            }}
+            className="btn-primary mt-3 w-full"
+          >
+            Yes, send my enquiry
+          </button>
+        </div>
+      )}
       <p className={leadFormHelper}>
         No spam — one counsellor call. Your details are used only to respond to this enquiry.
       </p>

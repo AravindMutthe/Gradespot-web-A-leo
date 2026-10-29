@@ -72,6 +72,9 @@ describe("final design phase 1: header + LP chrome", () => {
 
   it("footer subheads are sans, not display serif", () => {
     expect(FOOTER).not.toContain("font-display");
+    // Gate 1 items 2/3: the footer h2 subheads carry an explicit
+    // font-sans class (the base h2 rule alone would give Fraunces).
+    expect(FOOTER).toContain("font-sans font-semibold text-paper");
   });
 
   it("LP form-helper count is accurate", () => {
@@ -152,8 +155,10 @@ describe("final design phase 1: vocabulary pass", () => {
   });
 
   it("chrome Register links are enquiry-consistent, URLs unchanged", () => {
-    expect(HEADER).toContain("Course enquiry");
-    expect(FOOTER).toContain("Course enquiry");
+    // Owner Call/Enquire swap: the chrome enquiry links now read
+    // "✉️ Enquire" (emoji wrapped in aria-hidden at render).
+    expect(HEADER).toContain("✉️ Enquire");
+    expect(FOOTER).toContain("✉️ Enquire");
     expect(HEADER).not.toContain('{ label: "Register"');
     expect(FOOTER).not.toContain('{ label: "Register"');
   });

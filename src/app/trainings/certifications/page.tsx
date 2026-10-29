@@ -55,7 +55,7 @@ export default function CertificationsPage() {
               Browse All Courses
             </Link>
             <Link href="/contact-us" className="btn-primary min-h-[44px]">
-              Enquire About Certifications
+              <span aria-hidden="true">✉️</span> Enquire
             </Link>
           </div>
         </div>

@@ -26,7 +26,7 @@ export default function TeamPage() {
                 <p className="mt-1 text-sm font-medium text-signal">{m.role}</p>
                 {m.email && (
                   <p className="mt-2 text-sm">
-                    <a className="text-signal hover:underline" href={`mailto:${m.email}`}>
+                    <a className="text-action hover:underline" href={`mailto:${m.email}`}>
                       {m.email}
                     </a>
                   </p>
@@ -35,7 +35,7 @@ export default function TeamPage() {
               {m.profileHref && (
                 <Link
                   href={m.profileHref}
-                  className="text-sm font-semibold text-signal hover:underline"
+                  className="text-sm font-semibold text-action hover:underline"
                 >
                   View Profile →
                 </Link>

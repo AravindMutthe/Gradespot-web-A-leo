@@ -53,7 +53,7 @@ export default function CompareIndexPage() {
                   </div>
                   <Link
                     href={`/compare/${c.slug}`}
-                    className="text-sm font-bold text-signal hover:text-signal-strong"
+                    className="text-sm font-bold text-action hover:text-action-dark"
                   >
                     Compare them →
                   </Link>

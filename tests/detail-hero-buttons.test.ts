@@ -4,16 +4,16 @@
 // Pins, at model + template-source level (the repo has no
 // component-rendering test setup, so rendered output is pinned by the
 // live fetch in the checkpoint, as with demo-fill and LP rebuild):
-//   1. every course detail page renders "Enquire Now" in the hero;
+//   1. every course detail page renders "✉️</span> Enquire" in the hero;
 //   2. "View Syllabus" renders ONLY where a syllabus/areas section
 //      actually renders — the hero button is wrapped in exactly the
 //      same condition as the "What you will learn" topics list
 //      (facts.topics non-empty), and its href "#syllabus" targets the
 //      id added to that list, so a dead anchor cannot occur;
 //   3. the held branch (no body renders at all on a held page) has no
-//      View Syllabus; its Enquire Now keeps the existing /contact-us
+//      View Syllabus; its ✉️ Enquire keeps the existing /contact-us
 //      destination, and the held wording is unchanged;
-//   4. button text is exactly "Enquire Now" / "View Syllabus" — never
+//   4. button text is exactly "✉️</span> Enquire" / "View Syllabus" — never
 //      Enroll, Register, or "Download syllabus" (detailed syllabus is
 //      gated, shared after enquiry, never an instant download);
 //   5. LP pages keep their own pair untouched; service pages gain no
@@ -71,13 +71,13 @@ describe("Detail hero buttons — placement", () => {
     expect(withTopics).toBe(8);
   });
 
-  it("hero carries Enquire Now on every detail page, to a real target", () => {
-    expect(detail).toContain("Enquire Now");
+  it("hero carries ✉️ Enquire on every detail page, to a real target", () => {
+    expect(detail).toContain("✉️</span> Enquire");
     // Full pages: on-page enquiry panel. Held pages: the
     // existing /contact-us enquiry route, per the held branch.
     expect(detail).toContain('href="#enquire"');
     expect(detail).toContain('id="enquire"');
-    expect(heldSpan).toContain("Enquire Now");
+    expect(heldSpan).toContain("✉️</span> Enquire");
     expect(heldSpan).toContain('href="/contact-us"');
   });
 
@@ -113,12 +113,12 @@ describe("Detail hero buttons — placement", () => {
     expect(detail).not.toContain(">Enroll<");
     expect(detail).not.toContain("Download syllabus");
     expect(detail).not.toMatch(/>\s*Register\s*</);
-    expect(detail).toContain("Enquire Now");
+    expect(detail).toContain("✉️</span> Enquire");
     expect(detail).toContain("View Syllabus");
   });
 
   it("LP pages keep their own pair; service pages gain no View Syllabus", () => {
-    expect(lp).toContain("Enquire Now");
+    expect(lp).toContain("✉️</span> Enquire");
     expect(lp).toContain("View Syllabus");
     expect(lp).toContain('href="#leadform"');
     expect(lp).toContain('href="#syllabus"');

@@ -52,7 +52,7 @@ export default function FloatingActions() {
           href={telHref(phone)}
           className="flex min-h-[52px] items-center justify-center py-3.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-white active:bg-white/10"
         >
-          Call Now
+          <span aria-hidden="true">📞</span> Call
         </a>
         <a
           href={waHref}

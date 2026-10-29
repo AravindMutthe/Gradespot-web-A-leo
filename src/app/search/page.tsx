@@ -90,7 +90,7 @@ export default async function SearchPage({
               href="/contact-us"
               className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-[15px] font-semibold text-body hover:border-brand-dark hover:text-brand-dark"
             >
-              Enquire
+              <span aria-hidden="true">✉️</span> Enquire
             </Link>
           </p>
         </div>
@@ -168,7 +168,7 @@ export default async function SearchPage({
               </p>
               <p className="mt-4">
                 <Link href="/contact-us" className="btn-primary">
-                  Enquire
+                  <span aria-hidden="true">✉️</span> Enquire
                 </Link>
               </p>
             </div>
@@ -182,7 +182,7 @@ export default async function SearchPage({
                 {results.map((entry) => (
                   <article key={`${entry.kind}:${entry.href}`} className="border-b border-line py-5">
                     <h3 className="flex flex-wrap items-center gap-3 text-[19px] font-semibold leading-snug text-heading">
-                      <Link href={entry.href} className="transition-colors hover:text-signal">
+                      <Link href={entry.href} className="transition-colors hover:text-action-dark">
                         {entry.title}
                       </Link>
                     </h3>
@@ -208,7 +208,15 @@ export default async function SearchPage({
                         href={entry.actionHref}
                         className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-[15px] font-semibold text-body hover:border-brand-dark hover:text-brand-dark"
                       >
-                        {entry.actionLabel} →
+                        {entry.actionLabel.startsWith("Enquire") ? (
+                          <>
+                            <span aria-hidden="true">✉️</span> Enquire
+                          </>
+                        ) : (
+                          <>
+                            {entry.actionLabel} →
+                          </>
+                        )}
                       </Link>
                     </p>
                   </article>

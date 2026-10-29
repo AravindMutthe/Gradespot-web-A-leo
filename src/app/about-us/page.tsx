@@ -96,7 +96,7 @@ export default function AboutPage() {
                 {m.profileHref ? (
                   <Link
                     href={m.profileHref}
-                    className="text-sm font-bold text-signal hover:text-signal-strong"
+                    className="text-sm font-bold text-action hover:text-action-dark"
                   >
                     View Profile →
                   </Link>
@@ -105,13 +105,13 @@ export default function AboutPage() {
             ))}
           </div>
           <div className="mx-auto mt-12 max-w-3xl text-center">
-            <h3 className="font-display text-[20px] font-semibold text-heading">
+            <h3 className="font-sans text-[20px] font-semibold text-heading">
               Questions about trainings or services?
             </h3>
             <p className="mt-1.5 text-sm leading-6 text-body">
               The answers live in one place — our Help &amp; FAQs.
             </p>
-            <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-signal hover:text-signal-strong">
+            <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-action hover:text-action-dark">
               Read Help &amp; FAQs →
             </Link>
           </div>

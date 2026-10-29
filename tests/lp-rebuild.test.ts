@@ -414,7 +414,7 @@ describe("LP nav-free chrome", () => {
     // light bar — the light logo washed out ("Spot" near-invisible)
     // on owner-phone evidence. The file itself is unedited.
     expect(LP_PAGE).toContain('src="/images/logo.png"');
-    expect(LP_PAGE).toContain("Call:");
+    expect(LP_PAGE).toMatch(/aria-hidden="true">📞<\/span> Call/);
   });
 });
 

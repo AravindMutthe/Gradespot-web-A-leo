@@ -43,7 +43,7 @@ export default function ContactPage() {
                 <h3 className="font-semibold text-signal-strong">Send Us Mail</h3>
                 {business.emails.map((e) => (
                   <p key={e}>
-                    <a className="text-body hover:text-signal" href={`mailto:${e}`}>
+                    <a className="text-body hover:text-action-dark" href={`mailto:${e}`}>
                       {e}
                     </a>
                   </p>
@@ -53,8 +53,8 @@ export default function ContactPage() {
                 <h3 className="font-semibold text-signal-strong">Call Us</h3>
                 {allPhones.map((p) => (
                   <p key={p}>
-                    <a className="text-body hover:text-signal" href={telHref(p)}>
-                      {p}
+                    <a className="text-body hover:text-action-dark" href={telHref(p)}>
+                      <span aria-hidden="true">📞</span> Call
                     </a>
                   </p>
                 ))}

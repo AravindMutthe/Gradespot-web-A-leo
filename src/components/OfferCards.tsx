@@ -25,14 +25,14 @@ export default async function OfferCards({ excludeSlug }: { excludeSlug?: string
             {String(i + 1).padStart(2, "0")}
           </span>
           <p className="eyebrow text-signal-strong">Free</p>
-          <h3 className="mt-2.5 font-display text-[20px] font-semibold leading-snug text-heading">
+          <h3 className="mt-2.5 font-sans text-[20px] font-semibold leading-snug text-heading">
             {c.title}
           </h3>
           {c.body && <p className="mt-2 text-sm leading-6 text-body">{c.body}</p>}
           {c.ctaLabel && c.ctaHref && (
             <Link
               href={c.ctaHref}
-              className="mt-auto inline-block pt-4 text-sm font-bold text-signal transition-colors hover:text-signal-strong"
+              className="mt-auto inline-block pt-4 text-sm font-bold text-action transition-colors hover:text-action-dark"
             >
               {c.ctaLabel} →
             </Link>

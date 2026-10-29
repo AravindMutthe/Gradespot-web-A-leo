@@ -66,7 +66,7 @@ export default async function ServicesPage() {
                       <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
                         <div className="min-w-0">
                           <h3 className="flex flex-wrap items-center gap-3 text-lg font-semibold">
-                            <Link href={row.titleHref} className="hover:text-signal focus-visible:underline">
+                            <Link href={row.titleHref} className="hover:text-action-dark focus-visible:underline">
                               {row.displayTitle}
                             </Link>
                           </h3>
@@ -99,7 +99,7 @@ export default async function ServicesPage() {
                   <article className="row-hover flex min-h-[56px] flex-wrap items-center justify-between gap-4 py-4">
                     <div className="min-w-0">
                       <h3 className="text-lg font-semibold">
-                        <Link href={pathway.href} className="hover:text-signal focus-visible:underline">
+                        <Link href={pathway.href} className="hover:text-action-dark focus-visible:underline">
                           {pathway.title}
                         </Link>
                       </h3>
@@ -125,7 +125,7 @@ export default async function ServicesPage() {
               requirement.
             </p>
             <Link href="/contact-us" className="btn-primary mt-5">
-              Enquire About Our Services
+              <span aria-hidden="true">✉️</span> Enquire
             </Link>
           </div>
         </div>

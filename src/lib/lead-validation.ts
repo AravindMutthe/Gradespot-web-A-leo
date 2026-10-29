@@ -52,14 +52,19 @@ export interface LeadPayload {
 //   honeypot in the error — the caller sees only the generic message.
 // - Minimum time-to-submit: the forms stamp `formLoadedAt` (client
 //   epoch ms) at mount. A submission faster than MIN_SUBMIT_MS after
-//   load is rejected as bot-like. This is a SOFT signal, not proof of
-//   humanity: timestamps can be spoofed by a determined submitter, and
-//   a client clock far ahead of the server can shorten the measured
-//   gap. Missing or non-numeric timestamps are ALLOWED (old clients,
-//   API compat) — the defence is the layering (honeypot + time +
-//   existing 20-per-60s per-IP rate limit + validation), never any
-//   single check. Neither field is copied into the returned payload,
-//   so it can never reach storage.
+//   load is a SOFT signal, not proof of humanity: timestamps can be
+//   spoofed by a determined submitter, and a client clock far ahead
+//   of the server can shorten the measured gap. Human form users are
+//   NEVER auto-rejected for speed (Das recommendation): the form
+//   keeps their data and asks for confirmation instead, and a
+//   submission carrying confirmedFastSubmit: true is accepted. Only
+//   direct API posts with NO confirmation flag and elapsed <
+//   MIN_SUBMIT_MS are still rejected (the bot path). Missing or
+//   non-numeric timestamps are ALLOWED (old clients, API compat) —
+//   the defence is the layering (honeypot + time + existing
+//   20-per-60s per-IP rate limit + validation), never any single
+//   check. Neither anti-spam field (nor the confirmation flag) is
+//   copied into the returned payload, so none can ever reach storage.
 export const MIN_SUBMIT_MS = 3000;
 export const ANTI_SPAM_MESSAGE = "Please check the fields and try again.";
 
@@ -252,13 +257,18 @@ export function validateLead(
     return { data: null, errors: { form: "Invalid request body" } };
   }
   const b = body as Record<string, unknown>;
-  // Anti-spam gate FIRST, before field errors: a filled honeypot or a
-  // too-fast submission returns ONLY the generic message — the error
-  // shape never names the honeypot or the timing rule, so a bot learns
-  // nothing about which check tripped. Neither field is copied into
-  // the returned payload, so neither can ever reach storage.
+  // Anti-spam gate FIRST, before field errors: a filled honeypot or
+  // an UNCONFIRMED too-fast submission returns ONLY the generic
+  // message — the error shape never names the honeypot or the timing
+  // rule, so a bot learns nothing about which check tripped. A
+  // submission carrying confirmedFastSubmit: true (the human confirm
+  // step) skips the timing check; the honeypot still applies. Neither
+  // anti-spam field nor the confirmation flag is copied into the
+  // returned payload, so none can ever reach storage.
+  const confirmed = b.confirmedFastSubmit === true;
   const antiSpam =
-    validateHoneypot(b.website) ?? validateSubmitTiming(b.formLoadedAt);
+    validateHoneypot(b.website) ??
+    (confirmed ? null : validateSubmitTiming(b.formLoadedAt));
   if (antiSpam) return { data: null, errors: { form: antiSpam } };
   const errors: LeadErrors = {};
   const put = (key: string, err: string | null) => {

@@ -62,7 +62,7 @@ export default function AccessibilityPage() {
                   key={m.t}
                   className="rounded-[18px] border border-line bg-surface-light p-6"
                 >
-                  <h3 className="font-display text-[19px] font-semibold text-heading">{m.t}</h3>
+                  <h3 className="font-sans text-[19px] font-semibold text-heading">{m.t}</h3>
                   <p className="mt-2 text-sm leading-6 text-body">{m.d}</p>
                 </article>
               ))}
@@ -79,7 +79,7 @@ export default function AccessibilityPage() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3.5">
                 <a href={telHref(phone)} className="btn-primary">
-                  Call {phone}
+                  <span aria-hidden="true">📞</span> Call
                 </a>
                 <a href={`mailto:${business.emails[0]}`} className="btn-outline-navy">
                   {business.emails[0]}
@@ -87,7 +87,7 @@ export default function AccessibilityPage() {
               </div>
               <p className="mt-5 text-sm text-body">
                 Prefer a form? Use the{" "}
-                <Link href="/contact-us" className="font-semibold text-signal underline underline-offset-4">
+                <Link href="/contact-us" className="font-semibold text-action underline underline-offset-4">
                   contact page
                 </Link>{" "}
                 — it reaches the same team.

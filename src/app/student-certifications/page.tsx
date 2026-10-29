@@ -50,7 +50,7 @@ export default function CertificationsPage() {
           <div className="mx-auto mt-12 max-w-4xl space-y-5">
             <p>
               Received a certificate from us?{" "}
-              <Link href="/certificate-verification" className="font-semibold text-signal hover:underline">
+              <Link href="/certificate-verification" className="font-semibold text-action hover:underline">
                 Verify it here
               </Link>
               .

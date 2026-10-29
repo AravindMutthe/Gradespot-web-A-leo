@@ -66,7 +66,7 @@ const GROUPS: NavGroup[] = [
     label: "Support",
     links: [
       { label: "Contact us", href: "/contact-us" },
-      { label: "Course enquiry", href: "/register" },
+      { label: "✉️ Enquire", href: "/register" },
       { label: "Certificate verification", href: "/certificate-verification" },
       { label: "FAQs", href: "/faq" },
     ],
@@ -160,7 +160,14 @@ export default function Header() {
                         onClick={() => setOpenGroup(null)}
                         className="flex min-h-11 items-center rounded-lg px-3 text-[15px] text-body hover:bg-surface-muted hover:text-brand-dark"
                       >
-                        {link.label}
+                        {link.label.startsWith("✉️") ? (
+                              <>
+                                <span aria-hidden="true">✉️</span>{" "}
+                                {link.label.replace(/^✉️\s*/, "")}
+                              </>
+                            ) : (
+                              link.label
+                            )}
                       </Link>
                     ))}
                   </div>
@@ -178,13 +185,13 @@ export default function Header() {
             href={telHref(phone)}
             className="hidden min-h-11 shrink-0 items-center rounded-lg border border-line px-4 text-[15px] font-semibold whitespace-nowrap text-body hover:border-brand-dark hover:text-brand-dark lg:flex"
           >
-            Call {phone}
+            <span aria-hidden="true">📞</span> Call
           </a>
           <Link
             href="/contact-us"
             className="flex min-h-11 items-center rounded-lg bg-brand-dark px-5 text-[15px] font-semibold text-white hover:bg-ink"
           >
-            Enquire
+            <span aria-hidden="true">✉️</span> Enquire
           </Link>
           <button
             type="button"
@@ -229,7 +236,14 @@ export default function Header() {
                           onClick={() => setMobileOpen(false)}
                           className="flex min-h-11 items-center rounded-lg px-2 text-[15px] text-body hover:text-brand-dark"
                         >
-                          {link.label}
+                          {link.label.startsWith("✉️") ? (
+                              <>
+                                <span aria-hidden="true">✉️</span>{" "}
+                                {link.label.replace(/^✉️\s*/, "")}
+                              </>
+                            ) : (
+                              link.label
+                            )}
                         </Link>
                       ))}
                     </div>
@@ -241,7 +255,7 @@ export default function Header() {
               href={telHref(phone)}
               className="flex min-h-11 items-center rounded-lg px-2 py-2 text-[15px] font-semibold text-body"
             >
-              Call {phone}
+              <span aria-hidden="true">📞</span> Call
             </a>
           </div>
         </nav>

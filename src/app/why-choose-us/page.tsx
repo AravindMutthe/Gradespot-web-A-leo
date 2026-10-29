@@ -42,7 +42,7 @@ export default function WhyChoosePage() {
                 <h2 className="text-xl font-semibold text-heading">{h.title}</h2>
                 <Link
                   href={h.href}
-                  className="text-sm font-semibold text-signal hover:underline"
+                  className="text-sm font-semibold text-action hover:underline"
                 >
                   Read More →
                 </Link>
@@ -66,7 +66,7 @@ export default function WhyChoosePage() {
             <p className="mt-1.5 text-sm leading-6 text-body">
               The answers live in one place — our Help &amp; FAQs.
             </p>
-            <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-signal hover:text-signal-strong">
+            <Link href="/faq" className="mt-3.5 inline-block text-sm font-bold text-action hover:text-action-dark">
               Read Help &amp; FAQs →
             </Link>
           </div>

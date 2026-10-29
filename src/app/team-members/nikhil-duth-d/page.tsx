@@ -38,7 +38,7 @@ export default function NikhilProfilePage() {
               <div className="flex gap-3">
                 <dt className="w-32 shrink-0 font-semibold text-heading">Email:</dt>
                 <dd>
-                  <a className="text-signal hover:underline" href={`mailto:${member.email}`}>
+                  <a className="text-action hover:underline" href={`mailto:${member.email}`}>
                     {member.email}
                   </a>
                 </dd>

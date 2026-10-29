@@ -25,9 +25,8 @@ export const metadata: Metadata = staticPageMetadata({
 // filters as extra user work).
 // Entries are in the owner's order. Only Courses carries a real
 // count (36); every other entry carries status wording, never an
-// invented count. This page carries no sample content, so no
-// DemoLegend renders here; sample content lives on the category
-// pages, detail pages and search results.
+// invented count. Held courses and services carry the pending
+// notice on their own pages; no placeholder data renders here.
 
 export default function TrainingsDirectoryPage() {
   return (

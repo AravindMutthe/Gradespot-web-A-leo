@@ -4,8 +4,6 @@ import { getServices } from "@/lib/data";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
 import { buildServiceRow } from "@/lib/services-rows";
-import { DemoLegend } from "@/components/DemoLegend";
-import { SampleTag } from "@/components/SampleTag";
 import { BUSINESS_PATHWAYS, SERVICE_GROUPS } from "@/lib/two-door";
 
 export const metadata = staticPageMetadata({
@@ -19,8 +17,8 @@ export const metadata = staticPageMetadata({
 // The 12 existing services are presented in FOUR presentation-group
 // sections (labels only — they establish no new business line), in
 // the published services order within each group. Detail URLs are
-// unchanged (/services/[slug]); sample markers flow through the rows
-// exactly as demo-fill established them.
+// unchanged (/services/[slug]); every row carries the pending
+// notice until its scope is confirmed.
 // A distinct "Who We Work With" section lists the 4 business-facing
 // pages. Partner With Us is NOT labelled a service and carries no
 // partner list: no partners exist to list, and EC-Council/Pearson are
@@ -54,11 +52,6 @@ export default async function ServicesPage() {
           Hyderabad, grouped below. Service details, scope and availability are confirmed on
           enquiry.
         </AnswerLead>
-        {/* Demo-fill: every service row now carries a sample scope
-            summary, so the legend renders here. */}
-        <div className="mt-6">
-          <DemoLegend />
-        </div>
       </div>
       <section className="section-pad">
         <div className="wrap">
@@ -76,13 +69,8 @@ export default async function ServicesPage() {
                             <Link href={row.titleHref} className="hover:text-signal focus-visible:underline">
                               {row.displayTitle}
                             </Link>
-                            {row.sample && <SampleTag />}
                           </h3>
-                          {row.sample && row.description ? (
-                            <p className="mt-1 text-[15px] text-sample">{row.description}</p>
-                          ) : (
-                            <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
-                          )}
+                          <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
                         </div>
                         <Link
                           href={row.actionHref}

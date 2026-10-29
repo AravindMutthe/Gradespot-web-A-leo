@@ -8,6 +8,7 @@ import { business, telHref } from "@/data/site";
 import { courses } from "@/data/courses";
 import { courseDetails } from "@/data/course-details";
 import { buildCourseDetail } from "@/lib/course-detail";
+import { buildLpModel } from "@/lib/lp-model";
 
 export const metadata = staticPageMetadata({
   title: "IT Training Institute in Dilsukhnagar, Hyderabad",
@@ -175,7 +176,9 @@ export default function LocalInstitutePage() {
         <div className="wrap">
           <SectionTitle label="Hyderabad Landing Pages" title="Course pages for Hyderabad learners" center />
           <div className="mx-auto mt-8 flex max-w-4xl flex-wrap justify-center gap-3">
-            {fullCourses.map((c) => (
+            {fullCourses
+              .filter((c) => buildLpModel(c.slug) !== null)
+              .map((c) => (
               <Link
                 key={c.slug}
                 href={`/lp/${c.slug}-in-hyderabad`}

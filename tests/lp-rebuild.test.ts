@@ -2,9 +2,10 @@
 // landing pages at the model + template-source level (the repo has
 // no component-rendering test setup, so rendered output is pinned
 // by the live fetch in the checkpoint, as with demo-fill):
-//   1. exactly the 11 existing LP URLs, unchanged, one per
-//      full-detail course; no new LP; every LP builds a model
-//      (fail closed: catalogue-only / held / missing detail = null);
+//   1. LP URL slugs unchanged (11, one per full-detail course);
+//      no new LP; 8 verified LPs build a model, and the 3 held
+//      full-detail courses fail closed (null → 404) until real
+//      content is approved — purge gates, never placeholder data;
 //   2. Das 7-step spine order in the template source (hero ->
 //      overview -> enquiry -> syllabus -> audience -> outcomes ->
 //      final enquiry), with proof only where matched and the
@@ -26,15 +27,13 @@
 //      award) wording; SOC carries aligned-not-certified;
 //   6. two-tier gating: LP model exposes AREAS only — no
 //      lesson-level detail in any LP value, metadata or schema;
-//   7. demo-fill marking on LP: every sample LP renders the
-//      Sample tag + DemoLegend + sample color; sample values
-//      never appear in verified LP values; MERGE GATE: zero
-//      sample markers before any production deploy;
-//   8. vendor marks + variants: exactly the four demo-image
-//      marks on their LPs (never "authorized partner" framing);
-//      SOC carries the EC-Council mark as alignment only;
-//      Hardware + Digital Marketing carry no vendor mark;
-//      variant split 6/4/1, presentation only;
+//   7. purge gates on LP: zero sample markers anywhere in the
+//      LP model or template; no sampleSummary, no vendorMark
+//      field, no Sample tag, no DemoLegend, no sample color;
+//   8. vendor marks REMOVED + variants: no vendor image on any
+//      LP (the four demo files are deleted); variant split over
+//      the 8 live LPs is 4 cloud-infra / 4 cybersecurity,
+//      presentation only;
 //   9. nav-free: the LP template source contains no site
 //      header/footer/nav/search markup (only the simplified
 //      logo + phone bar);
@@ -48,9 +47,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { courses } from "@/data/courses";
-import { getSampleCourse } from "@/lib/demo-fill";
 import {
-  LP_VENDOR_MARKS,
   LP_VARIANT_BY_SLUG,
   buildLpModel,
   courseSlugForLpSlug,
@@ -76,7 +73,11 @@ const EXPECTED_LP_SLUGS = [
   "soc-analyst",
 ];
 
-const SAMPLE_LP_SLUGS = ["ccna-200-301", "ccnp-350-401-encor", "digital-marketing"];
+// Purge gates: the 3 held full-detail courses build NO LP model
+// (their routes 404); the other 8 are the live LPs.
+const HELD_LP_SLUGS = ["ccna-200-301", "ccnp-350-401-encor", "digital-marketing"];
+
+const VERIFIED_LP_SLUGS = EXPECTED_LP_SLUGS.filter((s) => !HELD_LP_SLUGS.includes(s));
 
 const FORBIDDEN_VALUE = /guarantee|job-ready|100% success|become certified|industry-approved|official partner|authorized partner|limited seats|countdown|salary|₹\s?\d|batch date|trainer:/i;
 
@@ -97,13 +98,19 @@ function lpValues(lp: ReturnType<typeof buildLpModel>) {
   ].join("\n");
 }
 
-describe("LP inventory: exactly the 11 existing LPs, URLs unchanged", () => {
-  it("every full-detail course has exactly one LP and nothing else does", () => {
+describe("LP inventory: 11 LP URL slugs unchanged, 8 live LPs, 3 held", () => {
+  it("every full-detail course keeps exactly one LP slug; 8 build, 3 held fail closed", () => {
     const full = courses.filter((c) => !c.catalogOnly).map((c) => c.slug);
     expect(full.sort()).toEqual([...EXPECTED_LP_SLUGS].sort());
-    for (const slug of EXPECTED_LP_SLUGS) {
+    expect(VERIFIED_LP_SLUGS.length).toBe(8);
+    for (const slug of VERIFIED_LP_SLUGS) {
       expect(buildLpModel(slug)).not.toBeNull();
       expect(lpSlugFor(slug)).toBe(`${slug}-in-hyderabad`);
+    }
+    // Purge gates: held LPs build no model (their routes 404)
+    // until real content is approved — never placeholder data.
+    for (const slug of HELD_LP_SLUGS) {
+      expect(buildLpModel(slug)).toBeNull();
     }
     // No Docker, Linux, finance, business-services or institutions LP.
     for (const slug of ["docker", "linux", "finance", "business-services", "institutions"]) {
@@ -213,13 +220,13 @@ describe("LP honesty removals", () => {
   it("no free-demo assertion anywhere on LP", () => {
     expect(LP_PAGE).not.toContain("Free demo class available");
     expect(LP_FORM).not.toContain("Free demo class available");
-    for (const slug of EXPECTED_LP_SLUGS) {
+    for (const slug of VERIFIED_LP_SLUGS) {
       expect(lpValues(buildLpModel(slug))).not.toContain("Free demo class available");
     }
   });
 
   it("no job-ready SOC wording and no forbidden claims in any LP model value", () => {
-    for (const slug of EXPECTED_LP_SLUGS) {
+    for (const slug of VERIFIED_LP_SLUGS) {
       const values = lpValues(buildLpModel(slug));
       expect(values).not.toMatch(/job-ready/i);
       expect(values).not.toMatch(FORBIDDEN_VALUE);
@@ -229,18 +236,17 @@ describe("LP honesty removals", () => {
     expect(soc.durationLabel).toBe("Duration confirmed on enquiry");
   });
 
-  it("CCNP LP carries no CCNA copy: zero shared topic or role strings", () => {
-    const ccna = buildLpModel("ccna-200-301")!;
-    const ccnp = buildLpModel("ccnp-350-401-encor")!;
-    const sharedTopics = ccnp.topics.filter((t) => ccna.topics.includes(t));
-    const sharedRoles = ccnp.roles.filter((r) => ccna.roles.includes(r));
-    expect(sharedTopics).toEqual([]);
-    expect(sharedRoles).toEqual([]);
-    expect(ccnp.topics.length).toBeGreaterThan(0);
+  it("held LPs carry no copy at all: CCNA/CCNP/DM models are null", () => {
+    // The old CCNP-vs-CCNA copy test is void post-purge: neither
+    // held LP builds a model, so no CCNA copy can surface on any
+    // LP. The gap (3 missing LPs) is reported, never filled.
+    for (const slug of HELD_LP_SLUGS) {
+      expect(buildLpModel(slug)).toBeNull();
+    }
   });
 
   it("gated lesson probes never appear in LP values, metadata or schema", () => {
-    for (const slug of EXPECTED_LP_SLUGS) {
+    for (const slug of VERIFIED_LP_SLUGS) {
       const lp = buildLpModel(slug)!;
       const course = courses.find((c) => c.slug === slug)!;
       const schema = JSON.stringify(
@@ -248,7 +254,6 @@ describe("LP honesty removals", () => {
           displayTitle: lp.displayTitle,
           suppressOffers: true,
           description: lp.metaDescription,
-          credentialAwarded: lp.sample ? null : undefined,
         }),
       );
       const meta = lpPageMetadata(lp, `/lp/${lp.lpSlug}`);
@@ -264,7 +269,7 @@ describe("LP honesty removals", () => {
   });
 
   it("no layout-break facts: no pricing table, countdown, seat, salary, batch date or fee figure", () => {
-    for (const slug of EXPECTED_LP_SLUGS) {
+    for (const slug of VERIFIED_LP_SLUGS) {
       expect(lpValues(buildLpModel(slug))).not.toMatch(
         /₹|Rs\.?\s?\d|limited seats|seats left|batch starts|starting \d/i,
       );
@@ -278,7 +283,7 @@ describe("LP honesty removals", () => {
 
 describe("LP vocabulary lock", () => {
   it("no Register / Enrol wording in any LP model value", () => {
-    for (const slug of EXPECTED_LP_SLUGS) {
+    for (const slug of VERIFIED_LP_SLUGS) {
       expect(lpValues(buildLpModel(slug))).not.toMatch(/register|enrol/i);
     }
   });
@@ -292,25 +297,17 @@ describe("LP vocabulary lock", () => {
     expect(hw.outcomeLine).toMatch(/course completion certificate/);
   });
 
-  it("sample outcome lines claim no credential", () => {
-    for (const slug of SAMPLE_LP_SLUGS) {
-      const lp = buildLpModel(slug)!;
-      expect(lp.outcomeLine).toMatch(/confirmed on enquiry/);
-      expect(lp.outcomeLine).not.toMatch(/certified/i);
-    }
-  });
 });
 
 describe("LP two-tier gating + schema discipline", () => {
   it("LP schema carries Course only: no Offer, no AggregateRating, no JobPosting, no FAQPage", () => {
-    for (const slug of EXPECTED_LP_SLUGS) {
+    for (const slug of VERIFIED_LP_SLUGS) {
       const lp = buildLpModel(slug)!;
       const course = courses.find((c) => c.slug === slug)!;
       const schema = courseSchema(course, {
         displayTitle: lp.displayTitle,
         suppressOffers: true,
         description: lp.metaDescription,
-        credentialAwarded: lp.sample ? null : undefined,
       }) as Record<string, unknown>;
       expect(schema["@type"]).toBe("Course");
       expect(schema.offers).toBeUndefined();
@@ -320,18 +317,7 @@ describe("LP two-tier gating + schema discipline", () => {
     }
   });
 
-  it("sample LPs omit the awarded-credential field; verified LPs keep it", () => {
-    for (const slug of SAMPLE_LP_SLUGS) {
-      const lp = buildLpModel(slug)!;
-      const course = courses.find((c) => c.slug === slug)!;
-      const schema = courseSchema(course, {
-        displayTitle: lp.displayTitle,
-        suppressOffers: true,
-        description: lp.metaDescription,
-        credentialAwarded: null,
-      }) as Record<string, unknown>;
-      expect(schema.educationalCredentialAwarded).toBeUndefined();
-    }
+  it("verified LPs keep the awarded-credential field where named", () => {
     const az = buildLpModel("azure-fundamentals-az-900")!;
     const azCourse = courses.find((c) => c.slug === az.slug)!;
     const azSchema = courseSchema(azCourse, {
@@ -343,7 +329,7 @@ describe("LP two-tier gating + schema discipline", () => {
   });
 
   it("LP metadata is neutral: no Enroll tail, no job-ready title, self-referential canonical path", () => {
-    for (const slug of EXPECTED_LP_SLUGS) {
+    for (const slug of VERIFIED_LP_SLUGS) {
       const lp = buildLpModel(slug)!;
       const meta = lpPageMetadata(lp, `/lp/${lp.lpSlug}`);
       const description = String(meta.description ?? "");
@@ -354,96 +340,49 @@ describe("LP two-tier gating + schema discipline", () => {
   });
 });
 
-describe("LP demo-fill marking", () => {
-  it("exactly the 3 held LPs are samples; all other LPs are verified", () => {
-    for (const slug of EXPECTED_LP_SLUGS) {
-      expect(buildLpModel(slug)!.sample).toBe(SAMPLE_LP_SLUGS.includes(slug));
+describe("LP purge gates", () => {
+  it("exactly the 3 held LPs return null; the other 8 build models", () => {
+    for (const slug of HELD_LP_SLUGS) {
+      expect(buildLpModel(slug)).toBeNull();
+    }
+    for (const slug of VERIFIED_LP_SLUGS) {
+      expect(buildLpModel(slug)).not.toBeNull();
     }
   });
 
-  it("sample records carry roles + sample:true; sample values never leak into verified LPs", () => {
-    for (const slug of SAMPLE_LP_SLUGS) {
-      const sample = getSampleCourse(slug);
-      expect(sample?.sample).toBe(true);
-      expect(sample?.roles?.length).toBeGreaterThan(0);
-      expect(buildLpModel(slug)!.roles).toEqual(sample!.roles);
-    }
-    const verifiedTopics = EXPECTED_LP_SLUGS.filter((s) => !SAMPLE_LP_SLUGS.includes(s)).flatMap(
-      (s) => buildLpModel(s)!.topics,
-    );
-    for (const slug of SAMPLE_LP_SLUGS) {
-      for (const topic of buildLpModel(slug)!.topics) {
-        expect(verifiedTopics).not.toContain(topic);
-      }
-    }
-  });
-
-  it("the LP template renders SampleTag + DemoLegend on sample LPs", () => {
-    expect(LP_PAGE).toContain("SampleTag");
-    expect(LP_PAGE).toContain("DemoLegend");
-    expect(LP_PAGE).toContain("lp.sample && <DemoLegend />");
-    expect(LP_PAGE).toContain("text-sample");
-    expect(LP_PAGE).toContain("border-sample");
-  });
-
-  it("sample LPs carry the sample summary; verified LPs carry no summary text", () => {
-    for (const slug of SAMPLE_LP_SLUGS) {
+  it("no LP model carries a sampleSummary or vendorMark field", () => {
+    for (const slug of VERIFIED_LP_SLUGS) {
       const lp = buildLpModel(slug)!;
-      expect(lp.sampleSummary.length).toBeGreaterThan(0);
-      expect(lp.sampleSummary).toBe(getSampleCourse(slug)!.summary);
+      expect("sampleSummary" in lp).toBe(false);
+      expect("vendorMark" in lp).toBe(false);
+      expect("sample" in lp).toBe(false);
     }
-    for (const slug of EXPECTED_LP_SLUGS.filter((s) => !SAMPLE_LP_SLUGS.includes(s))) {
-      expect(buildLpModel(slug)!.sampleSummary).toBe("");
-    }
+  });
+
+  it("the LP template renders no SampleTag, DemoLegend, sample color or vendor image", () => {
+    expect(LP_PAGE).not.toContain("SampleTag");
+    expect(LP_PAGE).not.toContain("DemoLegend");
+    expect(LP_PAGE).not.toContain("text-sample");
+    expect(LP_PAGE).not.toContain("border-sample");
+    expect(LP_PAGE).not.toContain("Vendor alignment:");
+    expect(LP_PAGE).not.toContain("/images/vendors/");
+    expect(LP_PAGE).not.toMatch(/authorized partner|official partner/i);
   });
 });
 
-describe("LP vendor marks + presentation variants", () => {
-  it("exactly four demo-image marks, on the right LPs, never partner framing", () => {
-    expect(Object.keys(LP_VENDOR_MARKS).sort()).toEqual(
-      [
-        "azure-administrator-az-104",
-        "azure-fundamentals-az-900",
-        "ccna-200-301",
-        "ccnp-350-401-encor",
-        "certified-ethical-hacker-ceh",
-        "comptia-network-plus",
-        "comptia-pentest-plus",
-        "comptia-security-plus",
-        "soc-analyst",
-      ].sort(),
-    );
-    expect(LP_VENDOR_MARKS["azure-fundamentals-az-900"].vendor).toBe("Microsoft");
-    expect(LP_VENDOR_MARKS["ccna-200-301"].vendor).toBe("Cisco");
-    expect(LP_VENDOR_MARKS["comptia-network-plus"].vendor).toBe("CompTIA");
-    expect(LP_VENDOR_MARKS["certified-ethical-hacker-ceh"].vendor).toBe("EC-Council");
-    for (const mark of Object.values(LP_VENDOR_MARKS)) {
-      expect(mark.image).toMatch(/^\/images\/vendors\//);
-      expect(mark.imageWidth).toBeGreaterThan(0);
-      expect(mark.imageHeight).toBeGreaterThan(0);
-    }
-    expect(LP_PAGE).toContain("Vendor alignment:");
-    expect(LP_PAGE).not.toMatch(/authorized partner|official partner/i);
-  });
-
-  it("SOC carries the EC-Council mark as alignment only; Hardware + DM carry no mark", () => {
-    expect(buildLpModel("soc-analyst")!.vendorMark?.vendor).toBe("EC-Council");
-    expect(buildLpModel("computer-hardware-and-networking")!.vendorMark).toBeNull();
-    expect(buildLpModel("digital-marketing")!.vendorMark).toBeNull();
-  });
-
-  it("variant split is 6 cloud-infra / 4 cybersecurity / 1 digital-marketing, presentation only", () => {
+describe("LP vendor marks removed + presentation variants", () => {
+  it("variant split over the 8 live LPs is 4 cloud-infra / 4 cybersecurity, presentation only", () => {
     const counts: Record<string, number> = {};
-    for (const slug of EXPECTED_LP_SLUGS) {
+    for (const slug of VERIFIED_LP_SLUGS) {
       const variant = LP_VARIANT_BY_SLUG[slug];
       counts[variant] = (counts[variant] ?? 0) + 1;
       expect(buildLpModel(slug)!.variant).toBe(variant);
     }
-    expect(counts).toEqual({ "cloud-infra": 6, cybersecurity: 4, "digital-marketing": 1 });
+    expect(counts).toEqual({ "cloud-infra": 4, cybersecurity: 4 });
     // Variants do not rename courses or alter taxonomy: the LP
     // category matches the course category, and the H1 is built
     // from the model's own short title.
-    for (const slug of EXPECTED_LP_SLUGS) {
+    for (const slug of VERIFIED_LP_SLUGS) {
       const lp = buildLpModel(slug)!;
       const course = courses.find((c) => c.slug === slug)!;
       expect(lp.category).toBe(course.category);
@@ -455,7 +394,7 @@ describe("LP vendor marks + presentation variants", () => {
   it("proof appears only for the two matched testimonials", () => {
     expect(buildLpModel("azure-administrator-az-104")!.testimonial?.name).toBe("Arif Syed");
     expect(buildLpModel("soc-analyst")!.testimonial?.name).toBe("M Vamsi");
-    for (const slug of EXPECTED_LP_SLUGS.filter(
+    for (const slug of VERIFIED_LP_SLUGS.filter(
       (s) => !["azure-administrator-az-104", "soc-analyst"].includes(s),
     )) {
       expect(buildLpModel(slug)!.testimonial).toBeNull();

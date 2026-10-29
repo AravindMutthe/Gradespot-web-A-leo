@@ -59,7 +59,6 @@ import {
   SERVICE_PENDING_LABEL,
   SERVICE_DETAILS_LABEL,
 } from "@/lib/services-rows";
-import { getSampleCourse, getSampleService } from "@/lib/demo-fill";
 
 export type SearchKind = "course" | "service" | "page";
 
@@ -70,24 +69,14 @@ export interface SearchEntry {
   // Courses only; null for services and pages.
   category: string | null;
   categorySlug: string | null;
-  // Verified course summary verbatim, or SAMPLE summary for
-  // demo-filled courses; null for held items, services without a
-  // sample, and pages (their rows show a status/type label instead).
+  // Verified course summary verbatim; null for held items,
+  // services, and pages (their rows show a status/type label
+  // instead).
   snippet: string | null;
-  // Held notice, or null for verified courses, demo-filled courses
-  // and pages.
+  // Held notice, or null for verified courses and pages.
   statusLabel: string | null;
   actionLabel: string;
   actionHref: string;
-  // Demo-fill: true when the row renders owner-authorised SAMPLE
-  // data. Results templates must render the Sample tag + sample
-  // font color whenever this is true.
-  sample: boolean;
-  // Sample course AREAS only (matching use — never rendered as a
-  // snippet). Verified course topics are not indexed, and sample
-  // lesson detail does not exist as data, so nothing gated can
-  // leak through search.
-  areas: string[] | null;
 }
 
 // Slug for a category label, shared with the trainings index anchors:
@@ -131,8 +120,6 @@ export const PAGE_ENTRIES: { title: string; href: string }[] = [
 export function isHeldCourseSlug(slug: string): boolean {
   const course = courses.find((c) => c.slug === slug);
   if (!course) return false;
-  // Demo-fill: a sample record un-holds the slug for demo.
-  if (getSampleCourse(slug)) return false;
   return course.catalogOnly || slug in HELD_DETAIL_REASONS;
 }
 
@@ -140,24 +127,9 @@ export function buildSearchIndex(): SearchEntry[] {
   const entries: SearchEntry[] = [];
 
   for (const course of courses) {
-    const sample = getSampleCourse(course.slug);
-    const heldBack = !sample && (course.catalogOnly || course.slug in HELD_DETAIL_REASONS);
+    const heldBack = course.catalogOnly || course.slug in HELD_DETAIL_REASONS;
     const title = displayCourseTitle(course.title);
-    if (sample) {
-      entries.push({
-        kind: "course",
-        title,
-        href: `/trainings/${course.slug}`,
-        category: course.category,
-        categorySlug: categorySlug(course.category),
-        snippet: sample.summary,
-        statusLabel: null,
-        actionLabel: "View course details",
-        actionHref: `/trainings/${course.slug}`,
-        sample: true,
-        areas: sample.areas,
-      });
-    } else if (heldBack) {
+    if (heldBack) {
       entries.push({
         kind: "course",
         title,
@@ -168,8 +140,6 @@ export function buildSearchIndex(): SearchEntry[] {
         statusLabel: COURSE_PENDING_LABEL,
         actionLabel: COURSE_ENQUIRE_LABEL,
         actionHref: "/contact-us",
-        sample: false,
-        areas: null,
       });
     } else {
       entries.push({
@@ -182,26 +152,21 @@ export function buildSearchIndex(): SearchEntry[] {
         statusLabel: null,
         actionLabel: "View course details",
         actionHref: `/trainings/${course.slug}`,
-        sample: false,
-        areas: null,
       });
     }
   }
 
   for (const service of services) {
-    const sample = getSampleService(service.slug);
     entries.push({
       kind: "service",
       title: service.title,
       href: `/services/${service.slug}`,
       category: null,
       categorySlug: null,
-      snippet: sample ? sample.summary : null,
-      statusLabel: sample ? null : SERVICE_PENDING_LABEL,
+      snippet: null,
+      statusLabel: SERVICE_PENDING_LABEL,
       actionLabel: SERVICE_DETAILS_LABEL,
       actionHref: `/services/${service.slug}`,
-      sample: Boolean(sample),
-      areas: null,
     });
   }
 
@@ -216,8 +181,6 @@ export function buildSearchIndex(): SearchEntry[] {
       statusLabel: null,
       actionLabel: "Visit page",
       actionHref: page.href,
-      sample: false,
-      areas: null,
     });
   }
 
@@ -238,21 +201,15 @@ function haystack(entry: SearchEntry): string {
   if (entry.kind === "course") {
     // Held courses have no snippet, so a query can never surface held
     // or truncated text through search — only title and category.
-    // Demo-filled courses additionally match their public AREAS
-    // (areas are rendered on detail pages, so matching them is
-    // consistent); lesson detail does not exist as data and is
-    // never in the haystack.
-    const areas = entry.areas ? ` ${entry.areas.join(" ")}` : "";
+    // Lesson detail does not exist as data and is never in the
+    // haystack.
     return entry.snippet
-      ? `${entry.title} ${entry.category ?? ""} ${entry.snippet}${areas}`.toLowerCase()
-      : `${entry.title} ${entry.category ?? ""}${areas}`.toLowerCase();
+      ? `${entry.title} ${entry.category ?? ""} ${entry.snippet}`.toLowerCase()
+      : `${entry.title} ${entry.category ?? ""}`.toLowerCase();
   }
   if (entry.kind === "service") {
-    // Sample service summaries are searchable like course snippets;
-    // held services (no sample) match on title only.
-    return entry.snippet
-      ? `${entry.title} ${entry.snippet}`.toLowerCase()
-      : entry.title.toLowerCase();
+    // Held services match on title only.
+    return entry.title.toLowerCase();
   }
   return entry.title.toLowerCase();
 }

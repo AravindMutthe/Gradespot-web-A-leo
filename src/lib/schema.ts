@@ -186,9 +186,9 @@ export function courseSchema(
     // (never the raw summary — SOC/Security+ "Enroll" tails).
     description?: string;
     // LP rebuild: pass null to OMIT educationalCredentialAwarded
-    // (sample LPs: the sample certification is preparation
-    // wording, not an awarded credential). Undefined keeps the
-    // previous behaviour (detail certification where named).
+    // (preparation wording is not an awarded credential).
+    // Undefined keeps the previous behaviour (detail
+    // certification where named).
     credentialAwarded?: string | null;
   },
 ) {
@@ -222,8 +222,8 @@ export function courseSchema(
     // educationalCredentialAwarded ONLY where course-details names a
     // certification for this course (11 full courses). Catalogue
     // courses and courses without a named certification get none.
-    // LP sample pages pass null: preparation wording is not an
-    // awarded credential.
+    // LP pages may pass null to omit it: preparation wording is
+    // not an awarded credential.
     const detail = courseDetails[course.slug];
     if (opts?.credentialAwarded === null) {
       // Omitted deliberately — see above.

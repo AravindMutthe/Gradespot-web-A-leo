@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SearchBox from "@/components/SearchBox";
-import { DemoLegend } from "@/components/DemoLegend";
-import { SampleTag } from "@/components/SampleTag";
 import {
   SEARCH_CATEGORIES,
   buildSearchIndex,
@@ -180,13 +178,6 @@ export default async function SearchPage({
                 {results.length} result{results.length === 1 ? "" : "s"}
                 {query.q ? <> for “{query.q}”</> : null}
               </p>
-              {/* Demo-fill: any sample result carries its tag below;
-                  the legend renders once when any result is sample. */}
-              {results.some((entry) => entry.sample) && (
-                <div className="mt-6">
-                  <DemoLegend />
-                </div>
-              )}
               <div className="mt-2">
                 {results.map((entry) => (
                   <article key={`${entry.kind}:${entry.href}`} className="border-b border-line py-5">
@@ -194,7 +185,6 @@ export default async function SearchPage({
                       <Link href={entry.href} className="transition-colors hover:text-signal">
                         {entry.title}
                       </Link>
-                      {entry.sample && <SampleTag />}
                     </h3>
                     <p className="mt-2 flex flex-wrap gap-2">
                       <span className="inline-block rounded-md border border-line bg-canvas px-2.5 py-1.5 text-[13px] font-semibold text-body">
@@ -211,7 +201,7 @@ export default async function SearchPage({
                       )}
                     </p>
                     {entry.snippet && (
-                      <p className={`mt-2 leading-7 ${entry.sample ? "text-sample" : "text-body"}`}>{entry.snippet}</p>
+                      <p className="mt-2 leading-7 text-body">{entry.snippet}</p>
                     )}
                     <p className="mt-3">
                       <Link

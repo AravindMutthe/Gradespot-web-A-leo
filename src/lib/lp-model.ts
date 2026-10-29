@@ -11,8 +11,8 @@
 //     claim. Rendering either on an LP would reintroduce copy the
 //     LP stage is required to remove.
 // The LP hero therefore carries the H1 + fit line (who) + CTAs,
-// and the facts strip carries duration / mode / location / vendor
-// alignment / certification. Nothing else on the page needs the
+// and the facts strip carries duration / mode / location /
+// certification. Nothing else on the page needs the
 // summary or the outcome.
 //
 // Two-tier syllabus gating (same as detail pages): the model
@@ -22,16 +22,10 @@
 // off-site by the team after enquiry. No download, no "instant",
 // no timing promise.
 //
-// Vendor marks: see LP_VENDOR_MARKS below (owner amendments
-// 20:26 + 20:29 IST, demo-only preview scope; production
-// decisions await GradeSpot officials). In short: provider brand
-// portals are gated, so demo images are reputable open-source /
-// press-distribution copies, bytes unmodified, approval status
-// honestly "demo-only, authorization pending" — never
-// "approved", never partner framing. Employer logos stay OFF;
-// EC-Council/Pearson stay in-progress only, never partners.
-// Before ANY production deploy, every mark below must be
-// removed or authorized (part of the production purge gate).
+// Purge gates (2026-10-29): vendor marks removed — the four demo-only
+// vendor files are deleted and no vendor image renders on LPs.
+// Employer logos stay OFF; EC-Council/Pearson stay in-progress
+// only, never partners.
 // SOC duration rule (LP-stricter than the detail model): the
 // detail model renders the repo-map "90 days" for SOC, but that
 // figure is NOT independently verified, so the LP renders
@@ -43,118 +37,10 @@ import { courseDetails } from "@/data/course-details";
 import type { CourseSection } from "@/data/courses";
 import { testimonials, type Testimonial } from "@/data/testimonials";
 import { buildCourseDetail, findLocalCourse } from "@/lib/course-detail";
-import { getSampleCourse } from "@/lib/demo-fill";
 
-// Vendor marks — OWNER AMENDMENTS 20:26 + 20:29 IST (demo-only
-// preview scope; production decisions await GradeSpot officials).
-// Priority applied: (1) official provider files first — provider
-// brand portals for Microsoft (Partner Center / FastTrack login),
-// Cisco (Brand Center request tool; corporate logo generally not
-// granted to third parties), CompTIA (partner portal) are all
-// gated, so no provider-direct file was obtainable; (2) reputable
-// open-source / press-distribution copies, unmodified, as demo
-// images; (3) reserved text slots where no file exists. Status at
-// build time:
-//   - Downloaded demo images (4 files, public/images/vendors/,
-//     bytes unmodified — never edited, recoloured, cropped or
-//     redrawn; a downloadable file is NOT authorization):
-//       Microsoft  → microsoft-logo.svg (2012 lockup, tiles +
-//                      wordmark, Commons PD)
-//       Cisco      → cisco-logo.svg (bridge + wordmark, red,
-//                      Commons PD)
-//       CompTIA    → comptia-logo.svg (wordmark, red, Commons PD)
-//       EC-Council → eccouncil-logo.jpg (lockup incl. "Building
-//                      A Culture of Security" tagline, EC-Council
-//                      press release via PR Newswire)
-//     SVG marks are verified by file identity + brand colors, not
-//     by a visual render (no rasterizer in this environment);
-//     the parent's live-browser check must confirm they render
-//     correctly. Currency vs current brand guidelines is NOT
-//     verified for any mark.
-//   - Reserved text slots: NONE for vendor marks (all four vendors
-//     have a demo image). Hardware & Digital Marketing have no
-//     vendor mark by design (completion certificate, not a vendor
-//     certification), not by reservation.
-//   - Generic illustrations used: NONE (no suitable generic file
-//     in the repo; Adobe generations uninspected/parked; Das
-//     generation banned; no lookalikes built).
-//   - Employer/other-organisation logos: OFF entirely. EC-Council
-//     /Pearson: in-progress only, never partners, never
-//     "authorized partner" framing. Full R10 register (exact
-//     asset, owner, source URL + download date, terms, purpose,
-//     restrictions, repo path, approval status "demo-only,
-//     authorization pending discussion with GradeSpot officials")
-//     is in the stage report + docs/frontend-v2/
-//     LP-R10-ASSET-REGISTER-2026-10-28.md. Before ANY production
-//     deploy, every mark below must be removed or authorized:
-//     demo images are part of the production purge gate alongside
-//     sample markers.
-export interface LpVendorMark {
-  vendor: string;
-  image: string;
-  imageWidth: number;
-  imageHeight: number;
-}
-
-export const LP_VENDOR_MARKS: Record<string, LpVendorMark> = {
-  "azure-fundamentals-az-900": {
-    vendor: "Microsoft",
-    image: "/images/vendors/microsoft-logo.svg",
-    imageWidth: 338,
-    imageHeight: 72,
-  },
-  "azure-administrator-az-104": {
-    vendor: "Microsoft",
-    image: "/images/vendors/microsoft-logo.svg",
-    imageWidth: 338,
-    imageHeight: 72,
-  },
-  "ccna-200-301": {
-    vendor: "Cisco",
-    image: "/images/vendors/cisco-logo.svg",
-    imageWidth: 72,
-    imageHeight: 38,
-  },
-  "ccnp-350-401-encor": {
-    vendor: "Cisco",
-    image: "/images/vendors/cisco-logo.svg",
-    imageWidth: 72,
-    imageHeight: 38,
-  },
-  "comptia-network-plus": {
-    vendor: "CompTIA",
-    image: "/images/vendors/comptia-logo.svg",
-    imageWidth: 198,
-    imageHeight: 42,
-  },
-  "comptia-security-plus": {
-    vendor: "CompTIA",
-    image: "/images/vendors/comptia-logo.svg",
-    imageWidth: 198,
-    imageHeight: 42,
-  },
-  "comptia-pentest-plus": {
-    vendor: "CompTIA",
-    image: "/images/vendors/comptia-logo.svg",
-    imageWidth: 198,
-    imageHeight: 42,
-  },
-  "certified-ethical-hacker-ceh": {
-    vendor: "EC-Council",
-    image: "/images/vendors/eccouncil-logo.jpg",
-    imageWidth: 399,
-    imageHeight: 146,
-  },
-  // SOC shows the EC-Council mark as ALIGNMENT only (its
-  // certification string is "EC-Council CSA / SC-200 aligned");
-  // the page carries the aligned-not-certified qualifier with it.
-  "soc-analyst": {
-    vendor: "EC-Council",
-    image: "/images/vendors/eccouncil-logo.jpg",
-    imageWidth: 399,
-    imageHeight: 146,
-  },
-};
+// Purge gates (2026-10-29): vendor marks removed — the four demo-only
+// vendor files are deleted and no vendor image renders on LPs.
+// EC-Council/Pearson stay in-progress only, never partners.
 
 // Presentation variants (Das LP proposal, reconciled): emphasis
 // only — they do NOT rename courses or alter taxonomy.
@@ -209,7 +95,6 @@ export interface LpModel {
   short: string;
   h1: string;
   displayTitle: string;
-  sample: boolean;
   who: string;
   level: string;
   certification: string;
@@ -218,8 +103,6 @@ export interface LpModel {
   topics: string[];
   roles: string[];
   outcomeLine: string;
-  sampleSummary: string;
-  vendorMark: LpVendorMark | null;
   variant: LpVariant;
   testimonial: Testimonial | null;
   metaDescription: string;
@@ -245,23 +128,23 @@ export function buildLpModel(courseSlug: string): LpModel | null {
   const detail = courseDetails[courseSlug];
   if (!course || course.catalogOnly || !detail) return null;
   const model = buildCourseDetail(course, detail, undefined);
-  // Fail closed: a held page (no sample record to un-hold it)
-  // must never render as an LP. All 11 LPs are un-held today
-  // (8 verified + 3 sample records), so this is a guard, not a
-  // path any current LP takes.
+  // Fail closed: a held page must never render as an LP. After the
+  // purge gates, the three held full courses (CCNA, CCNP, Digital
+  // Marketing) return null here, so their LP routes 404 until real
+  // content is approved — that gap is reported, never filled with
+  // placeholder data.
   if (model.heldBack || !model.facts) return null;
 
-  const sample = model.sample ? getSampleCourse(course.slug) : undefined;
   // SOC duration: repo-map 90 days is unverified — LP renders the
   // confirmed-on-enquiry wording instead (see header note).
-  // Sample + verified durationLabels carry a "Duration: " prefix
-  // from the detail model; the LP card supplies its own label,
-  // so the prefix is stripped here to avoid a doubled label.
+  // Detail durationLabels carry a "Duration: " prefix from the
+  // detail model; the LP card supplies its own label, so the
+  // prefix is stripped here to avoid a doubled label.
   const durationLabel =
     course.slug === "soc-analyst"
       ? "Duration confirmed on enquiry"
       : (model.durationLabel ?? "Duration confirmed on enquiry").replace(/^Duration:\s*/, "");
-  const roles = sample?.roles ?? rolesFromDetailSections(model.sections);
+  const roles = rolesFromDetailSections(model.sections);
   const testimonialName = LP_TESTIMONIAL_BY_SLUG[course.slug];
   const testimonial = testimonialName
     ? (testimonials.find((t) => t.name === testimonialName) ?? null)
@@ -274,35 +157,25 @@ export function buildLpModel(courseSlug: string): LpModel | null {
     short: detail.short,
     h1: `${detail.short} Training in Hyderabad`,
     displayTitle: model.displayTitle,
-    sample: model.sample,
     who: model.facts.who,
     level: model.facts.level,
     certification: model.facts.certification,
     durationLabel,
-    mode: sample ? sample.mode : "Online & Offline Classes",
+    mode: "Online & Offline Classes",
     topics: model.facts.topics ?? [],
     roles,
-    sampleSummary: model.sample ? (getSampleCourse(course.slug)?.summary ?? "") : "",
     // Outcome line (Das rule: preparation for an examination is
     // not the award of a certification; attendance alone never
-    // establishes a vendor credential). Sample LPs get the generic
-    // preparation line — no credential is claimed for samples.
-    outcomeLine: model.sample
-      ? "Builds the foundations covered in this course — full outcomes confirmed on enquiry."
-      : model.facts.certification.includes("aligned")
+    // establishes a vendor credential).
+    outcomeLine: model.facts.certification.includes("aligned")
         ? `Aligned with ${model.facts.certification.replace(/\s+aligned$/i, "")} — aligned, not certified. Attendance does not award a vendor credential.`
         : model.facts.certification.toLowerCase().includes("completion")
           ? "Leads to a course completion certificate from GradeSpot IT Solutions."
           : `Prepares for ${model.facts.certification} — preparation for an examination, not the award of a certification.`,
-    vendorMark: LP_VENDOR_MARKS[course.slug] ?? null,
     variant: LP_VARIANT_BY_SLUG[course.slug] ?? "cloud-infra",
     testimonial,
     // Meta description never carries the raw outcome or summary
-    // (Enroll tails, SOC job-ready). Sample LPs carry the sample
-    // summary itself (demo-fill meta precedent: the page's Sample
-    // tag + legend are the markers, since meta cannot carry them).
-    metaDescription: model.sample
-      ? (model.summary ?? "")
-      : `${detail.short} training in Hyderabad at GradeSpot IT Solutions, Dilsukhnagar — online & offline classes. For ${model.facts.who}. Certification: ${model.facts.certification}. Details confirmed on enquiry.`,
+    // (Enroll tails, SOC job-ready).
+    metaDescription: `${detail.short} training in Hyderabad at GradeSpot IT Solutions, Dilsukhnagar — online & offline classes. For ${model.facts.who}. Certification: ${model.facts.certification}. Details confirmed on enquiry.`,
   };
 }

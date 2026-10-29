@@ -31,7 +31,6 @@ import {
 } from "@/data/courses";
 import type { CourseDetail } from "@/data/course-details";
 import { displayCourseTitle } from "@/lib/trainings-rows";
-import { getSampleCourse } from "@/lib/demo-fill";
 
 // Full-detail courses held in full, with the reason recorded.
 export const HELD_DETAIL_REASONS: Record<string, string> = {
@@ -157,13 +156,6 @@ export interface DetailModel {
   related: RelatedCourse[];
   compareSlug: string | null;
   compareTitle: string | null;
-  // Demo-fill: true when the page renders owner-authorised SAMPLE
-  // data (summary, facts, areas). Templates must render the Sample
-  // tag + sample font color whenever this is true. Sample pages
-  // carry NO repo sections: the defective/truncated sections of the
-  // three held full courses are never rendered, and catalogue-only
-  // courses have none. Sample content closes no R-row.
-  sample: boolean;
 }
 
 export function findLocalCourse(slug: string): Course | undefined {
@@ -233,11 +225,11 @@ export function buildCourseDetail(
     course.catalogOnly
       ? "Catalogue-only course: no published detail page, summary, curriculum or availability in repo data."
       : (HELD_DETAIL_REASONS[course.slug] ?? null);
-  // Demo-fill (owner-authorised, preview only): a sample record
-  // un-holds the page for demo. The held path below survives for
-  // any slug with no sample record.
-  const sample = getSampleCourse(course.slug);
-  const heldBack = sample ? false : heldReason !== null;
+  // Purge gates (2026-10-29): demo-fill removed. Held presentation
+  // applies to every slug with a held reason — catalogue-only
+  // courses and the three held full courses — with no sample
+  // record to un-hold them.
+  const heldBack = heldReason !== null;
 
   const related: RelatedCourse[] = localCourses
     .filter((c) => c.category === course.category && c.slug !== course.slug)
@@ -261,33 +253,6 @@ export function buildCourseDetail(
       related: [],
       compareSlug: null,
       compareTitle: null,
-      sample: false,
-    };
-  }
-
-  if (sample) {
-    return {
-      slug: course.slug,
-      category: course.category,
-      displayTitle,
-      heldBack: false,
-      heldReason: null,
-      summary: sample.summary,
-      durationLabel: `Duration: ${sample.duration}`,
-      facts: {
-        who: sample.who,
-        level: sample.level,
-        certification: sample.certification,
-        topics: sample.areas,
-      },
-      sections: [],
-      skippedSections: [],
-      gatedHeadings: [],
-      jobReadyTopicsSuppressed: false,
-      related,
-      compareSlug: compare?.slug ?? null,
-      compareTitle: compare?.title ?? null,
-      sample: true,
     };
   }
 
@@ -338,6 +303,5 @@ export function buildCourseDetail(
     related,
     compareSlug: compare?.slug ?? null,
     compareTitle: compare?.title ?? null,
-    sample: false,
   };
 }

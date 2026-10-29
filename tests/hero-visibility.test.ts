@@ -3,7 +3,7 @@
 // Defect (pre-LP visual inspection, multiple screenshots): on
 // /trainings/ccna-200-301 the H1 existed in the DOM but was INVISIBLE
 // in the dark navy hero — breadcrumb and kicker rendered, then a gap,
-// then the Sample pill and buttons. Root cause, measured:
+// then the buttons. Root cause, measured:
 //   - globals.css @layer base sets `h1, h2, h3, h4 { @apply
 //     font-display text-heading; }` — an EXPLICIT color on every bare
 //     heading, which beats any inherited section text color.

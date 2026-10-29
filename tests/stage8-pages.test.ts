@@ -107,16 +107,17 @@ describe("Stage 8 page inventory", () => {
     }
   });
 
-  it("no in-scope page renders a price figure, except pricing's marked sample ranges", () => {
+  it("no in-scope page renders a price figure (pricing carries no figures at all)", () => {
     for (const p of PAGES) {
       // Strip comments: the held-notice explanations name the figures
       // they refuse to render, which must not trip this test.
       if (p === "pricing") {
-        // Pricing carries ONLY sample ranges from the demo-fill data
-        // (never a legacy figure), each with the Sample tag.
-        expect(sources[p]).toContain("SAMPLE_COURSE_FEE_RANGES");
-        expect(sources[p]).toContain("SampleTag");
-        continue;
+        // Purge gates: pricing carries NO fee figure of any kind —
+        // the former demo ranges are removed, not replaced.
+        expect(sources[p]).not.toContain("SAMPLE_COURSE_FEE_RANGES");
+        expect(sources[p]).not.toContain("SAMPLE_INSTITUTE_TIER_RANGES");
+        expect(sources[p]).not.toContain("SampleTag");
+        expect(sources[p]).toContain("confirmed on enquiry");
       }
       expect(stripComments(sources[p])).not.toMatch(/₹/);
     }
@@ -145,31 +146,31 @@ describe("Stage 8 held content", () => {
     const s = sources["career-support"];
     expect(s).toContain("buildCourseDetail");
     expect(s).toContain("heldBack");
-    // Demo-fill: sample courses contribute no roles (sample data
-    // carries no roles field); the page stays verified-only.
-    expect(s).toContain(".sample");
+    // Purge gates: held courses contribute no roles; the page
+    // stays verified-only via the heldBack filter.
+    expect(s).toContain("heldBack");
     expect(s).toContain("Service details to be confirmed");
     expect(stripComments(s)).not.toContain("testimonials");
   });
 
-  it("compare pair holds the held side and never renders fees; sample sides carry Sample tags", () => {
+  it("compare pair holds the held side and never renders fees or sample markers", () => {
     const s = sources["compare/[pair]"];
     expect(s).toContain("Course details to be confirmed");
     expect(s).toContain("Confirmed on enquiry");
-    expect(s).toContain("SampleTag");
-    expect(s).toContain("sampleA");
-    expect(s).toContain("sampleB");
+    expect(s).not.toContain("SampleTag");
+    expect(s).not.toContain("sampleA");
+    expect(s).not.toContain("sampleB");
     expect(stripComments(s)).not.toContain("getPricingPlans");
     expect(stripComments(s)).not.toContain("Published fees");
   });
 
-  it("pricing holds every unbuilt capability claim; its only figures are marked sample ranges", () => {
+  it("pricing holds every unbuilt capability claim and publishes no figures", () => {
     const s = sources["pricing"];
     expect(s).toContain("confirmed on enquiry");
-    expect(s).toContain("SAMPLE_COURSE_FEE_RANGES");
-    expect(s).toContain("SAMPLE_INSTITUTE_TIER_RANGES");
-    expect(s).toContain("SampleTag");
-    expect(s).toContain("DemoLegend");
+    expect(s).not.toContain("SAMPLE_COURSE_FEE_RANGES");
+    expect(s).not.toContain("SAMPLE_INSTITUTE_TIER_RANGES");
+    expect(s).not.toContain("SampleTag");
+    expect(s).not.toContain("DemoLegend");
     expect(stripComments(s)).not.toContain("Instant auto-reply");
     expect(stripComments(s)).not.toContain("CRM-lite");
     expect(stripComments(s)).not.toContain("quoted after a demo");

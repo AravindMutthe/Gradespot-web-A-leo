@@ -40,12 +40,10 @@ const roleCourses = courses
   .filter((c) => !c.catalogOnly)
   .map((c) => ({ course: c, roles: getJobRoles(c) }))
   .filter((x) => x.roles.length > 0)
-  .filter((x) => !buildCourseDetail(x.course, courseDetails[x.course.slug], undefined).heldBack)
-  // Demo-fill: sample courses contribute NO roles here — sample data
-  // carries no roles field, and the original sections of a held full
-  // course (e.g. CCNA's contested curriculum) must not leak in as
-  // roles. This page stays verified-only by design.
-  .filter((x) => !buildCourseDetail(x.course, courseDetails[x.course.slug], undefined).sample);
+  // Held courses contribute NO roles here — the original sections
+  // of a held full course (e.g. CCNA's contested curriculum) must
+  // not leak in as roles. This page stays verified-only by design.
+  .filter((x) => !buildCourseDetail(x.course, courseDetails[x.course.slug], undefined).heldBack);
 
 const careerServices = careerServiceSlugs
   .map((slug) => services.find((s) => s.slug === slug))

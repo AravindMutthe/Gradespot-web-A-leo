@@ -47,8 +47,6 @@ import { breadcrumbSchema, courseFaqs, courseSchema, faqSchema, webPageSchema } 
 import { courseDetails } from "@/data/course-details";
 import { comparisons } from "@/data/comparisons";
 import { courseWaLink } from "@/lib/wa";
-import { SampleTag } from "@/components/SampleTag";
-import { DemoLegend } from "@/components/DemoLegend";
 import {
   PENDING_LABEL,
   buildCourseDetail,
@@ -92,7 +90,6 @@ export async function generateMetadata({
   return coursePageMetadata(course, `/trainings/${slug}`, {
     displayTitle: model.displayTitle,
     held: model.heldBack,
-    description: model.sample ? (model.summary ?? undefined) : undefined,
   });
 }
 
@@ -129,7 +126,7 @@ export default async function CoursePage({
   // page's "Key Learning Objectives" list where one exists, moved
   // into the card; otherwise the kept "Course Outcomes" /
   // "Common Job Roles" section; otherwise nothing (areas + gated
-  // only — sample pages, whose sections are []). The objectives
+  // only). The objectives
   // list appears exactly once on the page (in the card, never also
   // in About). A legacy outcome section on a page whose card uses
   // KLO (Network+, PenTest+, Security+) stays in About verbatim —
@@ -179,16 +176,6 @@ export default async function CoursePage({
           <h1 className="mt-2 max-w-4xl text-4xl font-semibold text-white md:text-5xl md:leading-tight">
             {model.displayTitle}
           </h1>
-          {/* Demo-fill: sample courses show the Sample tag in the
-              hero (white pill, sample-colored text — readable on
-              ink), but NO sample-colored body text on the dark hero:
-              the sample summary and duration live in the light body
-              below, where the sample color passes AA. */}
-          {model.sample && (
-            <p className="mt-4">
-              <SampleTag />
-            </p>
-          )}
           {model.heldBack ? (
             <>
               <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">
@@ -210,14 +197,11 @@ export default async function CoursePage({
             </>
           ) : (
             <>
-              {/* Verified pages show summary + duration in the hero.
-                  Sample pages do not: sample-colored text never
-                  renders on dark ink, so the sample summary and
-                  duration render in the light body below. */}
-              {!model.sample && model.summary && (
+              {/* Verified pages show summary + duration in the hero. */}
+              {model.summary && (
                 <p className="mt-4 max-w-3xl text-base leading-7 text-white/85">{model.summary}</p>
               )}
-              {!model.sample && model.durationLabel && (
+              {model.durationLabel && (
                 <p className="mt-4 text-base font-semibold text-white">{model.durationLabel}</p>
               )}
               {/* Hero buttons, owner-approved reading order:
@@ -227,7 +211,7 @@ export default async function CoursePage({
                   stays the solid primary; About/Syllabus are
                   secondary. Fail-closed: About renders only where the
                   about sections below actually exist (verified pages;
-                  sample pages carry no repo sections, so no About and
+                  held pages take the held branch above, so no About and
                   no dead anchor). View Syllabus renders on every full
                   page because the grouped syllabus section below
                   always renders (its gated block is unconditional);
@@ -263,45 +247,23 @@ export default async function CoursePage({
         <section className="section-pad">
           <div className="wrap">
             <div className="mx-auto max-w-3xl">
-              {/* Demo-fill: legend on every sample-carrying detail page. */}
-              {model.sample && (
-                <div className="mb-10">
-                  <DemoLegend />
-                </div>
-              )}
-              {/* Demo-fill: sample summary + duration on a light
-                  surface, in the sample font color, with the tag. */}
-              {model.sample && model.summary && (
-                <div className="mb-10 rounded-2xl border border-sample/40 bg-[#F5F3FF] p-7">
-                  <p className="flex flex-wrap items-center gap-3">
-                    <SampleTag />
-                  </p>
-                  <p className="mt-3 text-base leading-7 text-sample">{model.summary}</p>
-                </div>
-              )}
               {model.facts && (
                 <div className="mb-10 rounded-2xl border border-line bg-surface p-7">
                   <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
-                    Course facts {model.sample && <SampleTag />}
+                    Course facts
                   </h2>
                   <dl className="mt-4 space-y-3 text-[15px] leading-7 text-body">
                     <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                       <dt className="w-32 shrink-0 font-semibold text-ink">Who it&apos;s for</dt>
-                      <dd className={model.sample ? "text-sample" : undefined}>{model.facts.who}</dd>
+                      <dd>{model.facts.who}</dd>
                     </div>
-                    {model.sample && model.durationLabel && (
-                      <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-                        <dt className="w-32 shrink-0 font-semibold text-ink">Duration</dt>
-                        <dd className="text-sample">{model.durationLabel}</dd>
-                      </div>
-                    )}
                     <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                       <dt className="w-32 shrink-0 font-semibold text-ink">Level</dt>
-                      <dd className={model.sample ? "text-sample" : undefined}>{model.facts.level}</dd>
+                      <dd>{model.facts.level}</dd>
                     </div>
                     <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                       <dt className="w-32 shrink-0 font-semibold text-ink">Certification</dt>
-                      <dd className={model.sample ? "text-sample" : undefined}>{model.slug === "azure-fundamentals-az-900" ? "Preparation for Microsoft AZ-900" : model.facts.certification}</dd>
+                      <dd>{model.slug === "azure-fundamentals-az-900" ? "Preparation for Microsoft AZ-900" : model.facts.certification}</dd>
                     </div>
                   </dl>
                 </div>
@@ -319,14 +281,14 @@ export default async function CoursePage({
                   (shared after enquiry only). */}
               <section id="syllabus" className="mb-10 scroll-mt-24 rounded-2xl border border-line bg-surface p-7">
                 <h2 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
-                  Syllabus {model.sample && <SampleTag />}
+                  Syllabus
                 </h2>
                 {model.facts?.topics && model.facts.topics.length > 0 && (
                   <div className="mt-4">
                     <h3 className="font-semibold text-ink">What you will learn</h3>
                     <ul className="mt-2 list-disc space-y-1 pl-5">
                       {model.facts.topics.map((topic) => (
-                        <li key={topic} className={model.sample ? "text-sample" : undefined}>{topic}</li>
+                        <li key={topic}>{topic}</li>
                       ))}
                     </ul>
                   </div>
@@ -343,7 +305,7 @@ export default async function CoursePage({
                 ))}
                 <div className="mt-6 border-t border-line pt-6">
                   <h3 className="flex flex-wrap items-center gap-3 text-lg font-bold text-ink">
-                    Full syllabus — shared after enquiry {model.sample && <SampleTag />}
+                    Full syllabus — shared after enquiry
                   </h3>
                   <p className="mt-2 text-[15px] leading-7 text-body">
                     The full syllabus for this course is shared by the GradeSpot team
@@ -363,9 +325,9 @@ export default async function CoursePage({
                   legacy outcome section on a page whose card uses
                   Key Learning Objectives — everything not in the
                   card's outcomes element above), in original order.
-                  Renders only where such sections exist; sample
-                  pages carry none, so no About section and no About
-                  button for them. */}
+                  Renders only where such sections exist; held pages
+                  take the held branch above, so no About section
+                  and no About button for them. */}
               {aboutSections.length > 0 && (
                 <div id="about" className="scroll-mt-24 space-y-12">
                   {aboutSections.map((s, i) => (

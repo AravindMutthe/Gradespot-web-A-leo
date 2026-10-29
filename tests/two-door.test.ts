@@ -8,8 +8,8 @@
 // page with no mapping and no forbidden claims, exactly one canonical
 // internships destination, a grouped business directory with exactly
 // the 12 existing services + 4 pathways, homepage links repointed,
-// search + sitemap gains for indexed pages only, and sample markers
-// intact on the new sample-carrying pages.
+// search + sitemap gains for indexed pages only, and zero sample
+// markers anywhere (purge gates).
 
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -94,7 +94,13 @@ describe("Two-door — topic taxonomy from catalogue data", () => {
         );
       expect(rows.length).toBe(cat.count);
       expect(rows.every((r) => r.category === cat.name)).toBe(true);
-      expect(rows.every((r) => r.titleHref === `/trainings/${r.slug}`)).toBe(true);
+      // Purge gates: verified rows link to their detail page;
+      // held rows carry no title link (title-only + enquiry).
+      expect(
+        rows.every((r) =>
+          r.heldBack ? r.titleHref === null : r.titleHref === `/trainings/${r.slug}`,
+        ),
+      ).toBe(true);
     }
   });
 });
@@ -150,13 +156,13 @@ describe("Two-door — training directory (no filters, no long list)", () => {
     expect(coursesDir).toContain('href="/trainings"');
   });
 
-  it("category pages are dynamic, 404 unknown slugs, and carry sample markers", () => {
+  it("category pages are dynamic, 404 unknown slugs, and carry no sample markers", () => {
     expect(categoryPage).toContain("generateStaticParams");
     expect(categoryPage).toContain("notFound()");
     expect(categoryPage).toContain("topicCategoryBySlug");
-    expect(categoryPage).toContain("DemoLegend");
-    expect(categoryPage).toContain("SampleTag");
-    expect(categoryPage).toContain("text-sample");
+    expect(categoryPage).not.toContain("DemoLegend");
+    expect(categoryPage).not.toContain("SampleTag");
+    expect(categoryPage).not.toContain("text-sample");
     expect(categoryPage).toContain('href="/trainings/courses"');
     expect(categoryPage).toContain('href="/trainings"');
   });
@@ -267,7 +273,7 @@ describe("Two-door — business directory: exactly 12 services, 4 pathways", () 
     expect(services.length).toBe(12);
     expect(servicesDir).toContain("SERVICE_GROUPS");
     expect(servicesDir).toContain("buildServiceRow");
-    expect(servicesDir).toContain("DemoLegend");
+    expect(servicesDir).not.toContain("DemoLegend");
     expect(servicesDir).toContain("Enquire About Our Services");
   });
 

@@ -147,17 +147,6 @@
   --color-wa: #0b7a43;
   --color-wa-bright: #4ade80;
 
-  /* Demo-fill sample marker (owner-authorised, preview only):
-     violet-700 #6D28D9, deliberately outside the brand palette.
-     Measured (relative-luminance, WCAG 2.2): 6.79:1 on canvas
-     #F8FAFC, 7.10:1 on white #FFFFFF, 6.48:1 on legend tint
-     #F5F3FF, 6.32:1 on surface-muted #EEF2F7, white-on-#6D28D9
-     7.10:1 — AA normal PASS on every surface sample text renders
-     on. Sample-colored text is NEVER rendered on dark ink: detail
-     heroes for sample courses show a white-background Sample tag
-     only. Purge with the demo-fill removal (zero sample markers
-     before any production deploy). */
-  --color-sample: #6d28d9;
 
   /* FINAL DESIGN P2 — CANDIDATE door accents, NOT finalized.
      Gate 1 owner review of tokens + typography is still pending:

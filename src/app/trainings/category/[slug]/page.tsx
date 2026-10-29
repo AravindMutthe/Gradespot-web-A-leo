@@ -4,8 +4,6 @@ import { notFound } from "next/navigation";
 import { staticPageMetadata } from "@/lib/metadata";
 import { PageHero, AnswerLead } from "@/components/ui";
 import DirectoryBoard from "@/components/DirectoryBoard";
-import { DemoLegend } from "@/components/DemoLegend";
-import { SampleTag } from "@/components/SampleTag";
 import { courses, courseDurations } from "@/data/courses";
 import { buildTrainingRow } from "@/lib/trainings-rows";
 import { topicCategories, topicCategoryBySlug } from "@/lib/two-door";
@@ -13,10 +11,8 @@ import { topicCategories, topicCategoryBySlug } from "@/lib/two-door";
 // Two-door categorization: ONE dynamic route generates all 10 topic
 // category pages from local catalogue data — no hardcoded page per
 // category. Unknown slugs 404. Each page lists ONLY its own topic's
-// course rows, reusing the existing row model including demo-fill
-// SampleTag/legend behaviour: category pages render sample summaries,
-// so the DemoLegend renders here unconditionally (it is the
-// demo-only component removed in one place at purge time).
+// course rows, reusing the existing row model: held rows carry the
+// pending notice, verified rows their summary.
 
 export function generateStaticParams() {
   return topicCategories().map((cat) => ({ slug: cat.slug }));
@@ -70,9 +66,6 @@ export default async function CategoryPage({
           Browse {rows.length} {cat.name} {rows.length === 1 ? "course" : "courses"} from
           GradeSpot IT Solutions in Dilsukhnagar, Hyderabad, listed below.
         </AnswerLead>
-        <div className="mt-6">
-          <DemoLegend />
-        </div>
       </div>
       <section className="section-pad">
         <div className="wrap">
@@ -103,11 +96,8 @@ export default async function CategoryPage({
                       ) : (
                         row.displayTitle
                       )}
-                      {row.sample && <SampleTag />}
                     </h2>
-                    {row.sample && row.description ? (
-                      <p className="mt-1 text-[15px] text-sample">{row.description}</p>
-                    ) : row.statusLabel ? (
+                    {row.statusLabel ? (
                       <p className="mt-1 text-[15px] text-body">{row.statusLabel}</p>
                     ) : (
                       row.description && (

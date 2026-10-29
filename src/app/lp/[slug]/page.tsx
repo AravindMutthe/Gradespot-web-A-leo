@@ -7,10 +7,8 @@ import { buildLpModel, courseSlugForLpSlug, lpSlugFor } from "@/lib/lp-model";
 import { lpPageMetadata } from "@/lib/metadata";
 import { courseSchema } from "@/lib/schema";
 import { waLink } from "@/lib/wa";
-import { DemoLegend } from "@/components/DemoLegend";
 import JsonLd from "@/components/JsonLd";
 import LpLeadForm from "@/components/LpLeadForm";
-import { SampleTag } from "@/components/SampleTag";
 
 // LP rebuild (Frontend 3.0, Das 7-step spine — Leo's 13 steps
 // mapped into it; see docs/frontend-v2/LP-REBUILD-CHECKPOINT
@@ -39,12 +37,18 @@ import { SampleTag } from "@/components/SampleTag";
 // omitted rather than asserted). FAQs: none (no source-supported
 // answers exist — step 7 collapses to the final enquiry action
 // and carries NO FAQ schema). Imageless: no course photos, no
-// art, no stock — text first, vendor marks excepted (demo
-// images, see lp-model.ts). No fixed-height cards, no fixed
+// art, no stock — text first (purge gates: no vendor images).
+// No fixed-height cards, no fixed
 // pixel widths, no nowrap anywhere — max-zoom reflow is
 // structural (visual verification still owed to the parent).
 export function generateStaticParams() {
-  return courses.filter((c) => !c.catalogOnly).map((c) => ({ slug: lpSlugFor(c.slug) }));
+  // Purge gates: only LPs whose model builds are emitted. Held
+  // courses (CCNA, CCNP, Digital Marketing) return null from
+  // buildLpModel, so no path — and no 404 shell — is generated
+  // for them; their routes 404 at request time instead.
+  return courses
+    .filter((c) => !c.catalogOnly && buildLpModel(c.slug) !== null)
+    .map((c) => ({ slug: lpSlugFor(c.slug) }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -63,7 +67,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
 
   const course = courses.find((c) => c.slug === lp.slug)!;
   const phone = business.phones[0];
-  const tag = lp.sample ? <SampleTag /> : null;
 
   return (
     <main>
@@ -72,9 +75,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
           displayTitle: lp.displayTitle,
           suppressOffers: true,
           description: lp.metaDescription,
-          // Sample certification wording is preparation language,
-          // not an awarded credential — omit the credential field.
-          credentialAwarded: lp.sample ? null : undefined,
         })}
       />
 
@@ -107,7 +107,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
         </div>
       </header>
 
-      {/* Step 1 — compact hero (dark; sample text never on ink). */}
+      {/* Step 1 — compact hero. */}
       <section className="bg-ink text-white">
         <div className="mx-auto grid max-w-[1200px] gap-10 px-5 py-12 md:px-6 lg:grid-cols-[1.6fr_1fr] lg:py-16">
           <div>
@@ -117,7 +117,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             <h1 className="mt-3 max-w-4xl text-4xl font-bold leading-[1.15] text-white md:text-[46px]">
               {lp.h1}
             </h1>
-            {lp.sample && <div className="mt-4">{tag}</div>}
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <a href="#leadform" className="btn-primary min-h-[44px] px-6 py-3">
                 Enquire Now
@@ -131,11 +130,11 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             <dl className="space-y-3">
               <div className="flex flex-wrap gap-x-2 gap-y-1">
                 <dt className="font-semibold text-heading">Duration:</dt>
-                <dd className={lp.sample ? "text-sample" : undefined}>{lp.durationLabel}</dd>
+                <dd>{lp.durationLabel}</dd>
               </div>
               <div className="flex flex-wrap gap-x-2 gap-y-1">
                 <dt className="font-semibold text-heading">Mode:</dt>
-                <dd className={lp.sample ? "text-sample" : undefined}>{lp.mode}</dd>
+                <dd>{lp.mode}</dd>
               </div>
               <div className="flex flex-wrap gap-x-2 gap-y-1">
                 <dt className="font-semibold text-heading">Location:</dt>
@@ -143,32 +142,12 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
               </div>
               <div className="flex flex-wrap gap-x-2 gap-y-1">
                 <dt className="font-semibold text-heading">Certification:</dt>
-                <dd className={lp.sample ? "text-sample" : undefined}>{lp.certification}</dd>
+                <dd>{lp.certification}</dd>
               </div>
-              {lp.vendorMark && (
-                <div className="flex flex-wrap items-center gap-3 pt-1">
-                  <dt className="font-semibold text-heading">Vendor alignment:</dt>
-                  <dd className="flex flex-wrap items-center gap-2">
-                    <Image
-                      src={lp.vendorMark.image}
-                      alt={`${lp.vendorMark.vendor} logo`}
-                      width={lp.vendorMark.imageWidth}
-                      height={lp.vendorMark.imageHeight}
-                      className="h-8 w-auto"
-                    />
-                    <span>{lp.vendorMark.vendor}</span>
-                  </dd>
-                </div>
-              )}
             </dl>
-            {lp.sample && (
-              <p className="mt-4 border-t border-line pt-4 text-sample">{lp.sampleSummary}</p>
-            )}
           </div>
         </div>
       </section>
-
-      {lp.sample && <DemoLegend />}
 
       {/* Step 2 — learning overview. */}
       <section className="section-pad bg-canvas">
@@ -179,13 +158,13 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
           <div className="mt-6 grid gap-3 md:grid-cols-3">
             <div className="rounded-2xl border border-line bg-surface p-5">
               <p className="text-sm font-semibold text-heading">Level</p>
-              <p className={`mt-2 text-[15px] leading-6 ${lp.sample ? "text-sample" : "text-body"}`}>
+              <p className="mt-2 text-[15px] leading-6 text-body">
                 {lp.level}
               </p>
             </div>
             <div className="rounded-2xl border border-line bg-surface p-5">
               <p className="text-sm font-semibold text-heading">Mode</p>
-              <p className={`mt-2 text-[15px] leading-6 ${lp.sample ? "text-sample" : "text-body"}`}>
+              <p className="mt-2 text-[15px] leading-6 text-body">
                 {lp.mode}
               </p>
             </div>
@@ -239,7 +218,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
               Syllabus and practical topics
             </h2>
-            {tag}
           </div>
           <ul className="mt-6 grid gap-3 md:grid-cols-2">
             {lp.topics.map((topic) => (
@@ -248,7 +226,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
                 className="flex items-start gap-2 rounded-2xl border border-line bg-surface px-4 py-3 text-[15px] leading-6"
               >
                 <span aria-hidden="true" className="font-bold text-signal">✓</span>
-                <span className={lp.sample ? "text-sample" : "text-body"}>{topic}</span>
+                <span className="text-body">{topic}</span>
               </li>
             ))}
           </ul>
@@ -257,7 +235,6 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
               <h3 className="font-display text-xl font-bold text-heading">
                 Full syllabus — shared after enquiry
               </h3>
-              {tag}
             </div>
             <p className="mt-2 text-[15px] leading-6 text-body">
               The complete syllabus is shared by the GradeSpot team after enquiry — via WhatsApp or
@@ -278,9 +255,8 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
               Who it&apos;s for
             </h2>
-            {tag}
           </div>
-          <p className={`mt-4 max-w-3xl text-[15px] leading-6 ${lp.sample ? "text-sample" : "text-body"}`}>
+          <p className="mt-4 max-w-3xl text-[15px] leading-6 text-body">
             {lp.who}
           </p>
         </div>
@@ -293,9 +269,8 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             <h2 className="font-display text-2xl font-bold text-heading md:text-3xl">
               Learning outcomes
             </h2>
-            {tag}
           </div>
-          <p className={`mt-4 max-w-3xl text-[15px] leading-6 ${lp.sample ? "text-sample" : "text-body"}`}>
+          <p className="mt-4 max-w-3xl text-[15px] leading-6 text-body">
             {lp.outcomeLine}
           </p>
           {lp.variant === "digital-marketing" && (
@@ -307,11 +282,7 @@ export default async function LpPage({ params }: { params: Promise<{ slug: strin
             {lp.roles.map((role) => (
               <span
                 key={role}
-                className={`rounded-full border px-4 py-2 text-sm font-medium ${
-                  lp.sample
-                    ? "border-sample text-sample"
-                    : "border-line bg-surface text-body"
-                }`}
+                className="rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-body"
               >
                 {role}
               </span>

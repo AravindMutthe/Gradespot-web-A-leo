@@ -17,14 +17,14 @@
 //      card outcomes element is the "Key Learning Objectives"
 //      list where one exists (moved verbatim into the card), else
 //      the kept section titled "Course Outcomes" or "Common Job
-//      Roles", else nothing (areas + gated only; sample pages
+//      Roles", else nothing (areas + gated only; held pages
 //      carry no sections). Exactly one outcomes element per card;
 //      a legacy outcome section on a KLO page stays in About
 //      verbatim, never duplicated into the card. SOC/CEH carry a
 //      dashed "Key Learning - Objectives" heading, which is NOT
 //      the KLO list, so they fall back to legacy.
 //   4. About renders only where about sections exist (the 8
-//      verified pages); sample pages carry no repo sections, so no
+//      verified pages); held pages carry no repo sections, so no
 //      About button and no dead anchor for them.
 //   5. breadcrumb, owner-refined 4 levels: Home / Trainings /
 //      Courses / course title. No topic-category crumb anywhere in
@@ -194,14 +194,11 @@ describe("Detail 4-button hero + grouped syllabus", () => {
         expect(about.some((s) => isLegacyOutcomeSection(s))).toBe(true);
         expect(outcomes.some((s) => isLegacyOutcomeSection(s))).toBe(false);
       }
-      if (model.sample) {
-        // Sample pages carry no repo sections: no About, no outcomes.
-        expect(model.sections).toEqual([]);
-        expect(about).toEqual([]);
-        expect(outcomes).toEqual([]);
-      }
+      // Held pages carry no repo sections: no About, no outcomes
+      // (handled by the heldBack branch above, which continues).
+
     }
-    expect(held).toBe(0);
+    expect(held).toBe(28);
     // 8 verified pages carry about sections, and all 8 now carry a
     // card outcomes element: 5 via Key Learning Objectives
     // (AZ-900, Network+, PenTest+, Security+, Hardware) and 3 via
@@ -266,7 +263,7 @@ describe("Detail 4-button hero + grouped syllabus", () => {
     // in About (it moved into the card).
     for (const c of courses) {
       const model = buildCourseDetail(c, courseDetails[c.slug], undefined);
-      if (model.heldBack || model.sample) continue;
+      if (model.heldBack) continue;
       const outcomes = cardOutcomes(model.sections);
       const about = model.sections.filter((s) => !outcomes.includes(s));
       expect(about.filter(isKloSection)).toEqual([]);

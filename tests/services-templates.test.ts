@@ -3,9 +3,9 @@
 // These tests pin the Stage 2→3 gate contract for the services
 // templates: Option A compact text-first rows, removed promotional
 // sections actually absent from the templates, and unchanged
-// slugs/routes. DEMO-FILL (owner-authorised, preview only): the 12
-// services are now sample-filled (scope + offerings, marked); the
-// title-only hold assertions below pin the demo contract. The repo
+// slugs/routes. PURGE GATES (2026-10-29): placeholder data
+// removed — the 12 services are held back to title-only again.
+// The title-only hold assertions below pin that hold. The repo
 // summaries stay unconfirmed and never render. They read the row
 // model and the template sources, so a regression that reintroduces
 // a card grid, a removed section, or an invented claim fails here.
@@ -38,24 +38,21 @@ const HELD_TEXTS = services.flatMap((s) => [
   ...(s.offerings ?? []),
 ]);
 
-describe("Stage 4 services index — inventory and sample-filled rows", () => {
+describe("Stage 4 services index — inventory and held-back rows (purge gates)", () => {
   it("renders 12 rows, one per service, in repo order with slugs unchanged", () => {
     expect(rows.length).toBe(12);
     expect(rows.map((r) => r.slug)).toEqual(services.map((s) => s.slug));
-    expect(rows.every((r) => r.sample)).toBe(true);
-    expect(rows.every((r) => r.heldBack)).toBe(false);
+    expect(rows.every((r) => r.heldBack)).toBe(true);
+    expect(rows.every((r) => "sample" in r)).toBe(false);
   });
 
-  it("fills every row with a marked sample scope and a details action, never an enquiry-only dead end", () => {
+  it("holds every row title-only with the pending notice and a details action", () => {
     for (const row of rows) {
-      expect(row.description).toBeTruthy();
-      expect(row.statusLabel).toBe("");
+      expect(row.description).toBeNull();
+      expect(row.statusLabel).toBe(SERVICE_PENDING_LABEL);
       expect(row.actionLabel).toBe(SERVICE_DETAILS_LABEL);
       expect(row.actionHref).toBe(`/services/${row.slug}`);
       expect(row.titleHref).toBe(`/services/${row.slug}`);
-      expect(row.offerings).toBeTruthy();
-      expect(row.offerings!.length).toBeGreaterThanOrEqual(3);
-      expect(row.offerings!.length).toBeLessThanOrEqual(6);
     }
   });
 
@@ -89,13 +86,12 @@ describe("Stage 4 services templates — removed surfaces and forbidden content"
     expect(index).toContain("Enquire About Our Services");
   });
 
-  it("detail renders sample scope + offerings only via the sample branch, never repo summaries, prices or timelines", () => {
+  it("detail renders the pending notice + enquiry only, never repo summaries, prices or timelines", () => {
     expect(detail).not.toContain("service.summary");
     expect(detail).not.toContain("service.offerings");
     expect(detail).not.toContain("₹");
-    expect(detail).toContain("sample.summary");
-    expect(detail).toContain("sample.offerings");
-    expect(detail).toContain("SampleTag");
+    expect(detail).not.toContain("SampleTag");
+    expect(detail).not.toContain("DemoLegend");
     expect(detail).toContain("SERVICE_PENDING_LABEL");
     expect(detail).toContain("SERVICE_ENQUIRE_LABEL");
     expect(detail).toContain("/contact-us");

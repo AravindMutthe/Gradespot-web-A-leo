@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { courses } from "@/data/courses";
+import { buildLpModel } from "@/lib/lp-model";
 import { services } from "@/data/services";
 import { comparisons } from "@/data/comparisons";
 import { articles } from "@/data/articles";
@@ -39,14 +40,14 @@ const LASTMOD: Record<string, string> = {
   "/for-institutes": "2026-10-24",
   "/lp/azure-administrator-az-104-in-hyderabad": "2026-10-23",
   "/lp/azure-fundamentals-az-900-in-hyderabad": "2026-10-23",
-  "/lp/ccna-200-301-in-hyderabad": "2026-10-23",
-  "/lp/ccnp-350-401-encor-in-hyderabad": "2026-10-23",
+  // Purge gates: the CCNA / CCNP / Digital Marketing LPs 404
+  // (held content, no placeholder data), so they carry no
+  // sitemap entry until real content is approved.
   "/lp/certified-ethical-hacker-ceh-in-hyderabad": "2026-10-23",
   "/lp/comptia-network-plus-in-hyderabad": "2026-10-23",
   "/lp/comptia-pentest-plus-in-hyderabad": "2026-10-23",
   "/lp/comptia-security-plus-in-hyderabad": "2026-10-23",
   "/lp/computer-hardware-and-networking-in-hyderabad": "2026-10-23",
-  "/lp/digital-marketing-in-hyderabad": "2026-10-23",
   "/lp/soc-analyst-in-hyderabad": "2026-10-23",
   "/partner-with-us": "2026-10-24",
   "/corporate-and-international": "2026-10-25",
@@ -173,9 +174,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...courses.map((c) => ({ url: `${base}/trainings/${c.slug}`, lastModified: LASTMOD[`/trainings/${c.slug}`] })),
     ...services.map((s) => ({ url: `${base}/services/${s.slug}`, lastModified: LASTMOD[`/services/${s.slug}`] })),
     // Research expansion pack (§18): city × course landing pages,
-    // comparison pairs and articles.
+    // comparison pairs and articles. LP entries only where the LP
+    // model builds (held courses 404 and are excluded).
     ...courses
-      .filter((c) => !c.catalogOnly)
+      .filter((c) => !c.catalogOnly && buildLpModel(c.slug) !== null)
       .map((c) => ({ url: `${base}/lp/${c.slug}-in-hyderabad`, lastModified: LASTMOD[`/lp/${c.slug}-in-hyderabad`] })),
     ...comparisons.map((c) => ({ url: `${base}/compare/${c.slug}`, lastModified: LASTMOD[`/compare/${c.slug}`] })),
     ...articles.map((a) => ({ url: `${base}/blog/${a.slug}`, lastModified: LASTMOD[`/blog/${a.slug}`] })),

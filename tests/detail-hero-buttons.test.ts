@@ -17,14 +17,13 @@
 //      Enroll, Register, or "Download syllabus" (detailed syllabus is
 //      gated, shared after enquiry, never an instant download);
 //   5. LP pages keep their own pair untouched; service pages gain no
-//      View Syllabus (no syllabus exists there); no sample marker,
-//      content fact, or held-page semantic changes.
-// NOTE (verified from the model, 2026-10-28): demo-fill un-held every
-// catalogue-only page with marked samples, so TODAY 0 of 36 detail
-// pages take the held branch and all 36 render the pair. The held
-// branch is a guard for any course that becomes held again — the
-// placement table in the checkpoint states this, it is not a
-// contradiction of the conditional rule.
+//      View Syllabus (no syllabus exists there); no content fact
+//      or held-page semantic changes; no sample marker anywhere.
+// NOTE (purge gates, 2026-10-29): placeholder data removed, so
+// 28 of 36 detail pages take the held branch (25 catalogue-only
+// + 3 held full courses) and only the 8 verified pages render
+// the pair. The held branch is no longer a guard — it is the
+// live presentation for held courses.
 
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -54,7 +53,7 @@ const heldSpan = (() => {
 })();
 
 describe("Detail hero buttons — placement", () => {
-  it("covers all 36 courses; today 0 are held and all 36 render topics", () => {
+  it("covers all 36 courses; 28 held, 8 verified render topics", () => {
     expect(courses.length).toBe(36);
     let held = 0;
     let withTopics = 0;
@@ -68,14 +67,14 @@ describe("Detail hero buttons — placement", () => {
         withTopics++;
       }
     }
-    expect(held).toBe(0);
-    expect(withTopics).toBe(36);
+    expect(held).toBe(28);
+    expect(withTopics).toBe(8);
   });
 
   it("hero carries Enquire Now on every detail page, to a real target", () => {
     expect(detail).toContain("Enquire Now");
-    // Full pages: on-page enquiry panel. Held pages (none today):
-    // the existing /contact-us enquiry route, per the held branch.
+    // Full pages: on-page enquiry panel. Held pages: the
+    // existing /contact-us enquiry route, per the held branch.
     expect(detail).toContain('href="#enquire"');
     expect(detail).toContain('id="enquire"');
     expect(heldSpan).toContain("Enquire Now");
@@ -127,8 +126,10 @@ describe("Detail hero buttons — placement", () => {
     expect(services).not.toContain("#syllabus");
   });
 
-  it("sample marking in the hero is untouched", () => {
-    expect(detail).toContain("SampleTag");
+  it("no sample marker renders in the hero", () => {
+    expect(detail).not.toContain("SampleTag");
+    expect(detail).not.toContain("DemoLegend");
+    expect(detail).not.toContain("text-sample");
     expect(findLocalCourse("ccna-200-301")).toBeTruthy();
   });
 });

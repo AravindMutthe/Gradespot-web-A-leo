@@ -16,7 +16,6 @@ import {
   findLocalCourse,
 } from "../src/lib/course-detail";
 import { buildSearchIndex, searchEntries } from "../src/lib/search";
-import { getSampleCourse } from "../src/lib/demo-fill";
 import { courseSchema } from "../src/lib/schema";
 import { coursePageMetadata } from "../src/lib/metadata";
 
@@ -140,14 +139,10 @@ describe("curriculum gating — page, search, metadata, schema", () => {
     for (const entry of index) {
       if (entry.kind !== "course") continue;
       const course = courses.find((c) => `/trainings/${c.slug}` === entry.href)!;
-      // Snippet is one of: null (no held course remains), the verified
-      // repo summary, or the marked sample summary — never a gated
-      // lesson/lab/tool list.
-      const sample = getSampleCourse(course.slug);
+      // Snippet is one of: null (held courses) or the verified
+      // repo summary — never a gated lesson/lab/tool list.
       expect(
-        entry.snippet === null ||
-          entry.snippet === course.summary ||
-          (sample !== undefined && entry.snippet === sample.summary),
+        entry.snippet === null || entry.snippet === course.summary,
       ).toBe(true);
       const hay = JSON.stringify(entry).toLowerCase();
       for (const s of CURRICULUM_ONLY_STRINGS) {
